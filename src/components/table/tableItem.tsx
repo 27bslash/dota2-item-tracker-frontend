@@ -1,0 +1,77 @@
+import { useNavigate } from "react-router";
+import ItemTooltip from "../tooltip/itemTooltip"
+import itemSearch from './table_search/item_search';
+import Tip from "../tooltip/tooltip";
+interface TItemProp {
+    matchId: number,
+    type: string,
+    item?: any,
+    items: any,
+    starter?: boolean,
+    itemKey: string,
+    colors?: any,
+    heroData?: object[],
+    heroName?: string
+    itemId?: number | undefined,
+    children?: React.ReactNode;
+    filteredData: object[],
+    totalMatchData: object[],
+    updateMatchData: (data: object[]) => void
+    role: string
+}
+const TableItem = (props: TItemProp) => {
+    const image_host = "https://ailhumfakp.cloudimg.io/v7/"
+
+    let link = `${image_host}https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/items/${props.itemKey}.png`
+    // console.log(props.item)
+    let time = ''
+    if (props.type === 'shard') {
+        time = props.item[0].time
+    } else if (props.type === 'item' || props.type === 'scepter') {
+        time = props.item.time
+    }
+    const updateMatchData = () => {
+        const data = itemSearch(props.itemKey, props.totalMatchData, props.items, props.role)
+
+        props.updateMatchData(data)
+    }
+    const navigate = useNavigate()
+    const handleClick = (event: any) => {
+        const url = `https://www.opendota.com/matches/${props.matchId}`
+        if (!event.ctrlKey) {
+            updateMatchData()
+        } else {
+            // return <Link to={{ 'pathname': "https://example.zendesk.com/hc/en-us/articles/123456789-Privacy-Policies" }} target="_blank" />
+            const url = `https://www.opendota.com/matches/${props.matchId}`
+            const w = window.open(url)
+
+
+        }
+    }
+    return (
+        <Tip component={<ItemTooltip type={props.type} img={link} itemId={props.itemId} items={props.items} itemKey={props.itemKey} colors={props.colors} heroData={props.heroData} heroName={props.heroName} />}>
+            {(props.type === 'item' || props.type === 'shard' || props.type === 'scepter') &&
+                <div className="item-cell" onClick={(e) => handleClick(e)} >
+                    <img className="item-img" height='55px' alt={props.itemKey} src={link}></img>
+                    {!props.starter &&
+                        <div className="overlay">{time}</div>
+                    }
+                    {props.starter &&
+                        <div className="overlay" style={{ backgroundColor: 'inherit' }}></div>
+                    }
+                </div>
+            }
+
+            {
+                props.type === 'neutral' &&
+                <div className="neutral-cell" onClick={updateMatchData}>
+                    <div className="circle">
+                        <img id="neutral-item" className="item-img" height='55px' alt={props.itemKey} src={link}>
+                        </img>
+                    </div>
+                </div>
+            }
+        </Tip >
+    )
+}
+export default TableItem
