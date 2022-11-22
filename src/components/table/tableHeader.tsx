@@ -7,7 +7,7 @@ const OrderableCell = (props: any) => {
         props.onRequestSort(event, property);
     };
     return (
-        <TableCell align={props.align}>
+        <TableCell align={props.align} sx={{maxWidth: props.maxWidth}}>
             <TableSortLabel sx={{ color: `${props.color} !important`, textTransform: 'uppercase', fontWeight: '600', ":hover": { opacity: `0.8 !important` }, maxWidth: props.maxWidth }}
                 direction={props.orderBy === props.sort ? props.order : 'desc'}
                 onClick={() => props.onRequestSort(props.sort)} hideSortIcon>
@@ -65,8 +65,9 @@ const TableHeader = (props: TableHeaderProps) => {
                             <OrderableCell label='D' sort='deaths_ten' onRequestSort={props.onRequestSort} orderBy={props.orderBy} order={props.sortDirection} color='red' />
                             <OrderableCell label='A' sort='assists' onRequestSort={props.onRequestSort} orderBy={props.orderBy} order={props.sortDirection} color='gray' />
                             <OrderableCell label='CS' sort='last_hits_ten' onRequestSort={props.onRequestSort} orderBy={props.orderBy} order={props.sortDirection} color='white' />
-                            <OrderableCell label='LANE EFF' color='gold' sort='lane_efficiency' onRequestSort={props.onRequestSort} orderBy={props.orderBy} order={props.sortDirection} />
-                            <OrderableCell label='GPM' sort='gpm_ten' onRequestSort={props.onRequestSort} orderBy={props.orderBy} order={props.sortDirection} color='gold' />
+                            <OrderableCell label='LANE EFF' color='gold' sort='lane_efficiency' onRequestSort={props.onRequestSort} 
+                            orderBy={props.orderBy} order={props.sortDirection} maxWidth='40px'/>
+                            <OrderableCell label='GPM'  align='right' sort='gpm_ten' onRequestSort={props.onRequestSort} orderBy={props.orderBy} order={props.sortDirection} color='gold' />
                             <OrderableCell label='/XPM' sort='xpm_ten' onRequestSort={props.onRequestSort} orderBy={props.orderBy} order={props.sortDirection} color='gray' />
                         </>
                     )}

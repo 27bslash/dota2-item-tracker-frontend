@@ -162,7 +162,7 @@ const CustomTableBody = (props: BodyProps) => {
                                         <TableCell sx={{ color: 'gold' }}>
                                             {row.lane_efficiency}%
                                         </TableCell>
-                                        <TableCell sx={{ color: 'gold' }}>
+                                        <TableCell sx={{ color: 'gold' }} align='right'>
                                             {row.gpm_ten}
                                         </TableCell>
                                         <TableCell sx={{ color: 'gray' }}>
