@@ -8,6 +8,7 @@ import stringSearch from './table_search/string_search';
 import itemSearch from "./table_search/item_search"
 interface BodyProps {
     nameParam: string,
+    baseApiUrl: string,
     type: string,
     page: number,
     totalMatchData: object[],
@@ -28,7 +29,7 @@ const CustomTableBody = (props: BodyProps) => {
     // console.log(props)
     useEffect(() => {
         (async () => {
-            const hColors = await fetch(`../files/ability_colours`)
+            const hColors = await fetch(`${props.baseApiUrl}files/ability_colours`)
             const colorJson = await hColors.json()
             setAbilityColors(colorJson)
         })()
@@ -38,7 +39,7 @@ const CustomTableBody = (props: BodyProps) => {
             const sett: Set<string> = new Set()
 
             if (props.type !== 'player') {
-                const hData = await fetch(`../files/hero-data/${props.nameParam}`)
+                const hData = await fetch(`${props.baseApiUrl}files/hero-data/${props.nameParam}`)
                 const hJson = await hData.json()
                 setHeroData([{ [props.nameParam]: hJson }])
             } else {
@@ -51,7 +52,7 @@ const CustomTableBody = (props: BodyProps) => {
         )()
     }, [props.data])
     async function getHeroData(hero: string) {
-        const hData = await fetch(`../files/hero-data/${hero}`)
+        const hData = await fetch(`${props.baseApiUrl}files/hero-data/${hero}`)
         const hJson = await hData.json()
         setHeroData((prev: any) => [...prev, { [hero]: hJson }])
     }

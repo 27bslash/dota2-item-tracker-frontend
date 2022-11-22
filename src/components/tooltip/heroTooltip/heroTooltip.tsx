@@ -7,6 +7,8 @@ interface HeroTooltipProps {
     heroName: string,
     img: string,
     heroColor: string
+    baseApiUrl: string,
+
 }
 
 const HeroTooltip = (props: HeroTooltipProps) => {
@@ -19,7 +21,7 @@ const HeroTooltip = (props: HeroTooltipProps) => {
     }
     useEffect(() => {
         (async () => {
-            const hData = await fetch(`../files/hero-data/${props.heroName}`)
+            const hData = await fetch(`${props.baseApiUrl}/files/hero-data/${props.heroName}`)
             const hJson = await hData.json()
             setHeroData(hJson)
         })()

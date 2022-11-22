@@ -10,6 +10,7 @@ interface searchProps {
     filterHeroes?: (data: any) => void,
     heroList: heroList[],
     highlightHero?: (data: number) => void
+    baseApiUrl:string,
 }
 const NavSearch = (props: searchProps) => {
     const [value, setValue] = useState('')
@@ -18,7 +19,7 @@ const NavSearch = (props: searchProps) => {
     const [sortedPlayers, setSortedPlayers] = useState<string[]>([])
     useEffect(() => {
         (async () => {
-            const res = await fetch("/files/accounts")
+            const res = await fetch(`${props.baseApiUrl}/files/accounts`)
             const playerlst = await res.json()
             setPlayerList(playerlst)
         })()

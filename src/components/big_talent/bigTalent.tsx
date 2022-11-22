@@ -2,12 +2,12 @@ import { useState, useEffect } from 'react';
 import BigTalentTooltip from './bigTalentTooltip';
 import heroSwitcher from '../heroSwitcher';
 
-const BigTalent = (props: { heroName: string; }) => {
+const BigTalent = (props: { heroName: string, baseApiUrl: string }) => {
     const [talents, setTalents] = useState<any[]>([])
     useEffect(() => {
         (async () => {
             const heroName = heroSwitcher(props.heroName)
-            const data = await fetch(`../files/talent-data/${heroName}`)
+            const data = await fetch(`${props.baseApiUrl}files/talent-data/${heroName}`)
             const json = await data.json()
             setTalents(json)
             console.log(json)

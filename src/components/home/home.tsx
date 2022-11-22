@@ -16,7 +16,7 @@ const Home = (props: any) => {
     const [sort, setSearchVal] = useState('')
     useEffect(() => {
         (async () => {
-            const req = await fetch('/files/win-stats')
+            const req = await fetch(`${props.baseApiUrl}/files/win-stats`)
             let json = await req.json()
             json = json.sort((a: any, b: any) => a['hero'].localeCompare(b['hero']))
             setWinStats(json)
@@ -65,10 +65,9 @@ const Home = (props: any) => {
     const highlightHero = (idx: number) => {
         setHighlight(idx)
     }
-    console.log(props, filtered)
     return (
         <div className="home">
-            <Nav filterHeroes={filterHeroes} heroList={props.heroList} highlightHero={highlightHero}></Nav>
+            <Nav baseApiUrl={props.baseApiUrl} filterHeroes={filterHeroes} heroList={props.heroList} highlightHero={highlightHero}></Nav>
             <ControlPanel sortHeroes={sortHeroes} winStats={winStats}></ControlPanel>
             {sort && !searching &&
                 <SortTitle role={roleFilter} sort={sort}></SortTitle>

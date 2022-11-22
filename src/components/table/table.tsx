@@ -1,4 +1,4 @@
-import {  TableContainer, TableRow, Table, TableFooter, TablePagination, CircularProgress } from "@mui/material"
+import { TableContainer, TableRow, Table, TableFooter, TablePagination, CircularProgress } from "@mui/material"
 import TablePaginationActions from "@mui/material/TablePagination/TablePaginationActions"
 import { useEffect, useState } from "react"
 import TableHeader from "./tableHeader"
@@ -10,6 +10,7 @@ import CustomTableBody from "./tablebody"
 interface TableProps {
     showStarter: boolean,
     heroList: any,
+    baseApiUrl: string,
     itemData: any,
     nameParam: string,
     type: string,
@@ -119,7 +120,7 @@ const CustomTable = (props: TableProps) => {
                                 onRequestSort={handleRequestSort}
                                 showStarter={props.showStarter}
                             />
-                            <CustomTableBody data={sortTable()} type={props.type} page={page} nameParam={props.nameParam}
+                            <CustomTableBody baseApiUrl={props.baseApiUrl} data={sortTable()} type={props.type} page={page} nameParam={props.nameParam}
                                 totalMatchData={totalMatchData} heroList={props.heroList} itemData={props.itemData}
                                 showStarter={props.showStarter} role={props.role} updateMatchData={props.updateMatchData}></CustomTableBody>
                             <TableFooter >

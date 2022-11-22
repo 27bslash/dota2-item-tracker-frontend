@@ -1,7 +1,6 @@
 import { Tooltip } from "@mui/material"
 
 const Tip = (props: any) => {
-    console.log(props.component)
     return (
         <Tooltip {...props}
             title=

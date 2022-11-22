@@ -13,9 +13,10 @@ interface heroList {
 }
 function App() {
     const [heroList, setHeroList] = useState<heroList[]>([])
+    const baseApiUrl = 'https://dota2-item-tracker.onrender.com/'
     useEffect(() => {
         (async () => {
-            const heroList = await fetch('../files/hero_ids')
+            const heroList = await fetch(`${baseApiUrl}files/hero_ids`)
             const heroListJson = await heroList.json()
             setHeroList(heroListJson['heroes'])
         })()
@@ -25,17 +26,17 @@ function App() {
         <div className="App">
             <Routes>
                 <Route path='/' element={
-                    <Home heroList={heroList} />
+                    <Home heroList={heroList} baseApiUrl={baseApiUrl} />
                 }>
                     {/* home page */}
                 </Route>
                 <Route path='/hero/:name' element={
-                    <Page heroList={heroList} type='hero' />
+                    <Page heroList={heroList} baseApiUrl={baseApiUrl} type='hero' />
                 }>
                     {/* hero pages */}
                 </Route>
                 <Route path='/player/:name' element={
-                    <Page heroList={heroList} type='player' />}>
+                    <Page heroList={heroList} baseApiUrl={baseApiUrl} type='player' />}>
                     {/* player pages */}
                 </Route>
                 <Route path='/chappie'>
