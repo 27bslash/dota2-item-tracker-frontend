@@ -63,6 +63,7 @@ const Page = (props: any) => {
     }, [role])
 
     useEffect(() => {
+        document.title = nameParam;
         (async () => {
             let url = `${baseApiUrl}${props.type}/${nameParam}/react-test?skip=0&length=10`
             if (role) {
