@@ -65,10 +65,8 @@ const CustomTableBody = (props: BodyProps) => {
         }
     }, [visited])
     const slice = props.data.slice(props.page * 10, props.page * 10 + 10)
-    console.log(slice)
 
     const handleClick = (event: any) => {
-        console.log(event.target.innerText)
         const PlayerName = event.target.innerText
         if (!event.ctrlKey) {
             // updateMatchData()

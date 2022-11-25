@@ -8,24 +8,18 @@ interface HeroTooltipProps {
     img: string,
     heroColor: string
     baseApiUrl: string,
+    heroData: any
 
 }
 
 const HeroTooltip = (props: HeroTooltipProps) => {
     const [open, setOpen] = useState(false)
-    const [heroData, setHeroData] = useState<any>()
 
     // todo move this to main page
     const handleChange = (b: boolean) => {
         setOpen(b)
     }
-    useEffect(() => {
-        (async () => {
-            const hData = await fetch(`${props.baseApiUrl}/files/hero-data/${props.heroName}`)
-            const hJson = await hData.json()
-            setHeroData(hJson)
-        })()
-    }, [props.heroName])
+    const heroData = props.heroData
     const color = `radial-gradient(circle at top left, ${props.heroColor} 0%, #182127 230px`
     return (
         <div className="toltip" onMouseEnter={() => handleChange(true)}

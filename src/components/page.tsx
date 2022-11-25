@@ -33,6 +33,7 @@ const Page = (props: any) => {
     const role = query.get('role') || ''
     const [Role, setRole] = useState(role)
     // console.log(heroData)
+    const [heroData, setHeroData] = useState<any>()
     const nameParam = heroSwitcher(t['name'])
     const updateStarter = () => {
         setShowStarter(prev => !prev)
@@ -90,7 +91,15 @@ const Page = (props: any) => {
         })()
     }, [])
 
-
+    useEffect(() => {
+        (async () => {
+            if (props.type === 'hero') {
+                const hData = await fetch(`${props.baseApiUrl}/files/hero-data/${nameParam}`)
+                const hJson = await hData.json()
+                setHeroData(hJson)
+            }
+        })()
+    }, [nameParam])
     useEffect(() => {
         (async () => {
             if (props.type === 'hero') {
@@ -127,14 +136,14 @@ const Page = (props: any) => {
                         {props.type === 'hero' &&
                             <>
                                 <div className="hero-img-wrapper">
-                                    <HeroImg baseApiUrl={props.baseApiUrl} heroName={nameParam} heroColor={heroColor} />
+                                    <HeroImg baseApiUrl={props.baseApiUrl} heroData={heroData} heroName={nameParam} heroColor={heroColor} />
                                     <MostUsed baseApiUrl={props.baseApiUrl} matchData={totalMatchData} role={Role} updateMatchData={updateMatchData} itemData={itemData}></MostUsed>
                                 </div>
                                 <div className="best-games-container" style={{ 'width': '1400px', 'height': '140px' }}>
                                     <BestGames baseApiUrl={props.baseApiUrl} heroList={props.heroList} role={Role} benchmarks={benchmarks}></BestGames>
                                 </div>
-                                {props.type !== 'player' &&
-                                    <BigTalent baseApiUrl={props.baseApiUrl} heroName={nameParam} />
+                                {props.type !== 'player' && heroData &&
+                                    <BigTalent matchData={totalMatchData} heroData={heroData} baseApiUrl={props.baseApiUrl} heroName={nameParam} />
                                 }
                             </>
                         }
