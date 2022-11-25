@@ -15,6 +15,7 @@ const Home = (props: any) => {
     const [highlight, setHighlight] = useState<number>()
     const [sort, setSearchVal] = useState('')
     useEffect(() => {
+        document.title = 'dota2 item tracker';
         (async () => {
             const req = await fetch(`${props.baseApiUrl}/files/win-stats`)
             let json = await req.json()
