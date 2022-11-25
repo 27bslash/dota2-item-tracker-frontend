@@ -21,7 +21,6 @@ const Page = (props: any) => {
     const [matchData, setMatchData] = useState<object[]>([])
     const [itemData, setItemData] = useState({})
     const [abilityColors, setAbilityColors] = useState([])
-    const [benchmarks, setBenchmarks] = useState<any[]>([])
     const [showStarter, setShowStarter] = useState(false)
     const [filteredData, setFilteredData] = useState<any[]>([])
     const [totalMatchData, setTotalMatchData] = useState<any[]>([])
@@ -46,22 +45,6 @@ const Page = (props: any) => {
         // setFilteredData(json['data'])
         return json['data']
     }
-    useEffect(() => {
-        (async () => {
-            if (props.type !== 'player') {
-                let url = ` ${baseApiUrl}files/${nameParam}/best-games`
-                if (role) {
-                    url = `${baseApiUrl}files/${nameParam}/best-games?role=${Role}`
-                }
-                const bmarks = await fetch(url)
-                const benchmarksJson = await bmarks.json()
-                setBenchmarks(benchmarksJson)
-            }
-
-            // tooltips load last
-
-        })()
-    }, [role])
 
     useEffect(() => {
         document.title = nameParam;
@@ -129,7 +112,6 @@ const Page = (props: any) => {
     return (
         <div className="page" >
             <Nav baseApiUrl={props.baseApiUrl} heroList={props.heroList} />
-            {/* <HeroImg /> */}
             {nameParam &&
                 <>
                     <div className="flex" style={{}}>
@@ -143,7 +125,7 @@ const Page = (props: any) => {
                                     <BestGames matchData={filteredData} ></BestGames>
                                 </div>
                                 {props.type !== 'player' && heroData &&
-                                    <BigTalent matchData={totalMatchData} heroData={heroData} baseApiUrl={props.baseApiUrl} heroName={nameParam} />
+                                    <BigTalent matchData={filteredData} heroData={heroData} heroName={nameParam} />
                                 }
                             </>
                         }
@@ -172,52 +154,7 @@ const Page = (props: any) => {
         </div>
     )
 }
-const IOSSwitch = styled((props: SwitchProps) => (
-    <Switch focusVisibleClassName=".Mui-focusVisible" disableRipple {...props} />
-))(({ theme }) => ({
-    width: 42,
-    height: 20,
-    padding: 0,
-    '& .MuiSwitch-switchBase': {
-        padding: 0,
-        margin: 2,
-        '&.Mui-checked': {
-            // transform: 'translateX(16px)',
-            color: '#fff',
-            '& + .MuiSwitch-track': {
-                backgroundColor: theme.palette.mode === 'dark' ? '#2ECA45' : '#65C466',
-                opacity: 1,
-                border: 5,
-            },
-            '&.Mui-disabled + .MuiSwitch-track': {
-                opacity: 0.5,
-            },
-        },
-        '&.Mui-focusVisible .MuiSwitch-thumb': {
-            color: '#33cf4d',
-            border: '6px solid #fff',
-        },
-        '&.Mui-disabled .MuiSwitch-thumb': {
-            color:
-                theme.palette.mode === 'light'
-                    ? theme.palette.grey[100]
-                    : theme.palette.grey[600],
-        },
-        '&.Mui-disabled + .MuiSwitch-track': {
-            opacity: theme.palette.mode === 'light' ? 0.7 : 0.3,
-        },
-    },
-    '& .MuiSwitch-thumb': {
-        transform: 'translateY(-5px)',
-        width: 20,
-        height: 20,
-    },
-    '& .MuiSwitch-track': {
-        // borderRadius: 26 / 2,
-        backgroundColor: theme.palette.mode === 'light' ? '#E9E9EA' : '#39393D',
-        opacity: 1
-    },
-}));
+
 const ToggleSwitch = styled((props: SwitchProps) => (
     <Switch focusVisibleClassName=".Mui-focusVisible" disableRipple {...props} />
 ))(({ theme }) => ({
@@ -242,7 +179,6 @@ const ToggleSwitch = styled((props: SwitchProps) => (
 }))
 
 const StarterToggle = (props: any) => {
-
     return (
         <div className="starter-toggle">
             <FormControlLabel

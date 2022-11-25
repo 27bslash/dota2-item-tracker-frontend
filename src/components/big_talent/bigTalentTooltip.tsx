@@ -22,7 +22,6 @@ const BigTalentTooltip = (props: any) => {
             {open && memo.length > 0 &&
                 <div className="tooltip" id='talents' style={{ marginRight: '105px', marginTop: '11px' }}>
                     {memo.map((x: any, i: number) => {
-                        // console.log('ros', props.talents)
                         const k = Object.keys(x[0])[0]
                         const level = x[0][k]['level']
                         return (
