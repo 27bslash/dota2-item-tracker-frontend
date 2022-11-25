@@ -15,38 +15,61 @@ interface BenchmarksProps {
 
 
 const BestGames = (props: any) => {
-    const [bestGames, setBestGames] = useState<any>()
+    const [bestgames, setBestgames] = useState<any>([])
+    const [benchmarkKeys, setbenchmarkKeys] = useState<any>([])
     useEffect(() => {
-        if ('best_games' in props.benchmarks) {
-            setBestGames(props.benchmarks['best_games'])
-            console.log(props.benchmarks)
+        sumBenchmarks()
+    }, [props.matchData])
+    const sumBenchmarks = () => {
+        const bmarks = []
+        for (let match of props.matchData) {
+            let sum: any = 0
+            const benchmarks = match['benchmarks']
+            sum = Object.values(benchmarks).reduce((a: any, b: any) => {
+                b = +b['pct']
+                return a + b
+            }, sum)
+            bmarks.push([match['id'], sum])
         }
-    }, [props.benchmarks])
+        const sorted = bmarks.sort((a: any, b: any) => {
+            return b[1] - a[1]
+        }).slice(0, 2).map((x) => x[0])
+        const filtered = props.matchData.filter((x: any) => sorted.includes(x['id']))
+        setBestgames(filtered)
+
+        const sortingArr = ['player', '', 'gold_per_min', 'xp_per_min',
+            'kills_per_min', 'last_hits_per_min', 'hero_damage_per_min', 'hero_healing_per_min', 'tower_damage', 'stuns_per_min', 'lhten']
+        if (filtered.length) {
+            const sortedBenchmarks = Object.keys(filtered[0]['benchmarks']).sort((a: any, b: any) => {
+                return sortingArr.indexOf(a) - sortingArr.indexOf(b)
+            })
+            setbenchmarkKeys(['player', '', 'role'].concat(sortedBenchmarks))
+        }
+    }
     return (
         <>
-            {bestGames &&
+            {!!bestgames.length &&
                 <div className="best-games-wrapper">
                     <div className="best-games">
                         <table>
                             <thead>
                                 <tr>
-                                    <th className="benchmarks">PLAYER</th>
-                                    <th className="benchmarks"></th>
-                                    <th className="benchmarks">Role</th>
-                                    <th className="benchmarks">GPM</th>
-                                    <th className="benchmarks">XPM</th>
-                                    <th className="benchmarks">KPM</th>
-                                    <th className="benchmarks">LHM</th>
-                                    <th className="benchmarks">HDM</th>
-                                    <th className="benchmarks">HH</th>
-                                    <th className="benchmarks">TD</th>
-                                    <th className="benchmarks">SPM</th>
-                                    <th className="benchmarks">LH@10</th>
+                                    {benchmarkKeys.map((x: any, i: number) => {
+                                        let header = x.split('_').map((char: string) => char[0]).join('')
+                                        if (i < 3) {
+                                            header = x
+                                        } else if (header.length === 4) {
+                                            header = header.replace('p', '')
+                                        } else if (x === 'lhten') {
+                                            header = "LH@10"
+                                        }
+                                        header = header.toUpperCase()
+                                        return <th key={i}>{header}</th>
+                                    })}
                                 </tr>
                             </thead>
                             <tbody className="best-games-body">
-                                {bestGames.map((match: any, i: number) => {
-                                    const benchmarkKeys = Object.keys(match.benchmarks)
+                                {bestgames.map((match: any, i: number) => {
                                     return (
                                         <tr className="best-games-row" key={i}>
                                             <td className="benchmark-cell">
@@ -60,21 +83,23 @@ const BestGames = (props: any) => {
                                                     onClick={() => props.updateMatchData(stringSearch(props.data, 'role', match.role))}></div>
                                             </td>
                                             {benchmarkKeys.map((k: any, idx: number) => {
-                                                let pct = match.benchmarks[k]['pct']
-                                                let raw = match.benchmarks[k]['raw']
-                                                let color = '#EC494B'
-                                                if (pct >= 80) color = '#5AA563'
-                                                else if (pct >= 60) color = '#5499D2'
-                                                else if (pct >= 40) color = '#C9AF1D'
-                                                else if (pct >= 25) color = '#D89740'
-                                                return (
-                                                    <td key={idx} className='benchmark-cell'>
-                                                        <p>
-                                                            <span className='benchmark-pct' style={{ color: color }}>{pct}% </span>
-                                                            <span className='benchmark-raw'>{raw}</span>
-                                                        </p>
-                                                    </td>
-                                                )
+                                                if (k in match.benchmarks) {
+                                                    let pct = match.benchmarks[k]['pct']
+                                                    let raw = match.benchmarks[k]['raw']
+                                                    let color = '#EC494B'
+                                                    if (pct >= 80) color = '#5AA563'
+                                                    else if (pct >= 60) color = '#5499D2'
+                                                    else if (pct >= 40) color = '#C9AF1D'
+                                                    else if (pct >= 25) color = '#D89740'
+                                                    return (
+                                                        <td key={idx} className='benchmark-cell'>
+                                                            <p>
+                                                                <span className='benchmark-pct' style={{ color: color }}>{pct}% </span>
+                                                                <span className='benchmark-raw'>{raw.replace(/\.0+/, '')}</span>
+                                                            </p>
+                                                        </td>
+                                                    )
+                                                }
                                             })}
                                         </tr>
                                     )

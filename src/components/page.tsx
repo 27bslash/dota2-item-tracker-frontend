@@ -140,7 +140,7 @@ const Page = (props: any) => {
                                     <MostUsed baseApiUrl={props.baseApiUrl} matchData={totalMatchData} role={Role} updateMatchData={updateMatchData} itemData={itemData}></MostUsed>
                                 </div>
                                 <div className="best-games-container" style={{ 'width': '1400px', 'height': '140px' }}>
-                                    <BestGames baseApiUrl={props.baseApiUrl} heroList={props.heroList} role={Role} benchmarks={benchmarks}></BestGames>
+                                    <BestGames matchData={filteredData} ></BestGames>
                                 </div>
                                 {props.type !== 'player' && heroData &&
                                     <BigTalent matchData={totalMatchData} heroData={heroData} baseApiUrl={props.baseApiUrl} heroName={nameParam} />
