@@ -3,7 +3,7 @@ import Nav from './nav/nav';
 import CustomTable from './table/table';
 import BestGames from './best_games/bestGames';
 import { useEffect, useState } from 'react';
-import { FormControlLabel, styled, Switch, SwitchProps, TextField } from '@mui/material';
+import { CircularProgress, FormControlLabel, styled, Switch, SwitchProps } from '@mui/material';
 import TableSearch from './table/table_search/table_search';
 import { useParams } from 'react-router';
 import heroSwitcher from './heroSwitcher';
@@ -16,9 +16,13 @@ import PickCounter from './pickCounter';
 //  add chappie section
 //  postition tooltips
 //  item guides 
+interface pageProps {
+    type: string,
+    baseApiUrl: string,
+    heroList: any
+}
 
-const Page = (props: any) => {
-    const [matchData, setMatchData] = useState<object[]>([])
+const Page = (props: pageProps) => {
     const [itemData, setItemData] = useState({})
     const [abilityColors, setAbilityColors] = useState([])
     const [showStarter, setShowStarter] = useState(false)
@@ -41,8 +45,6 @@ const Page = (props: any) => {
     const getAllMatches = async () => {
         const data = await fetch(`${baseApiUrl}${props.type}/${nameParam}/react-test`)
         let json = await data.json()
-        setMatchData(json['data'])
-        // setFilteredData(json['data'])
         return json['data']
     }
 
@@ -60,8 +62,8 @@ const Page = (props: any) => {
 
             const d = await getAllMatches()
             setTotalMatchData(d)
-            if (props.role) {
-                const data = d.filter((match: any) => match.role === props.role)
+            if (role) {
+                const data = d.filter((match: { role: string }) => match.role === role)
                 setFilteredData(data)
                 setCount(data.length)
             } else {
@@ -112,7 +114,10 @@ const Page = (props: any) => {
     return (
         <div className="page" >
             <Nav baseApiUrl={props.baseApiUrl} heroList={props.heroList} />
-            {nameParam &&
+            {(!Boolean(filteredData.length)) &&
+                <CircularProgress sx={{ width: '100px', 'position': 'absolute' }} />
+            }
+            {!!filteredData.length &&
                 <>
                     <div className="flex" style={{}}>
                         {props.type === 'hero' &&
@@ -124,7 +129,7 @@ const Page = (props: any) => {
                                 <div className="best-games-container" style={{ 'width': '1400px', 'height': '140px' }}>
                                     <BestGames matchData={filteredData} ></BestGames>
                                 </div>
-                                {props.type !== 'player' && heroData &&
+                                {heroData && !!filteredData.length &&
                                     <BigTalent matchData={filteredData} heroData={heroData} heroName={nameParam} />
                                 }
                             </>

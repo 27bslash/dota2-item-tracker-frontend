@@ -1,4 +1,4 @@
-import { TableContainer, TableRow, Table, TableFooter, TablePagination, CircularProgress } from "@mui/material"
+import { TableContainer, TableRow, Table, TableFooter, TablePagination } from "@mui/material"
 import TablePaginationActions from "@mui/material/TablePagination/TablePaginationActions"
 import { useEffect, useState } from "react"
 import TableHeader from "./tableHeader"
@@ -107,9 +107,6 @@ const CustomTable = (props: TableProps) => {
     }
     return (
         <div className="item-table">
-            {(!Boolean(filteredData.length)) &&
-                <CircularProgress sx={{ width: '100px', 'position': 'absolute' }} />
-            }
             {(!!filteredData.length) &&
                 <>
                     <TableContainer>
