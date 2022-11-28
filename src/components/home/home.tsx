@@ -69,7 +69,9 @@ const Home = (props: any) => {
     return (
         <div className="home">
             <Nav baseApiUrl={props.baseApiUrl} filterHeroes={filterHeroes} heroList={props.heroList} highlightHero={highlightHero}></Nav>
-            <ControlPanel sortHeroes={sortHeroes} winStats={winStats}></ControlPanel>
+            {filtered &&
+                <ControlPanel sortHeroes={sortHeroes} winStats={winStats}></ControlPanel>
+            }
             {sort && !searching &&
                 <SortTitle role={roleFilter} sort={sort}></SortTitle>
             }
