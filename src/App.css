@@ -161,12 +161,14 @@ thead .stats:hover {
 
 .overlay {
   color: white;
-  background-color: black;
+  background-color: #00000094;
   opacity: 0.9;
   text-align: center;
-  position: relative;
+  position: absolute;
   height: 20px;
   font-size: 15px;
+  bottom: 0px;
+  width: 100%;
 }
 ul {
   margin: 0;
@@ -623,6 +625,7 @@ label {
 }
 .purchases {
   display: flex;
+  margin-bottom: 10px;
 }
 .purchase-log {
   display: flex;
@@ -632,9 +635,9 @@ label {
 .starting_items {
   display: flex;
 }
-.intermediate_items {
+.intermediate-items {
   display: flex;
-  margin-top: 10px;
+  margin-bottom: 10px;
 }
 .item-cell {
   position: relative;
