@@ -7,19 +7,19 @@ const TalentImg = (props: any) => {
 
     return (
         <div className="small-talents talents" style={{ width: props.width, height: props.width }}>
-            {talents.map((x: any, i: number) => {
+            {[...talents].map((x: any, i: number) => {
                 const side = x['slot'] % 2 === 0 ? 'r-talent' : 'l-talent'
                 if (x['slot'] < 2) {
-                    x.level = 10
+                    x.lvl = 10
                 } else if (x['slot'] < 4) {
-                    x.level = 15
+                    x.lvl = 15
                 } else if (x['slot'] < 6) {
-                    x.level = 20
+                    x.lvl = 20
                 } else {
-                    x.level = 25
+                    x.lvl = 25
                 }
                 return (
-                    <div key={i} className={'lvl' + x.level + ' ' + side}></div>
+                    <div key={i} className={'lvl' + x.lvl + ' ' + side}></div>
                 )
             })}
         </div >
