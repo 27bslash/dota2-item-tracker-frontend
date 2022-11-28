@@ -15,12 +15,12 @@ interface TitemProps {
         backpack: object[],
         starting_items: object[],
         item_neutral: string,
-        aghanims_shard: object[],
+        aghanims_shard: { time: string, key: string, id: number }[],
         items: object[],
         abilities: object[],
         hero: string,
         radiant_draft: string[]
-        dire_draft: string[]
+        dire_draft: string[],
     },
     showStarter: boolean,
     abilityColors: object[],
@@ -41,9 +41,25 @@ const Test = () => {
         <div className="testd">test tootlp</div>
     )
 }
+const humanReadableTime = (time: number | string) => {
+    if (time < 0) {
+        time = 0
+    }
+    let minutes, secs
+    if (typeof (time) === 'string') {
+        const spit = time.split(':')
+        const hours = +spit[0].replace(/^0/, '')
+        minutes = +spit[1].replace(/^0/, '') + (hours * 60)
+        secs = spit[2].replace(/^0/, '')
+    } else {
+        minutes = Math.floor(time / 60)
+        secs = (time % 60) >= 10 ? (time % 60) : `0${(time % 60)}`
+    }
+    const timeString = `${minutes}:${secs}`
+    return minutes > 0 ? timeString : '0'
+}
 const TableItems = (props: TitemProps) => {
     const image_host = "https://ailhumfakp.cloudimg.io/v7/"
-    const [open, setOpen] = useState(false)
     const consumables = ['tango', 'flask', 'ward_observer',
         'ward_sentry', 'smoke_of_deceit', 'enchanted_mango', 'clarity', 'tpscroll', 'dust', 'tome_of_knowledge']
     const visitedTalents: any = []
@@ -68,45 +84,63 @@ const TableItems = (props: TitemProps) => {
                 <div className="purchases">
                     {!props.showStarter ? (
                         props.row.final_items.concat(props.row.backpack).map((item: any, i: number) => {
+                            const time = humanReadableTime(item['time'])
                             if (item.key === 'ultimate_scepter') {
-                                return <TableItem matchId={props.row.id} role={props.role} updateMatchData={props.updateMatchData} filteredData={props.filteredData} totalMatchData={props.totalMatchData} key={i} itemKey='ultimate_scepter' type='scepter' items={props.items} heroName={props.heroName}
-                                    heroData={props.heroData} item={item} colors={props.abilityColors}>
+                                return <TableItem matchId={props.row.id} role={props.role} updateMatchData={props.updateMatchData}
+                                    filteredData={props.filteredData} totalMatchData={props.totalMatchData} key={i} itemKey='ultimate_scepter' type='scepter'
+                                    items={props.items} heroName={props.heroName}
+                                    heroData={props.heroData} item={item} time={time} colors={props.abilityColors}>
                                 </TableItem>
                             } else {
-                                return <TableItem matchId={props.row.id} role={props.role} updateMatchData={props.updateMatchData} filteredData={props.filteredData} totalMatchData={props.totalMatchData} key={i} item={item} itemId={item.id} items={props.items} itemKey={item.key} type='item'></TableItem>
+                                return <TableItem matchId={props.row.id} time={time} role={props.role} updateMatchData={props.updateMatchData}
+                                    filteredData={props.filteredData} totalMatchData={props.totalMatchData} key={i} item={item}
+                                    itemId={item.id} items={props.items} itemKey={item.key} type='item'></TableItem>
                             }
                         }
                         )
                     ) : (
 
-                        props.row.starting_items.map((item: any, i: number) => (
-                            <TableItem matchId={props.row.id} role={props.role} updateMatchData={props.updateMatchData} filteredData={props.filteredData} totalMatchData={props.totalMatchData} key={i} item={item} items={props.items} itemKey={item.key} type='item' starter={true}></TableItem>
-                        )
+                        props.row.starting_items.map((item: any, i: number) => {
+                            const time = humanReadableTime(item['time'])
+                            return <TableItem matchId={props.row.id} time={time}
+                                role={props.role} updateMatchData={props.updateMatchData}
+                                filteredData={props.filteredData} totalMatchData={props.totalMatchData} key={i} item={item} items={props.items} itemKey={item.key} type='item' starter={true}></TableItem>
+                        })
 
-                        )
                     )}
                 </div>
                 {props.row.item_neutral && !props.showStarter &&
                     <TableItem matchId={props.row.id} role={props.role} updateMatchData={props.updateMatchData} filteredData={props.filteredData} totalMatchData={props.totalMatchData} itemKey={props.row.item_neutral} items={props.items} type='neutral'></TableItem>
                 }
                 {props.row.aghanims_shard && !props.showStarter &&
-                    <TableItem matchId={props.row.id} role={props.role} updateMatchData={props.updateMatchData} filteredData={props.filteredData} totalMatchData={props.totalMatchData} itemKey='aghanims_shard' type='shard' items={props.items} heroName={props.heroName}
+                    <TableItem matchId={props.row.id} role={props.role} time={humanReadableTime(props.row.aghanims_shard[0]['time'])} updateMatchData={props.updateMatchData} filteredData={props.filteredData} totalMatchData={props.totalMatchData} itemKey='aghanims_shard' type='shard' items={props.items} heroName={props.heroName}
                         heroData={props.heroData} item={props.row.aghanims_shard} colors={props.abilityColors}>
                     </TableItem>
+                    // time={humanReadableTime(props.row.aghanims_shard['time'])}
                 }
             </div>
+            {props.showStarter &&
+                <div className="flex intermediate-items">
+                    {props.row.items.map((item: any, i) => {
+                        if (item['time'] < 600 && item['time'] > 0 && !consumables.includes(item['key'])) {
+                            const time = humanReadableTime(item['time'])
+                            return (
+                                <TableItem matchId={props.row.id} role={props.role} updateMatchData={props.updateMatchData}
+                                    filteredData={props.filteredData} totalMatchData={props.totalMatchData}
+                                    key={i} item={item} items={props.items} time={time} itemKey={item.key} type='item'></TableItem>
+                            )
+                        }
+                    })}
+                </div>
+            }
             <ArrowButton transition="collapse">
                 <div className="purchase-log">
                     {props.row.items.map((item: any, i: number) => {
-                        let newItem: any = {}
-                        if (item['time'] < 0) {
-                            item['time'] = 0
-                        }
-                        newItem['time'] = new Date(item['time'] * 1000).toISOString().substr(11, 8);
-                        newItem['key'] = item['key']
-                        if (!consumables.includes(newItem['key'])) {
+                        const time = humanReadableTime(item['time'])
+                        if (!consumables.includes(item['key'])) {
                             return (
-                                <TableItem matchId={props.row.id} role={props.role} updateMatchData={props.updateMatchData} filteredData={props.filteredData} totalMatchData={props.totalMatchData} key={i} item={newItem} items={props.items} itemKey={newItem.key} type='item'></TableItem>)
+                                <TableItem matchId={props.row.id} role={props.role} updateMatchData={props.updateMatchData}
+                                    filteredData={props.filteredData} totalMatchData={props.totalMatchData} key={i} item={item} time={time} items={props.items} itemKey={item.key} type='item'></TableItem>)
                         }
                     }
                     )
@@ -119,11 +153,10 @@ const TableItems = (props: TitemProps) => {
                 {props.row.abilities.map((ability: any, i: number) => {
                     let len = props.row.abilities.length;
                     let imgWidth = Math.floor((+width - 50) / len)
-                    // console.log(imgWidth)
                     let link = `${image_host}https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/abilities/${ability.img}.png`
                     return (
                         <div className="ability-image-wrapper" key={i}>
-                            <strong><p style={{ color: 'white', textAlign: 'center' }}>{i + 1}</p></strong>
+                            <strong><p style={{ color: 'white', textAlign: 'center' }}>{ability['level']}</p></strong>
                             {
                                 ability['type'] === 'ability' &&
                                 <Tip component={<AbilityTooltip img={link} heroData={props.heroData} heroName={props.heroName} abilityColors={props.abilityColors} ability={ability} />}>

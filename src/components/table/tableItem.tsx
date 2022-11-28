@@ -17,19 +17,14 @@ interface TItemProp {
     filteredData: object[],
     totalMatchData: object[],
     updateMatchData: (data: object[]) => void
-    role: string
+    role: string,
+    time?: string,
 }
 const TableItem = (props: TItemProp) => {
     const image_host = "https://ailhumfakp.cloudimg.io/v7/"
 
     let link = `${image_host}https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/items/${props.itemKey}.png`
     // console.log(props.item)
-    let time = ''
-    if (props.type === 'shard') {
-        time = props.item[0].time
-    } else if (props.type === 'item' || props.type === 'scepter') {
-        time = props.item.time
-    }
     const updateMatchData = () => {
         const data = itemSearch(props.itemKey, props.totalMatchData, props.items, props.role)
 
@@ -54,7 +49,7 @@ const TableItem = (props: TItemProp) => {
                 <div className="item-cell" onClick={(e) => handleClick(e)} >
                     <img className="item-img" height='55px' alt={props.itemKey} src={link}></img>
                     {!props.starter &&
-                        <div className="overlay">{time}</div>
+                        <div className="overlay">{props.time}</div>
                     }
                     {props.starter &&
                         <div className="overlay" style={{ backgroundColor: 'inherit' }}></div>
