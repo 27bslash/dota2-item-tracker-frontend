@@ -8,7 +8,7 @@ const BigTalentTooltip = (props: any) => {
         let j = 0
         const rows = []
         for (let i = 0; i < 4; i++) {
-            rows[i] = [{ [keys[j]]: props.talents[keys[j]] }, { [keys[j + 1]]: props.talents[keys[j + 1]] }]
+            rows[i] = [{ [keys[j + 1]]: props.talents[keys[j + 1]] }, { [keys[j]]: props.talents[keys[j]] }]
             j += 2
         }
         return rows.reverse()

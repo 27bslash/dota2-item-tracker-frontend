@@ -1,12 +1,10 @@
 import { useState, useEffect } from 'react';
 import BigTalentTooltip from './bigTalentTooltip';
-import heroSwitcher from '../heroSwitcher';
 
-const BigTalent = (props: { matchData: any, heroName: string,  heroData: any }) => {
+const BigTalent = (props: { matchData: any, heroName: string, heroData: any }) => {
     const [talents, setTalents] = useState<any>([])
     useEffect(() => {
         countTalents()
-
     }, [props.matchData])
     const countTalents = () => {
         const talentCount: any = {}
@@ -72,7 +70,7 @@ const BigTalent = (props: { matchData: any, heroName: string,  heroData: any }) 
                     <div className="big-talent talents" >
                         {Object.entries(talents).reverse().map((x, i) => {
                             const v: any = x[1]
-                            const side = v['slot'] % 2 === 0 ? 'l-talent' : 'r-talent'
+                            const side = v['slot'] % 2 !== 0 ? 'l-talent' : 'r-talent'
                             if (v['count'] * 2 >= v['total_picks'] && v['count']) {
                                 return <div key={i} className={'lvl' + v['level'] + ' ' + side}></div>
                             }
