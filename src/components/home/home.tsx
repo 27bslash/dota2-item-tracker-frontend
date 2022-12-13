@@ -135,6 +135,10 @@ const HeroCard = (props: any) => {
     let width = heroHighlight ? '113' : '110'
     const img = `https://ailhumfakp.cloudimg.io/v7/https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/heroes/${imgName}.png?v=5926546`
     const heroname = heroName.replace(/\s/g, '_')
+    const picks = stats[0][`${role}picks`]
+    const wins = stats[0][`${role}wins`]
+    const bans = stats[0][`bans`]
+    const winrate = ((wins / picks) * 100).toFixed(2) || 0
     let link = `/hero/${heroname}`
     if (role) {
         link = `/hero/${heroname}?role=${role.replace('_', '')}`
@@ -145,10 +149,10 @@ const HeroCard = (props: any) => {
                 <img alt={props.heroName} className="hero-img" src={img} width={width}></img>
                 {!searching && !!stats.length &&
                     <div className="win-stats" style={{ width: width, maxWidth: width }}>
-                        <span className='picks'>{stats[0][`${role}picks`]}</span>
-                        <span className='wins'>{stats[0][`${role}wins`]}</span>
-                        <span className='winrate' style={{ color: colourWins(stats[0][`${role}winrate`]) }}>{stats[0][`${role}winrate`]}%</span>
-                        <span className='bans'>{stats[0][`bans`]}</span>
+                        <span className='picks'>{picks}</span>
+                        <span className='wins'>{wins}</span>
+                        <span className='winrate' style={{ color: colourWins(winrate) }}>{winrate}%</span>
+                        <span className='bans'>{bans}</span>
                     </div>
                 }
             </div>
