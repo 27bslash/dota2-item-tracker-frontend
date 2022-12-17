@@ -4,8 +4,10 @@ const TooltipAttributes = (props: any) => {
         <div className="attributes">
             {props.itemProperties.attributes &&
                 props.itemProperties.attrib.map((x: { key: string, value: string, footer: string, header: string }, i: number) => {
+                    const attribName = x.footer ? x.footer : x.header.replace(/[+-]/g, m => m === '_' ? ' ' : '')
+                    const headerSymbol = x.header.replace(/[^+-]/g, '').trim()
                     return (
-                        <p key={i} className="attribute">{x.header}<strong>{x.value}</strong> {x.footer}</p>
+                        <p key={i} className="attribute">{headerSymbol}<strong><span className="tooltip-text-highlight">{x.value}</span></strong> {attribName}</p>
                     )
                 })
             }
