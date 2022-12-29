@@ -26,7 +26,7 @@ const ItemTooltip = (props: ItemTooltipProps) => {
     const [open, setOpen] = useState(false)
     const [itemProperties, setItemProperties] = useState<Itemproperties>()
     useEffect(() => {
-        if (props.items['items']) {
+        if (props.items) {
             for (let item of props.items['items']) {
                 if (item.id === props.itemId || item.name.replace('item_', '') === props.itemKey) {
                     setItemProperties(item)
