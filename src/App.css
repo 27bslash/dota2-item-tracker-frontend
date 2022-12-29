@@ -590,6 +590,14 @@ label {
 .pick-counter {
   display: flex;
 }
+.table-search-results {
+  padding: 10px;
+}
+.table-search-result:hover,
+.table-search-results > h3:hover {
+  cursor: pointer;
+  opacity: 0.7;
+}
 .wins {
   color: green;
 }

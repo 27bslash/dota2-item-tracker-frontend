@@ -2,12 +2,13 @@ import { TextField } from '@mui/material';
 import { useState } from 'react';
 import DraftSearch from './draft_search';
 import itemSearch from './item_search';
+import search from './search';
 interface TableSearchProps {
     heroName: string,
-    starter: boolean,
-    updateMatchData: (data: object[]) => void,
+    updateMatchData: (data: object[], searchResults: any) => void,
     totalMatchData: object[],
     heroList: [{ id: number, name: string }],
+    playerList: any[]
     itemData: any,
     type: string,
     disabled: boolean
@@ -16,15 +17,24 @@ const TableSearch = (props: TableSearchProps) => {
     const [value, setValue] = useState('')
     const handleSubmit = async (e: any) => {
         e.preventDefault()
-        // const request = await fetch(`/search/${value}?key=${props.hero}&hero=jakiro`)
-        // const json = await request.json()
-        let searchResults: any = []
-        const matchIdSet = new Set()
-        const draftResults = new DraftSearch().handleDraftSearch(props.totalMatchData, props.heroList, value, props.heroName)
-        const itemResults = itemSearch(value, props.totalMatchData, props.itemData)
-        searchResults = addToResults(draftResults, matchIdSet, searchResults)
-        searchResults = addToResults(itemResults, matchIdSet, searchResults)
-        props.updateMatchData(Array.from(searchResults))
+        const searchTerms = value.split(',')
+        let searchResults = search(searchTerms, props.totalMatchData, props.itemData, props.heroList, props.playerList, props.heroName)
+        const combinedMatches = combineMatches(searchResults)
+        const matchIds: number[] = []
+        const targetArr = combinedMatches.find((arr) => arr.length > 0) || []
+        for (let matchId of targetArr) {
+            const tempArr = [];
+            for (let comparisonArr of combinedMatches) {
+                if (!comparisonArr || comparisonArr.includes(matchId) || !comparisonArr.length) {
+                    tempArr.push(matchId);
+                }
+            }
+            if (tempArr.length === combinedMatches.length) {
+                matchIds.push(tempArr[0]);
+            }
+        }
+        const matches = [...props.totalMatchData].filter((x: any) => matchIds.includes(x.id))
+        props.updateMatchData(matches, searchResults)
     }
     return (
         <div className="search">
@@ -40,7 +50,18 @@ const TableSearch = (props: TableSearchProps) => {
         </div >
     )
 }
-
+export function combineMatches(searchResults: any) {
+    const result: number[][] = [];
+    for (let key in searchResults) {
+        for (let k in searchResults[key]) {
+            const idx = searchResults[key][k]["index"];
+            const matches = searchResults[key][k]["matches"];
+            const m = matches.map(({ id }: any) => id) || [];
+            result[idx] = result[idx] ? result[idx].concat(m) : m;
+        }
+    }
+    return result;
+}
 const addToResults = (array: any, matchIdSet: any, searchResults: any) => {
     for (let match of array) {
         if (!matchIdSet.has(match['id'])) {
