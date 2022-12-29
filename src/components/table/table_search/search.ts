@@ -43,3 +43,5 @@ const search = (searchTerms: string[], matchData: any, itemData: any, herolist: 
     })
     return res
 }
+
+export default search
