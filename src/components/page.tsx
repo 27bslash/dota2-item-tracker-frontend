@@ -10,21 +10,28 @@ import heroSwitcher from './heroSwitcher';
 import MostUsed from './most_used/mostUsed';
 import BigTalent from './big_talent/bigTalent';
 import { useSearchParams } from 'react-router-dom';
-import PickCounter from './pickCounter';
+import PickCounter from './pick_counter/pickCounter';
 
 //  TODO
 //  add chappie section
-//  postition tooltips
 //  item guides 
+//  on search reset page
+//  talent search
+//  player search substitute numbers for letters
+//  fix search style
+//  lazyload images
+//  get items from github for tooltips
+//  lone druid bear items
+
 interface pageProps {
     type: string,
     baseApiUrl: string,
-    heroList: any
+    heroList: any,
+    playerList?: any
 }
 
 const Page = (props: pageProps) => {
-    const [itemData, setItemData] = useState({})
-    const [abilityColors, setAbilityColors] = useState([])
+    const [itemData, setItemData] = useState()
     const [showStarter, setShowStarter] = useState(false)
     const [filteredData, setFilteredData] = useState<any[]>([])
     const [totalMatchData, setTotalMatchData] = useState<any[]>([])
@@ -35,9 +42,9 @@ const Page = (props: pageProps) => {
     const [query] = useSearchParams();
     const role = query.get('role') || ''
     const [Role, setRole] = useState(role)
-    // console.log(heroData)
     const [heroData, setHeroData] = useState<any>()
     const nameParam = heroSwitcher(t['name'])
+    const [searchRes, setSearchRes] = useState<{ values: string[] }>({ values: [] })
     const updateStarter = () => {
         setShowStarter(prev => !prev)
     }
@@ -101,12 +108,15 @@ const Page = (props: pageProps) => {
     const f = () => {
 
     }
-    const updateMatchData = (data: object[]) => {
+    const updateMatchData = (data: object[], searchValue?: any, type?: string[],) => {
         // setMatchData(data) ]
         if (!data.length) return
         setFilteredData(data)
         // props.updateFilteredData(data)
         setCount(data.length)
+        if (searchValue) {
+            setSearchRes({ values: searchValue })
+        }
     }
     const updateRole = (role: string) => {
         setRole(role)
@@ -136,15 +146,16 @@ const Page = (props: pageProps) => {
                         }
                     </div>
                     <>
-                        <div className="flex" style={{ 'width': '100%', height: '50px' }}>
-                            <PickCounter type={props.type} nameParam={nameParam} heroColor={heroColor} matchData={totalMatchData}
+                        <div className="flex" style={{ 'width': '100%' }}>
+                            <PickCounter type={props.type} nameParam={nameParam} heroColor={heroColor} matchData={totalMatchData} searchRes={searchRes}
                                 count={count} filteredData={filteredData} totalPicks={totalPicks} updateRole={updateRole} updateMatchData={updateMatchData} />
                         </div>
                         <div className="flex">
                             <StarterToggle updateStarter={updateStarter} />
-                            <TableSearch type={props.type} disabled={totalMatchData.length === 0 || !('items' in itemData)} heroName={nameParam} heroList={props.heroList}
+                            <TableSearch type={props.type} disabled={totalMatchData.length === 0 || !itemData || !props.heroList}
+                                heroName={nameParam} heroList={props.heroList} playerList={props.playerList}
                                 itemData={itemData} totalMatchData={totalMatchData}
-                                updateMatchData={updateMatchData} starter={showStarter} />
+                                updateMatchData={updateMatchData} />
                         </div>
                         <CustomTable
                             baseApiUrl={props.baseApiUrl}
@@ -191,7 +202,7 @@ const StarterToggle = (props: any) => {
                 control={<ToggleSwitch color="primary" onChange={props.updateStarter} />}
                 label="Starting Items"
                 labelPlacement="start"
-                sx={{ padding: '4px', backgroundColor: '#424242', color: '#e1e1e1', borderRadius: '5px', border: ' solid 2px black', margin: '0', marginRight: 'auto', }}
+                sx={{ padding: '4px 0px 4px 8px', backgroundColor: '#424242', color: '#e1e1e1', borderRadius: '5px', border: ' solid 2px black', margin: '0', marginRight: 'auto', }}
             />
         </div>
     )
