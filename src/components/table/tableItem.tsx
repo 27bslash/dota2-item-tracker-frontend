@@ -29,17 +29,12 @@ const TableItem = (props: TItemProp) => {
         const data = itemSearch(props.itemKey, props.totalMatchData, props.items, props.role)
         if (data) {
             const itemKey = Object.keys(data)[0];
-
-        props.updateMatchData(data)
             props.updateMatchData(data[itemKey]['matches'], { 'items': data })
         }
     }
     const navigate = useNavigate()
     const handleClick = (event: any) => {
         const url = `https://www.opendota.com/matches/${props.matchId}`
-        if (!event.ctrlKey) {
-            updateMatchData()
-        } else {
         if (!event.ctrlKey && props.items) {
             updateTable()
         } else if (event.ctrlKey || event.button === 1) {
