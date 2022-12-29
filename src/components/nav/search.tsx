@@ -10,7 +10,7 @@ interface searchProps {
     filterHeroes?: (data: any) => void,
     heroList: heroList[],
     highlightHero?: (data: number) => void
-    baseApiUrl:string,
+    baseApiUrl: string,
 }
 const NavSearch = (props: searchProps) => {
     const [value, setValue] = useState('')
@@ -39,7 +39,8 @@ const NavSearch = (props: searchProps) => {
                 x.name = x.name.replace(/-|_/g, ' ')
                 return x
             }), value, { keys: [{ threshold: matchSorter.rankings.ACRONYM, key: 'name' }] }).slice(0, 15).reverse()
-            const srtedPlayers = matchSorter(playerList, value, { threshold: matchSorter.rankings.ACRONYM }).slice(0, 15)
+
+            const srtedPlayers = filterPlayers(playerList, value).slice(0, 15)
             setSortedHeroes(sorted)
             setSortedPlayers(srtedPlayers)
             if (props.filterHeroes) { props.filterHeroes(sorted) }
@@ -67,4 +68,34 @@ const NavSearch = (props: searchProps) => {
     )
 
 }
+export const filterPlayers = (accounts: string[], value: string) => {
+    const values = substituteLettersForNumbers(value);
+    const result: string[][] = [];
+    values.forEach((value) => {
+        const srtedPlayers = matchSorter(accounts, value, {
+            threshold: matchSorter.rankings.ACRONYM,
+        });
+        result.push(srtedPlayers);
+    });
+    return result.flat()
+}
+const substituteLettersForNumbers = (string: string) => {
+    const allLetterCombos = [string];
+    const letterPairs: { [key: string]: string } = { a: "4", o: "0", 1: "i", 5: "s" };
+    const strArr: string[] = string.split("");
+    strArr.forEach((char, i: number) => {
+        const keys = Object.keys(letterPairs);
+        const values = Object.values(letterPairs);
+        if (keys.includes(char)) {
+            const newChar = letterPairs[char];
+            strArr[i] = newChar;
+            allLetterCombos.push(strArr.join(""));
+        } else if (values.includes(char)) {
+            const newChar = keys.find((key) => letterPairs[key] === char);
+            if (newChar) strArr[i] = newChar;
+            allLetterCombos.push(strArr.join(""));
+        }
+    })
+    return allLetterCombos;
+};
 export default NavSearch
