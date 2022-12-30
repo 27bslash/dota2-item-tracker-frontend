@@ -31,12 +31,12 @@ const PickCounter = (props: pickProps) => {
 
     const roleSearch = (data: any, role: string) => {
         const m = stringSearch(data, 'role', role)
-        props.updateMatchData(m, [role], ['roles'])
+        props.updateMatchData(m)
         props.updateRole(role)
     }
     const reset = () => {
         props.updateMatchData(props.matchData)
-        setFiltering(false)
+        setSearching(false)
         props.updateRole('')
     }
     return (
@@ -58,24 +58,44 @@ const PickCounter = (props: pickProps) => {
         </>
     )
 }
-const TotalPickCounter = (props: any) => {
+const BoldName = (props: { reset: () => void; color: string; name: string; }) => {
+    return <p onClick={() => props.reset()} className='bold-name' id='hero-name' style={{ 'color': props.color, textTransform: 'capitalize' }}><strong >{heroSwitcher(props.name).replace('_', ' ')}</strong></p>
+
+}
+const HeroPicks = (props: { base: any, role: string, reset: () => void, name: string; color: string; }) => {
+    const { base, role, name, color, reset } = props
     return (
-        <>
-            {props.type === 'hero' ? (
-                <>
-                    <p className='bold-name' id='hero-name' style={{ 'color': props.color, textTransform: 'capitalize' }}><strong >{heroSwitcher(props.name).replace('_', ' ')}</strong></p>
-                    <p>was picked {props.totalPicks['picks']} times with a win rate of <span style={{ color: colourWins(props.totalPicks['winrate']), marginRight: '5px' }}>
-                        {props.totalPicks['winrate']}%
-                    </span>
-                        it's mostly played:
-                    </p>
-                </>
-            ) : (
-                <div className="pal">
-                    <p className='bold-name'>{props.name} has played {props.totalPicks['picks']} times. He mostly plays: </p>
-                </div>
-            )}
-        </>
+        props.role ? (
+            <>
+                <BoldName reset={reset} name={name} color={color} />
+                <p>was picked {base['picks']} times in {role} with a  <span style={{ color: colourWins(base['winrate']), marginRight: '5px' }}>
+                    {base['winrate']}%
+                </span>
+                    winrate.
+                </p>
+            </>
+        ) : (
+            <>
+                <BoldName reset={reset} name={name} color={color} />
+                <p>was picked {base['picks']} times with a win rate of <span style={{ color: colourWins(base['winrate']), marginRight: '5px' }}>
+                    {base['winrate']}%
+                </span>
+                    it's mostly played:
+                </p>
+            </>
+        )
+    )
+}
+const TotalPickCounter = (props: any) => {
+    const base = props.role ? props.totalPicks[props.role] : props.totalPicks
+    return (
+        props.type === 'hero' ? (
+            <HeroPicks role={props.role} name={props.name} base={base} color={props.color} reset={props.reset} />
+        ) : (
+            <div className="pal">
+                <p className='bold-name'>{props.name} has played {base['picks']} times. He mostly plays: </p>
+            </div>
+        )
     )
 }
 const sortByMatches = (data: any) => {
