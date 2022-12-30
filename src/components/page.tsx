@@ -29,7 +29,12 @@ interface pageProps {
     heroList: any,
     playerList?: any
 }
-
+interface SearchRes {
+    items: {},
+    draft: {},
+    role: {},
+    player: {}
+}
 const Page = (props: pageProps) => {
     const [itemData, setItemData] = useState()
     const [showStarter, setShowStarter] = useState(false)
@@ -44,6 +49,7 @@ const Page = (props: pageProps) => {
     const [Role, setRole] = useState(role)
     const [heroData, setHeroData] = useState<any>()
     const nameParam = heroSwitcher(t['name'])
+    const [searchRes, setSearchRes] = useState<SearchRes>()
     const [searchRes, setSearchRes] = useState<{ values: string[] }>({ values: [] })
     const updateStarter = () => {
         setShowStarter(prev => !prev)
@@ -115,7 +121,7 @@ const Page = (props: pageProps) => {
         // props.updateFilteredData(data)
         setCount(data.length)
         if (searchValue) {
-            setSearchRes({ values: searchValue })
+            setSearchRes(searchValue)
         }
     }
     const updateRole = (role: string) => {
@@ -147,7 +153,7 @@ const Page = (props: pageProps) => {
                     </div>
                     <>
                         <div className="flex" style={{ 'width': '100%' }}>
-                            <PickCounter type={props.type} nameParam={nameParam} heroColor={heroColor} matchData={totalMatchData} searchRes={searchRes}
+                            <PickCounter type={props.type} nameParam={nameParam} role={Role} heroColor={heroColor} matchData={totalMatchData} searchRes={searchRes}
                                 count={count} filteredData={filteredData} totalPicks={totalPicks} updateRole={updateRole} updateMatchData={updateMatchData} />
                         </div>
                         <div className="flex">
