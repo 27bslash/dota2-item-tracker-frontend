@@ -50,7 +50,6 @@ const Page = (props: pageProps) => {
     const [heroData, setHeroData] = useState<any>()
     const nameParam = heroSwitcher(t['name'])
     const [searchRes, setSearchRes] = useState<SearchRes>()
-    const [searchRes, setSearchRes] = useState<{ values: string[] }>({ values: [] })
     const updateStarter = () => {
         setShowStarter(prev => !prev)
     }
