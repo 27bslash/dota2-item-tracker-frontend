@@ -20,21 +20,19 @@ const RoleCounter = (props: any) => {
         })
     }
     return (
-        !props.role ? (
-            sorted.map((x: any, i: number) => {
-                const key = Object.keys(x)[0]
-                const value = x[key]
-                const wr = value['winrate']
-                const picks = value['picks']
-                const wrColor = colourWins(wr)
-                return (
-                    <p onClick={() => props.roleSearch(props.matchData, key)} className='total-picks' key={i}> {key} ({picks}, <span style={{ color: wrColor }}>{wr}%</span>)</p>
-                )
-
-            })
-        ) : (
-            null
-        )
+        <>
+            {!props.role &&
+                sorted.map((x: any, i: number) => {
+                    const key = Object.keys(x)[0]
+                    const value = x[key]
+                    const wr = value['winrate']
+                    const picks = value['picks']
+                    const wrColor = colourWins(wr)
+                    return (
+                        <p onClick={() => props.roleSearch(props.matchData, key)} className='total-picks' key={i}> {key} ({picks}, <span style={{ color: wrColor }}>{wr}%</span>)</p>
+                    )
+                })}
+        </>
     )
 }
 export default RoleCounter
