@@ -23,7 +23,7 @@ const ControlPanel = (props: any) => {
 }
 const roleSort = (stats: any, field: string) => {
     let filtered = stats.filter((item: any) => item[field] > 0);
-    const sorted = filtered.sort((a: any, b: any) => {
+    const sorted = [...filtered].sort((a: any, b: any) => {
         return b[field] - a[field]
     })
     console.log(sorted.map((x: any) => x['hero']))

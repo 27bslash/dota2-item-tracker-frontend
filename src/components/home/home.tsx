@@ -14,6 +14,7 @@ const Home = (props: any) => {
     const [searching, setSearching] = useState(false)
     const [highlight, setHighlight] = useState<number>()
     const [sort, setSearchVal] = useState('')
+    
     useEffect(() => {
         document.title = 'dota2 item tracker';
         (async () => {
@@ -68,7 +69,7 @@ const Home = (props: any) => {
     }
     return (
         <div className="home">
-            <Nav baseApiUrl={props.baseApiUrl} filterHeroes={filterHeroes} heroList={props.heroList} highlightHero={highlightHero}></Nav>
+            <Nav baseApiUrl={props.baseApiUrl} filterHeroes={filterHeroes} heroList={props.heroList} playerList={props.playerList} highlightHero={highlightHero}></Nav>
             {filtered &&
                 <ControlPanel sortHeroes={sortHeroes} winStats={winStats}></ControlPanel>
             }
