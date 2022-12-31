@@ -1,9 +1,9 @@
 import TooltipAttributes from "./tooltipAttributes"
 import CdMc from './cdmc';
 import colorTooltip from './colorTooltip';
+import Color from "color-thief-react";
 
 const AghanimTooltip = (props: any) => {
-    console.log(props)
     let abilities: any[] = []
     props.heroData.forEach((hero: any) => {
         if (hero[props.heroName]) {
@@ -13,38 +13,43 @@ const AghanimTooltip = (props: any) => {
     const aghanimAbility = extractAghanim(abilities, props.type)
     const aghText = aghanimAbility[`${props.type}_loc`] || aghanimAbility['desc_loc']
     const aghanimDescription = extract_hidden_values(aghText, aghanimAbility['special_values'])
-    const color = colorTooltip(props.colors['colors'], aghanimAbility.name)
     const img = `https://ailhumfakp.cloudimg.io/v7/https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react//abilities/${aghanimAbility.name}.png`
 
     return (
-        <div className="tooltip" id="shard-tooltip" style={{ background: color, }}>
-            <div className="tooltip-line-one" style={{ flexDirection: "column", padding: '20px 20px 0px' }}>
-                <div className="tooltip-title">
-                    <img className="tooltip-img" alt={img} src={img}></img>
-                    <h3>{aghanimAbility.name_loc}</h3>
-                </div>
-                <div className="aghanim-wrapper">
-                    <p className="aghanim-title">{props.type} ability upgrade</p>
-                </div>
-            </div>
-            <div className="tooltip-content">
-                <div className="tooltip-attributes">
-                    <TooltipAttributes aghanimAbility={aghanimAbility} type={props.type} itemProperties={aghanimAbility}></TooltipAttributes>
-                </div>
-                <div className="tooltip-description">
-                    {aghanimDescription.split(/\s|,/).map((x: any, i: number) => {
-                        if (x.match(/\d+/g)) {
-                            return <span key={i} className='tooltip-text-highlight'>{x} </span>
-                        } else {
-                            return <span key={i}>{x + ' '}</span>
-                        }
-                    })}
-                </div>
-            </div>
-            <div className="tooltip-footer">
-                <CdMc mana_costs={aghanimAbility.mana_costs} cooldowns={aghanimAbility.cooldowns}></CdMc>
-            </div>
-        </div>
+        <Color src={img} crossOrigin="anonymous" format="hex">
+            {({ data, loading, error }) => {
+                return (
+                    <div className="tooltip" id="aghanim-tooltip" style={{ background: `radial-gradient(circle at top left, ${data} 0%, #182127 160px` }}>
+                        <div className="tooltip-line-one" style={{ flexDirection: "column", padding: '20px 20px 0px' }}>
+                            <div className="tooltip-title">
+                                <img className="tooltip-img" alt={img} src={img}></img>
+                                <h3>{aghanimAbility.name_loc}</h3>
+                            </div>
+                            <div className="aghanim-wrapper">
+                                <p className="aghanim-title">{props.type} ability upgrade</p>
+                            </div>
+                        </div>
+                        <div className="tooltip-content">
+                            <div className="tooltip-attributes">
+                                <TooltipAttributes aghanimAbility={aghanimAbility} type={props.type} itemProperties={aghanimAbility}></TooltipAttributes>
+                            </div>
+                            <div className="tooltip-description">
+                                {aghanimDescription.split(/\s|,/).map((x: any, i: number) => {
+                                    if (x.match(/\d+/g)) {
+                                        return <span key={i} className='tooltip-text-highlight'>{x} </span>
+                                    } else {
+                                        return <span key={i}>{x + ' '}</span>
+                                    }
+                                })}
+                            </div>
+                        </div>
+                        <div className="tooltip-footer">
+                            <CdMc mana_costs={aghanimAbility.mana_costs} cooldowns={aghanimAbility.cooldowns}></CdMc>
+                        </div>
+                    </div>
+                )
+            }}
+        </Color>
     )
 }
 
@@ -68,27 +73,27 @@ const extract_hidden_values = (text: string, special_values: any) => {
 
 export default AghanimTooltip
 
-const highlightPattern = (text: string, pattern: RegExp) => {
-    const splitText = text.split(pattern);
+// const highlightPattern = (text: string, pattern: RegExp) => {
+//     const splitText = text.split(pattern);
 
-    if (splitText.length <= 1) {
-        return [];
-    }
+//     if (splitText.length <= 1) {
+//         return [];
+//     }
 
-    const matches = text.match(pattern) || [];
+//     const matches = text.match(pattern) || [];
 
-    return splitText.reduce((arr: any, element: string) => {
-        if (!element) return arr;
-        console.log(element, matches)
-        if (matches.includes(element)) {
-            return [...arr, <span className="tooltip-text-highlight">{element}</span>];
-        }
+//     return splitText.reduce((arr: any, element: string) => {
+//         if (!element) return arr;
+//         console.log(element, matches)
+//         if (matches.includes(element)) {
+//             return [...arr, <span className="tooltip-text-highlight">{element}</span>];
+//         }
 
-        return [...arr, element];
-    },
-        []
-    );
-};
+//         return [...arr, element];
+//     },
+//         []
+//     );
+// };
 
 
 const extractAghanim = (result: { [x: string]: any }, s: string) => {

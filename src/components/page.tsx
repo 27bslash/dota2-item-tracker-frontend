@@ -47,9 +47,12 @@ const Page = (props: pageProps) => {
     const [query] = useSearchParams();
     const role = query.get('role') || ''
     const [Role, setRole] = useState(role)
-    const [heroData, setHeroData] = useState<any>()
+    const [heroData, setHeroData] = useState<any[]>([])
     const nameParam = heroSwitcher(t['name'])
     const [searchRes, setSearchRes] = useState<SearchRes>()
+    const [visited, setVisited] = useState<any>(new Set())
+    const [total, setTotal] = useState<any>([])
+
     const updateStarter = () => {
         setShowStarter(prev => !prev)
     }
@@ -90,13 +93,34 @@ const Page = (props: pageProps) => {
 
     useEffect(() => {
         (async () => {
-            if (props.type === 'hero') {
-                const hData = await fetch(`${props.baseApiUrl}/files/hero-data/${nameParam}`)
+            const sett: Set<string> = new Set()
+
+            if (props.type !== 'player') {
+                const hData = await fetch(`${props.baseApiUrl}files/hero-data/${nameParam}`)
                 const hJson = await hData.json()
-                setHeroData(hJson)
+                setHeroData([{ [nameParam]: hJson }])
+            } else {
+                for (let match of filteredData) {
+                    sett.add(match['hero'])
+                }
+                setVisited(sett)
             }
-        })()
-    }, [nameParam])
+        }
+        )()
+    }, [filteredData])
+    async function getHeroData(hero: string) {
+        const hData = await fetch(`${props.baseApiUrl}files/hero-data/${hero}`)
+        const hJson = await hData.json()
+        setHeroData((prev: any) => [...prev, { [hero]: hJson }])
+    }
+    useEffect(() => {
+        for (let hero of visited) {
+            if (!total.includes(hero)) {
+                getHeroData(hero)
+                setTotal((prev: any) => [...prev, hero])
+            }
+        }
+    }, [visited])
     useEffect(() => {
         (async () => {
             if (props.type === 'hero') {
@@ -128,7 +152,7 @@ const Page = (props: pageProps) => {
     }
     return (
         <div className="page" >
-            <Nav baseApiUrl={props.baseApiUrl} heroList={props.heroList} />
+            <Nav baseApiUrl={props.baseApiUrl} playerList={props.playerList} heroList={props.heroList} />
             {(!Boolean(filteredData.length)) &&
                 <CircularProgress sx={{ width: '100px', 'position': 'absolute' }} />
             }
@@ -144,7 +168,7 @@ const Page = (props: pageProps) => {
                                 <div className="best-games-container" style={{ 'width': '1400px', 'height': '140px' }}>
                                     <BestGames matchData={filteredData} ></BestGames>
                                 </div>
-                                {heroData && !!filteredData.length &&
+                                {heroData.length && !!filteredData.length &&
                                     <BigTalent matchData={filteredData} heroData={heroData} heroName={nameParam} />
                                 }
                             </>
@@ -165,7 +189,7 @@ const Page = (props: pageProps) => {
                         <CustomTable
                             baseApiUrl={props.baseApiUrl}
                             type={props.type} role={Role}
-                            filteredData={filteredData} count={count} updateMatchData={updateMatchData}
+                            filteredData={filteredData} heroData={heroData} count={count} updateMatchData={updateMatchData}
                             totalMatchData={totalMatchData} nameParam={nameParam} heroList={props.heroList} itemData={itemData}
                             showStarter={showStarter} />
                     </>

@@ -19,7 +19,6 @@ interface ItemTooltipProps {
     type: string,
     heroData?: object[],
     img: string,
-    colors: object[],
     heroName?: string,
 }
 const ItemTooltip = (props: ItemTooltipProps) => {
@@ -60,7 +59,7 @@ const ItemTooltip = (props: ItemTooltipProps) => {
             )}
             {
                 props.heroData?.length && props.heroName && (
-                    <AghanimTooltip heroName={props.heroName} heroData={props.heroData} colors={props.colors} type={props.type}></AghanimTooltip>
+                    <AghanimTooltip heroName={props.heroName} heroData={props.heroData} type={props.type}></AghanimTooltip>
                 )
             }
         </>

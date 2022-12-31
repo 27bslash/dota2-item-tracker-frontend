@@ -15,57 +15,14 @@ interface BodyProps {
     data: any[],
     updateMatchData: (data: object[]) => void,
     heroList: object[],
+    heroData: any,
     itemData: object[],
     showStarter: boolean,
     role: string
 }
 const CustomTableBody = (props: BodyProps) => {
     const timeAgo = new TimeAgo('en-US')
-    const [heroData, setHeroData] = useState<any>(new Set())
-    const [visited, setVisited] = useState<any>(new Set())
-    const [total, setTotal] = useState<any>([])
-    const [itemData, setItemData] = useState([])
-    const [abilityColors, setAbilityColors] = useState([])
-    // console.log(props)
-    useEffect(() => {
-        (async () => {
-            const hColors = await fetch(`${props.baseApiUrl}files/ability_colours`)
-            const colorJson = await hColors.json()
-            setAbilityColors(colorJson)
-        })()
-    }, [props.data])
-    useEffect(() => {
-        (async () => {
-            const sett: Set<string> = new Set()
-
-            if (props.type !== 'player') {
-                const hData = await fetch(`${props.baseApiUrl}files/hero-data/${props.nameParam}`)
-                const hJson = await hData.json()
-                setHeroData([{ [props.nameParam]: hJson }])
-            } else {
-                for (let match of props.data) {
-                    sett.add(match['hero'])
-                }
-                setVisited(sett)
-            }
-        }
-        )()
-    }, [props.data])
-    async function getHeroData(hero: string) {
-        const hData = await fetch(`${props.baseApiUrl}files/hero-data/${hero}`)
-        const hJson = await hData.json()
-        setHeroData((prev: any) => [...prev, { [hero]: hJson }])
-    }
-    useEffect(() => {
-        for (let hero of visited) {
-            if (!total.includes(hero)) {
-                getHeroData(hero)
-                setTotal((prev: any) => [...prev, hero])
-            }
-        }
-    }, [visited])
     const slice = props.data.slice(props.page * 10, props.page * 10 + 10)
-
     const handleClick = (event: any) => {
         const PlayerName = event.target.innerText
         if (!event.ctrlKey) {
@@ -95,9 +52,9 @@ const CustomTableBody = (props: BodyProps) => {
                             )}
                             <TableItems
                                 row={row} items={props.itemData} role={props.role}
-                                heroData={heroData} heroName={row['hero']}
+                                heroData={props.heroData}
                                 heroList={props.heroList} filteredData={props.data} totalMatchData={props.totalMatchData} updateMatchData={props.updateMatchData}
-                                abilityColors={abilityColors} showStarter={props.showStarter}>
+                                showStarter={props.showStarter}>
                             </TableItems>
                             <TableCell sx={{ color: 'white', maxWidth: '100px', width: '100px' }}>
                                 {timeAgo.format(Date.now() - timeDelta)}

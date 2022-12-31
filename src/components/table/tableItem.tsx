@@ -50,10 +50,10 @@ const TableItem = (props: TItemProp) => {
         }
     }
     return (
-        <Tip component={<ItemTooltip type={props.type} img={link} itemId={props.itemId} items={props.items} itemKey={props.itemKey} colors={props.colors} heroData={props.heroData} heroName={props.heroName} />}>
+        <Tip component={<ItemTooltip type={props.type} img={link} itemId={props.itemId} items={props.items} itemKey={props.itemKey} heroData={props.heroData} heroName={props.heroName} />}>
             {(props.type === 'item' || props.type === 'shard' || props.type === 'scepter') &&
                 <div className="item-cell" onClick={handleClick} >
-                    <img className="item-img" height='55px' alt={props.itemKey} src={link}></img>
+                    <img className="item-img" height='55px' alt={props.itemKey} src={link} loading="lazy"></img>
                     {!props.starter &&
                         <div className="overlay">{props.time}</div>
                     }
@@ -67,7 +67,7 @@ const TableItem = (props: TItemProp) => {
                 props.type === 'neutral' &&
                 <div className="neutral-cell" onClick={updateTable}>
                     <div className="circle">
-                        <img id="neutral-item" className="item-img" height='55px' alt={props.itemKey} src={link}>
+                        <img id="neutral-item" className="item-img" height='55px' alt={props.itemKey} src={link} loading="lazy">
                         </img>
                     </div>
                 </div>

@@ -23,10 +23,8 @@ interface TitemProps {
         dire_draft: string[],
     },
     showStarter: boolean,
-    abilityColors: object[],
     items: object[],
     heroData: object[],
-    heroName: string,
     heroList: object[],
     totalMatchData: object[],
     filteredData: object[],
@@ -79,6 +77,7 @@ const TableItems = (props: TitemProps) => {
         visitedTalents.push(t)
     }
     const width = '900'
+    const heroName = props.row['hero']
     return (
         <TableCell sx={{ padding: '6px 0px 6px 10px', maxWidth: `${width}px`, minWidth: `${width}px`, width: width + 'px', height: '200px', maxHeight: '200px' }}>
             <div className="items flex">
@@ -89,8 +88,8 @@ const TableItems = (props: TitemProps) => {
                             if (item.key === 'ultimate_scepter') {
                                 return <TableItem matchId={props.row.id} role={props.role} updateMatchData={props.updateMatchData}
                                     filteredData={props.filteredData} totalMatchData={props.totalMatchData} key={i} itemKey='ultimate_scepter' type='scepter'
-                                    items={props.items} heroName={props.heroName}
-                                    heroData={props.heroData} item={item} time={time} colors={props.abilityColors}>
+                                    items={props.items} heroName={heroName}
+                                    heroData={props.heroData} item={item} time={time}>
                                 </TableItem>
                             } else {
                                 return <TableItem matchId={props.row.id} time={time} role={props.role} updateMatchData={props.updateMatchData}
@@ -114,8 +113,8 @@ const TableItems = (props: TitemProps) => {
                     <TableItem matchId={props.row.id} role={props.role} updateMatchData={props.updateMatchData} filteredData={props.filteredData} totalMatchData={props.totalMatchData} itemKey={props.row.item_neutral} items={props.items} type='neutral'></TableItem>
                 }
                 {props.row.aghanims_shard && !props.showStarter &&
-                    <TableItem matchId={props.row.id} role={props.role} time={humanReadableTime(props.row.aghanims_shard[0]['time'])} updateMatchData={props.updateMatchData} filteredData={props.filteredData} totalMatchData={props.totalMatchData} itemKey='aghanims_shard' type='shard' items={props.items} heroName={props.heroName}
-                        heroData={props.heroData} item={props.row.aghanims_shard} colors={props.abilityColors}>
+                    <TableItem matchId={props.row.id} role={props.role} time={humanReadableTime(props.row.aghanims_shard[0]['time'])} updateMatchData={props.updateMatchData} filteredData={props.filteredData} totalMatchData={props.totalMatchData} itemKey='aghanims_shard' type='shard' items={props.items} heroName={heroName}
+                        heroData={props.heroData} item={props.row.aghanims_shard}>
                     </TableItem>
                     // time={humanReadableTime(props.row.aghanims_shard['time'])}
                 }
@@ -149,34 +148,7 @@ const TableItems = (props: TitemProps) => {
                 </div>
             </ArrowButton>
 
-
-            <div className="abilities">
-                {props.row.abilities.map((ability: any, i: number) => {
-                    let len = props.row.abilities.length;
-                    let imgWidth = Math.floor((+width - 50) / len)
-                    let link = `${image_host}https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/abilities/${ability.img}.png`
-                    return (
-                        <div className="ability-image-wrapper" key={i}>
-                            <strong><p style={{ color: 'white', textAlign: 'center' }}>{ability['level']}</p></strong>
-                            {
-                                ability['type'] === 'ability' &&
-                                <Tip component={<AbilityTooltip img={link} heroData={props.heroData} heroName={props.heroName} abilityColors={props.abilityColors} ability={ability} />}>
-                                    <div className="ability" key={i}>
-                                        <img width={imgWidth} height={imgWidth} className='table-img' alt={ability.key} data-id={ability.id} src={link}></img>
-                                    </div>
-                                </Tip>
-                            }
-                            {
-                                // talents have to be changed here
-                                ability['type'] === 'talent' &&
-                                <Tip component={<TalentTooltip talent={ability} />}>
-                                    <TalentImg width={imgWidth * 1.2} talents={visitedTalents} ability={ability}></TalentImg>
-                                </Tip>
-                            }
-                        </div>
-                    )
-                })}
-            </div>
+            <Abilities abilities={props.row.abilities} heroName={heroName} visitedTalents={visitedTalents} heroData={props.heroData} imageHost={image_host} width={width} />
             <div className="draft">
                 <div className="radiant-draft">
                     <Draft hero={props.row.hero} heroList={props.heroList} totalMatchData={props.totalMatchData} updateMatchData={props.updateMatchData} draft={props.row.radiant_draft}></Draft>
@@ -195,5 +167,37 @@ const ConditionalLink = (props: { condition: any; to: string; children: any }) =
             </>
     )
 }
+const Abilities = (props: { abilities: any; heroData: any; imageHost: string; width: string, heroName: string, visitedTalents: any[] }) => {
+    const { abilities, heroData, imageHost, width, heroName, visitedTalents } = props
+    return (
+        <div className="abilities">
+            {abilities.map((ability: any, i: number) => {
+                let len = abilities.length;
+                let imgWidth = Math.floor((+width - 50) / len)
+                let link = `${imageHost}https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/abilities/${ability.img}.png`
 
+                return (
+                    <div className="ability-image-wrapper" key={i}>
+                        <strong><p style={{ color: 'white', textAlign: 'center' }}>{ability['level']}</p></strong>
+                        {
+                            ability['type'] === 'ability' &&
+                            <Tip component={<AbilityTooltip img={link} heroData={heroData} heroName={heroName} ability={ability} />}>
+                                <div className="ability" key={i}>
+                                    <img width={imgWidth} height={imgWidth} className='table-img' alt={ability.key} data-id={ability.id} src={link}></img>
+                                </div>
+                            </Tip>
+                        }
+                        {
+                            // talents have to be changed here
+                            ability['type'] === 'talent' &&
+                            <Tip component={<TalentTooltip talent={ability} />}>
+                                <TalentImg width={imgWidth * 1.2} talents={visitedTalents} ability={ability}></TalentImg>
+                            </Tip>
+                        }
+                    </div>
+                )
+            })}
+        </div>
+    )
+}
 export default TableItems

@@ -9,21 +9,14 @@ interface heroList {
 interface searchProps {
     filterHeroes?: (data: any) => void,
     heroList: heroList[],
+    playerList: []
     highlightHero?: (data: number) => void
     baseApiUrl: string,
 }
 const NavSearch = (props: searchProps) => {
     const [value, setValue] = useState('')
-    const [playerList, setPlayerList] = useState<string[]>([])
     const [sortedHeroes, setSortedHeroes] = useState<any[]>([])
     const [sortedPlayers, setSortedPlayers] = useState<string[]>([])
-    useEffect(() => {
-        (async () => {
-            const res = await fetch(`${props.baseApiUrl}/files/accounts`)
-            const playerlst = await res.json()
-            setPlayerList(playerlst)
-        })()
-    }, [])
     // const data = 'data'
     const updateValue = () => {
         setValue('')
@@ -40,7 +33,7 @@ const NavSearch = (props: searchProps) => {
                 return x
             }), value, { keys: [{ threshold: matchSorter.rankings.ACRONYM, key: 'name' }] }).slice(0, 15).reverse()
 
-            const srtedPlayers = filterPlayers(playerList, value).slice(0, 15)
+            const srtedPlayers = filterPlayers(props.playerList, value).slice(0, 15)
             setSortedHeroes(sorted)
             setSortedPlayers(srtedPlayers)
             if (props.filterHeroes) { props.filterHeroes(sorted) }
@@ -62,7 +55,7 @@ const NavSearch = (props: searchProps) => {
                 value={value}
                 onChange={(e) => setValue(e.target.value)} />
             {(!!sortedPlayers.length || !!sortedHeroes.length) &&
-                <SearchResults heroList={props.heroList} highlightHero={props.highlightHero} updateValue={updateValue} navigatePage={navigatePage} playerList={playerList} sortedHeroes={sortedHeroes} sortedPlayers={sortedPlayers} />
+                <SearchResults heroList={props.heroList} highlightHero={props.highlightHero} updateValue={updateValue} navigatePage={navigatePage} playerList={props.playerList} sortedHeroes={sortedHeroes} sortedPlayers={sortedPlayers} />
             }
         </div>
     )

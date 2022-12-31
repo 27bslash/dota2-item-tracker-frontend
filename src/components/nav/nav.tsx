@@ -4,9 +4,10 @@ import HomeButton from "./nav_button"
 import NavSearch from './search';
 interface NavProps {
     heroList: Hero[],
+    playerList: any,
     highlightHero?: (idx: number) => void
     filterHeroes?: (heroList: Hero[]) => void
-    baseApiUrl:string,
+    baseApiUrl: string,
 }
 interface Hero {
     name: string,
@@ -22,7 +23,7 @@ const Nav = (props: NavProps) => {
                 <HomeButton text='CHAPPIE' />
             </Link>
             <div className="search-container" style={{ width: '100%' }}>
-                <NavSearch baseApiUrl={props.baseApiUrl} highlightHero={props.highlightHero} filterHeroes={props.filterHeroes} heroList={props.heroList} />
+                <NavSearch baseApiUrl={props.baseApiUrl} highlightHero={props.highlightHero} filterHeroes={props.filterHeroes} heroList={props.heroList} playerList={props.playerList} />
             </div>
         </div>
     )

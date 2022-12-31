@@ -6,11 +6,12 @@ const BigTalent = (props: { matchData: any, heroName: string, heroData: any }) =
     useEffect(() => {
         countTalents()
     }, [props.matchData])
+    const heroData = props.heroData[0][props.heroName]
     const countTalents = () => {
         const talentCount: any = {}
         // initialise object 
-        for (let k in props.heroData['talents']) {
-            const talent = props.heroData['talents'][k]
+        for (let k in heroData['talents']) {
+            const talent = heroData['talents'][k]
             let lvl = 0
             if (talent['slot'] === 0 || talent['slot'] === 1) {
                 lvl = 10

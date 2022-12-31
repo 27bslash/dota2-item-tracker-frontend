@@ -20,7 +20,7 @@ function App() {
             const heroList = await fetch(`${baseApiUrl}files/hero_ids`)
             const heroListJson = await heroList.json()
             setHeroList(heroListJson['heroes'])
-            const res = await fetch(`${baseApiUrl}/files/accounts`)
+            const res = await fetch(`${baseApiUrl}files/accounts`)
             const playerlst = await res.json()
             setPlayerList(playerlst)
         })()
@@ -30,7 +30,7 @@ function App() {
         <div className="App">
             <Routes>
                 <Route path='/' element={
-                    <Home heroList={heroList} baseApiUrl={baseApiUrl} />
+                    <Home heroList={heroList} playerList={playerList} baseApiUrl={baseApiUrl} />
                 }>
                     {/* home page */}
                 </Route>
