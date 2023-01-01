@@ -54,7 +54,7 @@ const BestGames = (props: any) => {
     return (
         <>
             {loading &&
-                <img src={blurred} alt='blurred image/>
+                <img src={blurred} alt='blurred image' />
             }
             {!!bestgames.length && !loading &&
                 <div className="best-games-wrapper">
