@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useState } from 'react';
 import { useEffect } from 'react';
 import stringSearch from '../table/table_search/string_search';
+import blurred from '../../images/blurred-best-games.jpg'
 
 interface BenchmarksProps {
     benchmarks: {},
@@ -17,9 +18,13 @@ interface BenchmarksProps {
 const BestGames = (props: any) => {
     const [bestgames, setBestgames] = useState<any>([])
     const [benchmarkKeys, setbenchmarkKeys] = useState<any>([])
+    const [loading, setLoading] = useState(true)
     useEffect(() => {
-        sumBenchmarks()
-    }, [props.matchData])
+        if (!!props.totalMatchData.length) {
+            sumBenchmarks()
+            setLoading(false)
+        }
+    }, [props.matchData, props.totalMatchData])
     const sumBenchmarks = () => {
         const bmarks = []
         for (let match of props.matchData) {
@@ -48,7 +53,10 @@ const BestGames = (props: any) => {
     }
     return (
         <>
-            {!!bestgames.length &&
+            {loading &&
+                <img src={blurred} alt='blurred image/>
+            }
+            {!!bestgames.length && !loading &&
                 <div className="best-games-wrapper">
                     <div className="best-games">
                         <table>

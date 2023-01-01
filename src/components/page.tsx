@@ -107,7 +107,7 @@ const Page = (props: pageProps) => {
             }
         }
         )()
-    }, [filteredData])
+    }, [totalMatchData])
     async function getHeroData(hero: string) {
         const hData = await fetch(`${props.baseApiUrl}files/hero-data/${hero}`)
         const hJson = await hData.json()
@@ -165,8 +165,8 @@ const Page = (props: pageProps) => {
                                     <HeroImg baseApiUrl={props.baseApiUrl} heroData={heroData} heroName={nameParam} heroColor={heroColor} />
                                     <MostUsed baseApiUrl={props.baseApiUrl} matchData={totalMatchData} role={Role} updateMatchData={updateMatchData} itemData={itemData}></MostUsed>
                                 </div>
-                                <div className="best-games-container" style={{ 'width': '1400px', 'height': '140px' }}>
-                                    <BestGames matchData={filteredData} ></BestGames>
+                                <div className="best-games-container" style={{ 'width': '1200px', 'height': '140px' }}>
+                                    <BestGames matchData={filteredData} totalMatchData={totalMatchData}></BestGames>
                                 </div>
                                 {heroData.length && !!filteredData.length &&
                                     <BigTalent matchData={filteredData} heroData={heroData} heroName={nameParam} />

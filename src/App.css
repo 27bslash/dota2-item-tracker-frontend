@@ -376,10 +376,8 @@ a {
   color: grey;
 }
 .talent-wrapper {
-  display: flex;
-  width: 100%;
-  justify-content: center;
-  position: relative;
+  margin-left: 100px;
+
 }
 #main-talent-img {
   cursor: help;
