@@ -181,9 +181,9 @@ const Page = (props: pageProps) => {
                         </div>
                         <div className="flex">
                             <StarterToggle updateStarter={updateStarter} />
-                            <TableSearch type={props.type} disabled={totalMatchData.length === 0 || !itemData || !props.heroList}
+                            <TableSearch type={props.type} disabled={filteredData.length === 0 || !itemData || !props.heroList}
                                 heroName={nameParam} heroList={props.heroList} playerList={props.playerList}
-                                itemData={itemData} totalMatchData={totalMatchData}
+                                itemData={itemData} totalMatchData={filteredData}
                                 updateMatchData={updateMatchData} />
                         </div>
                         <CustomTable
