@@ -1,5 +1,5 @@
 import { TextField } from '@mui/material';
-import { useState } from 'react';
+import { SetStateAction, useState } from 'react';
 import DraftSearch from './draft_search';
 import itemSearch from './item_search';
 import search from './search';
@@ -15,6 +15,13 @@ interface TableSearchProps {
 }
 const TableSearch = (props: TableSearchProps) => {
     const [value, setValue] = useState('')
+    const [error, setError] = useState(false)
+    const [errorMsg, setErrorMsg] = useState('')
+    const handleChange = (e: { target: { value: SetStateAction<string>; }; }) => {
+        setError(false)
+        setValue(e.target.value)
+        setErrorMsg('')
+    }
     const handleSubmit = async (e: any) => {
         e.preventDefault()
         const searchTerms = value.split(',')
@@ -34,6 +41,10 @@ const TableSearch = (props: TableSearchProps) => {
             }
         }
         const matches = [...props.totalMatchData].filter((x: any) => matchIds.includes(x.id))
+        if (!matches.length) {
+            setError(true)
+            setErrorMsg(`No results found for ${value}`)
+        }
         props.updateMatchData(matches, searchResults)
     }
     return (
@@ -42,9 +53,12 @@ const TableSearch = (props: TableSearchProps) => {
                 <TextField
                     id="table-search"
                     placeholder='Search...'
-                    variant="standard"
+                    variant="outlined"
                     disabled={props.disabled}
-                    onChange={(e) => setValue(e.target.value)}
+                    onChange={handleChange}
+                    error={error}
+                    helperText={errorMsg}
+                    sx={{ maxWidth: '179px' }}
                 />
             </form>
         </div >
