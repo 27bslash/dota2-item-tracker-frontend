@@ -15,7 +15,6 @@ const itemSearch = (item: string, data: any, itemData: any, role: string = '', i
     if (role) {
         data = data.filter((match: any) => match.role === role)
     }
-    const seenMatches = new Set()
     data.forEach((match: any) => {
         const seenItems = new Set()
         for (let item of match['items']) {
@@ -23,7 +22,7 @@ const itemSearch = (item: string, data: any, itemData: any, role: string = '', i
                 continue
             }
             if (searchRes['names'].has(item.key) || searchRes['names'].has(`item_${item.key}`)) {
-                const name = displayNameFromName(itemData, item.key)
+                const name = itemData[item.key] ? itemData[item.key] : item.key
                 itemRes.add(name)
                 seenItems.add(item.key)
                 dict[name] ? dict[name]['matches'].push(match) : dict[name] = { 'matches': [match], 'index': i }
@@ -66,27 +65,27 @@ const displayNameFromName = (itemsArr: any, name: string) => {
         }
     }
 }
-const itemIdSearch = (itemsArr: { items: [{ 'name': string, 'displayName': string }] }, search: string) => {
+const itemIdSearch = (itemsArr: { [x: string]: { [x: string]: any } }, search: string) => {
     const names: Set<string> = new Set();
     const displayNames: Set<string> = new Set();
-    for (let item of itemsArr["items"]) {
-        const acronymRes: boolean = acronym(search, item)
-        if (item['name'] === 'item_ethereal_blade') {
-            // console.log(acronym(search, item), search, item['displayName'])
+    for (let key of Object.keys(itemsArr["items"])) {
+        const item = itemsArr["items"][key]
+        if (!('dname' in item)) {
+            continue
         }
+        const acronymRes: boolean = acronym(search, item)
         if (
-            item["name"].includes(search) || acronymRes ||
-            item["displayName"].toLowerCase().includes(search.replace(/_-/g, " "))
+            key.includes(search) || acronymRes ||
+            item['dname'].toLowerCase().includes(search.replace(/_-/g, " "))
         ) {
-            names.add(item["name"]);
-            // console.log(item['name'], item['displayName'])
-            if (item['displayName']) displayNames.add(item['displayName'])
+            names.add(key);
+            if (item['dname']) displayNames.add(item['dname'])
         }
     }
     return { 'names': names, displayNames: displayNames }
 };
 const acronym = (search: string, item: any) => {
-    let displayNameAcronym = item['displayName'].split(/\s|_|-/g).map((char: string) => char[0]).join('').toLowerCase()
+    let displayNameAcronym = item['dname'].split(/\s|_|-/g).map((char: string) => char[0]).join('').toLowerCase()
     if (displayNameAcronym === search.toLowerCase().replace(/\s/g, '')) {
         return true
     }
