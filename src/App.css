@@ -213,9 +213,7 @@ ul {
 .suggestion-link {
   color: white;
 }
-.suggestion:hover {
-  /* background-color: rgb(53, 53, 53); */
-}
+
 .form-container {
   justify-content: center;
   width: 100%;
@@ -291,8 +289,7 @@ a {
   display: flex;
   width: 250px;
 }
-.most-used-wrapper {
-}
+
 .most-used {
   height: 335px;
   overflow: auto;
@@ -608,9 +605,7 @@ label {
 .bold-name {
   margin-right: 6px;
 }
-.highlight {
-  /* background-color: rgba(255, 255, 255, 0.089); */
-}
+
 .win-cell {
   background-color: rgb(2 255 2 / 48%);
   width: 10px;
@@ -682,10 +677,7 @@ label {
   max-height: 60.5px;
 }
 @media (max-width: 1475px) {
-  .talents {
-    /* width: 35px;
-    height: 35px; */
-  }
+
 }
 .lvl10 {
   z-index: 1;
@@ -738,9 +730,7 @@ label {
   margin-left: 130px;
   margin-top: 2%;
 }
-.big-talent-tooltip-text {
-  /* z-index: 99; */
-}
+
 .search-container {
   display: flex;
   width: 100%;
@@ -917,8 +907,7 @@ label {
 .hero-aghanim-upgrades {
   padding: 5px;
 }
-.scepter-subicon {
-}
+
 .tooltip-aghanim-img {
   flex-shrink: 0;
 }

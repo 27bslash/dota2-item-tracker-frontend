@@ -6,53 +6,57 @@ const TooltipDescription = (props: any) => {
     return (
         <div className="tooltip-description">
             {
-                props.itemProperties.language.description &&
-                props.itemProperties.language.description.map((x: string, i: number) => {
-                    let activeText = highlight_numbers(x.match(/.*<h1>Active:.*/g));
-                    let toggleText = highlight_numbers(x.match(/.*<h1>Toggle:.*/g));
-                    let passiveText = highlight_numbers(x.match(/.*<h1>Passive:.*/g));
-                    let useText = highlight_numbers(x.match(/.*<h1>Use:.*/g));
-                    const activeHeader = x.replace(/<h1>(.*)<\/h1>.*/g, "$1");
-                    const activeTxt = x.replace(/.*<\/h1>(.*)/g, "$1");
-                    const activeDescText = highlight_numbers(activeTxt)
-                    return (
+                props.itemProperties.description &&
+                props.itemProperties.description.map((x: string, i: number) => {
+                    const header = x.match(/.*(?=--)/)
+                    const text = x.match(/(?=--).*/)
+                    let highlightedText = ''
+                    let active = x.match('Active:')
+                    let passive = x.match('Passive:')
+                    let use = x.match('Use:')
+                    let toggle = x.match('Toggle:')
+
+                    if (header && text) {
+                        const preProcessedText = text[0].replace(/(\.)(?=[A-Z])/, '$1<br></br>')
+                        highlightedText = highlight_numbers(preProcessedText.replace('--', '').trim())
+                            {active && highlightedText &&
                         <div key={i}>
                             {activeText &&
                                 <div className="active">
                                     <div className="active-header">
-                                        <h3 className='tooltip-text-highlight'>{activeHeader}</h3>
+                                        <h3 className='tooltip-text-highlight'>{header}</h3>
                                         <div className="statWrapper">
-                                            <CdMc mana_costs={props.itemProperties.stat['manaCost']} cooldowns={props.itemProperties.stat['cooldown']}></CdMc>
+                                            <CdMc mana_costs={props.itemProperties['mc']} cooldowns={props.itemProperties['cd']}></CdMc>
                                         </div>
                                     </div>
-                                    <p className="description-text" dangerouslySetInnerHTML={{ __html: activeDescText }}></p>
+                                    <p className="description-text" dangerouslySetInnerHTML={{ __html: highlightedText }}></p>
                                 </div>
                             }
-                            {passiveText &&
+                            {passive && highlightedText &&
                                 <div className="passive">
                                     <div className="passive-description">
-                                        <h3 className='tooltip-text-highlight'>{activeHeader}</h3>
-                                        <p className="description-text" dangerouslySetInnerHTML={{ __html: activeDescText }}></p>
+                                        <h3 className='tooltip-text-highlight'>{header}</h3>
+                                        <p className="description-text" dangerouslySetInnerHTML={{ __html: highlightedText }}></p>
                                     </div>
                                 </div>
                             }
-                            {useText &&
+                            {use && highlightedText &&
                                 <div className="use">
                                     <div className="use-description">
-                                        <h3 className='tooltip-text-highlight'>{activeHeader}</h3>
+                                        <h3 className='tooltip-text-highlight'>{header}</h3>
                                         <div className="stat-wrapper"></div>
-                                        <p className="description-text" dangerouslySetInnerHTML={{ __html: activeDescText }}></p>
+                                        <p className="description-text" dangerouslySetInnerHTML={{ __html: highlightedText }}></p>
                                     </div>
                                 </div>
                             }
-                            {toggleText &&
-                                <div className="toggle">
-                                    <div className="toggle-header">
-                                        <h3 className='tooltip-text-highlight'>{activeHeader}</h3>
+                            {toggle && highlightedText &&
+                                <div className="active">
+                                    <div className="active-header">
+                                        <h3 className='tooltip-text-highlight'>{header}</h3>
                                         <div className="stat-wrapper">
                                         </div>
                                     </div>
-                                    <p className="description-text" dangerouslySetInnerHTML={{ __html: activeDescText }}></p>
+                                    <p className="description-text" dangerouslySetInnerHTML={{ __html: highlightedText }}></p>
                                 </div>
                             }
                         </div>

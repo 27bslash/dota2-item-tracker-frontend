@@ -11,10 +11,12 @@ interface Itemproperties {
     name: string,
     attributes: [{ name: string, value: string }],
     stat: { cost: string, manaCost: string[], cooldown: string[] }
+    cost: number,
+    dname: string
 }
 interface ItemTooltipProps {
     itemId?: number,
-    items: { 'items': any[] },
+    items: any,
     itemKey: string,
     type: string,
     heroData?: object[],
@@ -26,12 +28,7 @@ const ItemTooltip = (props: ItemTooltipProps) => {
     const [itemProperties, setItemProperties] = useState<Itemproperties>()
     useEffect(() => {
         if (props.items) {
-            for (let item of props.items['items']) {
-                if (item.id === props.itemId || item.name.replace('item_', '') === props.itemKey) {
-                    setItemProperties(item)
-                    break
-                }
-            }
+            setItemProperties(props.items.items[props.itemKey])
         }
     }, [open])
     return (
@@ -41,12 +38,12 @@ const ItemTooltip = (props: ItemTooltipProps) => {
                     <div className="tooltip-line-one item-tooltip-line-one">
                         <div className="tooltip-title">
                             <img className="tooltip-img" alt={props.img} src={props.img}></img>
-                            <h3>{itemProperties.displayName}</h3>
+                            <h3>{itemProperties.dname}</h3>
                         </div>
-                        {+itemProperties.stat.cost > 0 &&
+                        {+itemProperties.cost > 0 &&
                             <div className="cost-wrapper">
                                 <img alt='gold' className="gold-img" src="https://steamcdn-a.akamaihd.net/apps/dota2/images/tooltips/gold.png"></img>
-                                <h4>{itemProperties.stat.cost}</h4>
+                                <h4>{itemProperties.cost}</h4>
                             </div>
                         }
                     </div>

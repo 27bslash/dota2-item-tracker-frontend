@@ -2,7 +2,7 @@
 const TooltipAttributes = (props: any) => {
     return (
         <div className="attributes">
-            {props.itemProperties.attributes &&
+            {props.itemProperties.attrib &&
                 props.itemProperties.attrib.map((x: { key: string, value: string, footer: string, header: string }, i: number) => {
                     const attribName = x.footer ? x.footer : x.header.replace(/[+-]/g, m => m === '_' ? ' ' : '')
                     const headerSymbol = x.header.replace(/[^+-]/g, '').trim()
