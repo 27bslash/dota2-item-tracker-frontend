@@ -30,9 +30,11 @@ const PickCounter = (props: pickProps) => {
     }, [props.filteredData])
 
     const roleSearch = (data: any, role: string) => {
-        const m = stringSearch(data, 'role', role)
-        props.updateMatchData(m)
-        props.updateRole(role)
+        if (data.length) {
+            const m = stringSearch(data, 'role', role)
+            props.updateRole(role)
+            props.updateMatchData(m)
+        }
     }
     const reset = () => {
         props.updateMatchData(props.matchData)

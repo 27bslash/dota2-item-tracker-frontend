@@ -58,7 +58,7 @@ const Page = (props: pageProps) => {
     }
     const baseApiUrl = 'https://dota2-item-tracker.onrender.com/'
     const getAllMatches = async () => {
-        const data = await fetch(`${baseApiUrl}${props.type}/${nameParam}/react-test`)
+        const data = await fetch(`${props.baseApiUrl}${props.type}/${nameParam}/react-test`)
         let json = await data.json()
         return json['data']
     }
@@ -66,31 +66,31 @@ const Page = (props: pageProps) => {
     useEffect(() => {
         document.title = nameParam;
         (async () => {
-            let url = `${baseApiUrl}${props.type}/${nameParam}/react-test?skip=0&length=10`
+            let url = `${props.baseApiUrl}${props.type}/${nameParam}/react-test?skip=0&length=10`
             if (role) {
-                url = `${baseApiUrl}${props.type}/${nameParam}/react-test?role=${role}&skip=0&length=10`
+                url = `${props.baseApiUrl}${props.type}/${nameParam}/react-test?role=${role}&skip=0&length=10`
             }
             const data = await fetch(url)
             let json = await data.json()
             setFilteredData(json['data'])
             setTotalPicks(json['picks'])
-
             const d = await getAllMatches()
             setTotalMatchData(d)
-            if (role) {
-                const data = d.filter((match: { role: string }) => match.role === role)
-                setFilteredData(data)
-                setCount(data.length)
-            } else {
-                setFilteredData(d)
-                setCount(d.length)
-            }
-            const itemData = await fetch(`${baseApiUrl}files/items`)
+            const itemData = await fetch(`${props.baseApiUrl}files/items`)
             const itemJson = await itemData.json()
             setItemData(itemJson)
         })()
     }, [])
-
+    useEffect(() => {
+        if (Role) {
+            const data = totalMatchData.filter((match: { role: string }) => match.role === Role)
+            setFilteredData(data)
+            setCount(data.length)
+        } else {
+            setFilteredData(totalMatchData)
+            setCount(totalMatchData.length)
+        }
+    }, [totalMatchData])
     useEffect(() => {
         (async () => {
             const sett: Set<string> = new Set()
