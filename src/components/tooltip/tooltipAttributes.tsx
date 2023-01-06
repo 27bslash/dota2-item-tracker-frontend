@@ -6,8 +6,9 @@ const TooltipAttributes = (props: any) => {
                 props.itemProperties.attrib.map((x: { key: string, value: string, footer: string, header: string }, i: number) => {
                     const attribName = x.footer ? x.footer : x.header.replace(/[+-]/g, m => m === '_' ? ' ' : '')
                     const headerSymbol = x.header.replace(/[^+-]/g, '').trim()
+                    const values = x.value.split(' ').filter((x) => +x.replace('%', '') > 0).join(' ')
                     return (
-                        <p key={i} className="attribute">{headerSymbol}<strong><span className="tooltip-text-highlight">{x.value}</span></strong> {attribName}</p>
+                        <p key={i} className="attribute">{headerSymbol}<strong><span className="tooltip-text-highlight">{values}</span></strong> {attribName}</p>
                     )
                 })
             }
