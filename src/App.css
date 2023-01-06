@@ -360,7 +360,7 @@ a {
   white-space: nowrap;
 }
 .benchmark-cell {
-  padding: 5px 15px;
+  padding: 10px;
 }
 .benchmark-pct {
   margin: 0;
