@@ -25,16 +25,15 @@ const BigTalent = (props: { matchData: any, heroName: string, heroData: any }) =
             else if (talent['slot'] === 6 || talent['slot'] === 7) {
                 lvl = 25
             }
-            talentCount[talent['name_loc']] = { count: 0, slot: talent['slot'], total_picks: 0, level: lvl }
+            talentCount[String(talent['id'])] = { count: 0, slot: talent['slot'], total_picks: 0, level: lvl, key: talent['name_loc'] }
 
         }
         for (let match of props.matchData) {
             for (let ability of match['abilities']) {
                 if (ability['type'] === 'talent') {
-                    const k = ability['key']
-                    const slot = ability['slot']
+                    const k = ability['id']
                     const count = talentCount[k]['count']
-                    talentCount[k] = { count: count + 1, slot: slot, total_picks: talentCount[k]['total_picks'], level: talentCount[k]['level'] }
+                    talentCount[k]['count'] = count + 1
                 }
             }
 
@@ -46,22 +45,16 @@ const BigTalent = (props: { matchData: any, heroName: string, heroData: any }) =
                     return talentCount[key]['slot'] === slot + 1
                 });
                 if (found) {
-                    talentCount[found]['total_picks'] = talentCount[k]['count'] + talentCount[found]['count']
-                    talentCount[k]['total_picks'] = talentCount[k]['count'] + talentCount[found]['count']
+                    const totalPicks = talentCount[k]['count'] + talentCount[found]['count']
+                    talentCount[found]['total_picks'] = totalPicks
+                    talentCount[k]['total_picks'] = totalPicks
                 }
             }
         }
-        const sortO = (a: any, b: any) => {
-            return talentCount[a]['slot'] - talentCount[b]['slot']
-        }
-        const ordered = Object.keys(talentCount).sort((a, b) => sortO(a, b)).reduce(
-            (obj: any, key: string) => {
-                obj[key] = talentCount[key];
-                return obj;
-            },
-            {}
-        );
-        setTalents(ordered)
+        const sorted =
+            Object.entries(talentCount).sort((a: any, b: any) => a[1].slot - b[1].slot)
+
+        setTalents(sorted)
     }
 
     return (
@@ -69,7 +62,7 @@ const BigTalent = (props: { matchData: any, heroName: string, heroData: any }) =
             {talents &&
                 <BigTalentTooltip talents={talents}>
                     <div className="big-talent talents" >
-                        {Object.entries(talents).reverse().map((x, i) => {
+                        {[...talents].reverse().map((x: any, i: number) => {
                             const v: any = x[1]
                             const side = v['slot'] % 2 !== 0 ? 'l-talent' : 'r-talent'
                             if (v['count'] * 2 >= v['total_picks'] && v['count']) {
