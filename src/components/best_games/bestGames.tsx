@@ -102,8 +102,8 @@ const BestGames = (props: any) => {
                                                     return (
                                                         <td key={idx} className='benchmark-cell'>
                                                             <p>
-                                                                <span className='benchmark-pct' style={{ color: color }}>{pct}% </span>
-                                                                <span className='benchmark-raw'>{raw.replace(/\.0+/, '')}</span>
+                                                                <span className='benchmark-pct' style={{ color: color }}>{pct.replace(/\.00+/, '')}% </span>
+                                                                <span className='benchmark-raw'>{raw.replace(/\.00+/, '')}</span>
                                                             </p>
                                                         </td>
                                                     )
