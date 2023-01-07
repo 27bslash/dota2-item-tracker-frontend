@@ -1,6 +1,5 @@
 import TooltipAttributes from "./tooltipAttributes"
 import CdMc from './cdmc';
-import colorTooltip from './colorTooltip';
 import Color from "color-thief-react";
 
 const AghanimTooltip = (props: any) => {
@@ -22,11 +21,11 @@ const AghanimTooltip = (props: any) => {
                     <div className="tooltip" id="aghanim-tooltip" style={{ background: `radial-gradient(circle at top left, ${data} 0%, #182127 160px` }}>
                         <div className="tooltip-line-one" style={{ flexDirection: "column", padding: '20px 20px 0px' }}>
                             <div className="tooltip-title">
-                                <img className="tooltip-img" alt={img} src={img}></img>
+                                <img className="tooltip-img" alt={img} src={img} width='55px'></img>
                                 <h3>{aghanimAbility.name_loc}</h3>
                             </div>
                             <div className="aghanim-wrapper">
-                                <p className="aghanim-title">{props.type} ability upgrade</p>
+                                <p style={{ fontSize: '12px' }} className="aghanim-title">{props.type} ability upgrade</p>
                             </div>
                         </div>
                         <div className="tooltip-content">
