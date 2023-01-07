@@ -10,7 +10,6 @@ const AbilityTooltip = (props: any) => {
     let id = props.ability.id
     const [open, setOpen] = useState(false)
     const [ability, setAbility] = useState<any>([])
-    const [color, setColor] = useState('')
     useEffect(() => {
         for (let hero of props.heroData) {
             if (hero[props.heroName]) {
@@ -45,7 +44,7 @@ const AbilityTooltip = (props: any) => {
                         <div className="tooltip-content">
                             {ability['desc_loc'] && ability['desc_loc'].length &&
                                 <div className="tooltip-description">
-                                    <p dangerouslySetInnerHTML={{ __html: highlight_numbers(ability['desc_loc'][0].replace(/-- /, '')) }}></p>
+                                    <p dangerouslySetInnerHTML={{ __html: highlight_numbers(ability['desc_loc']) }}></p>
                                 </div>
                             }
                             <TooltipAttributes itemProperties={ability}></TooltipAttributes>
