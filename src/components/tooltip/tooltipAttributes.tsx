@@ -8,7 +8,7 @@ const TooltipAttributes = (props: any) => {
                     const headerSymbol = x.header.replace(/[^+-]/g, '').trim()
                     const values = x.value.split(' ').filter((x) => +x.replace('%', '') > 0).join(' ')
                     return (
-                        <p key={i} className="attribute">{headerSymbol}<strong><span className="tooltip-text-highlight">{values}</span></strong> {attribName}</p>
+                        <p key={i} className="attribute">{headerSymbol} <strong><span className="tooltip-text-highlight">{values}</span></strong> {attribName}</p>
                     )
                 })
             }

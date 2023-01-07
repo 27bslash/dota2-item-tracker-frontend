@@ -8,17 +8,14 @@ const TooltipDescription = (props: any) => {
                 props.itemProperties.description &&
                 props.itemProperties.description.map((x: string, i: number) => {
                     const header = x.match(/.*(?=--)/)
-                    const text = x.match(/(?=--).*/)
+                    const text = header ? x.match(/(?=--).*/) : x.match(/.*/)
                     let highlightedText = ''
                     const active = x.match('Active:')
                     const passive = x.match('Passive:')
                     const use = x.match('Use:')
                     const toggle = x.match('Toggle:')
 
-                    if (header && text) {
-                        console.log(header[0])
-                        console.log(text[0])
-
+                    if (text) {
                         // let activeText = highlight_numbers(x.match(/.*<h1>Active:.*/g));
                         // let toggleText = highlight_numbers(x.match(/.*<h1>Toggle:.*/g));
                         // let passiveText = highlight_numbers(x.match(/.*<h1>Passive:.*/g));
@@ -70,6 +67,11 @@ const TooltipDescription = (props: any) => {
                                     <p className="description-text" dangerouslySetInnerHTML={{ __html: highlightedText }}></p>
                                 </div>
                             }
+                            {!active && !toggle && !use && !passive &&
+                                <div className="passive-description">
+                                    <p className="description-text" dangerouslySetInnerHTML={{ __html: highlightedText }}></p>
+                                </div>
+                            }
                         </div>
                     )
                 })
@@ -78,7 +80,7 @@ const TooltipDescription = (props: any) => {
         </div >
     )
 }
-const highlight_numbers = (text: any) => {
+export const highlight_numbers = (text: any) => {
     if (typeof text == "object" && text != null) text = text.join("");
     return text
         ? text
