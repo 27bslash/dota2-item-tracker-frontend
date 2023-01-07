@@ -6,7 +6,7 @@ const TalentTooltip = (props: any) => {
         <div {...props} className="tooltip" id='talent-tooltip'>
             <div className="tooltip-line-one">
                 <div className="tooltip-title">
-                    <img alt='talent-img' className="tooltip-img" src={empty_talent}></img>
+                    <img alt='talent-img' className="tooltip-img" src={empty_talent} width='55px'></img>
                     <h3>{props.talent.key}</h3>
                 </div>
             </div>
