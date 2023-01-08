@@ -45,9 +45,9 @@ const PickCounter = (props: pickProps) => {
         props.updateRole('')
     }
     return (
-        !!props.matchData.length &&
         <>
-            <div className="pick-counter" style={{ color: 'white' }}>
+            {!!props.matchData.length &&
+                <div className="pick-counter" style={{ color: 'white' }}>
                 {searching ? (
                     <SearchResultsText data={props.matchData} updateMatchData={props.updateMatchData} roleSearch={roleSearch} searchRes={searchResults}
                         heroColor={props.heroColor} name={name} reset={reset} />
@@ -59,7 +59,8 @@ const PickCounter = (props: pickProps) => {
                     </>
                 )
                 }
-            </div >
+                </div>
+            }
         </>
     )
 }
