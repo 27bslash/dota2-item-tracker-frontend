@@ -22,7 +22,6 @@ const TooltipDescription = (props: any) => {
                         // let useText = highlight_numbers(x.match(/.*<h1>Use:.*/g));
                         const preProcessedText = text[0].replace(/(\.)(?=[A-Z])/, '$1<br></br>')
                         highlightedText = highlight_numbers(preProcessedText.replace('--', '').trim())
-                        console.log(highlightedText)
                         // const activeHeader = x.replace(/<h1>(.*)<\/h1>.*/g, "$1");
                         // const activeTxt = x.replace(/.*<\/h1>(.*)/g, "$1");
                         // const activeDescText = highlight_numbers(activeTxt)

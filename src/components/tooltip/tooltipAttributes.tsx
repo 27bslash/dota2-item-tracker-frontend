@@ -1,3 +1,5 @@
+import { damageType } from "./abilityAttributes"
+
 
 const TooltipAttributes = (props: any) => {
     return (
@@ -13,26 +15,34 @@ const TooltipAttributes = (props: any) => {
                 })
             }
             {props.itemProperties.special_values &&
-                props.itemProperties.special_values.map((x: any, i: number) => {
-                    const heading = x.heading_loc
-                    const percentage = x.is_percentage
-                    let value
-                    const zeroCheck = x.values_float.join() !== '0'
-                    if (percentage) {
-                        value = x.values_float.join('%/') + '%'
-                    } else {
-                        value = x.values_float.join('/')
-                    }
-                    if (props.aghanimAbility && props.aghanimAbility['modifier'] && !x.name.includes(props.type)) {
-                    }
-                    else if (heading && zeroCheck) {
-                        return (
-                            <p className="attribute" key={i}>{heading} <strong><span className="tooltip-text-highlight">{value}</span></strong></p>
-                        )
-                    }
-                })
+                <>
+                    {props.itemProperties.special_values.map((x: any, i: number) => {
+                        const heading = x.heading_loc
+                        const percentage = x.is_percentage
+                        let value
+                        const zeroCheck = x.values_float.join() !== '0'
+                        if (percentage) {
+                            value = x.values_float.join('%/') + '%'
+                        } else {
+                            value = x.values_float.join('/')
+                        }
+                        if (heading.toLowerCase().includes('damage') && zeroCheck && heading) {
+                            const dmgtype = damageType(props.itemProperties.damage)
+                            if (dmgtype)
+                                return <AbilityAttribute heading={heading} color={dmgtype[1]} value={value} key={i} />
+                        }
+                        else if (heading && zeroCheck) {
+                            return (
+                                <AbilityAttribute heading={heading} color='#5b6573' value={value} key={i} />)
+                        }
+                    })}
+                </>
             }
-        </div>
+        </div >
     )
+}
+export const AbilityAttribute = (props: { heading: string; color: string; value: string; }) => {
+    const { heading, color, value } = props
+    return <p className="attribute" >{heading} <strong><span className="tooltip-text-highlight" style={{ color: color, textTransform: 'capitalize' }}>{value}</span></strong></p>
 }
 export default TooltipAttributes

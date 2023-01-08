@@ -5,6 +5,7 @@ import TooltipLore from './tooltipLore';
 import CdMc from './cdmc';
 import Color from 'color-thief-react';
 import { highlight_numbers } from './tooltipDescription';
+import AbilityAttributes from './abilityAttributes';
 
 const AbilityTooltip = (props: any) => {
     let id = props.ability.id
@@ -42,8 +43,9 @@ const AbilityTooltip = (props: any) => {
                             </div>
                         </div>
                         <div className="tooltip-content">
+                            <AbilityAttributes ability={ability} />
                             {ability['desc_loc'] && ability['desc_loc'].length &&
-                                <div className="tooltip-description">
+                                <div className="tooltip-description" style={{ color: '#c9d1dd' }}>
                                     <p dangerouslySetInnerHTML={{ __html: highlight_numbers(ability['desc_loc']) }}></p>
                                 </div>
                             }
