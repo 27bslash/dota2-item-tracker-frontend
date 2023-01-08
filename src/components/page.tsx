@@ -145,6 +145,8 @@ const Page = (props: pageProps) => {
         setCount(data.length)
         if (searchValue) {
             setSearchRes(searchValue)
+        } else {
+            setSearchRes(undefined)
         }
     }
     const updateRole = (role: string) => {

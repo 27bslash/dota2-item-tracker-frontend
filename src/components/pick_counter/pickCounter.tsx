@@ -20,12 +20,14 @@ interface pickProps {
 }
 const PickCounter = (props: pickProps) => {
     const name = props.nameParam
-    const [data, setData] = useState<any>(props.matchData)
     const [searching, setSearching] = useState(false)
+    const [searchResults, setSearchResults] = useState(props.searchRes)
     useEffect(() => {
         if (props.searchRes) {
-            setData(props.filteredData)
             setSearching(true)
+            setSearchResults(props.searchRes)
+        } else {
+            setSearching(false)
         }
     }, [props.filteredData])
 
@@ -38,14 +40,16 @@ const PickCounter = (props: pickProps) => {
     }
     const reset = () => {
         props.updateMatchData(props.matchData)
+        setSearchResults(undefined)
         setSearching(false)
         props.updateRole('')
     }
     return (
+        !!props.matchData.length &&
         <>
             <div className="pick-counter" style={{ color: 'white' }}>
                 {searching ? (
-                    <SearchResultsText data={props.matchData} updateMatchData={props.updateMatchData} roleSearch={roleSearch} searchRes={props.searchRes}
+                    <SearchResultsText data={props.matchData} updateMatchData={props.updateMatchData} roleSearch={roleSearch} searchRes={searchResults}
                         heroColor={props.heroColor} name={name} reset={reset} />
                 ) : (
                     props.type === 'hero' && props.heroColor &&
@@ -53,7 +57,6 @@ const PickCounter = (props: pickProps) => {
                         <TotalPickCounter type={props.type} reset={reset} color={props.heroColor} role={props.role} totalPicks={props.totalPicks} name={props.nameParam} />
                         <RoleCounter totalPicks={props.totalPicks} matchData={props.matchData} role={props.role} roleSearch={roleSearch}></RoleCounter>
                     </>
-
                 )
                 }
             </div >
