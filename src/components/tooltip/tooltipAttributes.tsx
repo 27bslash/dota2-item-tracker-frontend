@@ -5,12 +5,12 @@ const TooltipAttributes = (props: any) => {
     return (
         <div className="attributes">
             {props.itemProperties.attrib &&
-                props.itemProperties.attrib.map((x: { key: string, value: string, footer: string, header: string }, i: number) => {
+                props.itemProperties.attrib.map((x: { key: string, value: string | string[], footer: string, header: string }, i: number) => {
                     const attribName = x.footer ? x.footer : x.header.replace(/[+-]/g, m => m === '_' ? ' ' : '')
                     const headerSymbol = x.header.replace(/[^+-]/g, '').trim()
-                    const values = x.value.split(' ').filter((x) => +x.replace('%', '') > 0).join(' ')
+                    const value = typeof (x.value) === 'string' ? x.value : x.value.join('/')
                     return (
-                        <p key={i} className="attribute">{headerSymbol} <strong><span className="tooltip-text-highlight">{values}</span></strong> {attribName}</p>
+                        <p key={i} className="attribute">{headerSymbol} <strong><span className="tooltip-text-highlight">{value}</span></strong> {attribName}</p>
                     )
                 })
             }
