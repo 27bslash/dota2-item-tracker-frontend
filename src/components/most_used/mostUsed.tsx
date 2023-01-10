@@ -12,7 +12,6 @@ const MostUsed = (props: any) => {
         let data = props.matchData
         if (props.role) {
             data = props.matchData.filter((match: any) => match.role === props.role)
-            console.log(data)
         }
         const mostU = calculateMostUsed(data)
         setMostUsed(mostU)
@@ -21,6 +20,13 @@ const MostUsed = (props: any) => {
             setMax(mostU[0][1])
         }
     }, [props.matchData, props.role])
+    const handleClick = (item: any) => {
+        const itemResult = itemSearch(item, props.matchData, props.itemData)
+        if (itemResult) {
+            const itemKey = Object.keys(itemResult)[0];
+            props.updateMatchData(itemResult[itemKey]['matches'], { 'items': itemResult })
+        }
+    }
     return (
         <>
             <ArrowButton transition='collapse'>
@@ -32,7 +38,7 @@ const MostUsed = (props: any) => {
                             const perc = (value / max) * 100;
                             // console.log(x[0], perc)
                             return (
-                                <div key={i} onClick={() => props.updateMatchData(itemSearch(x[0], props.matchData, props.itemData))} className="most-used-row">
+                                <div key={i} onClick={() => handleClick(x[0])} className="most-used-row">
                                     <img className='most-used-item' alt={x} src={img}></img>
                                     <div className="bar" style={{ backgroundColor: `hsl(120,100%,25%, ${perc}%)`, width: perc * 0.8 + '%' }}>
                                         <p className='bar-value'>{x[1]}</p>
