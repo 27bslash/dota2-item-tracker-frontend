@@ -119,8 +119,7 @@ const SearchResultsText = (props: any) => {
     const handleClick = (matches: any, key: string, type: string) => {
         const newMatchArr = matches.map((m: any) => m.id)
         const filteredMatches = data.filter((match: any) => newMatchArr.includes(match.id))
-        searchRes['values'] = { [type]: { [key]: { matches: filteredMatches } } }
-        updateMatchData(filteredMatches)
+        updateMatchData(filteredMatches, searchRes)
     }
     let playerKeys: string[] = [], roleKeys: string[] = []
     if (players) {
