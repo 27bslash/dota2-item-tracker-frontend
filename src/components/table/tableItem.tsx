@@ -2,9 +2,10 @@ import { useNavigate } from "react-router";
 import ItemTooltip from "../tooltip/itemTooltip"
 import itemSearch from './table_search/item_search';
 import Tip from "../tooltip/tooltip";
-interface TItemProp {
-    matchId: number,
+type TItemProp = {
+    matchId?: number,
     type: string,
+    height?: string,
     item?: any,
     items: any,
     starter?: boolean,
@@ -16,9 +17,10 @@ interface TItemProp {
     children?: React.ReactNode;
     filteredData: object[],
     totalMatchData: object[],
-    updateMatchData: (data: any, searchResults?: any) => void
+    updateMatchData?: (data: any, searchResults?: any) => void
     role: string,
     time?: string,
+    overlay: boolean
 }
 const TableItem = (props: TItemProp) => {
     const image_host = "https://ailhumfakp.cloudimg.io/v7/"
@@ -27,17 +29,15 @@ const TableItem = (props: TItemProp) => {
     // console.log(props.item)
     const updateTable = () => {
         const data = itemSearch(props.itemKey, props.totalMatchData, props.items, props.role)
-        if (data) {
+        if (data && props.updateMatchData) {
             const itemKey = Object.keys(data)[0];
             props.updateMatchData(data[itemKey]['matches'], { 'items': data })
         }
     }
-    const navigate = useNavigate()
     const handleClick = (event: any) => {
-        const url = `https://www.opendota.com/matches/${props.matchId}`
         if (!event.ctrlKey && props.items) {
             updateTable()
-        } else if (event.ctrlKey || event.button === 1) {
+        } else if ((event.ctrlKey || event.button === 1) && props.matchId) {
             event.preventDefault()
             // return <Link to={{ 'pathname': "https://example.zendesk.com/hc/en-us/articles/123456789-Privacy-Policies" }} target="_blank" />
             const url = `https://www.opendota.com/matches/${props.matchId}`
@@ -53,11 +53,11 @@ const TableItem = (props: TItemProp) => {
         <Tip component={<ItemTooltip type={props.type} img={link} itemId={props.itemId} items={props.items} itemKey={props.itemKey} heroData={props.heroData} heroName={props.heroName} />}>
             {(props.type === 'item' || props.type === 'shard' || props.type === 'scepter') &&
                 <div className="item-cell" onClick={handleClick} >
-                    <img className="item-img" height='55px' alt={props.itemKey} src={link} loading="lazy"></img>
-                    {!props.starter &&
-                        <div className="overlay">{props.time}</div>
+                    <img className="item-img" height={props.height || '55px'} alt={props.itemKey} src={link} loading="lazy"></img>
+                    {!props.starter && props.overlay &&
+                        < div className="overlay">{props.time}</div>
                     }
-                    {props.starter &&
+                    {props.starter && props.overlay &&
                         <div className="overlay" style={{ backgroundColor: 'inherit' }}></div>
                     }
                 </div>

@@ -3,7 +3,6 @@ import AbilityTooltip from "../tooltip/abilityTooltip";
 import TalentTooltip from "../tooltip/talentTooltip";
 import TableItem from './tableItem';
 import TalentImg from "./talentImg";
-import { useState } from 'react';
 import ArrowButton from './../arrowButton';
 import Tip from "../tooltip/tooltip";
 import Draft from "./draft";
@@ -34,11 +33,7 @@ interface TitemProps {
 
 
 }
-const Test = () => {
-    return (
-        <div className="testd">test tootlp</div>
-    )
-}
+
 const humanReadableTime = (time: number | string) => {
     if (time < 0) {
         time = 0
@@ -86,13 +81,13 @@ const TableItems = (props: TitemProps) => {
                         props.row.final_items.concat(props.row.backpack).map((item: any, i: number) => {
                             const time = humanReadableTime(item['time'])
                             if (item.key === 'ultimate_scepter') {
-                                return <TableItem matchId={props.row.id} role={props.role} updateMatchData={props.updateMatchData}
+                                return <TableItem matchId={props.row.id} role={props.role} overlay={true} updateMatchData={props.updateMatchData}
                                     filteredData={props.filteredData} totalMatchData={props.totalMatchData} key={i} itemKey='ultimate_scepter' type='scepter'
                                     items={props.items} heroName={heroName}
                                     heroData={props.heroData} item={item} time={time}>
                                 </TableItem>
                             } else {
-                                return <TableItem matchId={props.row.id} time={time} role={props.role} updateMatchData={props.updateMatchData}
+                                return <TableItem matchId={props.row.id} time={time} role={props.role} overlay={true} updateMatchData={props.updateMatchData}
                                     filteredData={props.filteredData} totalMatchData={props.totalMatchData} key={i} item={item}
                                     itemId={item.id} items={props.items} itemKey={item.key} type='item'></TableItem>
                             }
@@ -102,7 +97,7 @@ const TableItems = (props: TitemProps) => {
 
                         props.row.starting_items.map((item: any, i: number) => {
                             const time = humanReadableTime(item['time'])
-                            return <TableItem matchId={props.row.id} time={time}
+                            return <TableItem matchId={props.row.id} time={time} overlay={true}
                                 role={props.role} updateMatchData={props.updateMatchData}
                                 filteredData={props.filteredData} totalMatchData={props.totalMatchData} key={i} item={item} items={props.items} itemKey={item.key} type='item' starter={true}></TableItem>
                         })
@@ -110,10 +105,10 @@ const TableItems = (props: TitemProps) => {
                     )}
                 </div>
                 {props.row.item_neutral && !props.showStarter &&
-                    <TableItem matchId={props.row.id} role={props.role} updateMatchData={props.updateMatchData} filteredData={props.filteredData} totalMatchData={props.totalMatchData} itemKey={props.row.item_neutral} items={props.items} type='neutral'></TableItem>
+                    <TableItem matchId={props.row.id} role={props.role} overlay={true} updateMatchData={props.updateMatchData} filteredData={props.filteredData} totalMatchData={props.totalMatchData} itemKey={props.row.item_neutral} items={props.items} type='neutral'></TableItem>
                 }
                 {props.row.aghanims_shard && !props.showStarter &&
-                    <TableItem matchId={props.row.id} role={props.role} time={humanReadableTime(props.row.aghanims_shard[0]['time'])} updateMatchData={props.updateMatchData} filteredData={props.filteredData} totalMatchData={props.totalMatchData} itemKey='aghanims_shard' type='shard' items={props.items} heroName={heroName}
+                    <TableItem matchId={props.row.id} role={props.role} overlay={true} time={humanReadableTime(props.row.aghanims_shard[0]['time'])} updateMatchData={props.updateMatchData} filteredData={props.filteredData} totalMatchData={props.totalMatchData} itemKey='aghanims_shard' type='shard' items={props.items} heroName={heroName}
                         heroData={props.heroData} item={props.row.aghanims_shard}>
                     </TableItem>
                     // time={humanReadableTime(props.row.aghanims_shard['time'])}
@@ -125,7 +120,7 @@ const TableItems = (props: TitemProps) => {
                         if (item['time'] < 600 && item['time'] > 0 && !consumables.includes(item['key'])) {
                             const time = humanReadableTime(item['time'])
                             return (
-                                <TableItem matchId={props.row.id} role={props.role} updateMatchData={props.updateMatchData}
+                                <TableItem matchId={props.row.id} role={props.role} overlay={true} updateMatchData={props.updateMatchData}
                                     filteredData={props.filteredData} totalMatchData={props.totalMatchData}
                                     key={i} item={item} items={props.items} time={time} itemKey={item.key} type='item'></TableItem>
                             )
@@ -139,7 +134,7 @@ const TableItems = (props: TitemProps) => {
                         const time = humanReadableTime(item['time'])
                         if (!consumables.includes(item['key'])) {
                             return (
-                                <TableItem matchId={props.row.id} role={props.role} updateMatchData={props.updateMatchData}
+                                <TableItem matchId={props.row.id} role={props.role} overlay={true} updateMatchData={props.updateMatchData}
                                     filteredData={props.filteredData} totalMatchData={props.totalMatchData} key={i} item={item} time={time} items={props.items} itemKey={item.key} type='item'></TableItem>)
                         }
                     }
@@ -159,14 +154,14 @@ const TableItems = (props: TitemProps) => {
             </div>
         </TableCell >)
 }
-const ConditionalLink = (props: { condition: any; to: string; children: any }) => {
-    return (
-        (props.condition && props.to)
-            ? <a href={props.to} target='_blank' rel='noreferrer'>{props.children}</a>
-            : <>{props.children}
-            </>
-    )
-}
+// const ConditionalLink = (props: { condition: any; to: string; children: any }) => {
+//     return (
+//         (props.condition && props.to)
+//             ? <a href={props.to} target='_blank' rel='noreferrer'>{props.children}</a>
+//             : <>{props.children}
+//             </>
+//     )
+// }
 const Abilities = (props: { abilities: any; heroData: any; imageHost: string; width: string, heroName: string, visitedTalents: any[] }) => {
     const { abilities, heroData, imageHost, width, heroName, visitedTalents } = props
     return (
@@ -181,11 +176,7 @@ const Abilities = (props: { abilities: any; heroData: any; imageHost: string; wi
                         <strong><p style={{ color: 'white', textAlign: 'center' }}>{ability['level']}</p></strong>
                         {
                             ability['type'] === 'ability' &&
-                            <Tip component={<AbilityTooltip img={link} heroData={heroData} heroName={heroName} ability={ability} />}>
-                                <div className="ability" key={i}>
-                                    <img width={imgWidth} height={imgWidth} className='table-img' alt={ability.key} data-id={ability.id} src={link}></img>
-                                </div>
-                            </Tip>
+                            <AbilityImg link={link} heroData={heroData} heroName={heroName} ability={ability} key={i} imgWidth={imgWidth} />
                         }
                         {
                             // talents have to be changed here
@@ -201,3 +192,12 @@ const Abilities = (props: { abilities: any; heroData: any; imageHost: string; wi
     )
 }
 export default TableItems
+
+export const AbilityImg = (props: { link: string, heroData: any, heroName: string, ability: any, imgWidth: number }) => {
+    const { link, heroData, heroName, ability, imgWidth } = props
+    return <Tip component={<AbilityTooltip img={link} heroData={heroData} heroName={heroName} ability={ability} />}>
+        <div className="ability">
+            <img width={imgWidth} height={imgWidth} className='table-img' alt={ability.key} data-id={ability.id} src={link}></img>
+        </div>
+    </Tip>;
+}
