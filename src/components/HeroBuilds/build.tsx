@@ -68,7 +68,7 @@ const Build = (props: BuildProps) => {
             const merged = items.map((_: any, i: number) => {
                 return { ...items[i], ...skills[i] }
             })
-            setNonProData(merged)
+            setNonProData(merged.filter((x: any) => x.abilities && x.items))
         })()
     }, [])
 
@@ -110,7 +110,7 @@ const Build = (props: BuildProps) => {
                                 const k = object[0]
                                 const buildData = filteredData[k]
                                 return (
-                                    <BuildCell buildData={buildData} k={k} heroName={props.heroName} itemData={props.itemData} heroData={props.heroData} />
+                                    <BuildCell buildData={buildData} k={k} heroName={props.heroName} itemData={props.itemData} dataLength={roles.length} heroData={props.heroData} />
                                 )
                             })}
                         </>
@@ -121,7 +121,7 @@ const Build = (props: BuildProps) => {
     )
 }
 const BuildCell = (props: any) => {
-    const [open, setOpen] = useState(false)
+    const [open, setOpen] = useState(props.dataLength === 1)
     // do the calculations here then it won't re render
     // maybe a hook for once
     return (
