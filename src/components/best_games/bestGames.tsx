@@ -81,7 +81,7 @@ const BestGames = (props: any) => {
                                     return (
                                         <tr className="best-games-row" key={i}>
                                             <td className="benchmark-cell">
-                                                <a className="player-name" href={`/player/${match['name']}`}>{match['name']}</a>
+                                                <a className="player-name" href={`/player/${match['name']}`}>{match['name'].replace(/\(smurf.*\)/,'')}</a>
                                             </td>
                                             <td className="benchmark-cell ">
                                                 <FontAwesomeIcon className='copy-match-id' icon={faCopy} color='white' onClick={() => navigator.clipboard.writeText(match.id)} />
