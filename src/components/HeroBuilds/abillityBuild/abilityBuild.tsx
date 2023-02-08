@@ -1,5 +1,5 @@
-import BigTalent from '../../../big_talent/bigTalent';
-import { AbilityImg } from '../../../table/tableItems';
+import BigTalent from '../../big_talent/bigTalent';
+import { AbilityImg } from '../../table/tableItems';
 import abilityFilter from './abilityFiltering';
 
 const AbilityBuild = (props: any) => {

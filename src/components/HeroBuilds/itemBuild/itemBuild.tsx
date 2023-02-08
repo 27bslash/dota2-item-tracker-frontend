@@ -1,6 +1,6 @@
-import filterItems from '../itemFitltering/itemFiltering';
+import filterItems from './itemFitltering/itemFiltering';
 import TableItem from './../../table/tableItem';
-import { countItems } from '../itemFitltering/itemFiltering';
+import { countItems } from './itemFitltering/itemFiltering';
 import { useMemo } from 'react';
 import { memo } from 'react';
 type Item = {
@@ -14,11 +14,11 @@ const ItemBuild = memo((props: any) => {
     }).flat().map((x: any) => {
         return Object.keys(x)
     }).flat()
-    const itemCount = useMemo(() => countItems(props.data, props.itemData), [props.data])
-    const filteredItems = itemCount.filter((match: any) => {
-        const keys = Object.keys(dataKeys)
-        return !dataKeys.includes(match[0])
-    })
+    // const itemCount = useMemo(() => countItems(props.data, props.itemData), [props.data])
+    // const filteredItems = itemCount.filter((match: any) => {
+    //     const keys = Object.keys(dataKeys)
+    //     return !dataKeys.includes(match[0])
+    // })
     // console.log(filteredItems, dataKeys.length)
     return (
         <>
@@ -36,19 +36,19 @@ const ItemBuild = memo((props: any) => {
                 })}
             </div>
             < div className="flex">
-                {filteredItems.map((key: string, i: number) => {
+                {/* {filteredItems.map((key: string, i: number) => {
                     return (
                         <TableItem type='item' height='40px' itemKey={key[0]} filteredData={data} totalMatchData={data}
                             items={props.itemData} role='' overlay={false} />
                     )
                 })
-                }
+                } */}
             </div>
         </>
     )
 })
 const ItemBuilds = (props: { arr: any; timing: any; data: any; itemData: any; }) => {
-    const { arr, timing, data, itemData } = props
+    const { arr, data, itemData } = props
     return (
         <div style={{ display: 'grid' }}>
             {arr['core'].length !== 0 &&

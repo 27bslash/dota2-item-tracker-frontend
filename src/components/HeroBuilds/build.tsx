@@ -1,5 +1,5 @@
 import ItemBuild from "./itemBuild/itemBuild"
-import AbilityBuild from './itemBuild/abillityBuild/abilityBuild';
+import AbilityBuild from './abillityBuild/abilityBuild';
 import { useEffect, useMemo, useState } from "react";
 import StartingItems from "./itemBuild/startingItems/startingItems";
 import { promises } from "stream";
@@ -13,7 +13,7 @@ type BuildProps = {
     baseApiUrl: string
     role: string,
     searchRes?: any,
-    picks: any
+    picks: { [key: string]: any }
 }
 type NonProDataType = {
     abilities: [{ id: string, img: string, key: string, level: number, type: string }],

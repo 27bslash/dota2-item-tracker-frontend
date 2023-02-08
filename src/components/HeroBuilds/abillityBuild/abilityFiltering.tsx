@@ -1,6 +1,6 @@
 const abilityFilter = (data: any, ab = '') => {
     const abilities = []
-    const aCount: any = {}
+    const aCount: { [key: string]: number } = {}
     for (let match of data) {
         if ('abilities' in match) {
             const abilityArray = match['abilities'].filter((ability: any) => ability.type !== 'talent').map((x: any) => x.img).slice(0, 10)
