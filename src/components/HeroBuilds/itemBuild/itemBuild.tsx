@@ -1,6 +1,6 @@
-import filterItems from './itemFiltering';
+import filterItems from '../itemFitltering/itemFiltering';
 import TableItem from './../../table/tableItem';
-import { countItems } from './itemFiltering';
+import { countItems } from '../itemFitltering/itemFiltering';
 import { useMemo } from 'react';
 import { memo } from 'react';
 type Item = {
