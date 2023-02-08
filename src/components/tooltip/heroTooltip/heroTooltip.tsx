@@ -7,7 +7,6 @@ interface HeroTooltipProps {
     children: React.ReactNode;
     heroName: string,
     img: string,
-    heroColor: string
     baseApiUrl: string,
     heroData: any
 
