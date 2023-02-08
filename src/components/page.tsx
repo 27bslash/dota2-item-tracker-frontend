@@ -123,7 +123,7 @@ const Page = (props: pageProps) => {
     useEffect(() => {
         (async () => {
             if (props.type === 'hero') {
-                const hc = await fetch(`${baseApiUrl}files/colors`)
+                const hc = await fetch(`${props.baseApiUrl}files/colors`)
                 const json = await hc.json()
                 for (let i of json['colors']) {
                     if (i['hero'] === nameParam) {
@@ -133,7 +133,6 @@ const Page = (props: pageProps) => {
             }
         })()
     }, [])
-    const f = () => {
 
     const updateMatchData = (data: object[], searchValue?: any, type?: string[],) => {
         // setMatchData(data) ]
@@ -235,4 +234,4 @@ const StarterToggle = (props: any) => {
         </div>
     )
 }
-export default Page;
+export default Page
