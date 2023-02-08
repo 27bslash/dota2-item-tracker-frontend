@@ -8,7 +8,7 @@ const HeroAghs = (props: any) => {
         <div className="hero-aghanim-upgrades">
             <div className="hero-aghanim-wrapper" id={`hero-${props.type}`}>
                 <div className="tooltip-aghanim-img" style={{ backgroundImage: `url(${link})`, position: 'relative' }}>
-                    <img className={`subicon`} id={`${props.type}-subicon`}></img>
+                    <img className={`subicon`} id={`${props.type}-subicon`} alt=''></img>
                 </div>
                 <p style={{ fontSize: '13px' }}>
                     {aghanimDescription.split(/\s|,/).map((x: any, i: number) => {
