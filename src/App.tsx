@@ -40,7 +40,7 @@ function App() {
                     {/* hero pages */}
                 </Route>
                 <Route path='/player/:name' element={
-                    <Page heroList={heroList} baseApiUrl={baseApiUrl} type='player' />}>
+                    <Page heroList={heroList} playerList={playerList}baseApiUrl={baseApiUrl} type='player' />}>
                     {/* player pages */}
                 </Route>
                 <Route path='/chappie'>
