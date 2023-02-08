@@ -11,14 +11,22 @@ const AbilityTooltip = (props: any) => {
     let id = props.ability.id
     const [open, setOpen] = useState(false)
     const [ability, setAbility] = useState<any>([])
+    console.log(props.ability)
     useEffect(() => {
+        // console.log(props.heroData, props.heroName)
         for (let hero of props.heroData) {
-            if (hero[props.heroName]) {
+            if (hero[props.heroName] && id) {
+                console.log(hero, props.ability)
                 setAbility(hero[props.heroName].abilities[+id])
+            } else {
+                const abilities = hero[props.heroName].abilities
+                const k = Object.keys(props.ability)[0]
+                const a = Object.entries(abilities).find((x: any) => x[1].name === k)
+                if (a)
+                    setAbility(a[1])
             }
         }
     }, [open])
-
     // const fac = new FastAverageColor()
     // const options = { width: '55px', height: '55px' }
     let image = new Image(55, 55)
@@ -27,10 +35,6 @@ const AbilityTooltip = (props: any) => {
     // const averageColor = fac.getColor(image)
     // console.log(averageColor)
 
-    useEffect(() => {
-
-        // setColor(colorTooltip(props.abilityColors['colors'], ability['name']))
-    }, [ability, open])
     return (
         <Color src={props.img} crossOrigin="anonymous" format="hex">
             {({ data, loading, error }) => {

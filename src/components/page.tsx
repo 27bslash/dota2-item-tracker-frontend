@@ -11,6 +11,7 @@ import MostUsed from './most_used/mostUsed';
 import BigTalent from './big_talent/bigTalent';
 import { useSearchParams } from 'react-router-dom';
 import PickCounter from './pick_counter/pickCounter';
+import Build from './HeroBuilds/build';
 
 //  TODO
 //  add chappie section
@@ -36,7 +37,7 @@ interface SearchRes {
     player: {}
 }
 const Page = (props: pageProps) => {
-    const [itemData, setItemData] = useState()
+    const [itemData, setItemData] = useState<any>()
     const [showStarter, setShowStarter] = useState(false)
     const [filteredData, setFilteredData] = useState<any[]>([])
     const [totalMatchData, setTotalMatchData] = useState<any[]>([])
@@ -52,11 +53,9 @@ const Page = (props: pageProps) => {
     const [searchRes, setSearchRes] = useState<SearchRes>()
     const [visited, setVisited] = useState<any>(new Set())
     const [total, setTotal] = useState<any>([])
-
     const updateStarter = () => {
         setShowStarter(prev => !prev)
     }
-    const baseApiUrl = 'https://dota2-item-tracker.onrender.com/'
     const getAllMatches = async () => {
         const data = await fetch(`${props.baseApiUrl}${props.type}/${nameParam}/react-test`)
         let json = await data.json()
@@ -136,7 +135,6 @@ const Page = (props: pageProps) => {
     }, [])
     const f = () => {
 
-    }
     const updateMatchData = (data: object[], searchValue?: any, type?: string[],) => {
         // setMatchData(data) ]
         if (!data.length) return
@@ -151,53 +149,52 @@ const Page = (props: pageProps) => {
     }
     const updateRole = (role: string) => {
         setRole(role)
+        // setFilteredData([...filteredData].filter((x) => x.role === role))
     }
     return (
         <div className="page" >
             <Nav baseApiUrl={props.baseApiUrl} playerList={props.playerList} heroList={props.heroList} />
-            {(!Boolean(filteredData.length)) &&
-                <CircularProgress sx={{ width: '100px', 'position': 'absolute' }} />
-            }
-            {!!filteredData.length &&
+            <>
+                <div className="flex" style={{}}>
+                    {props.type === 'hero' &&
+                        <>
+                            <div className="hero-img-wrapper">
+                                <HeroImg baseApiUrl={props.baseApiUrl} heroData={heroData} heroName={nameParam} />
+                                <MostUsed baseApiUrl={props.baseApiUrl} matchData={totalMatchData} role={Role} updateMatchData={updateMatchData} itemData={itemData}></MostUsed>
+                            </div>
+                            <div className="best-games-container" style={{ 'width': '1200px', 'height': '140px' }}>
+                                <BestGames matchData={filteredData} totalMatchData={totalMatchData}></BestGames>
+                            </div>
+                            {heroData.length && !!filteredData.length && props.type === 'hero' &&
+                                < BigTalent matchData={filteredData} heroData={heroData} heroName={nameParam} width='100px' margin='2% 0px 0px 230px' />
+                            }
+                        </>
+                    }
+                </div>
+                {!!heroData.length && itemData && nameParam &&
+                    <Build baseApiUrl={props.baseApiUrl} role={Role} picks={totalPicks} searchRes={searchRes} data={filteredData} heroData={heroData} heroName={nameParam} itemData={itemData} />
+                }
                 <>
-                    <div className="flex" style={{}}>
-                        {props.type === 'hero' &&
-                            <>
-                                <div className="hero-img-wrapper">
-                                    <HeroImg baseApiUrl={props.baseApiUrl} heroData={heroData} heroName={nameParam} heroColor={heroColor} />
-                                    <MostUsed baseApiUrl={props.baseApiUrl} matchData={totalMatchData} role={Role} updateMatchData={updateMatchData} itemData={itemData}></MostUsed>
-                                </div>
-                                <div className="best-games-container" style={{ 'width': '1200px', 'height': '140px' }}>
-                                    <BestGames matchData={filteredData} totalMatchData={totalMatchData}></BestGames>
-                                </div>
-                                {heroData.length && !!filteredData.length &&
-                                    <BigTalent matchData={filteredData} heroData={heroData} heroName={nameParam} />
-                                }
-                            </>
-                        }
+                    <div className="flex" style={{ 'width': '100%' }}>
+                        <PickCounter type={props.type} nameParam={nameParam} role={Role} heroColor={heroColor} matchData={totalMatchData} searchRes={searchRes}
+                            count={count} filteredData={filteredData} totalPicks={totalPicks} updateRole={updateRole} updateMatchData={updateMatchData} />
                     </div>
-                    <>
-                        <div className="flex" style={{ 'width': '100%' }}>
-                            <PickCounter type={props.type} nameParam={nameParam} role={Role} heroColor={heroColor} matchData={totalMatchData} searchRes={searchRes}
-                                count={count} filteredData={filteredData} totalPicks={totalPicks} updateRole={updateRole} updateMatchData={updateMatchData} />
-                        </div>
-                        <div className="flex">
-                            <StarterToggle updateStarter={updateStarter} />
-                            <TableSearch type={props.type} disabled={filteredData.length === 0 || !itemData || !props.heroList}
-                                heroName={nameParam} heroList={props.heroList} playerList={props.playerList}
-                                itemData={itemData} totalMatchData={filteredData}
-                                updateMatchData={updateMatchData} />
-                        </div>
-                        <CustomTable
-                            baseApiUrl={props.baseApiUrl}
-                            type={props.type} role={Role}
-                            filteredData={filteredData} heroData={heroData} count={count} updateMatchData={updateMatchData}
-                            totalMatchData={totalMatchData} nameParam={nameParam} heroList={props.heroList} itemData={itemData}
-                            showStarter={showStarter} />
-                    </>
-
+                    <div className="flex">
+                        <StarterToggle updateStarter={updateStarter} />
+                        <TableSearch type={props.type} disabled={filteredData.length === 0 || !itemData || !props.heroList}
+                            heroName={nameParam} heroList={props.heroList} playerList={props.playerList}
+                            itemData={itemData} totalMatchData={filteredData}
+                            updateMatchData={updateMatchData} />
+                    </div>
+                    <CustomTable
+                        baseApiUrl={props.baseApiUrl}
+                        type={props.type} role={Role}
+                        filteredData={filteredData} heroData={heroData} count={count} updateMatchData={updateMatchData}
+                        totalMatchData={totalMatchData} nameParam={nameParam} heroList={props.heroList} itemData={itemData}
+                        showStarter={showStarter} />
                 </>
-            }
+
+            </>
         </div>
     )
 }
