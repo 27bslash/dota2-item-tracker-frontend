@@ -2,9 +2,11 @@ import ItemBuild from "./itemBuild/itemBuild"
 import AbilityBuild from './abillityBuild/abilityBuild';
 import { useEffect, useMemo, useState } from "react";
 import StartingItems from "./itemBuild/startingItems/startingItems";
-import { promises } from "stream";
 import { Button } from "@mui/material";
-import { grey, purple } from "@mui/material/colors";
+import { grey } from "@mui/material/colors";
+import filterItems from "./itemBuild/itemFitltering/itemFiltering";
+import abilityFilter from "./abillityBuild/abilityFiltering";
+import countStartingItems from "./itemBuild/startingItems/startingItemsFilter";
 type BuildProps = {
     data?: any,
     itemData: any,
@@ -50,13 +52,11 @@ const Build = (props: BuildProps) => {
     }
     const roles = useMemo(() => calc_common_roles(), [props.picks])
     useEffect(() => {
-        console.log('re render')
     }, [props.picks, proData, data, filteredData, props.role, roles, nonProData])
     useEffect(() => {
         if (proData) {
             setData(props.data)
         } else {
-            console.log('render ',)
             setData(nonProData)
         }
     }, [proData, nonProData, props.data])
@@ -86,7 +86,6 @@ const Build = (props: BuildProps) => {
             }
             setFilteredData(tempObject)
         }
-        console.log(props.role, data?.length, filteredData)
     }, [props.role, data])
     return (
         <>
@@ -110,7 +109,7 @@ const Build = (props: BuildProps) => {
                                 const k = object[0]
                                 const buildData = filteredData[k]
                                 return (
-                                    <BuildCell buildData={buildData} k={k} heroName={props.heroName} itemData={props.itemData} dataLength={roles.length} heroData={props.heroData} />
+                                    <BuildCell key={index} buildData={buildData} k={k} heroName={props.heroName} itemData={props.itemData} dataLength={roles.length} heroData={props.heroData} />
                                 )
                             })}
                         </>
@@ -122,16 +121,18 @@ const Build = (props: BuildProps) => {
 }
 const BuildCell = (props: any) => {
     const [open, setOpen] = useState(props.dataLength === 1)
-    // do the calculations here then it won't re render
     // maybe a hook for once
+    const itemBuild = useMemo(() => filterItems(props.buildData, props.itemData), [props.data])
+    const abilityBuilds = abilityFilter(props.buildData)
+    const startingItemBuilds = countStartingItems(props.buildData)
     return (
         <div className="builds" >
             <h1 onClick={() => setOpen(prev => !prev)}>{props.k}</h1>
             {open &&
                 <div className="buildData">
-                    <StartingItems data={props.buildData} itemData={props.itemData} />
-                    <ItemBuild data={props.buildData} itemData={props.itemData} />
-                    <AbilityBuild data={props.buildData} heroData={props.heroData} heroName={props.heroName} />
+                    <StartingItems data={startingItemBuilds} itemData={props.itemData} />
+                    <ItemBuild data={itemBuild} itemData={props.itemData} />
+                    <AbilityBuild data={props.buildData} abilityBuild={abilityBuilds} heroData={props.heroData} heroName={props.heroName} />
                 </div>
             }
         </div>

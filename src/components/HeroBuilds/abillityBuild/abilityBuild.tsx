@@ -1,9 +1,13 @@
 import BigTalent from '../../big_talent/bigTalent';
 import { AbilityImg } from '../../table/tableItems';
-import abilityFilter from './abilityFiltering';
 
-const AbilityBuild = (props: any) => {
-    const abilities = abilityFilter(props.data)
+type AbilityBuildProps = {
+    heroName: string,
+    data: any,
+    abilityBuild: { [key: string]: any }[][]
+    heroData: any
+}
+const AbilityBuild = (props: AbilityBuildProps) => {
     const imageHost = "https://ailhumfakp.cloudimg.io/v7/"
     // const secAbilities = abilityFilter(props.data, fistAB)
     // console.log(abilities)
@@ -19,7 +23,7 @@ const AbilityBuild = (props: any) => {
                 <BigTalent matchData={props.data} heroName={props.heroName} heroData={props.heroData} width='65px' margin='-5px 0px 0px 0px' />
             </div> */}
             <div className="">
-                {abilities[0].map((abilityArr, i) => {
+                {props.abilityBuild[0].map((abilityArr, i) => {
                     return (
                         <div className="flex" key={i}>
                             {abilityArr[0].split('__').map((ability: string, i: number) => {

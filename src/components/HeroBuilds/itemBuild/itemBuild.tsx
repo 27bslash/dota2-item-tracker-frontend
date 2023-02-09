@@ -1,19 +1,16 @@
-import filterItems from './itemFitltering/itemFiltering';
 import TableItem from './../../table/tableItem';
-import { countItems } from './itemFitltering/itemFiltering';
-import { useMemo } from 'react';
-import { memo } from 'react';
 type Item = {
     [k: string]: { value: number, adjustedValue: number, time: number, disassemble?: boolean, dissassembledComponents?: string[] }
 }
-const ItemBuild = memo((props: any) => {
-    const data = useMemo(() => filterItems(props.data, props.itemData), [props.data])
-    const dataKeys = data.flat().map((itemArr: any) => {
-        const k = Object.keys(itemArr)[0]
-        return itemArr[k]
-    }).flat().map((x: any) => {
-        return Object.keys(x)
-    }).flat()
+const ItemBuild = (props: any) => {
+    // const data = useMemo(() => filterItems(props.data, props.itemData), [props.data])
+    // console.log(data)
+    // const dataKeys = data.flat().map((itemArr: any) => {
+    //     const k = Object.keys(itemArr)[0]
+    //     return itemArr[k]
+    // }).flat().map((x: any) => {
+    //     return Object.keys(x)
+    // }).flat()
     // const itemCount = useMemo(() => countItems(props.data, props.itemData), [props.data])
     // const filteredItems = itemCount.filter((match: any) => {
     //     const keys = Object.keys(dataKeys)
@@ -23,7 +20,7 @@ const ItemBuild = memo((props: any) => {
     return (
         <>
             <div className="item-build flex" style={{ flexWrap: 'wrap' }}>
-                {data.map((arr: any, i: number) => {
+                {props.data.map((arr: any, i: number) => {
                     let timing = i === 1 ? 'mid' : (i === 2 ? 'late' : 'early')
                     return (
                         <div className="item-cell-wrapper" key={i}>
@@ -46,7 +43,7 @@ const ItemBuild = memo((props: any) => {
             </div>
         </>
     )
-})
+}
 const ItemBuilds = (props: { arr: any; timing: any; data: any; itemData: any; }) => {
     const { arr, data, itemData } = props
     return (

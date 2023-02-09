@@ -5,12 +5,11 @@ const abilityFilter = (data: any, ab = '') => {
         if ('abilities' in match) {
             const abilityArray = match['abilities'].filter((ability: any) => ability.type !== 'talent').map((x: any) => x.img).slice(0, 10)
             abilities.push(abilityArray)
+            // console.log(match)
+            const key = match['abilities'].filter((ability: any) => ability.type !== 'talent').slice(0, 10).map((x: { img: string }) => x.img).join('__')
+            aCount[key] = (aCount[key] + 1) || 1
         } else {
-            console.log(match)
         }
-        const key = match['abilities'].filter((ability: any) => ability.type !== 'talent').slice(0, 10).map((x: { img: string }) => x.img).join('__')
-        // console.log('key', key)
-        aCount[key] = (aCount[key] + 1) || 1
     }
     const res = []
     for (let i = 0; i < 10; i++) {

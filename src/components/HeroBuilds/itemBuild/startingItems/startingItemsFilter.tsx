@@ -6,7 +6,7 @@ const countStartingItems = (data: any) => {
     ]
 
     let itemCount: any = {}
-    const comboCount: any = {}
+    const comboCount: { [key: string]: number } = {}
     for (let match of data) {
         const key = match['starting_items'].filter((x: { key: string }) => {
             if (!wards.includes(x['key']))
