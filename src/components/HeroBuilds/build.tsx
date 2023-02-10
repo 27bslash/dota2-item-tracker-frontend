@@ -1,12 +1,14 @@
 import ItemBuild from "./itemBuild/itemBuild"
 import AbilityBuild from './abillityBuild/abilityBuild';
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useReducer, useState } from "react";
 import StartingItems from "./itemBuild/startingItems/startingItems";
 import { Button } from "@mui/material";
 import { grey } from "@mui/material/colors";
 import filterItems from "./itemBuild/itemFitltering/itemFiltering";
 import abilityFilter from "./abillityBuild/abilityFiltering";
 import countStartingItems from "./itemBuild/startingItems/startingItemsFilter";
+import { bulkRequest, fetchData } from "../fetchData";
+
 type BuildProps = {
     data?: any,
     itemData: any,
@@ -26,17 +28,20 @@ type NonProDataType = {
     starting_items: [{ id: string, key: string, time: number }],
     role?: string
 }
-async function fetchData(url: string) {
-    const response = await fetch(url);
-    return await response.json();
-}
 const Build = (props: BuildProps) => {
     const [filteredData, setFilteredData] = useState<{ [k: string]: NonProDataType[] }>()
     const [data, setData] = useState<NonProDataType[]>()
     const [nonProData, setNonProData] = useState<NonProDataType[]>()
     const [proData, setProData] = useState(false)
     const [open, setOpen] = useState(false)
-
+    const [build, setBuild] = useReducer((states: any, updates: any) => {
+        switch (updates.type) {
+            case 'clear':
+                return ({})
+            default:
+                return ({ ...states, ...updates })
+        }
+    }, {})
     // switch to toggle only known pro accounts
     const calc_common_roles = () => {
         const picks = props.picks.picks
@@ -62,12 +67,10 @@ const Build = (props: BuildProps) => {
     }, [proData, nonProData, props.data])
     useEffect(() => {
         (async () => {
-            const itemUrl = `${props.baseApiUrl}hero/${props.heroName}/item_build`
-            const skillUrl = `${props.baseApiUrl}hero/${props.heroName}/skill_build`
-            const [items, skills] = await Promise.all([fetchData(itemUrl), fetchData(skillUrl)])
-            const merged = items.map((_: any, i: number) => {
-                return { ...items[i], ...skills[i] }
-            })
+            const countDocsUrl = `${props.baseApiUrl}hero/${props.heroName}/count_docs?collection=non-pro`
+            const docLength = await fetchData(countDocsUrl)
+            const data = await bulkRequest(`${props.baseApiUrl}hero/${props.heroName}/item_build`, docLength)
+            const merged = data.flat()
             setNonProData(merged.filter((x: any) => x.abilities && x.items))
         })()
     }, [])
@@ -87,6 +90,17 @@ const Build = (props: BuildProps) => {
             setFilteredData(tempObject)
         }
     }, [props.role, data])
+    useEffect(() => {
+        setBuild({ type: 'clear' })
+        for (let key in filteredData) {
+            const buildData = filteredData[key]
+            const itemBuild = filterItems(buildData, props.itemData)
+            const abilityBuilds = abilityFilter(buildData)
+            const startingItemBuilds = countStartingItems(buildData)
+            const res = [itemBuild, abilityBuilds, startingItemBuilds]
+            setBuild({ [key]: res })
+        }
+    }, [filteredData])
     return (
         <>
             {filteredData &&
@@ -105,11 +119,11 @@ const Build = (props: BuildProps) => {
                                     backgroundColor: grey[700],
                                 }
                             }} onClick={() => setProData((prevstate) => !prevstate)} variant='contained'>{!proData ? ' Pro data' : 'non pro'}</Button>
-                            {Object.entries(filteredData).map((object: any, index: number) => {
+                            {Object.entries(build).map((object: any, index: number) => {
                                 const k = object[0]
-                                const buildData = filteredData[k]
+                                const buildData = build[k]
                                 return (
-                                    <BuildCell key={index} buildData={buildData} k={k} heroName={props.heroName} itemData={props.itemData} dataLength={roles.length} heroData={props.heroData} />
+                                    <BuildCell key={index} data={filteredData[k]} buildData={buildData} k={k} heroName={props.heroName} itemData={props.itemData} dataLength={roles.length} heroData={props.heroData} />
                                 )
                             })}
                         </>
@@ -122,17 +136,14 @@ const Build = (props: BuildProps) => {
 const BuildCell = (props: any) => {
     const [open, setOpen] = useState(props.dataLength === 1)
     // maybe a hook for once
-    const itemBuild = useMemo(() => filterItems(props.buildData, props.itemData), [props.data])
-    const abilityBuilds = abilityFilter(props.buildData)
-    const startingItemBuilds = countStartingItems(props.buildData)
     return (
         <div className="builds" >
             <h1 onClick={() => setOpen(prev => !prev)}>{props.k}</h1>
             {open &&
                 <div className="buildData">
-                    <StartingItems data={startingItemBuilds} itemData={props.itemData} />
-                    <ItemBuild data={itemBuild} itemData={props.itemData} />
-                    <AbilityBuild data={props.buildData} abilityBuild={abilityBuilds} heroData={props.heroData} heroName={props.heroName} />
+                    <StartingItems data={props.buildData[2]} itemData={props.itemData} />
+                    <ItemBuild data={props.buildData[0]} itemData={props.itemData} />
+                    <AbilityBuild data={props.data} abilityBuild={props.buildData[1]} heroData={props.heroData} heroName={props.heroName} />
                 </div>
             }
         </div>

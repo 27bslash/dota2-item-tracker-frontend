@@ -14,6 +14,7 @@ import PickCounter from './pick_counter/pickCounter';
 import Build from './HeroBuilds/build';
 import Items from './types/Item';
 import { baseApiUrlContext } from '../App';
+import { fetchData, bulkRequest } from './fetchData';
 
 //  TODO
 //  add chappie section
@@ -28,7 +29,6 @@ import { baseApiUrlContext } from '../App';
 
 interface pageProps {
     type: string,
-    baseApiUrl: string,
     heroList: any,
     playerList?: any
 }
@@ -66,15 +66,16 @@ const Page = (props: pageProps) => {
             if (role) {
                 url = `${baseApiUrl}${props.type}/${nameParam}/react-test?role=${role}&skip=0&length=10`
             }
-            const data = await fetch(url)
-            let json = await data.json()
-            setFilteredData(json['data'])
-            setTotalPicks(json['picks'])
-            const d = await getAllMatches()
-            setTotalMatchData(d)
-            const itemData = await fetch(`${props.baseApiUrl}files/items`)
-            const itemJson = await itemData.json()
-            setItemData(itemJson)
+            const countDocsUrl = `${baseApiUrl}hero/${nameParam}/count_docs?collection=heroes`
+            const matches = await fetchData(url)
+            setFilteredData(matches['data'])
+            const docLength = await fetchData(countDocsUrl)
+            setTotalPicks(matches['picks'])
+            const allMatches = await bulkRequest(`${baseApiUrl}${props.type}/${nameParam}/react-test`, docLength)
+            const merged = allMatches.map((x) => x['data']).flat()
+            setTotalMatchData(merged)
+            const itemData = await fetchData(`${baseApiUrl}files/items`)
+            setItemData(itemData)
         })()
     }, [])
     useEffect(() => {
