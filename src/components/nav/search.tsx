@@ -11,7 +11,6 @@ interface searchProps {
     heroList: heroList[],
     playerList: []
     highlightHero?: (data: number) => void
-    baseApiUrl: string,
 }
 const NavSearch = (props: searchProps) => {
     const [value, setValue] = useState('')

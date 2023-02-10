@@ -1,11 +1,9 @@
-import { faCopy, fas } from "@fortawesome/free-solid-svg-icons"
-import { TableBody, TableRow, TableCell, Typography } from "@mui/material"
+import { faCopy } from "@fortawesome/free-solid-svg-icons"
+import { TableBody, TableRow, TableCell } from "@mui/material"
 import TimeAgo from "javascript-time-ago"
-import { useEffect, useState } from "react"
 import TableItems from "./tableItems"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import stringSearch from './table_search/string_search';
-import itemSearch from "./table_search/item_search"
 interface BodyProps {
     nameParam: string,
     baseApiUrl: string,
@@ -26,12 +24,10 @@ const CustomTableBody = (props: BodyProps) => {
     const handleClick = (event: any) => {
         const PlayerName = event.target.innerText
         if (!event.ctrlKey) {
-            // updateMatchData()
             props.updateMatchData(stringSearch(props.data, 'name', PlayerName))
         } else {
-            // return <Link to={{ 'pathname': "https://example.zendesk.com/hc/en-us/articles/123456789-Privacy-Policies" }} target="_blank" />
             const url = `/player/${PlayerName}`
-            const w = window.open(url)
+            window.open(url)
         }
     }
     return (

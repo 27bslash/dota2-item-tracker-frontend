@@ -1,7 +1,6 @@
 import { TextField } from '@mui/material';
 import { SetStateAction, useState } from 'react';
-import DraftSearch from './draft_search';
-import itemSearch from './item_search';
+import Items from '../../types/Item';
 import search from './search';
 interface TableSearchProps {
     heroName: string,
@@ -9,7 +8,7 @@ interface TableSearchProps {
     totalMatchData: object[],
     heroList: [{ id: number, name: string }],
     playerList: any[]
-    itemData: any,
+    itemData: Items | undefined,
     type: string,
     disabled: boolean
 }
