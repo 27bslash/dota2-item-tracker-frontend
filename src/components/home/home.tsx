@@ -1,11 +1,12 @@
 import { Grid, Typography } from "@mui/material"
 import heroSwitcher from "../heroSwitcher"
-import { useEffect } from 'react';
+import { useEffect, useContext } from 'react';
 import { useState } from 'react';
 import { Link } from "react-router-dom";
 import Nav from "../nav/nav";
 import colourWins from '../colourWins';
 import ControlPanel from "./control";
+import { baseApiUrlContext } from "../../App";
 
 const Home = (props: any) => {
     const [winStats, setWinStats] = useState<any[]>()
@@ -14,11 +15,11 @@ const Home = (props: any) => {
     const [searching, setSearching] = useState(false)
     const [highlight, setHighlight] = useState<number>()
     const [sort, setSearchVal] = useState('')
-    
+    const baseApiUrl = useContext(baseApiUrlContext)
     useEffect(() => {
         document.title = 'dota2 item tracker';
         (async () => {
-            const req = await fetch(`${props.baseApiUrl}/files/win-stats`)
+            const req = await fetch(`${baseApiUrl}/files/win-stats`)
             let json = await req.json()
             json = json.sort((a: any, b: any) => a['hero'].localeCompare(b['hero']))
             setWinStats(json)
@@ -69,7 +70,7 @@ const Home = (props: any) => {
     }
     return (
         <div className="home">
-            <Nav baseApiUrl={props.baseApiUrl} filterHeroes={filterHeroes} heroList={props.heroList} playerList={props.playerList} highlightHero={highlightHero}></Nav>
+            <Nav filterHeroes={filterHeroes} heroList={props.heroList} playerList={props.playerList} highlightHero={highlightHero}></Nav>
             {filtered &&
                 <ControlPanel sortHeroes={sortHeroes} winStats={winStats}></ControlPanel>
             }
@@ -101,7 +102,7 @@ const GridContainer = (props: any) => {
         props.className.includes('right') ?
             (
                 <Grid className={`hero-grid ${props.className}`} container spacing={0} md={4} sx={{ width: props.width + '!important' }}>
-                    {props.children}
+                    {props.children};
                 </Grid>
             ) : (
                 <Grid className={`hero-grid ${props.className}`} container spacing={3} md='auto' sx={{ width: props.width }}>

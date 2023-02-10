@@ -2,8 +2,8 @@ import HeroImg from './heroImg';
 import Nav from './nav/nav';
 import CustomTable from './table/table';
 import BestGames from './best_games/bestGames';
-import { useEffect, useState } from 'react';
-import { CircularProgress, FormControlLabel, styled, Switch, SwitchProps } from '@mui/material';
+import { useEffect, useState, useContext } from 'react';
+import { FormControlLabel, styled, Switch, SwitchProps } from '@mui/material';
 import TableSearch from './table/table_search/table_search';
 import { useParams } from 'react-router';
 import heroSwitcher from './heroSwitcher';
@@ -12,6 +12,8 @@ import BigTalent from './big_talent/bigTalent';
 import { useSearchParams } from 'react-router-dom';
 import PickCounter from './pick_counter/pickCounter';
 import Build from './HeroBuilds/build';
+import Items from './types/Item';
+import { baseApiUrlContext } from '../App';
 
 //  TODO
 //  add chappie section
@@ -37,7 +39,7 @@ interface SearchRes {
     player: {}
 }
 const Page = (props: pageProps) => {
-    const [itemData, setItemData] = useState<any>()
+    const [itemData, setItemData] = useState<Items>()
     const [showStarter, setShowStarter] = useState(false)
     const [filteredData, setFilteredData] = useState<any[]>([])
     const [totalMatchData, setTotalMatchData] = useState<any[]>([])
@@ -56,18 +58,13 @@ const Page = (props: pageProps) => {
     const updateStarter = () => {
         setShowStarter(prev => !prev)
     }
-    const getAllMatches = async () => {
-        const data = await fetch(`${props.baseApiUrl}${props.type}/${nameParam}/react-test`)
-        let json = await data.json()
-        return json['data']
-    }
-
+    const baseApiUrl = useContext(baseApiUrlContext)
     useEffect(() => {
         document.title = nameParam;
         (async () => {
-            let url = `${props.baseApiUrl}${props.type}/${nameParam}/react-test?skip=0&length=10`
+            let url = `${baseApiUrl}${props.type}/${nameParam}/react-test?skip=0&length=10`
             if (role) {
-                url = `${props.baseApiUrl}${props.type}/${nameParam}/react-test?role=${role}&skip=0&length=10`
+                url = `${baseApiUrl}${props.type}/${nameParam}/react-test?role=${role}&skip=0&length=10`
             }
             const data = await fetch(url)
             let json = await data.json()
@@ -95,7 +92,7 @@ const Page = (props: pageProps) => {
             const sett: Set<string> = new Set()
 
             if (props.type !== 'player') {
-                const hData = await fetch(`${props.baseApiUrl}files/hero-data/${nameParam}`)
+                const hData = await fetch(`${baseApiUrl}files/hero-data/${nameParam}`)
                 const hJson = await hData.json()
                 setHeroData([{ [nameParam]: hJson }])
             } else {
@@ -108,7 +105,7 @@ const Page = (props: pageProps) => {
         )()
     }, [totalMatchData])
     async function getHeroData(hero: string) {
-        const hData = await fetch(`${props.baseApiUrl}files/hero-data/${hero}`)
+        const hData = await fetch(`${baseApiUrl}files/hero-data/${hero}`)
         const hJson = await hData.json()
         setHeroData((prev: any) => [...prev, { [hero]: hJson }])
     }
@@ -123,7 +120,7 @@ const Page = (props: pageProps) => {
     useEffect(() => {
         (async () => {
             if (props.type === 'hero') {
-                const hc = await fetch(`${props.baseApiUrl}files/colors`)
+                const hc = await fetch(`${baseApiUrl}files/colors`)
                 const json = await hc.json()
                 for (let i of json['colors']) {
                     if (i['hero'] === nameParam) {
@@ -152,14 +149,14 @@ const Page = (props: pageProps) => {
     }
     return (
         <div className="page" >
-            <Nav baseApiUrl={props.baseApiUrl} playerList={props.playerList} heroList={props.heroList} />
+            <Nav playerList={props.playerList} heroList={props.heroList} />
             <>
                 <div className="flex" style={{}}>
                     {props.type === 'hero' &&
                         <>
                             <div className="hero-img-wrapper">
-                                <HeroImg baseApiUrl={props.baseApiUrl} heroData={heroData} heroName={nameParam} />
-                                <MostUsed baseApiUrl={props.baseApiUrl} matchData={totalMatchData} role={Role} updateMatchData={updateMatchData} itemData={itemData}></MostUsed>
+                                <HeroImg baseApiUrl={baseApiUrl} heroData={heroData} heroName={nameParam} />
+                                <MostUsed baseApiUrl={baseApiUrl} matchData={totalMatchData} role={Role} updateMatchData={updateMatchData} itemData={itemData}></MostUsed>
                             </div>
                             <div className="best-games-container" style={{ 'width': '1200px', 'height': '140px' }}>
                                 <BestGames matchData={filteredData} totalMatchData={totalMatchData}></BestGames>
@@ -171,7 +168,7 @@ const Page = (props: pageProps) => {
                     }
                 </div>
                 {!!heroData.length && itemData && nameParam &&
-                    <Build baseApiUrl={props.baseApiUrl} role={Role} picks={totalPicks} searchRes={searchRes} data={filteredData} heroData={heroData} heroName={nameParam} itemData={itemData} />
+                    <Build baseApiUrl={baseApiUrl} role={Role} picks={totalPicks} searchRes={searchRes} data={filteredData} heroData={heroData} heroName={nameParam} itemData={itemData} />
                 }
                 <>
                     <div className="flex" style={{ 'width': '100%' }}>
@@ -186,7 +183,7 @@ const Page = (props: pageProps) => {
                             updateMatchData={updateMatchData} />
                     </div>
                     <CustomTable
-                        baseApiUrl={props.baseApiUrl}
+                        baseApiUrl={baseApiUrl}
                         type={props.type} role={Role}
                         filteredData={filteredData} heroData={heroData} count={count} updateMatchData={updateMatchData}
                         totalMatchData={totalMatchData} nameParam={nameParam} heroList={props.heroList} itemData={itemData}
