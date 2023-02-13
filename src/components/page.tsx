@@ -71,9 +71,17 @@ const Page = (props: pageProps) => {
             setFilteredData(matches['data'])
             const docLength = await fetchData(countDocsUrl)
             setTotalPicks(matches['picks'])
-            const allMatches = await bulkRequest(`${baseApiUrl}${props.type}/${nameParam}/react-test`, docLength)
-            const merged = allMatches.map((x) => x['data']).flat()
-            setTotalMatchData(merged)
+            let allMatches
+            if (docLength > 60) {
+                const worker = new Worker('./fetchData.ts')
+                allMatches = await bulkRequest(`${baseApiUrl}${props.type}/${nameParam}/react-test`, docLength)
+                const merged = allMatches.map((x: { [x: string]: any; }) => x['data']).flat()
+                setTotalMatchData(merged)
+            } else {
+                allMatches = await fetchData(`${baseApiUrl}${props.type}/${nameParam}/react-test`)
+                console.log(allMatches)
+                setTotalMatchData(allMatches['data'])
+            }
             const itemData = await fetchData(`${baseApiUrl}files/items`)
             setItemData(itemData)
         })()
@@ -168,8 +176,8 @@ const Page = (props: pageProps) => {
                         </>
                     }
                 </div>
-                {!!heroData.length && itemData && nameParam &&
-                    <Build baseApiUrl={baseApiUrl} role={Role} picks={totalPicks} searchRes={searchRes} data={filteredData} heroData={heroData} heroName={nameParam} itemData={itemData} />
+                {!!heroData.length && itemData && nameParam && props.type === 'hero' &&
+                    < Build baseApiUrl={baseApiUrl} role={Role} picks={totalPicks} searchRes={searchRes} data={filteredData} heroData={heroData} heroName={nameParam} itemData={itemData} />
                 }
                 <>
                     <div className="flex" style={{ 'width': '100%' }}>
