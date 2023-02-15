@@ -1,13 +1,12 @@
-import { useEffect } from 'react';
+import { useEffect, useContext } from 'react';
 import { useState } from 'react';
 import colourWins from '../colourWins';
 import heroSwitcher from '../heroSwitcher';
 import stringSearch from '../table/table_search/string_search';
 import RoleCounter from './roleCounter';
-import Draft from './../table/draft';
+import { totalMatchDataContext } from '../page';
+import { filteredDataContext } from './../page';
 interface pickProps {
-    matchData: any,
-    filteredData: any[],
     nameParam: string,
     role: string,
     updateMatchData: (data: object[], value?: string[], types?: string[]) => void,
@@ -22,6 +21,8 @@ const PickCounter = (props: pickProps) => {
     const name = props.nameParam
     const [searching, setSearching] = useState(false)
     const [searchResults, setSearchResults] = useState(props.searchRes)
+    const matchData = useContext(totalMatchDataContext)
+    const filteredData = useContext(filteredDataContext)
     useEffect(() => {
         if (props.searchRes) {
             setSearching(true)
@@ -29,7 +30,7 @@ const PickCounter = (props: pickProps) => {
         } else {
             setSearching(false)
         }
-    }, [props.filteredData])
+    }, [filteredData])
 
     const roleSearch = (data: any, role: string) => {
         if (data.length) {
@@ -39,26 +40,26 @@ const PickCounter = (props: pickProps) => {
         }
     }
     const reset = () => {
-        props.updateMatchData(props.matchData)
+        props.updateMatchData(matchData)
         setSearchResults(undefined)
         setSearching(false)
         props.updateRole('')
     }
     return (
         <>
-            {!!props.matchData.length &&
+            {!!matchData.length &&
                 <div className="pick-counter" style={{ color: 'white' }}>
-                {searching ? (
-                    <SearchResultsText data={props.matchData} updateMatchData={props.updateMatchData} roleSearch={roleSearch} searchRes={searchResults}
-                        heroColor={props.heroColor} name={name} reset={reset} />
-                ) : (
-                    props.type === 'hero' && props.heroColor &&
-                    <>
-                        <TotalPickCounter type={props.type} reset={reset} color={props.heroColor} role={props.role} totalPicks={props.totalPicks} name={props.nameParam} />
-                        <RoleCounter totalPicks={props.totalPicks} matchData={props.matchData} role={props.role} roleSearch={roleSearch}></RoleCounter>
-                    </>
-                )
-                }
+                    {searching ? (
+                        <SearchResultsText data={matchData} updateMatchData={props.updateMatchData} roleSearch={roleSearch} searchRes={searchResults}
+                            heroColor={props.heroColor} name={name} reset={reset} />
+                    ) : (
+                        props.type === 'hero' && props.heroColor &&
+                        <>
+                            <TotalPickCounter type={props.type} reset={reset} color={props.heroColor} role={props.role} totalPicks={props.totalPicks} name={props.nameParam} />
+                            <RoleCounter totalPicks={props.totalPicks} matchData={matchData} role={props.role} roleSearch={roleSearch}></RoleCounter>
+                        </>
+                    )
+                    }
                 </div>
             }
         </>

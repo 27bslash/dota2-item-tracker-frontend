@@ -2,6 +2,8 @@ import { useNavigate } from "react-router";
 import ItemTooltip from "../tooltip/itemTooltip"
 import itemSearch from './table_search/item_search';
 import Tip from "../tooltip/tooltip";
+import { totalMatchDataContext } from "../page";
+import { useContext } from "react";
 type TItemProp = {
     matchId?: number,
     type: string,
@@ -16,7 +18,6 @@ type TItemProp = {
     itemId?: number | undefined,
     children?: React.ReactNode;
     filteredData: object[],
-    totalMatchData: object[],
     updateMatchData?: (data: any, searchResults?: any) => void
     role: string,
     time?: string,
@@ -24,11 +25,12 @@ type TItemProp = {
 }
 const TableItem = (props: TItemProp) => {
     const image_host = "https://ailhumfakp.cloudimg.io/v7/"
+    const totalMatchData = useContext(totalMatchDataContext)
 
     let link = `${image_host}https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/items/${props.itemKey}.png`
     // console.log(props.item)
     const updateTable = () => {
-        const data = itemSearch(props.itemKey, props.totalMatchData, props.items, props.role)
+        const data = itemSearch(props.itemKey, totalMatchData, props.items, props.role)
         if (data && props.updateMatchData) {
             const itemKey = Object.keys(data)[0];
             props.updateMatchData(data[itemKey]['matches'], { 'items': data })

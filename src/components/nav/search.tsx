@@ -1,21 +1,22 @@
 import TextField from '@mui/material/TextField';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { matchSorter } from 'match-sorter'
 import SearchResults from './searchResults';
+import { ListContext } from '../../App';
 interface heroList {
     name: string,
     id: number
 }
 interface searchProps {
     filterHeroes?: (data: any) => void,
-    heroList: heroList[],
-    playerList: []
     highlightHero?: (data: number) => void
 }
 const NavSearch = (props: searchProps) => {
     const [value, setValue] = useState('')
     const [sortedHeroes, setSortedHeroes] = useState<any[]>([])
     const [sortedPlayers, setSortedPlayers] = useState<string[]>([])
+    const heroList = useContext(ListContext)['heroList']
+    const playerList = useContext(ListContext)['playerList']
     // const data = 'data'
     const updateValue = () => {
         setValue('')
@@ -26,20 +27,20 @@ const NavSearch = (props: searchProps) => {
     }
     useEffect(() => {
         if (value.length > 1) {
-            const copy = [...props.heroList]
+            const copy = [...heroList]
             const sorted = matchSorter(copy.map((x: any) => {
                 x.name = x.name.replace(/-|_/g, ' ')
                 return x
             }), value, { keys: [{ threshold: matchSorter.rankings.ACRONYM, key: 'name' }] }).slice(0, 15).reverse()
 
-            const srtedPlayers = filterPlayers(props.playerList, value).slice(0, 15)
+            const srtedPlayers = filterPlayers(playerList, value).slice(0, 15)
             setSortedHeroes(sorted)
             setSortedPlayers(srtedPlayers)
             if (props.filterHeroes) { props.filterHeroes(sorted) }
         } else {
             setSortedHeroes([])
             setSortedPlayers([])
-            if (props.filterHeroes) props.filterHeroes(props.heroList)
+            if (props.filterHeroes) props.filterHeroes(heroList)
 
         }
     }, [value])
@@ -54,7 +55,8 @@ const NavSearch = (props: searchProps) => {
                 value={value}
                 onChange={(e) => setValue(e.target.value)} />
             {(!!sortedPlayers.length || !!sortedHeroes.length) &&
-                <SearchResults heroList={props.heroList} highlightHero={props.highlightHero} updateValue={updateValue} navigatePage={navigatePage} playerList={props.playerList} sortedHeroes={sortedHeroes} sortedPlayers={sortedPlayers} />
+                <SearchResults heroList={heroList} highlightHero={props.highlightHero} updateValue={updateValue}
+                    navigatePage={navigatePage} playerList={playerList} sortedHeroes={sortedHeroes} sortedPlayers={sortedPlayers} />
             }
         </div>
     )

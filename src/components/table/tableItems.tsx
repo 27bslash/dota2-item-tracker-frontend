@@ -6,6 +6,8 @@ import TalentImg from "./talentImg";
 import ArrowButton from './../arrowButton';
 import Tip from "../tooltip/tooltip";
 import Draft from "./draft";
+import { totalMatchDataContext } from "../page";
+import { useContext } from "react";
 
 interface TitemProps {
     row: {
@@ -24,8 +26,6 @@ interface TitemProps {
     showStarter: boolean,
     items: object[],
     heroData: object[],
-    heroList: object[],
-    totalMatchData: object[],
     filteredData: object[],
     updateMatchData: (data: object[]) => void,
     children: React.ReactNode;
@@ -59,6 +59,7 @@ const TableItems = (props: TitemProps) => {
     const visitedTalents: any = []
     const talents: any = props.row.abilities.filter((ability: any) => ability['type'] === 'talent')
     const s = new Set()
+    const totalMatchData = useContext(totalMatchDataContext)
     for (let talent of talents) {
         const t = []
         if (!s.has(talent['id'])) {
@@ -82,13 +83,13 @@ const TableItems = (props: TitemProps) => {
                             const time = humanReadableTime(item['time'])
                             if (item.key === 'ultimate_scepter') {
                                 return <TableItem matchId={props.row.id} role={props.role} overlay={true} updateMatchData={props.updateMatchData}
-                                    filteredData={props.filteredData} totalMatchData={props.totalMatchData} key={i} itemKey='ultimate_scepter' type='scepter'
+                                    filteredData={props.filteredData} key={i} itemKey='ultimate_scepter' type='scepter'
                                     items={props.items} heroName={heroName}
                                     heroData={props.heroData} item={item} time={time}>
                                 </TableItem>
                             } else {
                                 return <TableItem matchId={props.row.id} time={time} role={props.role} overlay={true} updateMatchData={props.updateMatchData}
-                                    filteredData={props.filteredData} totalMatchData={props.totalMatchData} key={i} item={item}
+                                    filteredData={props.filteredData} key={i} item={item}
                                     itemId={item.id} items={props.items} itemKey={item.key} type='item'></TableItem>
                             }
                         }
@@ -99,16 +100,16 @@ const TableItems = (props: TitemProps) => {
                             const time = humanReadableTime(item['time'])
                             return <TableItem matchId={props.row.id} time={time} overlay={true}
                                 role={props.role} updateMatchData={props.updateMatchData}
-                                filteredData={props.filteredData} totalMatchData={props.totalMatchData} key={i} item={item} items={props.items} itemKey={item.key} type='item' starter={true}></TableItem>
+                                filteredData={props.filteredData} key={i} item={item} items={props.items} itemKey={item.key} type='item' starter={true}></TableItem>
                         })
 
                     )}
                 </div>
                 {props.row.item_neutral && !props.showStarter &&
-                    <TableItem matchId={props.row.id} role={props.role} overlay={true} updateMatchData={props.updateMatchData} filteredData={props.filteredData} totalMatchData={props.totalMatchData} itemKey={props.row.item_neutral} items={props.items} type='neutral'></TableItem>
+                    <TableItem matchId={props.row.id} role={props.role} overlay={true} updateMatchData={props.updateMatchData} filteredData={props.filteredData} itemKey={props.row.item_neutral} items={props.items} type='neutral'></TableItem>
                 }
                 {props.row.aghanims_shard && !props.showStarter &&
-                    <TableItem matchId={props.row.id} role={props.role} overlay={true} time={humanReadableTime(props.row.aghanims_shard[0]['time'])} updateMatchData={props.updateMatchData} filteredData={props.filteredData} totalMatchData={props.totalMatchData} itemKey='aghanims_shard' type='shard' items={props.items} heroName={heroName}
+                    <TableItem matchId={props.row.id} role={props.role} overlay={true} time={humanReadableTime(props.row.aghanims_shard[0]['time'])} updateMatchData={props.updateMatchData} filteredData={props.filteredData} itemKey='aghanims_shard' type='shard' items={props.items} heroName={heroName}
                         heroData={props.heroData} item={props.row.aghanims_shard}>
                     </TableItem>
                     // time={humanReadableTime(props.row.aghanims_shard['time'])}
@@ -121,7 +122,7 @@ const TableItems = (props: TitemProps) => {
                             const time = humanReadableTime(item['time'])
                             return (
                                 <TableItem matchId={props.row.id} role={props.role} overlay={true} updateMatchData={props.updateMatchData}
-                                    filteredData={props.filteredData} totalMatchData={props.totalMatchData}
+                                    filteredData={props.filteredData}
                                     key={i} item={item} items={props.items} time={time} itemKey={item.key} type='item'></TableItem>
                             )
                         }
@@ -135,7 +136,7 @@ const TableItems = (props: TitemProps) => {
                         if (!consumables.includes(item['key'])) {
                             return (
                                 <TableItem matchId={props.row.id} role={props.role} overlay={true} updateMatchData={props.updateMatchData}
-                                    filteredData={props.filteredData} totalMatchData={props.totalMatchData} key={i} item={item} time={time} items={props.items} itemKey={item.key} type='item'></TableItem>)
+                                    filteredData={props.filteredData} key={i} item={item} time={time} items={props.items} itemKey={item.key} type='item'></TableItem>)
                         }
                     }
                     )
@@ -146,10 +147,10 @@ const TableItems = (props: TitemProps) => {
             <Abilities abilities={props.row.abilities} heroName={heroName} visitedTalents={visitedTalents} heroData={props.heroData} imageHost={image_host} width={width} />
             <div className="draft">
                 <div className="radiant-draft">
-                    <Draft hero={props.row.hero} heroList={props.heroList} totalMatchData={props.totalMatchData} updateMatchData={props.updateMatchData} draft={props.row.radiant_draft}></Draft>
+                    <Draft hero={props.row.hero} updateMatchData={props.updateMatchData} draft={props.row.radiant_draft}></Draft>
                 </div>
                 <div className="dire-draft">
-                    <Draft hero={props.row.hero} heroList={props.heroList} totalMatchData={props.totalMatchData} updateMatchData={props.updateMatchData} draft={props.row.dire_draft}></Draft>
+                    <Draft hero={props.row.hero} updateMatchData={props.updateMatchData} draft={props.row.dire_draft}></Draft>
                 </div>
             </div>
         </TableCell >)

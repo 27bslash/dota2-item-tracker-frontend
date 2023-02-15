@@ -1,24 +1,21 @@
 import { TableContainer, TableRow, Table, TableFooter, TablePagination, CircularProgress } from "@mui/material"
 import TablePaginationActions from "@mui/material/TablePagination/TablePaginationActions"
-import { useEffect, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import TableHeader from "./tableHeader"
 import TimeAgo from 'javascript-time-ago'
 
 // English.
 import en from 'javascript-time-ago/locale/en'
 import CustomTableBody from "./tablebody"
+import { filteredDataContext, totalMatchDataContext } from './../page';
 interface TableProps {
     showStarter: boolean,
-    heroList: any,
     heroData: any,
-    baseApiUrl: string,
     itemData: any,
     nameParam: string,
     type: string,
-    filteredData: object[],
     count: number,
     updateMatchData: (data: object[]) => void,
-    totalMatchData: object[],
     role: string
 }
 TimeAgo.addDefaultLocale(en)
@@ -27,8 +24,8 @@ const CustomTable = (props: TableProps) => {
     const [count, setCount] = useState(props.count)
     const [orderBy, setOrderBy] = useState('unix_time')
     const [sortDirection, setSortDirection] = useState('desc')
-    const { filteredData, totalMatchData } = props
-
+    const filteredData = useContext(filteredDataContext)
+    const totalMatchData = useContext(totalMatchDataContext)
     useEffect(() => {
         setCount(props.count)
         if (page * 10 > props.count) {
@@ -121,8 +118,8 @@ const CustomTable = (props: TableProps) => {
                                 onRequestSort={handleRequestSort}
                                 showStarter={props.showStarter}
                             />
-                            <CustomTableBody baseApiUrl={props.baseApiUrl} data={sortTable()} heroData={props.heroData} type={props.type} page={page} nameParam={props.nameParam}
-                                totalMatchData={totalMatchData} heroList={props.heroList} itemData={props.itemData}
+                            <CustomTableBody data={sortTable()} heroData={props.heroData} type={props.type} page={page} nameParam={props.nameParam}
+                                itemData={props.itemData}
                                 showStarter={props.showStarter} role={props.role} updateMatchData={props.updateMatchData}></CustomTableBody>
                             <TableFooter >
                                 <TableRow>

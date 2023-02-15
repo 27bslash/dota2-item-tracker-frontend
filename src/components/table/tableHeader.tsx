@@ -3,9 +3,7 @@ import { useEffect, useState } from 'react';
 
 
 const OrderableCell = (props: any) => {
-    const createSortHandler = (property: any) => (event: React.MouseEvent<unknown>) => {
-        props.onRequestSort(event, property);
-    };
+
     return (
         <TableCell align={props.align} sx={{maxWidth: props.maxWidth}}>
             <TableSortLabel sx={{ color: `${props.color} !important`, textTransform: 'uppercase', fontWeight: '600', ":hover": { opacity: `0.8 !important` }, maxWidth: props.maxWidth }}

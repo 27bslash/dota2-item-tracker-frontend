@@ -1,13 +1,20 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
+import { totalMatchDataContext } from '../page';
 import BigTalentTooltip from './bigTalentTooltip';
+import { filteredDataContext } from './../page';
 
-const BigTalent = (props: { matchData: any, heroName: string, heroData: any, width: string, margin: string }) => {
+const BigTalent = (props: { heroName: string, heroData: any, width: string, margin: string }) => {
     const [talents, setTalents] = useState<any>([])
+    const filteredData = useContext(filteredDataContext)
+    const totalMatchData = useContext(totalMatchDataContext)
+
+    const matchData = totalMatchData || filteredData
+    console.log(matchData)
     useEffect(() => {
         const heroData = props.heroData[0][props.heroName]
-        const sorted = countTalents(heroData, props.matchData)
+        const sorted = countTalents(heroData, matchData)
         setTalents(sorted)
-    }, [props.matchData])
+    }, [matchData])
 
     return (
         <div className="talent-wrapper">

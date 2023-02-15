@@ -11,14 +11,13 @@ const AbilityTooltip = (props: any) => {
     let id = props.ability.id
     const [open, setOpen] = useState(false)
     const [ability, setAbility] = useState<any>([])
-    console.log(props.ability)
     useEffect(() => {
         // console.log(props.heroData, props.heroName)
         for (let hero of props.heroData) {
             if (hero[props.heroName] && id) {
                 console.log(hero, props.ability)
                 setAbility(hero[props.heroName].abilities[+id])
-            } else {
+            } else if (!id) {
                 const abilities = hero[props.heroName].abilities
                 const k = Object.keys(props.ability)[0]
                 const a = Object.entries(abilities).find((x: any) => x[1].name === k)

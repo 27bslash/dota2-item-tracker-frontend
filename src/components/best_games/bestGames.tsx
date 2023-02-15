@@ -1,9 +1,10 @@
 import { faCopy } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { useEffect } from 'react';
 import stringSearch from '../table/table_search/string_search';
 import blurred from '../../images/blurred-best-games.jpg'
+import { filteredDataContext, totalMatchDataContext } from '../page';
 
 interface BenchmarksProps {
     benchmarks: {},
@@ -19,15 +20,18 @@ const BestGames = (props: any) => {
     const [bestgames, setBestgames] = useState<any>([])
     const [benchmarkKeys, setbenchmarkKeys] = useState<any>([])
     const [loading, setLoading] = useState(true)
+    const totalMatchData = useContext(totalMatchDataContext)
+    const matchData = useContext(filteredDataContext)
+
     useEffect(() => {
-        if (!!props.totalMatchData.length) {
+        if (!!totalMatchData.length) {
             sumBenchmarks()
             setLoading(false)
         }
-    }, [props.matchData, props.totalMatchData])
+    }, [matchData, totalMatchData])
     const sumBenchmarks = () => {
         const bmarks = []
-        for (let match of props.matchData) {
+        for (let match of matchData) {
             let sum: any = 0
             const benchmarks = match['benchmarks']
             sum = Object.values(benchmarks).reduce((a: any, b: any) => {
@@ -39,7 +43,7 @@ const BestGames = (props: any) => {
         const sorted = bmarks.sort((a: any, b: any) => {
             return b[1] - a[1]
         }).slice(0, 2).map((x) => x[0])
-        const filtered = props.matchData.filter((x: any) => sorted.includes(x['id']))
+        const filtered = matchData.filter((x: any) => sorted.includes(x['id']))
         setBestgames(filtered)
 
         const sortingArr = ['player', '', 'gold_per_min', 'xp_per_min',
@@ -81,7 +85,7 @@ const BestGames = (props: any) => {
                                     return (
                                         <tr className="best-games-row" key={i}>
                                             <td className="benchmark-cell">
-                                                <a className="player-name" href={`/player/${match['name']}`}>{match['name'].replace(/\(smurf.*\)/,'')}</a>
+                                                <a className="player-name" href={`/player/${match['name']}`}>{match['name'].replace(/\(smurf.*\)/, '')}</a>
                                             </td>
                                             <td className="benchmark-cell ">
                                                 <FontAwesomeIcon className='copy-match-id' icon={faCopy} color='white' onClick={() => navigator.clipboard.writeText(match.id)} />

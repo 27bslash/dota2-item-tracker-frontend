@@ -47,7 +47,6 @@ class DraftSearch {
         if (symbol === '-') {
             rad = !match['radiant_draft'].includes(targetHero) && match['radiant_draft'].includes(hero)
             dire = !match['dire_draft'].includes(targetHero) && match['dire_draft'].includes(hero)
-            console.log(symbol, targetHero, hero, match, rad, dire)
 
         } else if (!symbol) {
             if (rad || dire) {
@@ -55,7 +54,6 @@ class DraftSearch {
             }
         }
         if ((match['radiant_draft'].includes(hero) && rad) || (match['dire_draft'].includes(hero) && dire)) {
-            console.log('ret', match)
             return match['id']
         }
 

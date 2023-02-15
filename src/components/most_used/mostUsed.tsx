@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
+import { totalMatchDataContext, filteredDataContext } from "../page";
 import itemSearch from "../table/table_search/item_search";
 import ArrowButton from './../arrowButton';
 
@@ -7,11 +8,11 @@ const MostUsed = (props: any) => {
     const [open, setOpen] = React.useState(false);
     const [mostUsed, setMostUsed] = useState([])
     const [max, setMax] = useState(0)
-
+    const matchData = useContext(totalMatchDataContext)
     useEffect(() => {
-        let data = props.matchData
+        let data = matchData
         if (props.role) {
-            data = props.matchData.filter((match: any) => match.role === props.role)
+            data = matchData.filter((match: any) => match.role === props.role)
         }
         const mostU = calculateMostUsed(data)
         setMostUsed(mostU)
@@ -19,9 +20,9 @@ const MostUsed = (props: any) => {
             // console.log(mostU)
             setMax(mostU[0][1])
         }
-    }, [props.matchData, props.role])
+    }, [matchData, props.role])
     const handleClick = (item: any) => {
-        const itemResult = itemSearch(item, props.matchData, props.itemData)
+        const itemResult = itemSearch(item, matchData, props.itemData)
         if (itemResult) {
             const itemKey = Object.keys(itemResult)[0];
             props.updateMatchData(itemResult[itemKey]['matches'], { 'items': itemResult })

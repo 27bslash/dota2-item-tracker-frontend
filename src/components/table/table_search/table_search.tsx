@@ -1,13 +1,13 @@
 import { TextField } from '@mui/material';
-import { SetStateAction, useState } from 'react';
+import { SetStateAction, useContext, useState } from 'react';
+import { ListContext } from '../../../App';
 import Items from '../../types/Item';
 import search from './search';
+import { filteredDataContext } from './../../page';
+
 interface TableSearchProps {
     heroName: string,
     updateMatchData: (data: object[], searchResults: any) => void,
-    totalMatchData: object[],
-    heroList: [{ id: number, name: string }],
-    playerList: any[]
     itemData: Items | undefined,
     type: string,
     disabled: boolean
@@ -16,6 +16,10 @@ const TableSearch = (props: TableSearchProps) => {
     const [value, setValue] = useState('')
     const [error, setError] = useState(false)
     const [errorMsg, setErrorMsg] = useState('')
+    const heroList = useContext(ListContext)['heroList']
+    const playerList = useContext(ListContext)['playerList']
+    const filteredData = useContext(filteredDataContext)
+
     const handleChange = (e: { target: { value: SetStateAction<string>; }; }) => {
         setError(false)
         setValue(e.target.value)
@@ -24,7 +28,7 @@ const TableSearch = (props: TableSearchProps) => {
     const handleSubmit = async (e: any) => {
         e.preventDefault()
         const searchTerms = value.split(',')
-        let searchResults = search(searchTerms, props.totalMatchData, props.itemData, props.heroList, props.playerList, props.heroName)
+        let searchResults = search(searchTerms, filteredData, props.itemData, heroList, playerList, props.heroName)
         const combinedMatches = combineMatches(searchResults)
         const matchIds: number[] = []
         const targetArr = combinedMatches.find((arr) => arr.length > 0) || []
@@ -39,7 +43,7 @@ const TableSearch = (props: TableSearchProps) => {
                 matchIds.push(tempArr[0]);
             }
         }
-        const matches = [...props.totalMatchData].filter((x: any) => matchIds.includes(x.id))
+        const matches = [...filteredData].filter((x: any) => matchIds.includes(x.id))
         if (!matches.length) {
             setError(true)
             setErrorMsg(`No results found for ${value}`)

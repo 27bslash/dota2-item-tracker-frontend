@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 import Nav from "../nav/nav";
 import colourWins from '../colourWins';
 import ControlPanel from "./control";
-import { baseApiUrlContext } from "../../App";
+import { baseApiUrlContext, ListContext } from "../../App";
 
 const Home = (props: any) => {
     const [winStats, setWinStats] = useState<any[]>()
@@ -16,6 +16,7 @@ const Home = (props: any) => {
     const [highlight, setHighlight] = useState<number>()
     const [sort, setSearchVal] = useState('')
     const baseApiUrl = useContext(baseApiUrlContext)
+    const heroList = useContext(ListContext)['heroList']
     useEffect(() => {
         document.title = 'dota2 item tracker';
         (async () => {
@@ -32,19 +33,19 @@ const Home = (props: any) => {
     //     return n1.localeCompare(n2)
     // }
     useEffect(() => {
-        if (!props.heroList.length) {
+        if (!heroList.length) {
             return
         }
-        const m = props.heroList.map((hero: any) => ({ 'name': hero['name'].replace(/\s/g, '_'), 'id': hero['id'] }))
+        const m = heroList.map((hero: any) => ({ 'name': hero['name'].replace(/\s/g, '_'), 'id': hero['id'] }))
         const hList = m.sort((a: any, b: any) => a['name'].localeCompare(b['name']))
         setFiltered(hList)
 
 
-    }, [props.heroList])
+    }, [heroList])
     const filterHeroes = (list: any) => {
         const newList = list.map((x: any) => x.name.replace(/\s/g, '_'))
         setFiltered(newList)
-        if (newList.length !== props.heroList.length) {
+        if (newList.length !== heroList.length) {
             setSearching(true)
         } else {
             setSearching(false)
@@ -70,7 +71,7 @@ const Home = (props: any) => {
     }
     return (
         <div className="home">
-            <Nav filterHeroes={filterHeroes} heroList={props.heroList} playerList={props.playerList} highlightHero={highlightHero}></Nav>
+            <Nav filterHeroes={filterHeroes} highlightHero={highlightHero}></Nav>
             {filtered &&
                 <ControlPanel sortHeroes={sortHeroes} winStats={winStats}></ControlPanel>
             }
@@ -102,7 +103,8 @@ const GridContainer = (props: any) => {
         props.className.includes('right') ?
             (
                 <Grid className={`hero-grid ${props.className}`} container spacing={0} md={4} sx={{ width: props.width + '!important' }}>
-                    {props.children};
+                    {props.children};import {ListContext} from './../../App';
+
                 </Grid>
             ) : (
                 <Grid className={`hero-grid ${props.className}`} container spacing={3} md='auto' sx={{ width: props.width }}>

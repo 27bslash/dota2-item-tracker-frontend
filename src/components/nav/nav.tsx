@@ -1,10 +1,10 @@
 import { Container } from "@mui/system";
+import { useContext } from "react";
 import { Link } from "react-router-dom";
+import { ListContext } from "../../App";
 import HomeButton from "./nav_button"
 import NavSearch from './search';
 interface NavProps {
-    heroList: Hero[],
-    playerList: any,
     highlightHero?: (idx: number) => void
     filterHeroes?: (heroList: Hero[]) => void
 }
@@ -22,7 +22,7 @@ const Nav = (props: NavProps) => {
                 <HomeButton text='CHAPPIE' />
             </Link>
             <div className="search-container" style={{ width: '100%' }}>
-                <NavSearch highlightHero={props.highlightHero} filterHeroes={props.filterHeroes} heroList={props.heroList} playerList={props.playerList} />
+                <NavSearch highlightHero={props.highlightHero} filterHeroes={props.filterHeroes} />
             </div>
         </div>
     )

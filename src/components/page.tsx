@@ -2,7 +2,7 @@ import HeroImg from './heroImg';
 import Nav from './nav/nav';
 import CustomTable from './table/table';
 import BestGames from './best_games/bestGames';
-import { useEffect, useState, useContext } from 'react';
+import { useEffect, useState, useContext, createContext } from 'react';
 import { FormControlLabel, styled, Switch, SwitchProps } from '@mui/material';
 import TableSearch from './table/table_search/table_search';
 import { useParams } from 'react-router';
@@ -15,6 +15,8 @@ import Build from './HeroBuilds/build';
 import Items from './types/Item';
 import { baseApiUrlContext } from '../App';
 import { fetchData, bulkRequest } from './fetchData';
+import HeroPage from './heroPage';
+import search from './table/table_search/search';
 
 //  TODO
 //  add chappie section
@@ -38,11 +40,17 @@ interface SearchRes {
     role: {},
     player: {}
 }
+export const filteredDataContext = createContext<any>([])
+export const totalMatchDataContext = createContext<any>([])
+
 const Page = (props: pageProps) => {
     const [itemData, setItemData] = useState<Items>()
     const [showStarter, setShowStarter] = useState(false)
     const [filteredData, setFilteredData] = useState<any[]>([])
     const [totalMatchData, setTotalMatchData] = useState<any[]>([])
+
+    const [matchData, setMatchData] = useState<any>({ 'filteredData': [], 'totalMatchData': [] })
+
     const [totalPicks, setTotalPicks] = useState<any>([])
     const [heroColor, setHeroColor] = useState('')
     const [count, setCount] = useState(0)
@@ -73,7 +81,6 @@ const Page = (props: pageProps) => {
             setTotalPicks(matches['picks'])
             let allMatches
             if (docLength > 60) {
-                const worker = new Worker('./fetchData.ts')
                 allMatches = await bulkRequest(`${baseApiUrl}${props.type}/${nameParam}/react-test`, docLength)
                 const merged = allMatches.map((x: { [x: string]: any; }) => x['data']).flat()
                 setTotalMatchData(merged)
@@ -158,48 +165,30 @@ const Page = (props: pageProps) => {
     }
     return (
         <div className="page" >
-            <Nav playerList={props.playerList} heroList={props.heroList} />
-            <>
-                <div className="flex" style={{}}>
+            <Nav />
+            <filteredDataContext.Provider value={filteredData}>
+                <totalMatchDataContext.Provider value={totalMatchData}>
                     {props.type === 'hero' &&
-                        <>
-                            <div className="hero-img-wrapper">
-                                <HeroImg baseApiUrl={baseApiUrl} heroData={heroData} heroName={nameParam} />
-                                <MostUsed baseApiUrl={baseApiUrl} matchData={totalMatchData} role={Role} updateMatchData={updateMatchData} itemData={itemData}></MostUsed>
-                            </div>
-                            <div className="best-games-container" style={{ 'width': '1200px', 'height': '140px' }}>
-                                <BestGames matchData={filteredData} totalMatchData={totalMatchData}></BestGames>
-                            </div>
-                            {heroData.length && !!filteredData.length && props.type === 'hero' &&
-                                < BigTalent matchData={filteredData} heroData={heroData} heroName={nameParam} width='100px' margin='2% 0px 0px 230px' />
-                            }
-                        </>
+                        <HeroPage type='hero' updateMatchData={updateMatchData} itemData={itemData} heroData={heroData}
+                            searchRes={searchRes} role={Role} totalPicks={totalPicks} />
                     }
-                </div>
-                {!!heroData.length && itemData && nameParam && props.type === 'hero' &&
-                    < Build baseApiUrl={baseApiUrl} role={Role} picks={totalPicks} searchRes={searchRes} data={filteredData} heroData={heroData} heroName={nameParam} itemData={itemData} />
-                }
-                <>
-                    <div className="flex" style={{ 'width': '100%' }}>
-                        <PickCounter type={props.type} nameParam={nameParam} role={Role} heroColor={heroColor} matchData={totalMatchData} searchRes={searchRes}
-                            count={count} filteredData={filteredData} totalPicks={totalPicks} updateRole={updateRole} updateMatchData={updateMatchData} />
-                    </div>
-                    <div className="flex">
-                        <StarterToggle updateStarter={updateStarter} />
-                        <TableSearch type={props.type} disabled={filteredData.length === 0 || !itemData || !props.heroList}
-                            heroName={nameParam} heroList={props.heroList} playerList={props.playerList}
-                            itemData={itemData} totalMatchData={filteredData}
-                            updateMatchData={updateMatchData} />
-                    </div>
-                    <CustomTable
-                        baseApiUrl={baseApiUrl}
-                        type={props.type} role={Role}
-                        filteredData={filteredData} heroData={heroData} count={count} updateMatchData={updateMatchData}
-                        totalMatchData={totalMatchData} nameParam={nameParam} heroList={props.heroList} itemData={itemData}
-                        showStarter={showStarter} />
-                </>
-
-            </>
+                    <>
+                        <div className="flex" style={{ 'width': '100%' }}>
+                            <PickCounter type={props.type} nameParam={nameParam} role={Role} heroColor={heroColor} searchRes={searchRes}
+                                count={count} totalPicks={totalPicks} updateRole={updateRole} updateMatchData={updateMatchData} />
+                        </div>
+                        <div className="flex">
+                            <StarterToggle updateStarter={updateStarter} />
+                            <TableSearch type={props.type} disabled={filteredData.length === 0 || !itemData}
+                                heroName={nameParam} itemData={itemData} updateMatchData={updateMatchData} />
+                        </div>
+                        <CustomTable
+                            type={props.type} role={Role}
+                            heroData={heroData} count={count} updateMatchData={updateMatchData}
+                            nameParam={nameParam} itemData={itemData} showStarter={showStarter} />
+                    </>
+                </totalMatchDataContext.Provider>
+            </filteredDataContext.Provider>
         </div>
     )
 }

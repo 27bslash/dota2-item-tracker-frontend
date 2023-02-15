@@ -6,13 +6,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import stringSearch from './table_search/string_search';
 interface BodyProps {
     nameParam: string,
-    baseApiUrl: string,
     type: string,
     page: number,
-    totalMatchData: object[],
     data: any[],
     updateMatchData: (data: object[]) => void,
-    heroList: object[],
     heroData: any,
     itemData: object[],
     showStarter: boolean,
@@ -49,7 +46,7 @@ const CustomTableBody = (props: BodyProps) => {
                             <TableItems
                                 row={row} items={props.itemData} role={props.role}
                                 heroData={props.heroData}
-                                heroList={props.heroList} filteredData={props.data} totalMatchData={props.totalMatchData} updateMatchData={props.updateMatchData}
+                                filteredData={props.data} updateMatchData={props.updateMatchData}
                                 showStarter={props.showStarter}>
                             </TableItems>
                             <TableCell sx={{ color: 'white', maxWidth: '100px', width: '100px' }}>
