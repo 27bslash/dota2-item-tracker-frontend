@@ -9,7 +9,6 @@ const BigTalent = (props: { heroName: string, heroData: any, width: string, marg
     const totalMatchData = useContext(totalMatchDataContext)
 
     const matchData = totalMatchData || filteredData
-    console.log(matchData)
     useEffect(() => {
         const heroData = props.heroData[0][props.heroName]
         const sorted = countTalents(heroData, matchData)

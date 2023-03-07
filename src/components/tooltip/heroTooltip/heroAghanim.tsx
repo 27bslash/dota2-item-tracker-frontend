@@ -1,27 +1,31 @@
 
 const HeroAghs = (props: any) => {
     const agh = extractAghanim(props.heroData['abilities'], props.type)
-    const aghText = agh[`${props.type}_loc`] || agh['desc_loc']
-    const aghanimDescription = extract_hidden_values(aghText, agh['special_values'])
-    const link = `https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/abilities/${agh['name']}.png`
-    return (
-        <div className="hero-aghanim-upgrades">
-            <div className="hero-aghanim-wrapper" id={`hero-${props.type}`}>
-                <div className="tooltip-aghanim-img" style={{ backgroundImage: `url(${link})`, position: 'relative' }}>
-                    <img className={`subicon`} id={`${props.type}-subicon`} alt=''></img>
-                </div>
-                <p style={{ fontSize: '13px' }}>
-                    {aghanimDescription.split(/\s|,/).map((x: any, i: number) => {
-                        if (x.match(/\d+/g)) {
-                            return <span key={i} className='tooltip-text-highlight'>{x} </span>
-                        } else {
-                            return <span key={i}>{x + ' '}</span>
-                        }
-                    })}
-                </p>
+    if (agh) {
+        const aghText = agh[`${props.type}_loc`] || agh['desc_loc']
+        const aghanimDescription = extract_hidden_values(aghText, agh['special_values'])
+        const link = `https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/abilities/${agh['name']}.png`
+        return (
+            <div className="hero-aghanim-upgrades">
+                {aghText &&
+                    <div className="hero-aghanim-wrapper" id={`hero-${props.type}`}>
+                        <div className="tooltip-aghanim-img" style={{ backgroundImage: `url(${link})`, position: 'relative' }}>
+                            <img className={`subicon`} id={`${props.type}-subicon`} alt=''></img>
+                        </div>
+                        <p style={{ fontSize: '13px' }}>
+                            {aghanimDescription.split(/\s|,/).map((x: any, i: number) => {
+                                if (x.match(/\d+/g)) {
+                                    return <span key={i} className='tooltip-text-highlight'>{x} </span>
+                                } else {
+                                    return <span key={i}>{x + ' '}</span>
+                                }
+                            })}
+                        </p>
+                    </div>
+                }
             </div>
-        </div>
-    )
+        )
+    }
 }
 const extract_hidden_values = (text: string, special_values: any) => {
     let sp = text.replace("bonus_", "").split("%");
