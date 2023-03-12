@@ -5,7 +5,7 @@ const recursive_remove = (item: any, itemdata: any, components: string[], data: 
         const idx = keys.indexOf(component)
 
         const dataComponent = data[idx]
-        if (!dataComponent || component === 'blink' || component === 'boots' || component === 'travel_boots') {
+        if (!dataComponent || component === 'blink' || component === 'boots' || component === 'travel_boots' || component === 'ultimate_scepter') {
             continue
         }
         if (badQuals.includes(componentStats['qual']) && !componentStats['components']) {
@@ -83,7 +83,7 @@ const filterComponents = (data: any[], itemData: any) => {
     const gpm = 400
     const itemdata: any = itemData
     const keys = data.map((x) => x[0])
-    console.log([...keys])
+    // console.log([...keys])
     const removedComponents: any = []
     const disassembleable = ['arcane_boots', 'echo_sabre', 'lotus_orb', 'octarine_core', 'vanguard', 'mask_of_madness']
     // console.log([...data])

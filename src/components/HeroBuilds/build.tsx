@@ -53,8 +53,9 @@ const Build = (props: BuildProps) => {
             const role = k[0]
             let totalRolePicks = props.picks[role].picks
             if (!combinedRole && combinedRoles.includes(role)) {
-                const otherRole = combinedRoles.find((x) => x !== role)
-                totalRolePicks = props.picks[role].picks + props.picks[otherRole!].picks
+                const otherRole: string | undefined = combinedRoles.find((pos) => pos !== role && pos in props.picks)
+                const otherRolePicks = otherRole ? props.picks[otherRole].picks : 0
+                totalRolePicks = props.picks[role].picks + otherRolePicks
                 combinedRole = true
             }
             let perc = totalRolePicks / picks
