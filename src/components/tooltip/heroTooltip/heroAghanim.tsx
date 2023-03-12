@@ -26,6 +26,9 @@ const HeroAghs = (props: any) => {
             </div>
         )
     }
+    else {
+        return <></>
+    }
 }
 const extract_hidden_values = (text: string, special_values: any) => {
     let sp = text.replace("bonus_", "").split("%");
