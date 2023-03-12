@@ -26,7 +26,7 @@ type NonProDataType = {
     items: [{ id: string, key: string, time: number }],
     match_id: number,
     starting_items: [{ id: string, key: string, time: number }],
-    role?: string
+    role: string
 }
 const Build = (props: BuildProps) => {
     const [filteredData, setFilteredData] = useState<{ [k: string]: NonProDataType[] }>()
@@ -43,14 +43,23 @@ const Build = (props: BuildProps) => {
         }
     }, {})
     // switch to toggle only known pro accounts
+    const combinedRoles = ['Support', 'Roaming']
     const calc_common_roles = () => {
         const picks = props.picks.picks
         const roles: string[] = []
         const sorted = Object.entries(props.picks).filter((x) => typeof (x[1]) === 'object').sort((a, b) => b[1]['picks'] - a[1]['picks'])
+        let combinedRole = null
         for (let k of sorted) {
-            const perc = props.picks[k[0]].picks / picks
-            if (perc > 0.2) {
-                roles.push(k[0])
+            const role = k[0]
+            let totalRolePicks = props.picks[role].picks
+            if (!combinedRole && combinedRoles.includes(role)) {
+                const otherRole = combinedRoles.find((x) => x !== role)
+                totalRolePicks = props.picks[role].picks + props.picks[otherRole!].picks
+                combinedRole = true
+            }
+            let perc = totalRolePicks / picks
+            if (perc > 0.1) {
+                roles.push(role)
             }
         }
         return roles
@@ -84,7 +93,7 @@ const Build = (props: BuildProps) => {
             console.log(props.role, roles)
             const tempObject: { [role: string]: NonProDataType[] } = {}
             for (let role of roles) {
-                const roleFiltered = data.filter(((item: NonProDataType) => item.role === role))
+                const roleFiltered = data.filter(((item: NonProDataType) => item.role === role || (combinedRoles.includes(role) && combinedRoles.includes(item.role))))
                 tempObject[role] = roleFiltered
             }
             setFilteredData(tempObject)
