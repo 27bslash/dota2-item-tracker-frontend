@@ -68,6 +68,7 @@ const Home = (props: any) => {
     const highlightHero = (idx: number) => {
         setHighlight(idx)
     }
+    let pickStats: any = null
     return (
         <div className="home">
             <Nav filterHeroes={filterHeroes} heroList={props.heroList} playerList={props.playerList} highlightHero={highlightHero}></Nav>
@@ -78,17 +79,24 @@ const Home = (props: any) => {
                 <SortTitle role={roleFilter} sort={sort}></SortTitle>
             }
             <GridContainer className={className} width={width}>
-                {filtered && winStats && (
+                {filtered && (
                     filtered.map((x: any, i: number) => {
                         let heroName = x['name'] || x['hero'] || x
                         if (heroName === 'anti_mage') heroName = 'anti-mage'
-                        const stats = winStats.filter((x) => {
-                            return x.hero === heroName.replace(/\s/g, '_')
-                        })
+                        if (winStats) {
+                            const stats = winStats.filter((x) => {
+                                return x.hero === heroName.replace(/\s/g, '_')
+                            })
+                            const picks = stats[0][`${roleFilter}picks`]
+                            const wins = stats[0][`${roleFilter}wins`]
+                            const bans = stats[0][`bans`]
+                            const winrate = ((wins / picks) * 100 ).toFixed(2) || 0
+                            pickStats = { 'picks': picks, 'wins': wins, 'bans': bans, 'winrate': winrate }
+                        }
                         // console.log(heroName, stats)
                         return (
                             <Grid key={i} className={`grid-item-${className}`} item >
-                                <HeroCard highlight={highlight} idx={i} key={i} searching={searching} heroName={heroName} stats={stats} role={roleFilter}></HeroCard>
+                                <HeroCard highlight={highlight} idx={i} key={i} searching={searching} heroName={heroName} stats={pickStats} role={roleFilter}></HeroCard>
                             </Grid>
                         )
                     })
@@ -137,10 +145,7 @@ const HeroCard = (props: any) => {
     let width = heroHighlight ? '113' : '110'
     const img = `https://ailhumfakp.cloudimg.io/v7/https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/heroes/${imgName}.png?v=5926546`
     const heroname = heroName.replace(/\s/g, '_')
-    const picks = stats[0][`${role}picks`]
-    const wins = stats[0][`${role}wins`]
-    const bans = stats[0][`bans`]
-    const winrate = ((wins / picks) * 100).toFixed(2) || 0
+
     let link = `/hero/${heroname}`
     if (role) {
         link = `/hero/${heroname}?role=${role.replace('_', '')}`
@@ -149,12 +154,12 @@ const HeroCard = (props: any) => {
         <Link to={link}>
             <div className={`hero-cell ${heroHighlight}`}>
                 <img alt={props.heroName} className="hero-img" src={img} width={width}></img>
-                {!searching && !!stats.length &&
+                {!searching && !!stats &&
                     <div className="win-stats" style={{ width: width, maxWidth: width }}>
-                        <span className='picks'>{picks}</span>
-                        <span className='wins'>{wins}</span>
-                        <span className='winrate' style={{ color: colourWins(winrate) }}>{winrate}%</span>
-                        <span className='bans'>{bans}</span>
+                        <span className='picks'>{stats['picks']}</span>
+                        <span className='wins'>{stats['wins']}</span>
+                        <span className='winrate' style={{ color: colourWins(stats['winrate']) }}>{stats['winrate']}%</span>
+                        <span className='bans'>{stats['bans']}</span>
                     </div>
                 }
             </div>
