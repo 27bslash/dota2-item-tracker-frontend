@@ -48,17 +48,22 @@ const PickCounter = (props: pickProps) => {
         <>
             {!!props.matchData.length &&
                 <div className="pick-counter" style={{ color: 'white' }}>
-                {searching ? (
-                    <SearchResultsText data={props.matchData} updateMatchData={props.updateMatchData} roleSearch={roleSearch} searchRes={searchResults}
-                        heroColor={props.heroColor} name={name} reset={reset} />
-                ) : (
-                    props.type === 'hero' && props.heroColor &&
-                    <>
-                        <TotalPickCounter type={props.type} reset={reset} color={props.heroColor} role={props.role} totalPicks={props.totalPicks} name={props.nameParam} />
-                        <RoleCounter totalPicks={props.totalPicks} matchData={props.matchData} role={props.role} roleSearch={roleSearch}></RoleCounter>
-                    </>
-                )
-                }
+                    {searching ? (
+                        <SearchResultsText data={props.matchData} updateMatchData={props.updateMatchData} roleSearch={roleSearch} searchRes={searchResults}
+                            heroColor={props.heroColor} name={name} reset={reset} />
+                    ) : (
+                        props.type === 'hero' && props.heroColor &&
+                        <>
+                            <TotalPickCounter type={props.type} reset={reset} color={props.heroColor} role={props.role} totalPicks={props.totalPicks} name={props.nameParam} />
+                            <RoleCounter totalPicks={props.totalPicks} matchData={props.matchData} role={props.role} roleSearch={roleSearch}></RoleCounter>
+                        </>
+                    )}
+                    {props.type === 'player' && !searching &&
+                        <>
+                            <TotalPickCounter type={props.type} reset={reset} role={props.role} totalPicks={props.matchData.length} name={props.nameParam} />
+                            {/* <RoleCounter totalPicks={props.totalPicks} matchData={props.matchData} role={props.role} roleSearch={roleSearch}></RoleCounter> */}
+                        </>
+                    }
                 </div>
             }
         </>
@@ -93,15 +98,20 @@ const HeroPicks = (props: { base: any, role: string, reset: () => void, name: st
     )
 }
 const TotalPickCounter = (props: any) => {
-    const base = props.role ? props.totalPicks[props.role] : props.totalPicks
+    const totalPicks = props.role ? props.totalPicks[props.role] : props.totalPicks
     return (
         props.type === 'hero' ? (
-            <HeroPicks role={props.role} name={props.name} base={base} color={props.color} reset={props.reset} />
+            <HeroPicks role={props.role} name={props.name} base={totalPicks} color={props.color} reset={props.reset} />
         ) : (
-            <div className="pal">
-                <p className='bold-name'>{props.name} has played {base['picks']} times. He mostly plays: </p>
-            </div>
+            <PlayerPicks role={props.role} name={props.name} base={totalPicks} reset={props.reset} />
         )
+    )
+}
+const PlayerPicks = (props: any) => {
+    return (
+        <div className="pal">
+            <p className='bold-name'>{props.name} has played {props.base} times. He mostly plays: </p>
+        </div>
     )
 }
 const sortByMatches = (data: any) => {
@@ -115,7 +125,6 @@ const SearchResultsText = (props: any) => {
     const draft = searchRes['draft']
     const role = searchRes['role']
     const players = searchRes['player']
-
     const handleClick = (matches: any, key: string, type: string) => {
         const newMatchArr = matches.map((m: any) => m.id)
         const filteredMatches = data.filter((match: any) => newMatchArr.includes(match.id))
@@ -133,15 +142,16 @@ const SearchResultsText = (props: any) => {
             <h3 onClick={() => props.reset()}>Search Results:</h3>
             {players && Object.keys(players).length > 0 &&
                 <>
-                    <h4>Players: </h4>
-                    <SearchResultText data={players} handleClick={handleClick} filteredData={playerKeys} type={'player'} />
+                    {/* <SearchResultText data={players} handleClick={handleClick} filteredData={playerKeys} type={'player'} /> */}
+                    <DraftCounter handleClick={handleClick} draft={players} header='Players' subheader={[null, 'filtered players']} />
+
                 </>
             }
             {items && Object.keys(items).length > 0 &&
-                <ItemCounter handleClick={handleClick} items={items} />
+                <DraftCounter handleClick={handleClick} draft={items} type='items' header='Items' subheader={[null, 'filtered items']} />
             }
             {draft && !!Object.keys(draft).length &&
-                <DraftCounter handleClick={handleClick} draft={draft} />
+                <DraftCounter handleClick={handleClick} draft={draft} type='draft' header='Draft' subheader={['with', 'against']} />
             }
             {role && Object.keys(role).length > 0 &&
                 <>
@@ -158,9 +168,10 @@ const capitalizeStr = (str: string) => {
 }
 
 const DraftCounter = (props: any) => {
-    const { draft, handleClick } = props
+    const { draft, handleClick, header, subheader, type } = props
     const heroNames = Object.keys(draft)
     const keys = sortByMatches(draft)
+
     const draftArray = (symbol: string) => {
         const arr = []
         for (let heroName of keys) {
@@ -176,27 +187,33 @@ const DraftCounter = (props: any) => {
     const againstArr = draftArray('-')
     return (
         <>
-            <h4>Draft</h4>
+            <h4>{header}</h4>
             {!!withArr.length &&
                 <>
-                    <p>With:</p>
-                    <SearchResultText data={props.draft} handleClick={handleClick} filteredData={withArr} type={'draft'} />
+                    {subheader[0] &&
+                        <p>{subheader[0]}:</p>
+                    }
+                    <SearchResultText data={props.draft} handleClick={handleClick} filteredData={withArr} filtered={false} type={type} />
                 </>
             }
             {!!againstArr.length &&
                 <>
-                    <p>Against:</p>
-                    < SearchResultText data={props.draft} handleClick={handleClick} filteredData={againstArr} type={'draft'} />
+                    <p>{subheader[1]}:</p>
+                    < SearchResultText data={props.draft} handleClick={handleClick} filteredData={againstArr} filtered={true} type={type} />
                 </>
             }
         </>
     )
 }
 const SearchResultText = (props: any) => {
-    const { data, filteredData, handleClick, type } = props
+    const { data, filteredData, handleClick, type, filtered } = props
     return (
         filteredData.map((key: string, i: number) => {
-            const matches = data[key]['matches']
+            let matchKey = 'matches'
+            if ('totalFilteredMatches' in data[key]) {
+                matchKey = 'totalFilteredMatches'
+            }
+            const matches = data[key][matchKey]
             const totalWins = matches.filter((match: any) => match.win === 1).length
             const winRate = ((totalWins / matches.length) * 100).toFixed(2)
             const k = heroSwitcher(key.replace(/[+\-_]/g, x => x === '_' ? ' ' : ''))
@@ -208,7 +225,7 @@ const SearchResultText = (props: any) => {
                 end = ' and'
             }
             return (
-                <span onClick={() => handleClick(matches, key, type)} style={{ marginRight: '5px', textTransform: 'capitalize' }}
+                <span onClick={() => handleClick(data[key][matchKey], key, type)} style={{ marginRight: '5px', textTransform: 'capitalize' }}
                     className={`${type}-search-result table-search-result`} key={i}>{k}: ({matches.length}, <span style={{ color: colourWins(winRate) }}>{winRate}%</span>){end}</span>
             )
         })

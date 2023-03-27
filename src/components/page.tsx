@@ -188,7 +188,7 @@ const Page = (props: pageProps) => {
                         <StarterToggle updateStarter={updateStarter} />
                         <TableSearch type={props.type} disabled={filteredData.length === 0 || !itemData || !props.heroList}
                             heroName={nameParam} heroList={props.heroList} playerList={props.playerList}
-                            itemData={itemData} totalMatchData={filteredData}
+                            itemData={itemData} totalMatchData={totalMatchData} role={Role}
                             updateMatchData={updateMatchData} />
                     </div>
                     <CustomTable

@@ -4,7 +4,11 @@ const itemSearch = (item: string, data: any, itemData: any, role: string = '', i
         return {}
     }
     const matches: object[] = []
-    let searchRes = itemIdSearch(itemData, item)
+    const noSymbl = item.replace('-', '')
+    const symbolMatch = item.match(/^-/)
+    let symbol = ''
+    if (symbolMatch) symbol = '-'
+    let searchRes = itemIdSearch(itemData, noSymbl)
     const itemRes: any = new Set()
     const dict: {
         [item: string]: {
@@ -15,37 +19,22 @@ const itemSearch = (item: string, data: any, itemData: any, role: string = '', i
     if (role) {
         data = data.filter((match: any) => match.role === role)
     }
+    const allItems = data.map((match: any) => match['items'].map((item: { [key: string]: string }) => item.key)).flat()
     data.forEach((match: any) => {
         const seenItems = new Set()
         for (let item of match['items']) {
             if (seenItems.has(item.key)) {
                 continue
             }
-            if (searchRes['names'].has(item.key) || searchRes['names'].has(`item_${item.key}`)) {
+            if (!symbol && (searchRes['names'].has(item.key) || searchRes['names'].has(`item_${item.key}`))) {
                 const name = itemData[item.key] ? itemData[item.key] : item.key
                 itemRes.add(name)
                 seenItems.add(item.key)
-                dict[name] ? dict[name]['matches'].push(match) : dict[name] = { 'matches': [match], 'index': i }
+                dict[`${symbol}${name}`] ? dict[`${symbol}${name}`]['matches'].push(match) : dict[`${symbol}${name}`] = { 'matches': [match], 'index': i }
                 // matches.push({ name: match })
                 // {item: matches: [0]}
             }
         }
-        // const m = match['items'].filter((x: any) => {
-        //     // itemRes.push(x['key'])
-        //     const seenItems = new Set()
-        //     if (x.key in seenItems) {
-        //         return false
-        //     }
-        //     if (searchRes['names'].has(x.key) || searchRes['names'].has(`item_${x.key}`)) {
-        //         const name = displayNameFromName(itemData, x.key)
-        //         itemRes.add(name)
-        //         seenItems.add(x.key)
-        //         dict[name] ? dict[name]['matches'].push(match) : dict[name] = { 'matches': [match] }
-        //         // matches.push({ name: match })
-        //         // {item: matches: [0]}
-        //         return true
-        //     }
-        // })
         const neutral = searchRes['names'].has(match['item_neutral']) || searchRes['names'].has(`item_${match['item_neutral']}`)
         if (neutral) {
             matches.push(match)
@@ -54,6 +43,14 @@ const itemSearch = (item: string, data: any, itemData: any, role: string = '', i
             // {item: match}
         }
     })
+    if (symbol === '-') {
+        for (let item of searchRes['names']) {
+            const filteredMatches = data.filter((match: any) => match['items'].map((x: any) => x.key).every((x: string) => allItems.includes(x) && item !== x))
+            if (filteredMatches.length) {
+                dict[`${symbol}${item}`] = { 'matches': filteredMatches, index: 0 }
+            }
+        }
+    }
     return dict
 
 }
@@ -70,6 +67,7 @@ const itemIdSearch = (itemsArr: { [x: string]: { [x: string]: any } }, search: s
     const displayNames: Set<string> = new Set();
     for (let key of Object.keys(itemsArr["items"])) {
         const item = itemsArr["items"][key]
+        if (key.includes('recipe')) continue
         if (!('dname' in item)) {
             continue
         }
