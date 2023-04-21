@@ -52,12 +52,16 @@ export const countTalents = (heroData: any, matchData: any) => {
     for (let match of matchData) {
         for (let ability of match['abilities']) {
             if (ability['type'] === 'talent') {
-                const k = ability['id']
-                const count = talentCount[k]['count']
-                talentCount[k]['count'] = count + 1
+                try {
+                    const k = ability['id']
+                    const count = talentCount[k]['count']
+                    talentCount[k]['count'] = count + 1
+                } catch {
+                    console.log(ability)
+                }
+
             }
         }
-
     }
     for (let k in talentCount) {
         const slot = talentCount[k]['slot']
