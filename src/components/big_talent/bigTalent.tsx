@@ -57,7 +57,6 @@ export const countTalents = (heroData: any, matchData: any) => {
                     const count = talentCount[k]['count']
                     talentCount[k]['count'] = count + 1
                 } catch {
-                    console.log(ability)
                 }
 
             }

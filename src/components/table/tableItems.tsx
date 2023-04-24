@@ -6,6 +6,7 @@ import TalentImg from "./talentImg";
 import ArrowButton from './../arrowButton';
 import Tip from "../tooltip/tooltip";
 import Draft from "./draft";
+import StartingItems from './../../__tests__/HeroBuilds/startingItems.test';
 
 interface TitemProps {
     row: {
@@ -94,14 +95,13 @@ const TableItems = (props: TitemProps) => {
                         }
                         )
                     ) : (
-
+                        props.row.starting_items &&
                         props.row.starting_items.map((item: any, i: number) => {
                             const time = humanReadableTime(item['time'])
                             return <TableItem matchId={props.row.id} time={time} overlay={true}
                                 role={props.role} updateMatchData={props.updateMatchData}
                                 filteredData={props.filteredData} totalMatchData={props.totalMatchData} key={i} item={item} items={props.items} itemKey={item.key} type='item' starter={true}></TableItem>
                         })
-
                     )}
                 </div>
                 {props.row.item_neutral && !props.showStarter &&
@@ -114,7 +114,7 @@ const TableItems = (props: TitemProps) => {
                     // time={humanReadableTime(props.row.aghanims_shard['time'])}
                 }
             </div>
-            {props.showStarter &&
+            {props.showStarter && props.row.starting_items &&
                 <div className="flex intermediate-items">
                     {props.row.items.map((item: any, i) => {
                         if (item['time'] < 600 && item['time'] > 0 && !consumables.includes(item['key'])) {
@@ -128,20 +128,22 @@ const TableItems = (props: TitemProps) => {
                     })}
                 </div>
             }
-            <ArrowButton transition="collapse">
-                <div className="purchase-log">
-                    {props.row.items.map((item: any, i: number) => {
-                        const time = humanReadableTime(item['time'])
-                        if (!consumables.includes(item['key'])) {
-                            return (
-                                <TableItem matchId={props.row.id} role={props.role} overlay={true} updateMatchData={props.updateMatchData}
-                                    filteredData={props.filteredData} totalMatchData={props.totalMatchData} key={i} item={item} time={time} items={props.items} itemKey={item.key} type='item'></TableItem>)
+            {props.row.items &&
+                <ArrowButton transition="collapse">
+                    <div className="purchase-log">
+                        {props.row.items.map((item: any, i: number) => {
+                            const time = humanReadableTime(item['time'])
+                            if (!consumables.includes(item['key'])) {
+                                return (
+                                    <TableItem matchId={props.row.id} role={props.role} overlay={true} updateMatchData={props.updateMatchData}
+                                        filteredData={props.filteredData} totalMatchData={props.totalMatchData} key={i} item={item} time={time} items={props.items} itemKey={item.key} type='item'></TableItem>)
+                            }
                         }
-                    }
-                    )
-                    }
-                </div>
-            </ArrowButton>
+                        )
+                        }
+                    </div>
+                </ArrowButton>
+            }
 
             <Abilities abilities={props.row.abilities} heroName={heroName} visitedTalents={visitedTalents} heroData={props.heroData} imageHost={image_host} width={width} />
             <div className="draft">
