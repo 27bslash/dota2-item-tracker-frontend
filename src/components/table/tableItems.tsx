@@ -6,7 +6,6 @@ import TalentImg from "./talentImg";
 import ArrowButton from './../arrowButton';
 import Tip from "../tooltip/tooltip";
 import Draft from "./draft";
-import StartingItems from './../../__tests__/HeroBuilds/startingItems.test';
 
 interface TitemProps {
     row: {
