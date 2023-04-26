@@ -94,6 +94,10 @@ const BestGames = (props: any) => {
                                                 if (k in match.benchmarks) {
                                                     let pct = match.benchmarks[k]['pct']
                                                     let raw = match.benchmarks[k]['raw']
+                                                    if (typeof pct == 'number') {
+                                                        pct = (pct * 100).toFixed(2)
+                                                        raw = raw.toFixed(2)
+                                                    }
                                                     let color = '#EC494B'
                                                     if (pct >= 80) color = '#5AA563'
                                                     else if (pct >= 60) color = '#5499D2'
