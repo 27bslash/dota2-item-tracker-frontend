@@ -13,7 +13,7 @@ import { useSearchParams } from 'react-router-dom';
 import PickCounter from './pick_counter/pickCounter';
 import Build from './HeroBuilds/build';
 import Items from './types/Item';
-import { baseApiUrlContext } from '../App';
+import { baseApiUrl } from '../App';
 import { fetchData, bulkRequest } from './fetchData';
 
 //  TODO
@@ -58,7 +58,6 @@ const Page = (props: pageProps) => {
     const updateStarter = () => {
         setShowStarter(prev => !prev)
     }
-    const baseApiUrl = useContext(baseApiUrlContext)
     useEffect(() => {
         document.title = nameParam;
         (async () => {
@@ -73,7 +72,7 @@ const Page = (props: pageProps) => {
             setTotalPicks(matches['picks'])
             let allMatches
             if (docLength > 60) {
-                const worker = new Worker('./fetchData.ts')
+                // const worker = new Worker('./fetchData.ts')
                 allMatches = await bulkRequest(`${baseApiUrl}${props.type}/${nameParam}/react-test`, docLength)
                 const merged = allMatches.map((x: { [x: string]: any; }) => x['data']).flat()
                 setTotalMatchData(merged)

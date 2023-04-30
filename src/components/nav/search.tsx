@@ -1,5 +1,5 @@
 import TextField from '@mui/material/TextField';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { matchSorter } from 'match-sorter'
 import SearchResults from './searchResults';
 interface heroList {
@@ -16,6 +16,7 @@ const NavSearch = (props: searchProps) => {
     const [value, setValue] = useState('')
     const [sortedHeroes, setSortedHeroes] = useState<any[]>([])
     const [sortedPlayers, setSortedPlayers] = useState<string[]>([])
+    const searchRef = useRef<HTMLInputElement | null>(null)
     // const data = 'data'
     const updateValue = () => {
         setValue('')
@@ -31,7 +32,7 @@ const NavSearch = (props: searchProps) => {
                 x.name = x.name.replace(/-|_/g, ' ')
                 return x
             }), value, { keys: [{ threshold: matchSorter.rankings.ACRONYM, key: 'name' }] }).slice(0, 15).reverse()
-
+            console.log(sorted)
             const srtedPlayers = filterPlayers(props.playerList, value).slice(0, 15)
             setSortedHeroes(sorted)
             setSortedPlayers(srtedPlayers)
@@ -43,12 +44,33 @@ const NavSearch = (props: searchProps) => {
 
         }
     }, [value])
+    useEffect(() => {
+        window.addEventListener('keydown', autoFocus, false);
+        return () => window.removeEventListener('keydown', autoFocus, false);
+    }, [])
+    const autoFocus = (e: KeyboardEvent) => {
+        let keyCodes = [13, 27, 40, 38, 39, 37, 9];
+        // focus search on keypress
+        if (
+            !window.location.pathname.includes("player") &&
+            !window.location.pathname.includes("hero")
+        ) {
+            if (!keyCodes.includes(e.keyCode)) {
+                // search.focus();
+                if (searchRef.current) {
+                    searchRef.current.focus()
+                }
+                // document.querySelector(".suggestions").classList.add("hide");
+            }
+        }
+    };
     return (
         <div className='nav-search'>
             <TextField
                 id="search"
                 placeholder='Search...'
                 label=""
+                inputRef={searchRef}
                 disabled={false}
                 variant="standard"
                 value={value}

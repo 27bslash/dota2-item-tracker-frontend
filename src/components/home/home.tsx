@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 import Nav from "../nav/nav";
 import colourWins from '../colourWins';
 import ControlPanel from "./control";
-import { baseApiUrlContext } from "../../App";
+import { baseApiUrl } from "../../App";
 
 const Home = (props: any) => {
     const [winStats, setWinStats] = useState<any[]>()
@@ -15,7 +15,6 @@ const Home = (props: any) => {
     const [searching, setSearching] = useState(false)
     const [highlight, setHighlight] = useState<number>()
     const [sort, setSearchVal] = useState('')
-    const baseApiUrl = useContext(baseApiUrlContext)
     useEffect(() => {
         document.title = 'dota2 item tracker';
         (async () => {

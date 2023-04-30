@@ -115,10 +115,7 @@ const SearchResults = (props: SearchResultsProps) => {
                         <h5 className='suggestion-header'>Players</h5>
                         {props.sortedPlayers.map((value, i) => {
                             // console.log(value)
-                            let style;
-                            if (i === searchResultIdx && targetList === 1) {
-                                style = { backgroundColor: 'white' }
-                            }
+
                             return (
                                 <SearchResult value={value} updateSearchIdx={updateSearchIdx} type='player' idx={i} key={i} selectedidx={idxRef.current} list={1} targetList={targetList} />
                             )

@@ -12,12 +12,11 @@ interface heroList {
     id: number
 }
 // export const baseApiUrlContext = createContext('http://127.0.0.1:5000/')
-export const baseApiUrlContext = createContext('https://wqr6qu33nndj37c5uoogrmgsyq0mkbes.lambda-url.eu-west-2.on.aws/')
+export const baseApiUrl = 'https://wqr6qu33nndj37c5uoogrmgsyq0mkbes.lambda-url.eu-west-2.on.aws/'
 function App() {
     const [heroList, setHeroList] = useState<heroList[]>([])
     const [playerList, setPlayerList] = useState([])
     // const baseApiUrl = 'https://dota2-item-tracker.onrender.com/'
-    const baseApiUrl = useContext(baseApiUrlContext)
     useEffect(() => {
         (async () => {
             const heroList = await fetch(`${baseApiUrl}files/hero_ids`)
