@@ -110,7 +110,7 @@ const GridContainer = (props: any) => {
         props.className.includes('right') ?
             (
                 <Grid className={`hero-grid ${props.className}`} container spacing={0} md={4} sx={{ width: props.width + '!important' }}>
-                    {props.children};
+                    {props.children}
                 </Grid>
             ) : (
                 <Grid className={`hero-grid ${props.className}`} container spacing={3} md='auto' sx={{ width: props.width }}>

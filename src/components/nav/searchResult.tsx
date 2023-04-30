@@ -1,9 +1,10 @@
 
 import { useState, useEffect } from 'react';
 const SearchResult = (props: any) => {
-    const name = props.type === 'hero' ? props.value.name.replace(/\s/g, '_') : props.value
-    let class_ = ''
+    let name = props.type === 'hero' ? props.value.name.replace(/\s/g, '_') : props.value
+    // anti mage edge case
     const displayName = name.replace(/_/g, ' ')
+    if (name === 'anti_mage') name = 'anti-mage'
     const [hightlight, setHighlight] = useState(false)
     useEffect(() => {
         if (props.idx === props.selectedidx && props.list === props.targetList) {
