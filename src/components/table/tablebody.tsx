@@ -63,6 +63,9 @@ const CustomTableBody = (props: BodyProps) => {
                             </TableCell>
                             <TableCell>
                                 <FontAwesomeIcon className='copy-match-id' icon={faCopy} color='white' onClick={() => navigator.clipboard.writeText(row.id)} />
+                                <a href={`https://www.opendota.com/matches/${row.id}`} target="_blank" rel='noreferrer'>
+                                    <img style={{ marginLeft: '10px' }} src='https://www.opendota.com/assets/images/icons/icon-72x72.png' height='14px' alt='opendota link' />
+                                </a>
                             </TableCell>
                             <TableCell sx={{ color: 'white' }}>
                                 {/* {row.role} */}
@@ -129,7 +132,7 @@ const CustomTableBody = (props: BodyProps) => {
                                 {row.tower_damage}
                             </TableCell>
                             <TableCell sx={{ color: 'white' }}>
-                                {row.duration}
+                                {new Date(1000 * row.duration).toISOString().substring(11, 19)}
                             </TableCell>
                             <TableCell sx={{ color: 'white' }}>
                                 {row.mmr}

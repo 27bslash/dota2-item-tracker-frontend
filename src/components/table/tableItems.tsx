@@ -35,7 +35,7 @@ interface TitemProps {
 }
 
 const humanReadableTime = (time: number | string) => {
-    if (time < 0) {
+    if (typeof (time) === 'number' && time < 0) {
         time = 0
     }
     let minutes, secs
