@@ -2,7 +2,7 @@ import ItemBuild from "./itemBuild/itemBuild"
 import AbilityBuild from './abillityBuild/abilityBuild';
 import { useEffect, useMemo, useReducer, useState } from "react";
 import StartingItems from "./itemBuild/startingItems/startingItems";
-import { Button } from "@mui/material";
+import { Box, Button } from "@mui/material";
 import { grey } from "@mui/material/colors";
 import filterItems from "./itemBuild/itemFitltering/itemFiltering";
 import abilityFilter from "./abillityBuild/abilityFiltering";
@@ -112,9 +112,9 @@ const Build = (props: BuildProps) => {
         }
     }, [filteredData])
     return (
-        <>
+        <div className="build-wrapper">
             {filteredData &&
-                <div>
+                <div className="build-container">
                     < Button sx={{
                         backgroundColor: grey[800],
                         '&:hover': {
@@ -140,7 +140,7 @@ const Build = (props: BuildProps) => {
                     }
                 </div>
             }
-        </>
+        </div>
     )
 }
 const BuildCell = (props: any) => {
