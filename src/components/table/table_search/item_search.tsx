@@ -46,7 +46,9 @@ const itemSearch = (item: string, data: any, itemData: any, role: string = '', i
     })
     if (symbol === '-') {
         for (let item of searchRes['names']) {
-            const filteredMatches = data.filter((match: any) => match['items'].map((x: any) => x.key).every((x: string) => allItems.includes(x) && item !== x))
+            const filteredMatches = data.filter((match: any) => match['items'].map((x: any) => x.key).every((x: string) =>
+                allItems.includes(item) && item !== x
+            ))
             if (filteredMatches.length) {
                 dict[`${symbol}${item}`] = { 'matches': filteredMatches, index: 0 }
             }
@@ -54,14 +56,6 @@ const itemSearch = (item: string, data: any, itemData: any, role: string = '', i
     }
     return dict
 
-}
-const displayNameFromName = (itemsArr: any, name: string) => {
-    for (let item of itemsArr["items"]) {
-        if (item['name'] === `item_${name}`) {
-            // console.log('item ', item['name'], 'name: ', name)
-            return item['displayName']
-        }
-    }
 }
 const itemIdSearch = (itemsArr: { [x: string]: { [x: string]: any } }, search: string) => {
     const names: Set<string> = new Set();
