@@ -85,7 +85,7 @@ const filterComponents = (data: any[], itemData: any) => {
     const keys = data.map((x) => x[0])
     // console.log([...keys])
     const removedComponents: any = []
-    const disassembleable = ['arcane_boots', 'echo_sabre', 'lotus_orb', 'octarine_core', 'vanguard', 'mask_of_madness']
+    const disassembleable = ['arcane_boots', 'echo_sabre', 'octarine_core', 'vanguard', 'mask_of_madness']
     // console.log([...data])
     for (let i = 0; i < data.length; i++) {
         const item = data[i]

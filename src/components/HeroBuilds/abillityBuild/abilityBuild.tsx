@@ -22,7 +22,7 @@ const AbilityBuild = (props: AbilityBuildProps) => {
                 })}
                 <BigTalent matchData={props.data} heroName={props.heroName} heroData={props.heroData} width='65px' margin='-5px 0px 0px 0px' />
             </div> */}
-            <div className="">
+            <div className="ability-build">
                 {props.abilityBuild[0].map((abilityArr, i) => {
                     return (
                         <div className="flex" key={i}>

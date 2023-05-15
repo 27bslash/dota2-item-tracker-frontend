@@ -1,3 +1,4 @@
+import { Grid } from '@mui/material';
 import TableItem from './../../table/tableItem';
 type Item = {
     [k: string]: { value: number, adjustedValue: number, time: number, disassemble?: boolean, dissassembledComponents?: string[] }
@@ -19,19 +20,21 @@ const ItemBuild = (props: any) => {
     // console.log(filteredItems, dataKeys.length)
     return (
         <>
-            <div className="item-build flex" style={{ flexWrap: 'wrap' }}>
+            <Grid container spacing={2} className="item-build">
                 {props.data.map((arr: any, i: number) => {
-                    let timing = i === 1 ? 'mid' : (i === 2 ? 'late' : 'early')
+                    let timing = i === 1 ? 'Mid' : (i === 2 ? 'Late' : 'Early')
                     return (
-                        <div className="item-cell-wrapper" key={i}>
-                            {timing}
-                            <div className={timing + ' flex'} >
-                                <ItemBuilds arr={arr} timing={timing} data={props.data} itemData={props.itemData} />
+                        <Grid item>
+                            <div className="item-cell-wrapper" key={i}>
+                                <h3 className='build-header'>{timing + ' Core'}</h3>
+                                <div className={timing + ' flex'} >
+                                    <ItemBuilds arr={arr} timing={timing} data={props.data} itemData={props.itemData} />
+                                </div>
                             </div>
-                        </div>
+                        </Grid>
                     )
                 })}
-            </div>
+            </Grid>
             < div className="flex">
                 {/* {filteredItems.map((key: string, i: number) => {
                     return (
@@ -45,11 +48,11 @@ const ItemBuild = (props: any) => {
     )
 }
 const ItemBuilds = (props: { arr: any; timing: any; data: any; itemData: any; }) => {
-    const { arr, data, itemData } = props
+    const { arr, data, itemData, timing } = props
     return (
         <div style={{ display: 'grid' }}>
             {arr['core'].length !== 0 &&
-                <div className="core flex" style={{ border: 'solid 1px white' }}>
+                <div className="core flex">
                     {arr['core'].map((items: Item[], i: number) => {
                         // console.log('items', i, items)
                         const itemkey = Object.keys(items)
@@ -61,14 +64,18 @@ const ItemBuilds = (props: { arr: any; timing: any; data: any; itemData: any; })
                 </div>
             }
             {arr['situational'].length !== 0 &&
-                <div className="situational flex" style={{ border: 'solid 1px white', marginTop: '10px' }}>
-                    {arr['situational'].map((items: Item[], i: number) => {
-                        const itemkey = Object.keys(items)
-                        return (
-                            <ItemBuildCell key={i} itemkey={itemkey} item={items} data={data} itemData={itemData} />
-                        )
-                    })}
-                </div>}
+                <>
+                    <h3>{timing + ' Situational'}</h3>
+                    <div className="situational flex" style={{ justifySelf: 'center' }}>
+                        {arr['situational'].map((items: Item[], i: number) => {
+                            const itemkey = Object.keys(items)
+                            return (
+                                <ItemBuildCell key={i} itemkey={itemkey} item={items} data={data} itemData={itemData} />
+                            )
+                        })}
+                    </div>
+                </>
+            }
         </div>
     )
 }
@@ -87,6 +94,7 @@ const ItemBuildCell = (props: { itemkey: any; item: any; data: any; itemData: an
                     const link = `${image_host}https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/items/${k}.png`
                     const disassemble = item[k]['disassemble']
                     const components = item[k]['dissassembledComponents']
+                    const orText = itemkey.length - 1 !== idx ? 'or' : ''
                     k = k.replace(/__\d+/g, '')
                     return (
                         <div key={idx} className='itembuild-img-cell flex' style={{ alignItems: 'center', justifyContent: 'end' }} >
@@ -99,6 +107,7 @@ const ItemBuildCell = (props: { itemkey: any; item: any; data: any; itemData: an
                                     items={itemData} role='' overlay={false} />
                                 {/* <p style={{ margin: '0', color: 'white' }}>{perc}%</p> */}
                                 <p style={{ margin: '0', color: 'white' }}>{perc.toFixed(2)}%</p>
+                                <p style={{ margin: 0, color: 'white' }}>{orText}</p>
                             </div>
                         </div>
 
@@ -108,7 +117,6 @@ const ItemBuildCell = (props: { itemkey: any; item: any; data: any; itemData: an
         </div >)
 }
 const ItemComponents = (props: { components: string[][]; data: object[]; itemData: any; }) => {
-    console.log(props.components)
     const components = props.components.slice(0, 2)
     return (
         <div className='components' style={{ height: '300%', display: 'flex' }}>

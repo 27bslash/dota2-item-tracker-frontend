@@ -60,7 +60,17 @@ body {
   background-color: #94a2a3;
   border-radius: 5px;
 }
-
+.build-wrapper {
+  width: fit-content;
+}
+.build-container:has(div) {
+  background-color: rgb(48, 48, 54);
+  padding: 10px;
+  border: solid black 2px;
+  border-radius: 5px;
+  margin-top: -12px;
+  margin-left: -12px;
+}
 table {
   width: 100%;
 }
