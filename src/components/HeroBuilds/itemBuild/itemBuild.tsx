@@ -18,65 +18,51 @@ const ItemBuild = (props: any) => {
     //     return !dataKeys.includes(match[0])
     // })
     // console.log(filteredItems, dataKeys.length)
+    const sortedData = props.data.map((o: any) => ({ 'core': o['core'] })).concat(props.data.map((o: any) => ({ 'situational': o['situational'] })));
+
     return (
         <>
-            <Grid container spacing={2} className="item-build">
-                {props.data.map((arr: any, i: number) => {
-                    let timing = i === 1 ? 'Mid' : (i === 2 ? 'Late' : 'Early')
+            <Grid container className="item-build" sx={{ maxWidth: '1100px' }}>
+                {sortedData.map((buildObject: any, i: number) => {
+                    let timing = i === 1 || i === 4 ? 'Mid' : (i === 2 || i === 5 ? 'Late' : 'Early')
                     return (
-                        <Grid item>
-                            <div className="item-cell-wrapper" key={i}>
-                                <h3 className='build-header'>{timing + ' Core'}</h3>
-                                <div className={timing + ' flex'} >
-                                    <ItemBuilds arr={arr} timing={timing} data={props.data} itemData={props.itemData} />
-                                </div>
-                            </div>
-                        </Grid>
+                        <>
+                            {i < 3 ? (
+                                <Grid item md={4} sx={{ textAlign: 'center' }}>
+                                    <ItemBuilds buildObject={buildObject} timing={timing} data={sortedData} itemData={props.itemData} ObjectKey='core' />
+                                </Grid>
+                            ) : (
+                                <Grid item md={4} style={{ textAlign: 'center' }}>
+                                    <ItemBuilds buildObject={buildObject} timing={timing} data={sortedData} itemData={props.itemData} ObjectKey='situational' />
+                                </Grid>
+                            )}
+                        </>
                     )
                 })}
             </Grid>
-            < div className="flex">
-                {/* {filteredItems.map((key: string, i: number) => {
-                    return (
-                        <TableItem type='item' height='40px' itemKey={key[0]} filteredData={data} totalMatchData={data}
-                            items={props.itemData} role='' overlay={false} />
-                    )
-                })
-                } */}
-            </div>
         </>
     )
 }
-const ItemBuilds = (props: { arr: any; timing: any; data: any; itemData: any; }) => {
-    const { arr, data, itemData, timing } = props
+const ItemBuilds = (props: { buildObject: any; timing: any; data: any; itemData: any, ObjectKey: string }) => {
+    const { buildObject, data, itemData, timing, ObjectKey } = props
     return (
-        <div style={{ display: 'grid' }}>
-            {arr['core'].length !== 0 &&
-                <div className="core flex">
-                    {arr['core'].map((items: Item[], i: number) => {
-                        // console.log('items', i, items)
-                        const itemkey = Object.keys(items)
-                        return (
-                            <ItemBuildCell key={i} itemkey={itemkey} item={items} data={data} itemData={itemData} />
-                        )
-                    })
-                    }
-                </div>
-            }
-            {arr['situational'].length !== 0 &&
+        <>
+            {buildObject[ObjectKey].length !== 0 &&
                 <>
-                    <h3>{timing + ' Situational'}</h3>
-                    <div className="situational flex" style={{ justifySelf: 'center' }}>
-                        {arr['situational'].map((items: Item[], i: number) => {
+                    <h3 className='build-header'>{`${timing} ${ObjectKey}`}</h3>
+                    <div className="core flex" style={{ justifyContent: 'center' }}>
+                        {buildObject[ObjectKey].map((items: Item[], i: number) => {
+                            // console.log('items', i, items)
                             const itemkey = Object.keys(items)
                             return (
                                 <ItemBuildCell key={i} itemkey={itemkey} item={items} data={data} itemData={itemData} />
                             )
-                        })}
+                        })
+                        }
                     </div>
                 </>
             }
-        </div>
+        </>
     )
 }
 const ItemBuildCell = (props: { itemkey: any; item: any; data: any; itemData: any; }) => {

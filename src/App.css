@@ -71,6 +71,10 @@ body {
   margin-top: -12px;
   margin-left: -12px;
 }
+.build-header {
+  color: white;
+  text-transform: capitalize;
+}
 table {
   width: 100%;
 }
