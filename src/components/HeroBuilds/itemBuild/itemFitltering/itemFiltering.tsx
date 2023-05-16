@@ -30,7 +30,9 @@ export const countItems = (data: any, itemData: any) => {
         "dust",
         "tome_of_knowledge",
         "gem",
-        'faerie_fire'
+        'faerie_fire',
+        'great_famango',
+        'famango'
     ];
 
     // most common items try sorting them by time maybe that's good enough
