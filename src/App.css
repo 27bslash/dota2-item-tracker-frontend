@@ -61,7 +61,8 @@ body {
   border-radius: 5px;
 }
 .build-wrapper {
-  width: fit-content;
+  /* width: fit-content; */
+  width: 1200px;
 }
 .build-container:has(div) {
   background-color: rgb(48, 48, 54);
@@ -71,9 +72,19 @@ body {
   margin-top: -12px;
   margin-left: -12px;
 }
+
+.starting-items {
+  /* background-color: blue; */
+}
+.item-build {
+  /* background-color: green; */
+}
 .build-header {
   color: white;
   text-transform: capitalize;
+}
+.ability-build {
+  /* background-color: yellow; */
 }
 table {
   width: 100%;

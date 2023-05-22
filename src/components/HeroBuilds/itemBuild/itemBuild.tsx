@@ -19,28 +19,69 @@ const ItemBuild = (props: any) => {
     // })
     // console.log(filteredItems, dataKeys.length)
     const sortedData = props.data.map((o: any) => ({ 'core': o['core'] })).concat(props.data.map((o: any) => ({ 'situational': o['situational'] })));
+    const totalLen = props.data.map((x: any) => {
+        const keys = ['core', 'situational']
+        let currMax = 0
+        for (let k of keys) {
 
+            if (x[k].map((y: any) => y).length > currMax) {
+                currMax = x[k].length
+            } else {
+                x[k]['currMax'] = currMax
+            }
+        }
+        return currMax
+        // return x['core'].map((y: any) => y)
+    }
+    )
     return (
         <>
-            <Grid container className="item-build" sx={{ maxWidth: '1100px' }}>
-                {sortedData.map((buildObject: any, i: number) => {
+            <Grid container  >
+                <Grid container >
+                    <GridRow data={props.data.map((o: any) => ({ 'core': o['core'] }))} dataLength={totalLen} itemData={props.itemData} ObjectKey={'core'} />
+                </Grid>
+                <Grid container >
+                    <GridRow data={props.data.map((o: any) => ({ 'situational': o['situational'] }))} dataLength={totalLen} itemData={props.itemData} ObjectKey={'situational'} />
+                </Grid>
+                {/* {props.data.map((o: any) => ({ 'core': o['core'] })).map((buildObject: any, i: number) => {
+
+                {props.data.map((o: any) => ({ 'situational': o['situational'] })).map((buildObject: any, i: number) => {
                     let timing = i === 1 || i === 4 ? 'Mid' : (i === 2 || i === 5 ? 'Late' : 'Early')
                     return (
-                        <>
-                            {i < 3 ? (
-                                <Grid item md={4} sx={{ textAlign: 'center' }}>
-                                    <ItemBuilds buildObject={buildObject} timing={timing} data={sortedData} itemData={props.itemData} ObjectKey='core' />
-                                </Grid>
-                            ) : (
-                                <Grid item md={4} style={{ textAlign: 'center' }}>
-                                    <ItemBuilds buildObject={buildObject} timing={timing} data={sortedData} itemData={props.itemData} ObjectKey='situational' />
-                                </Grid>
-                            )}
-                        </>
+                        <Grid container item key={i}>
+                            <Grid key={i} item md={3.7} sx={{ textAlign: 'center' }}>
+                                <ItemBuilds buildObject={buildObject} timing={timing} data={props.data} itemData={props.itemData} ObjectKey={'situational'} />
+                            </Grid>
+                        </Grid>
+
                     )
-                })}
+                })} */}
             </Grid>
         </>
+    )
+}
+const GridRow = (props: { data: any, itemData: any, ObjectKey: any, dataLength: number[] }) => {
+    // console.log(props.data)
+    // 18 6
+    // 18 
+    const totalLen = props.dataLength.reduce((a: number, b: number) => a + b)
+    return (
+        props.data.map((buildObject: any, i: number) => {
+            let timing = i === 1 || i === 4 ? 'Mid' : (i === 2 || i === 5 ? 'Late' : 'Early')
+            // console.log(buildObject)
+            const maxWidth = 12 / (totalLen / props.dataLength[i])
+            const widthPerc = (maxWidth / 12) * 100
+            console.log('mw', widthPerc)
+            const adjustedWidth = widthPerc - widthPerc / 100 * 15
+            const l = buildObject[props.ObjectKey].map((x: any) => x).flat().length
+            // console.log(l)
+
+            return (
+                <Grid item md={maxWidth} sm={maxWidth} sx={{ textAlign: 'center', maxWidth: adjustedWidth }}>
+                    <ItemBuilds buildObject={buildObject} timing={timing} data={props.data} itemData={props.itemData} ObjectKey={props.ObjectKey} />
+                </Grid >
+            )
+        })
     )
 }
 const ItemBuilds = (props: { buildObject: any; timing: any; data: any; itemData: any, ObjectKey: string }) => {
@@ -50,7 +91,7 @@ const ItemBuilds = (props: { buildObject: any; timing: any; data: any; itemData:
             {buildObject[ObjectKey].length !== 0 &&
                 <>
                     <h3 className='build-header'>{`${timing} ${ObjectKey}`}</h3>
-                    <div className="core flex" style={{ justifyContent: 'center' }}>
+                    <div className={`${ObjectKey} flex`} style={{ justifyContent: 'center' }}>
                         {buildObject[ObjectKey].map((items: Item[], i: number) => {
                             // console.log('items', i, items)
                             const itemkey = Object.keys(items)
