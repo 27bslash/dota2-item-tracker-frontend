@@ -77,12 +77,15 @@ const groupByTime = (data: any, itemData: any, matchData: any) => {
         for (let k of keys) {
             for (let itemArr of itemGroup[k]) {
                 // console.log(Object.values(itemArr))
-                const targetKey = Object.keys(itemArr)[0]
-                if (Object.keys(Object.values(itemArr)[0]).includes('option')) {
+                const objectKeys = Object.keys(itemArr)
+                const targetKey = objectKeys[0]
+                const values = Object.values(itemArr)[0]
+                if (!values) continue
+                if (Object.keys(values).includes('option')) {
                     // itemGroup[k].concat(itemArr)
                     const option = itemArr[targetKey]['option'][0]
                     const optionKey = option['choice']
-                    const idx = itemGroup[k].findIndex((x) => Object.keys(x)[0] === optionKey)
+                    const idx = itemGroup[k].findIndex((x: any) => Object.keys(x)[0] === optionKey)
                     itemArr[optionKey] = { 'value': option['targetValue'], 'adjustedValue': option['targetValue'], time: option['time'] }
                     itemGroup[k].splice(idx, 1)
 
