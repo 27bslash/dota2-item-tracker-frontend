@@ -95,7 +95,7 @@ const ItemBuilds = (props: { buildObject: any; timing: any; data: any; itemData:
                     <div className={`${ObjectKey} flex`} style={{ justifyContent: 'center', flexDirection: 'column' }}>
                         {buildObject[ObjectKey].map((itemGroup: any[], i: number) => {
                             // console.log('items', i, items)
-                            const offset = itemGroup.length % 2 === 0 ? '0px' : '-51px'
+                            const offset = itemGroup.length % 2 === 0 || i === 0 ? '0px' : '-51px'
                             return (
                                 <div key={i} className='flex' style={{ justifyContent: 'center', marginLeft: offset }}>
                                     {itemGroup.map((items: Item[], j: number) => {
