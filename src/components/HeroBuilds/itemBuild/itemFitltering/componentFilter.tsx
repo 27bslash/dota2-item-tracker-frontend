@@ -14,7 +14,7 @@ const recursive_remove = (item: any, itemdata: any, components: string[], data: 
                 // console.log('qual remove: ', component, componentStats, data[idx])
                 removedComponents.push(component)
                 continue
-            } else if (!component.includes('boots') && component !== 'ring_of_health' && component !== 'helm_of_iron_will'
+            } else if (!component.includes('boots') && component !== 'ring_of_health' && component !== 'cornucopia' && component !== 'helm_of_iron_will'
                 && Math.abs(dataComponent[1]['time'] - item[1]['time']) < 300
                 && item[1]['value'] > 3) {
                 // console.log('lace', component, dataComponent, Math.abs(dataComponent[1]['time'] - item[1]['time']), item)

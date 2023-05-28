@@ -1,7 +1,7 @@
 const groupByTime = (data: any, itemData: any, matchData: any) => {
     const itemObj: any = { 'core': [], 'situational': [] }
     const res = [structuredClone(itemObj), structuredClone(itemObj), structuredClone(itemObj)]
-
+    const coreArr = []
     const seenItems = new Set()
     for (let item of data) {
         const itemKey: any = item[0].replace(/__\d+/g, '')
@@ -30,6 +30,9 @@ const groupByTime = (data: any, itemData: any, matchData: any) => {
                 return false
             }
         }))
+        // const filtereedData = matchData.filter((match: any) => match['items'].map((itemObject: any) => itemObject['key']).includes(item[0]))
+        // console.log(filtereedData)
+
         const coreLength = Object.keys(core).length !== 0
         // console.log(data.length, (item[1]['value'] / matchData.length) * 100, item[0])
         // if (item[1]['value'] < 3 && itemData['items'][itemKey]['components']) {
@@ -53,6 +56,7 @@ const groupByTime = (data: any, itemData: any, matchData: any) => {
                 res[0]['core'].push(core)
             } else if (itemTime < 1800) {
                 res[1]['core'].push(core)
+                // coreArr.push(core)
             } else {
                 res[2]['core'].push(core)
             }
@@ -66,13 +70,28 @@ const groupByTime = (data: any, itemData: any, matchData: any) => {
             }
         }
     }
+
+
     for (let itemGroup of res) {
         const keys: string[] = ['core', 'situational']
         for (let k of keys) {
+            for (let itemArr of itemGroup[k]) {
+                // console.log(Object.values(itemArr))
+                const targetKey = Object.keys(itemArr)[0]
+                if (Object.keys(Object.values(itemArr)[0]).includes('option')) {
+                    // itemGroup[k].concat(itemArr)
+                    const option = itemArr[targetKey]['option'][0]
+                    const optionKey = option['choice']
+                    const idx = itemGroup[k].findIndex((x) => Object.keys(x)[0] === optionKey)
+                    itemArr[optionKey] = { 'value': option['targetValue'], 'adjustedValue': option['targetValue'], time: option['time'] }
+                    itemGroup[k].splice(idx, 1)
+
+                }
+            }
             if (itemGroup[k].length > 5) {
-                console.log('test', k)
+                // console.log('test', k)
                 itemGroup[k] = chunkArray(itemGroup[k], 6)
-                console.log(itemGroup[k])
+                // console.log(itemGroup[k])
             } else {
                 itemGroup[k] = [itemGroup[k]]
             }

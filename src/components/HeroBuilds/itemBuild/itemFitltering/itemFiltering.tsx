@@ -1,5 +1,6 @@
 import filterComponents from "./componentFilter"
 import groupByTime from "./groupBytime"
+import { addItemChoices } from "./itemChoices"
 
 const humanToUnix = (time: string | number) => {
     if (typeof (time) === "number") {
@@ -120,12 +121,13 @@ export const boots_filter = (data: any[], itemData: any[]) => {
     return filtered
 }
 
-const filterItems = (data: any, itemData: any) => {
-    let itemBuild = countItems(data, itemData)
+const filterItems = (matchData: any, itemData: any) => {
+    let itemBuild = countItems(matchData, itemData)
     // console.log(itemBuild)
     itemBuild = filterComponents(itemBuild, itemData)
     itemBuild = boots_filter(itemBuild, itemData)
-    itemBuild = groupByTime(itemBuild, itemData, data)
+    itemBuild = addItemChoices(itemBuild, matchData, itemData)
+    itemBuild = groupByTime(itemBuild, itemData, matchData)
     return itemBuild
 }
 export default filterItems
