@@ -32,9 +32,13 @@ export const countItems = (data: any, itemData: any) => {
         "gem",
         'faerie_fire',
         'great_famango',
-        'famango'
+        'famango',
+        'dagon_2',
+        'dagon_3',
+        'dagon_4',
     ];
-
+    // console.log(data)
+    // console.log(data.map((x: any) => x['items']))
     // most common items try sorting them by time maybe that's good enough
     // otherwise bbuild by boots maybe?
     const items: any[] = []
@@ -103,7 +107,7 @@ export const countItems = (data: any, itemData: any) => {
     return itemValues
 }
 
-const boots_filter = (data: any[], itemData: any[]) => {
+export const boots_filter = (data: any[], itemData: any[]) => {
     const boots = ['tranquil_boots', 'arcane_boots', 'power_treads', 'phase_boots']
     const bootsCount = data.filter((x) => boots.includes(x[0])).length
     const filtered = data.filter((x) => {
@@ -117,10 +121,11 @@ const boots_filter = (data: any[], itemData: any[]) => {
 }
 
 const filterItems = (data: any, itemData: any) => {
-    data = countItems(data, itemData)
-    data = filterComponents(data, itemData)
-    data = boots_filter(data, itemData)
-    data = groupByTime(data, itemData, data)
-    return data
+    let itemBuild = countItems(data, itemData)
+    // console.log(itemBuild)
+    itemBuild = filterComponents(itemBuild, itemData)
+    itemBuild = boots_filter(itemBuild, itemData)
+    itemBuild = groupByTime(itemBuild, itemData, data)
+    return itemBuild
 }
 export default filterItems
