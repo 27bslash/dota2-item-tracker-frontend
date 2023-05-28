@@ -12,7 +12,7 @@ const groupByTime = (data: any, itemData: any, matchData: any) => {
         let count = 0
         const core = Object.fromEntries([...data].filter((x: any) => {
             // group items into sections of 2 mins apart also filter situational items out
-            if (Math.abs(itemTime - x[1]['time']) <= 40 && !seenItems.has(x[0]) && x[1]['adjustedValue'] > 20 && count <= 1) {
+            if (Math.abs(itemTime - x[1]['time']) <= 40 && !seenItems.has(x[0]) && x[1]['adjustedValue'] > 20 && count === 0) {
                 seenItems.add(x[0])
                 count++
                 return x
@@ -22,7 +22,7 @@ const groupByTime = (data: any, itemData: any, matchData: any) => {
         }))
         count = 0
         const situational = Object.fromEntries([...data].filter((x: any) => {
-            if (Math.abs(itemTime - x[1]['time']) <= 40 && item[1]['adjustedValue'] < 20 && item[1]['adjustedValue'] > 5 && !seenItems.has(x[0]) && itemData['items'][itemKey]['components'] && count <= 1) {
+            if (Math.abs(itemTime - x[1]['time']) <= 40 && item[1]['adjustedValue'] < 20 && item[1]['adjustedValue'] > 5 && !seenItems.has(x[0]) && itemData['items'][itemKey]['components'] && count === 0) {
                 seenItems.add(x[0])
                 count++
                 return x
@@ -66,7 +66,29 @@ const groupByTime = (data: any, itemData: any, matchData: any) => {
             }
         }
     }
+    for (let itemGroup of res) {
+        const keys: string[] = ['core', 'situational']
+        for (let k of keys) {
+            if (itemGroup[k].length > 5) {
+                console.log('test', k)
+                itemGroup[k] = chunkArray(itemGroup[k], 6)
+                console.log(itemGroup[k])
+            } else {
+                itemGroup[k] = [itemGroup[k]]
+            }
+        }
+    }
+    // console.log(res)
     return res
 
+}
+const chunkArray = (array: any[], size: number) => {
+    const chunks = [];
+    let index = 0;
+    while (index < array.length) {
+        chunks.push(array.slice(index, index + size));
+        index += size;
+    }
+    return chunks;
 }
 export default groupByTime

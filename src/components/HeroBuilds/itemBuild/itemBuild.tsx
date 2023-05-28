@@ -36,6 +36,7 @@ const ItemBuild = (props: any) => {
     )
     return (
         <>
+
             <Grid container  >
                 <Grid container >
                     <GridRow data={props.data.map((o: any) => ({ 'core': o['core'] }))} dataLength={totalLen} itemData={props.itemData} ObjectKey={'core'} />
@@ -60,6 +61,7 @@ const ItemBuild = (props: any) => {
         </>
     )
 }
+
 const GridRow = (props: { data: any, itemData: any, ObjectKey: any, dataLength: number[] }) => {
     // console.log(props.data)
     // 18 6
@@ -68,16 +70,15 @@ const GridRow = (props: { data: any, itemData: any, ObjectKey: any, dataLength: 
     return (
         props.data.map((buildObject: any, i: number) => {
             let timing = i === 1 || i === 4 ? 'Mid' : (i === 2 || i === 5 ? 'Late' : 'Early')
-            // console.log(buildObject)
-            const maxWidth = 12 / (totalLen / props.dataLength[i])
+            let maxWidth = 12 / (totalLen / props.dataLength[i])
+            if (maxWidth > 6) maxWidth = 6
             const widthPerc = (maxWidth / 12) * 100
-            console.log('mw', widthPerc)
             const adjustedWidth = widthPerc - widthPerc / 100 * 15
             const l = buildObject[props.ObjectKey].map((x: any) => x).flat().length
             // console.log(l)
 
             return (
-                <Grid item md={maxWidth} sm={maxWidth} sx={{ textAlign: 'center', maxWidth: adjustedWidth }}>
+                <Grid key={i} item md={4} sm={maxWidth} sx={{ textAlign: 'center', maxWidth: adjustedWidth }}>
                     <ItemBuilds buildObject={buildObject} timing={timing} data={props.data} itemData={props.itemData} ObjectKey={props.ObjectKey} />
                 </Grid >
             )
@@ -88,15 +89,22 @@ const ItemBuilds = (props: { buildObject: any; timing: any; data: any; itemData:
     const { buildObject, data, itemData, timing, ObjectKey } = props
     return (
         <>
-            {buildObject[ObjectKey].length !== 0 &&
+            {buildObject[ObjectKey][0].length !== 0 &&
                 <>
                     <h3 className='build-header'>{`${timing} ${ObjectKey}`}</h3>
-                    <div className={`${ObjectKey} flex`} style={{ justifyContent: 'center' }}>
-                        {buildObject[ObjectKey].map((items: Item[], i: number) => {
+                    <div className={`${ObjectKey} flex`} style={{ justifyContent: 'center', flexDirection: 'column' }}>
+                        {buildObject[ObjectKey].map((itemGroup: any[], i: number) => {
                             // console.log('items', i, items)
-                            const itemkey = Object.keys(items)
                             return (
-                                <ItemBuildCell key={i} itemkey={itemkey} item={items} data={data} itemData={itemData} />
+                                <div key={i} className='flex' style={{ justifyContent: 'center' }}>
+                                    {itemGroup.map((items: Item[], j: number) => {
+                                        const itemkey = Object.keys(items)
+                                        return (
+                                            <ItemBuildCell key={j} itemkey={itemkey} item={items} data={data} itemData={itemData} />
+                                        )
+                                    })}
+                                </div>
+
                             )
                         })
                         }
@@ -137,7 +145,6 @@ const ItemBuildCell = (props: { itemkey: any; item: any; data: any; itemData: an
                                 <p style={{ margin: 0, color: 'white' }}>{orText}</p>
                             </div>
                         </div>
-
                     )
                 })
             }
