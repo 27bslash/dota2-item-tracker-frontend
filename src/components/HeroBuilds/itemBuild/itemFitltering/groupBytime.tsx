@@ -71,22 +71,26 @@ const groupByTime = (data: any, itemData: any, matchData: any) => {
         }
     }
 
-
+    const choiceSet = new Set()
     for (let itemGroup of res) {
         const keys: string[] = ['core', 'situational']
         for (let k of keys) {
-            for (let itemArr of itemGroup[k]) {
+            for (let itemObject of itemGroup[k]) {
                 // console.log(Object.values(itemArr))
-                const objectKeys = Object.keys(itemArr)
+                const objectKeys = Object.keys(itemObject)
                 const targetKey = objectKeys[0]
-                const values = Object.values(itemArr)[0]
+                const values = Object.values(itemObject)[0]
                 if (!values) continue
                 if (Object.keys(values).includes('option')) {
                     // itemGroup[k].concat(itemArr)
-                    const option = itemArr[targetKey]['option'][0]
+                    const option = itemObject[targetKey]['option'][0]
                     const optionKey = option['choice']
+                    if (choiceSet.has(targetKey) || choiceSet.has(optionKey)) continue
                     const idx = itemGroup[k].findIndex((x: any) => Object.keys(x)[0] === optionKey)
-                    itemArr[optionKey] = { 'value': option['targetValue'], 'adjustedValue': option['targetValue'], time: option['time'] }
+                    itemObject[optionKey] = { 'value': option['targetValue'], 'adjustedValue': option['targetValue'], time: option['time'] }
+                    delete itemObject[targetKey]['option']
+                    choiceSet.add(optionKey)
+                    choiceSet.add(targetKey)
                     itemGroup[k].splice(idx, 1)
 
                 }
@@ -100,7 +104,7 @@ const groupByTime = (data: any, itemData: any, matchData: any) => {
             }
         }
     }
-    // console.log(res)
+    console.log(res)
     return res
 
 }

@@ -6,6 +6,7 @@ type TItemProp = {
     matchId?: number,
     type: string,
     height?: string,
+    width?: string,
     item?: any,
     items: any,
     starter?: boolean,
@@ -53,7 +54,7 @@ const TableItem = (props: TItemProp) => {
         <Tip component={<ItemTooltip type={props.type} img={link} itemId={props.itemId} items={props.items} itemKey={props.itemKey} heroData={props.heroData} heroName={props.heroName} />}>
             {(props.type === 'item' || props.type === 'shard' || props.type === 'scepter') &&
                 <div className="item-cell" onClick={handleClick} >
-                    <img className="item-img" height={props.height || '55px'} alt={props.itemKey} src={link} loading="lazy"></img>
+                    <img className="item-img" height={props.height || '55px'} width={props.width || '100%'} alt={props.itemKey} src={link} loading="lazy"></img>
                     {!props.starter && props.overlay &&
                         < div className="overlay">{props.time}</div>
                     }

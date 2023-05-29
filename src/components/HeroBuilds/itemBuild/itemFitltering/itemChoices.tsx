@@ -34,7 +34,7 @@ const choice = (arr: any[], percentiles: any[], matchData: any, itemData: any) =
         if (targetVal > 70 || targetVal < 40) continue
         const t = timeBracket(targetArr)
         const cost: number = itemData['items'][targetArr[0]]['cost']
-        if (Math.abs(mainItemCost - cost) > (mainItemCost / 100) * 20 || t !== time || targetVal < 40 || targetVal > 60) {
+        if (Math.abs(mainItemCost - cost) > (mainItemCost / 100) * 20 || t !== time || targetVal < 40 || targetVal > 60 || Math.abs(targetArr[1]['time'] - arr[1]['time']) > 300) {
             continue
         }
         // console.log(key, cost)

@@ -855,7 +855,7 @@ label {
 
 .item-img {
   display: block;
-  width: 100%;
+  /* width: 100%; */
   min-height: 5px;
   max-width: 77.83px;
 }

@@ -118,9 +118,10 @@ const ItemBuilds = (props: { buildObject: any; timing: any; data: any; itemData:
 const ItemBuildCell = (props: { itemkey: any; item: any; data: any; itemData: any; }) => {
     const { itemkey, item, data, itemData } = props
     const image_host = "https://ailhumfakp.cloudimg.io/v7/"
-    itemkey.sort((a: any, b: any) => {
-        return item[b]['value'] - item[a]['value']
-    })
+    // itemkey.sort((a: any, b: any) => {
+    //     return item[b]['time'] - item[a]['time']
+    // })
+    // console.log(itemkey)
     return (
         <div className="img-cell" >
             {
@@ -139,7 +140,7 @@ const ItemBuildCell = (props: { itemkey: any; item: any; data: any; itemData: an
                             }
                             <div className="item-build-img">
                                 <p style={{ margin: '0', color: 'white' }}>{avgTime}m {disassemble ? 'D' : ''}</p>
-                                <TableItem type='item' height='40px' itemKey={k} filteredData={data} totalMatchData={data}
+                                <TableItem type='item' height='40px' width='55px' itemKey={k} filteredData={data} totalMatchData={data}
                                     items={itemData} role='' overlay={false} />
                                 {/* <p style={{ margin: '0', color: 'white' }}>{perc}%</p> */}
                                 <p style={{ margin: '0', color: 'white' }}>{perc.toFixed(2)}%</p>
