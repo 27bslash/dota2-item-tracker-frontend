@@ -37,9 +37,9 @@ body {
   --lore: rgb(12, 19, 22);
 }
 @font-face {
-  font-family: "Trajan Regular";
-  src: local("Trajan Regular"),
-    url(./fonts/TrajanPro-Regular.otf) format("opentype");
+  font-family: "Trajan Bold";
+  src: local("Trajan Bold"),
+    url(./fonts/TrajanPro-Bold.otf) format("opentype");
 }
 body {
   background-color: var(--body-bg-colour);
@@ -995,7 +995,7 @@ label {
 }
 .tooltip-title,
 .item-tooltip-title h3 {
-  font-family: "Trajan Regular";
+  font-family: "Trajan Bold";
 }
 .tooltip-line-one {
   display: flex;
@@ -1212,7 +1212,7 @@ label {
   margin: 0;
   margin-top: 2px;
   font-size: 13px;
-  color: #7f8b9c;
+  color: #5b7496;
   font-weight: 600;
 }
 .tooltip-lore {

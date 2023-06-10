@@ -22,9 +22,9 @@ const TooltipAttributes = (props: any) => {
                         let value
                         const zeroCheck = x.values_float.join() !== '0'
                         if (percentage) {
-                            value = x.values_float.join('%/') + '%'
+                            value = x.values_float.join('% / ') + '%'
                         } else {
-                            value = x.values_float.join('/')
+                            value = x.values_float.join(' / ')
                         }
                         if (heading.toLowerCase().includes('damage') && zeroCheck && heading) {
                             const dmgtype = damageType(props.itemProperties.damage)
@@ -33,7 +33,7 @@ const TooltipAttributes = (props: any) => {
                         }
                         else if (heading && zeroCheck) {
                             return (
-                                <AbilityAttribute heading={heading} color='#5b6573' value={value} key={i} />)
+                                <AbilityAttribute heading={heading} color='#b1bbc9' value={value} key={i} />)
                         }
                     })}
                 </>

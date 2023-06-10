@@ -14,7 +14,7 @@ const dispellable = (dispel: number) => {
 
 export const damageType = (dmgType: number) => {
     let dmgTypestr = ''
-    const dmgColors: any = { 'physical': 'red', 'magical': '#a3dcee', 'pure': '#FBDC98' }
+    const dmgColors: any = { 'physical': '#c91212', 'magical': '#428fc7', 'pure': '#FBDC98' }
     switch (dmgType) {
         case 1:
             dmgTypestr = 'physical';
@@ -47,7 +47,7 @@ const AbilityAttributes = (props: any) => {
                 <AbilityAttribute heading='PIERCES SPELL IMMUNITY:' color={pierce === 'no' ? 'inherit' : '#50A552'} value={pierce} />
             }
             {dispel &&
-                <AbilityAttribute heading='DISPELLABLE: ' color={dispel === 'yes' ? 'inherit' : 'red'} value={dispel} />
+                <AbilityAttribute heading='DISPELLABLE: ' color={dispel === 'yes' ? 'inherit' : '#c91212'} value={dispel} />
             }
         </div>
     )

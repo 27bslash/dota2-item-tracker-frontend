@@ -40,7 +40,7 @@ const AbilityTooltip = (props: any) => {
                 <Color src={props.img} crossOrigin="anonymous" format="hex">
                     {({ data, loading, error }) => {
                         return (
-                            <div className="tooltip" id="ability-tooltip" style={{ background: `radial-gradient(circle at top left, ${data} 0%, #182127 160px` }}>
+                            <div className="tooltip" id="ability-tooltip" style={{ background: `radial-gradient(circle at top left, ${data} 0%, #11171c 160px` }}>
                                 <div className="tooltip-line-one">
                                     <div className="tooltip-title">
                                         <img className="tooltip-img" alt={props.img} src={props.img} width="55px"></img>
