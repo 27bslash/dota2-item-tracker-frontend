@@ -2,12 +2,13 @@ import ItemBuild from "./itemBuild/itemBuild"
 import AbilityBuild from './abillityBuild/abilityBuild';
 import { useEffect, useMemo, useReducer, useState } from "react";
 import StartingItems from "./itemBuild/startingItems/startingItems";
-import { Box, Button } from "@mui/material";
-import { grey } from "@mui/material/colors";
+import { Box, Button, Tooltip } from "@mui/material";
+import { green, grey } from "@mui/material/colors";
 import filterItems from "./itemBuild/itemFitltering/itemFiltering";
 import abilityFilter from "./abillityBuild/abilityFiltering";
 import countStartingItems from "./itemBuild/startingItems/startingItemsFilter";
 import { bulkRequest, fetchData } from "../fetchData";
+import GuideGuide from "./guideDownload";
 
 type BuildProps = {
     data?: any,
@@ -34,7 +35,7 @@ const Build = (props: BuildProps) => {
     const [nonProData, setNonProData] = useState<NonProDataType[]>()
     const [proData, setProData] = useState(false)
     const [open, setOpen] = useState(false)
-    const [build, setBuild] = useReducer((states: any, updates: any) => {
+    const [heroBuilds, setHeroBuilds] = useReducer((states: any, updates: any) => {
         switch (updates.type) {
             case 'clear':
                 return ({})
@@ -101,20 +102,21 @@ const Build = (props: BuildProps) => {
         }
     }, [props.role, data])
     useEffect(() => {
-        setBuild({ type: 'clear' })
+        setHeroBuilds({ type: 'clear' })
         for (let key in filteredData) {
             const buildData = filteredData[key]
             const itemBuild = filterItems(buildData, props.itemData)
             const abilityBuilds = abilityFilter(buildData)
             const startingItemBuilds = countStartingItems(buildData)
             const res = [itemBuild, abilityBuilds, startingItemBuilds]
-            setBuild({ [key]: res })
+            setHeroBuilds({ [key]: res })
         }
     }, [filteredData])
+    const [guideGuide, setGuideGuide] = useState(false)
     return (
         <div className="build-wrapper">
             {filteredData &&
-                <div className="build-container">
+                <div className="build-container" style={{ position: 'relative' }}>
                     < Button sx={{
                         backgroundColor: grey[800],
                         '&:hover': {
@@ -129,18 +131,33 @@ const Build = (props: BuildProps) => {
                                     backgroundColor: grey[700],
                                 }
                             }} onClick={() => setProData((prevstate) => !prevstate)} variant='contained'>{!proData ? ' Pro data' : 'non pro'}</Button>
-                            {Object.entries(build).map((object: any, index: number) => {
-                                const k = object[0]
-                                const buildData = build[k]
+                            <Button sx={{
+                                backgroundColor: green[800], marginLeft: '840px',
+                                '&:hover': {
+                                    backgroundColor: green[700],
+                                }
+                            }} onClick={() => setGuideGuide((prev) => !prev)}
+                                // onMouseOut={() => setGuideGuide(false)}
+                                variant='contained'>get all guides</Button>
+                            {guideGuide &&
+                                <Tooltip title=''>
+                                    <div className='download-guides-help-text' style={{ position: 'absolute', right: '16px', zIndex: 99 }} >
+                                        <GuideGuide />
+                                    </div>
+                                </Tooltip>
+                            }
+                            {Object.entries(heroBuilds).map((build: any, index: number) => {
+                                const role = build[0]
+                                const buildData = heroBuilds[role]
                                 return (
-                                    <BuildCell key={index} data={filteredData[k]} buildData={buildData} k={k} heroName={props.heroName} itemData={props.itemData} dataLength={roles.length} heroData={props.heroData} />
+                                    <BuildCell key={index} data={filteredData[role]} buildData={buildData} role={role} heroName={props.heroName} itemData={props.itemData} dataLength={roles.length} heroData={props.heroData} />
                                 )
                             })}
                         </>
                     }
                 </div>
             }
-        </div>
+        </div >
     )
 }
 const BuildCell = (props: any) => {
@@ -148,7 +165,7 @@ const BuildCell = (props: any) => {
     // maybe a hook for once
     return (
         <div className="builds" >
-            <h1 onClick={() => setOpen(prev => !prev)}>{props.k}</h1>
+            <h1 onClick={() => setOpen(prev => !prev)}>{props.role}</h1>
             {open &&
                 <div className="buildData">
                     <StartingItems data={props.buildData[2]} itemData={props.itemData} />

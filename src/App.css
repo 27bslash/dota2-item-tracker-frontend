@@ -38,8 +38,7 @@ body {
 }
 @font-face {
   font-family: "Trajan Bold";
-  src: local("Trajan Bold"),
-    url(./fonts/TrajanPro-Bold.otf) format("opentype");
+  src: local("Trajan Bold"), url(./fonts/TrajanPro-Bold.otf) format("opentype");
 }
 body {
   background-color: var(--body-bg-colour);
@@ -85,6 +84,15 @@ body {
 }
 .ability-build {
   /* background-color: yellow; */
+}
+.download-guides-help-text {
+  background: rgb(38, 80, 0);
+  background: linear-gradient(90deg, rgb(37 79 0) 0%, rgb(0 32 4) 101%);
+  border-radius: 2%;
+  border: solid 1.5px black;
+}
+.copy-guide-code:hover {
+  cursor: pointer;
 }
 table {
   width: 100%;
@@ -313,6 +321,9 @@ input[type="text" i] {
 a {
   color: white;
   text-decoration: none;
+}
+a:hover {
+  opacity: 0.9;
 }
 .most-used-container {
   display: flex;
