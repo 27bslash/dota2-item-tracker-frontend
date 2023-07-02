@@ -3,7 +3,7 @@ import BigTalentTooltip from './bigTalentTooltip';
 import { MatchDataAdj } from '../page';
 
 interface BigTalentProps extends MatchDataAdj {
-    heroName: string, heroData: any, width: string, margin: string,
+    heroName: string, heroData: any, width: string, margin: string
 }
 const BigTalent: React.FC<BigTalentProps> = (props: BigTalentProps) => {
     const [talents, setTalents] = useState<any>([])

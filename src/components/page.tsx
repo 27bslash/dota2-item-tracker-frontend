@@ -188,7 +188,7 @@ const Page = (props: pageProps) => {
                     }
                 </div>
                 {!!heroData.length && itemData && nameParam && props.type === 'hero' &&
-                    < Build baseApiUrl={baseApiUrl} role={Role} picks={totalPicks} searchRes={searchRes} data={filteredData} heroData={heroData} heroName={nameParam} itemData={itemData} />
+                    < Build baseApiUrl={baseApiUrl} role={Role} picks={totalPicks} searchRes={searchRes} data={filteredData} heroData={heroData} heroName={nameParam} itemData={itemData} updateMatchData={updateMatchData} />
                 }
                 <>
                     <div className="flex" style={{ 'width': '100%' }}>

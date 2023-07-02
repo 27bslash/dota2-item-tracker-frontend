@@ -1,7 +1,8 @@
 import BigTalent from '../../big_talent/bigTalent';
 import { AbilityImg } from '../../table/tableItems';
+import { MatchDataAdj } from './../../page';
 
-type AbilityBuildProps = {
+interface AbilityBuildProps extends MatchDataAdj {
     heroName: string,
     data: any,
     abilityBuild: { [key: string]: any }[][]
@@ -34,7 +35,7 @@ const AbilityBuild = (props: AbilityBuildProps) => {
                                     // <div className="terst"></div>)
                                 )
                             })}
-                            <BigTalent matchData={props.data} heroName={props.heroName} heroData={props.heroData} width='65px' margin='-5px 0px 0px 0px' />
+                            <BigTalent matchData={props.data} heroName={props.heroName} heroData={props.heroData} width='65px' margin='-5px 0px 0px 0px' updateMatchData={props.updateMatchData} />
                             <p style={{ color: 'white' }}>{abilityArr[1]}</p>
                         </div>
                     )
