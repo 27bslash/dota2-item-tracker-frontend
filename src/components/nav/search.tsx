@@ -2,6 +2,7 @@ import TextField from '@mui/material/TextField';
 import { useState, useEffect, useRef } from 'react';
 import { matchSorter } from 'match-sorter'
 import SearchResults from './searchResults';
+import { Box } from '@mui/material';
 interface heroList {
     name: string,
     id: number
@@ -65,7 +66,7 @@ const NavSearch = (props: searchProps) => {
         }
     };
     return (
-        <div className='nav-search'>
+        <Box className='nav-search' bgcolor={'primary.main'}>
             <TextField
                 id="search"
                 placeholder='Search...'
@@ -74,11 +75,12 @@ const NavSearch = (props: searchProps) => {
                 disabled={false}
                 variant="standard"
                 value={value}
+                color={'success'}
                 onChange={(e) => setValue(e.target.value)} />
             {(!!sortedPlayers.length || !!sortedHeroes.length) &&
                 <SearchResults heroList={props.heroList} highlightHero={props.highlightHero} updateValue={updateValue} navigatePage={navigatePage} playerList={props.playerList} sortedHeroes={sortedHeroes} sortedPlayers={sortedPlayers} />
             }
-        </div>
+        </Box>
     )
 
 }

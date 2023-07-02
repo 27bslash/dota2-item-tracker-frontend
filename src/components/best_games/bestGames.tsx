@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useEffect } from 'react';
 import stringSearch from '../table/table_search/string_search';
 import blurred from '../../images/blurred-best-games.jpg'
+import Match from '../types/matchData';
 
 interface BenchmarksProps {
     benchmarks: {},
@@ -15,7 +16,7 @@ interface BenchmarksProps {
 }
 
 
-const BestGames = (props: any) => {
+const BestGames = (props: { totalMatchData: Match[]; matchData: Match[]; updateRole: (role: string) => void }) => {
     const [bestgames, setBestgames] = useState<any>([])
     const [benchmarkKeys, setbenchmarkKeys] = useState<any>([])
     const [loading, setLoading] = useState(true)
@@ -54,7 +55,7 @@ const BestGames = (props: any) => {
     return (
         <>
             {loading &&
-                <img src={blurred} alt='blurred image' />
+                <img src={blurred} alt='blurred benchmarks' />
             }
             {!!bestgames.length && !loading &&
                 <div className="best-games-wrapper">
@@ -88,7 +89,7 @@ const BestGames = (props: any) => {
                                             </td>
                                             <td className="benchmark-cell">
                                                 <div className='svg-icon' id={match.role ? match.role.replace(' ', '-') : ''}
-                                                    onClick={() => props.updateMatchData(stringSearch(props.data, 'role', match.role))}></div>
+                                                    onClick={() => props.updateRole(match.role)}></div>
                                             </td>
                                             {benchmarkKeys.map((k: any, idx: number) => {
                                                 if (k in match.benchmarks) {
@@ -104,7 +105,7 @@ const BestGames = (props: any) => {
                                                     else if (pct >= 40) color = '#C9AF1D'
                                                     else if (pct >= 25) color = '#D89740'
                                                     return (
-                                                        <td key={idx} className='benchmark-cell'>
+                                                        <td key={idx} className='benchmark-cell' style={{ textAlign: 'center' }}>
                                                             <p>
                                                                 {pct &&
                                                                     <>

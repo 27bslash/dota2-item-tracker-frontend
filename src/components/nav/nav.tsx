@@ -14,12 +14,8 @@ interface Hero {
 const Nav = (props: NavProps) => {
     return (
         <div className="navbar">
-            <Link to='/'>
-                <HomeButton text='HOME' />
-            </Link>
-            <Link to='/chappie'>
-                <HomeButton text='CHAPPIE' />
-            </Link>
+            <HomeButton text='HOME' link='/' />
+            <HomeButton text='CHAPPIE' link='/chappie' />
             <div className="search-container" style={{ width: '100%' }}>
                 <NavSearch highlightHero={props.highlightHero} filterHeroes={props.filterHeroes} heroList={props.heroList} playerList={props.playerList} />
             </div>

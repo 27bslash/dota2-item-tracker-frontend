@@ -7,6 +7,7 @@ import TimeAgo from 'javascript-time-ago'
 // English.
 import en from 'javascript-time-ago/locale/en'
 import CustomTableBody from "./tablebody"
+import Match from "../types/matchData"
 interface TableProps {
     showStarter: boolean,
     heroList: any,
@@ -15,9 +16,9 @@ interface TableProps {
     itemData: any,
     nameParam: string,
     type: string,
-    filteredData: object[],
+    filteredData: Match[],
     count: number,
-    updateMatchData: (data: object[]) => void,
+    updateMatchData: (data: Match[]) => void,
     totalMatchData: object[],
     role: string
 }

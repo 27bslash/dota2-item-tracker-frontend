@@ -89,7 +89,7 @@ const Home = (props: any) => {
                             const picks = stats[0][`${roleFilter}picks`]
                             const wins = stats[0][`${roleFilter}wins`]
                             const bans = stats[0][`bans`]
-                            const winrate = ((wins / picks) * 100 ).toFixed(2) || 0
+                            const winrate = ((wins / picks) * 100).toFixed(2) || 0
                             pickStats = { 'picks': picks, 'wins': wins, 'bans': bans, 'winrate': winrate }
                         }
                         // console.log(heroName, stats)
@@ -108,11 +108,11 @@ const GridContainer = (props: any) => {
     return (
         props.className.includes('right') ?
             (
-                <Grid className={`hero-grid ${props.className}`} container spacing={0} md={4} sx={{ width: props.width + '!important' }}>
+                <Grid className={`hero-grid ${props.className}`} container spacing={0} sx={{ width: props.width + '!important' }}>
                     {props.children}
                 </Grid>
             ) : (
-                <Grid className={`hero-grid ${props.className}`} container spacing={3} md='auto' sx={{ width: props.width }}>
+                <Grid className={`hero-grid ${props.className}`} container spacing={3} sx={{ width: props.width }}>
                     {props.children}
                 </Grid>
             )

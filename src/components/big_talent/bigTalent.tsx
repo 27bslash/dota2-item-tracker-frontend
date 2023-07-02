@@ -1,7 +1,11 @@
 import { useState, useEffect } from 'react';
 import BigTalentTooltip from './bigTalentTooltip';
+import { MatchDataAdj } from '../page';
 
-const BigTalent = (props: { matchData: any, heroName: string, heroData: any, width: string, margin: string }) => {
+interface BigTalentProps extends MatchDataAdj {
+    heroName: string, heroData: any, width: string, margin: string,
+}
+const BigTalent: React.FC<BigTalentProps> = (props: BigTalentProps) => {
     const [talents, setTalents] = useState<any>([])
     useEffect(() => {
         const heroData = props.heroData[0][props.heroName]
@@ -12,7 +16,7 @@ const BigTalent = (props: { matchData: any, heroName: string, heroData: any, wid
     return (
         <div className="talent-wrapper">
             {talents &&
-                <BigTalentTooltip talents={talents}>
+                <BigTalentTooltip talents={talents} updateMatchData={props.updateMatchData} filteredData={props.matchData} matchData={props.matchData}>
                     <div className="talents" style={{ width: props.width, height: props.width, margin: props.margin }}>
                         {[...talents].reverse().map((x: any, i: number) => {
                             const v: any = x[1]
@@ -20,10 +24,9 @@ const BigTalent = (props: { matchData: any, heroName: string, heroData: any, wid
                             if (v['count'] * 2 >= v['total_picks'] && v['count']) {
                                 return <div key={i} className={'lvl' + v['level'] + ' ' + side}></div>
                             }
-
                         })}
                     </div>
-                </BigTalentTooltip >
+                </BigTalentTooltip>
             }
         </div >
     )

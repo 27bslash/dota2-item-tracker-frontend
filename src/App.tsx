@@ -6,6 +6,7 @@ import {
     Route
 } from "react-router-dom";
 import Home from './components/home/home';
+import { Box } from '@mui/material';
 
 interface heroList {
     name: string,
@@ -29,7 +30,7 @@ function App() {
     }, [])
 
     return (
-        <div className="App">
+        <Box className="App" bgcolor={'background.default'} sx={{ padding: '8px' }}>
             <Routes>
                 <Route path='/' element={
                     <Home heroList={heroList} playerList={playerList} />
@@ -49,7 +50,7 @@ function App() {
 
                 </Route>
             </Routes>
-        </div >
+        </Box >
     );
 }
 

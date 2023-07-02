@@ -4,13 +4,15 @@ import colourWins from '../colourWins';
 import heroSwitcher from '../heroSwitcher';
 import stringSearch from '../table/table_search/string_search';
 import RoleCounter from './roleCounter';
-import Draft from './../table/draft';
+import Match from '../types/matchData';
 interface pickProps {
     matchData: any,
-    filteredData: any[],
+    filteredData: Match[],
     nameParam: string,
     role: string,
-    updateMatchData: (data: object[], value?: string[], types?: string[]) => void,
+    updateMatchData: (data: Match[], searchValue?: {
+        [key: string]: { matches: Match[] }
+    }, types?: string[]) => void,
     updateRole: (role: string) => void,
     type: string,
     totalPicks: object[],
@@ -125,6 +127,7 @@ const SearchResultsText = (props: any) => {
     const draft = searchRes['draft']
     const role = searchRes['role']
     const players = searchRes['player']
+    const talents = searchRes['talents']
     const handleClick = (matches: any, key: string, type: string) => {
         const newMatchArr = matches.map((m: any) => m.id)
         const filteredMatches = data.filter((match: any) => newMatchArr.includes(match.id))
@@ -145,6 +148,12 @@ const SearchResultsText = (props: any) => {
                     {/* <SearchResultText data={players} handleClick={handleClick} filteredData={playerKeys} type={'player'} /> */}
                     <DraftCounter handleClick={handleClick} draft={players} header='Players' subheader={[null, 'filtered players']} />
 
+                </>
+            }
+            {talents && Object.keys(talents).length > 0 &&
+                <>
+                    <h4>Talents: </h4>
+                    <SearchResultText data={talents} handleClick={handleClick} type='talents' filteredData={sortByMatches(talents)} />
                 </>
             }
             {items && Object.keys(items).length > 0 &&

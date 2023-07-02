@@ -2,16 +2,18 @@ import { TextField } from '@mui/material';
 import { SetStateAction, useState } from 'react';
 import Items from '../../types/Item';
 import search from './search';
-interface TableSearchProps {
+import Match from '../../types/matchData';
+import { MatchDataAdj } from '../../page';
+
+interface TableSearchProps extends MatchDataAdj {
     heroName: string,
-    updateMatchData: (data: object[], searchResults: any) => void,
-    totalMatchData: object[],
     heroList: [{ id: number, name: string }],
     playerList: any[]
     itemData: Items | undefined,
     type: string,
     disabled: boolean,
-    role?: string
+    role?: string,
+    totalMatchData: Match[]
 }
 const TableSearch = (props: TableSearchProps) => {
     const [value, setValue] = useState('')

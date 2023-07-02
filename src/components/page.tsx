@@ -15,6 +15,7 @@ import Build from './HeroBuilds/build';
 import Items from './types/Item';
 import { baseApiUrl } from '../App';
 import { fetchData, bulkRequest } from './fetchData';
+import Match from './types/matchData';
 
 //  TODO
 //  add chappie section
@@ -33,16 +34,25 @@ interface pageProps {
     playerList?: any
 }
 interface SearchRes {
-    items: {},
-    draft: {},
-    role: {},
-    player: {}
+    items?: { string: { matches: Match[] } },
+    draft?: { string: { matches: Match[] } },
+    role?: { string: { matches: Match[] } },
+    player?: { string: { matches: Match[] } },
+    talents?: { string: { matches: Match[] } }
+}
+export interface MatchDataAdj {
+    updateMatchData: (data: Match[], searchValue?: {
+        [key: string]: { matches: Match[] }
+    }, types?: string[]) => void,
+    matchData?: Match[],
+    totalMatchData?: Match[],
+    filteredData?: Match[]
 }
 const Page = (props: pageProps) => {
     const [itemData, setItemData] = useState<Items>()
     const [showStarter, setShowStarter] = useState(false)
-    const [filteredData, setFilteredData] = useState<any[]>([])
-    const [totalMatchData, setTotalMatchData] = useState<any[]>([])
+    const [filteredData, setFilteredData] = useState<Match[]>([])
+    const [totalMatchData, setTotalMatchData] = useState<Match[]>([])
     const [totalPicks, setTotalPicks] = useState<any>([])
     const [heroColor, setHeroColor] = useState('')
     const [count, setCount] = useState(0)
@@ -139,7 +149,9 @@ const Page = (props: pageProps) => {
         })()
     }, [])
 
-    const updateMatchData = (data: object[], searchValue?: any, type?: string[],) => {
+    const updateMatchData = (data: Match[], searchValue?: {
+        [key: string]: { matches: Match[] }
+    }, types?: string[]) => {
         // setMatchData(data) ]
         if (!data.length) return
         setFilteredData(data)
@@ -167,10 +179,10 @@ const Page = (props: pageProps) => {
                                 <MostUsed baseApiUrl={baseApiUrl} matchData={totalMatchData} role={Role} updateMatchData={updateMatchData} itemData={itemData}></MostUsed>
                             </div>
                             <div className="best-games-container" style={{ 'width': '1200px', 'height': '140px' }}>
-                                <BestGames matchData={filteredData} totalMatchData={totalMatchData}></BestGames>
+                                <BestGames matchData={filteredData} totalMatchData={totalMatchData} updateRole={updateRole}></BestGames>
                             </div>
                             {heroData.length && !!filteredData.length && props.type === 'hero' &&
-                                < BigTalent matchData={filteredData} heroData={heroData} heroName={nameParam} width='100px' margin='2% 0px 0px 230px' />
+                                <BigTalent totalMatchData={totalMatchData} matchData={filteredData} heroData={heroData} heroName={nameParam} width='100px' margin='2% 0px 0px 230px' updateMatchData={updateMatchData} />
                             }
                         </>
                     }

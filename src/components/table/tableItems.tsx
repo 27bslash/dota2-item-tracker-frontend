@@ -6,6 +6,7 @@ import TalentImg from "./talentImg";
 import ArrowButton from './../arrowButton';
 import Tip from "../tooltip/tooltip";
 import Draft from "./draft";
+import Match from "../types/matchData";
 
 interface TitemProps {
     row: {
@@ -27,7 +28,7 @@ interface TitemProps {
     heroList: object[],
     totalMatchData: object[],
     filteredData: object[],
-    updateMatchData: (data: object[]) => void,
+    updateMatchData: (data: Match[]) => void,
     children: React.ReactNode;
     role: string
 
