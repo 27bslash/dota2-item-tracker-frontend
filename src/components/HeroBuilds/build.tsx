@@ -9,8 +9,9 @@ import abilityFilter from "./abillityBuild/abilityFiltering";
 import countStartingItems from "./itemBuild/startingItems/startingItemsFilter";
 import { bulkRequest, fetchData } from "../fetchData";
 import GuideGuide from "./guideDownload";
+import { MatchDataAdj } from "../page";
 
-type BuildProps = {
+interface BuildProps extends MatchDataAdj {
     data?: any,
     itemData: any,
     heroName: string,
