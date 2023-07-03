@@ -2,8 +2,6 @@ import { useMemo } from 'react';
 import { useState, Fragment } from 'react';
 
 const BigTalentTooltip = (props: any) => {
-    console.log(props.matchData)
-    const [open, setOpen] = useState(false)
     const pairTalents = () => {
         const keys = Object.keys(props.talents)
         let j = 0
@@ -19,10 +17,9 @@ const BigTalentTooltip = (props: any) => {
     }
     const memo = useMemo(() => pairTalents(), [props.talents])
     return (
-        <div className="toltip" onMouseEnter={() => setOpen(true)}
-            onMouseLeave={() => setOpen(false)}>
+        <div className="toltip">
             {props.children}
-            {open && props.talents.length > 0 && memo &&
+            {props.open && props.talents.length > 0 && memo &&
                 <div className="tooltip" id='talents' style={{ marginRight: '105px', marginTop: '11px' }}>
                     {memo.map((talentObj: any, i: number) => {
                         const k = Object.keys(talentObj[0])[0]

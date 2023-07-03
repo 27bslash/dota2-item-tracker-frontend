@@ -7,6 +7,7 @@ interface BigTalentProps extends MatchDataAdj {
 }
 const BigTalent: React.FC<BigTalentProps> = (props: BigTalentProps) => {
     const [talents, setTalents] = useState<any>([])
+    const [open, setOpen] = useState(false)
     useEffect(() => {
         const heroData = props.heroData[0][props.heroName]
         const sorted = countTalents(heroData, props.matchData)
@@ -16,8 +17,9 @@ const BigTalent: React.FC<BigTalentProps> = (props: BigTalentProps) => {
     return (
         <div className="talent-wrapper">
             {talents &&
-                <BigTalentTooltip talents={talents} updateMatchData={props.updateMatchData} filteredData={props.matchData} matchData={props.matchData}>
-                    <div className="talents" style={{ width: props.width, height: props.width, margin: props.margin }}>
+                <BigTalentTooltip talents={talents} updateMatchData={props.updateMatchData} filteredData={props.matchData} matchData={props.matchData} open={open}>
+                    <div className="talents" style={{ width: props.width, height: props.width, margin: props.margin }} onMouseEnter={() => setOpen(true)}
+                        onMouseLeave={() => setOpen(false)}>
                         {[...talents].reverse().map((x: any, i: number) => {
                             const v: any = x[1]
                             const side = v['slot'] % 2 !== 0 ? 'l-talent' : 'r-talent'
