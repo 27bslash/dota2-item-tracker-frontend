@@ -30,26 +30,27 @@ function App() {
     }, [])
 
     return (
-        <Box className="App" bgcolor={'background.default'} sx={{ padding: '8px' }}>
-            <Routes>
-                <Route path='/' element={
-                    <Home heroList={heroList} playerList={playerList} />
-                }>
-                    {/* home page */}
-                </Route>
-                <Route path='/hero/:name' element={
-                    <Page heroList={heroList} playerList={playerList} type='hero' />
-                }>
-                    {/* hero pages */}
-                </Route>
-                <Route path='/player/:name' element={
-                    <Page heroList={heroList} playerList={playerList} type='player' />}>
-                    {/* player pages */}
-                </Route>
-                <Route path='/chappie'>
+        <Box className="App" sx={{ padding: '8px' }}>
+                <Routes>
+                    <Route path='/' element={
+                        <Home heroList={heroList} playerList={playerList} />
+                        // <Palette></Palette>
+                    }>
+                        {/* home page */}
+                    </Route>
+                    <Route path='/hero/:name' element={
+                        <Page heroList={heroList} playerList={playerList} type='hero' palette={type} />
+                    }>
+                        {/* hero pages */}
+                    </Route>
+                    <Route path='/player/:name' element={
+                        <Page heroList={heroList} playerList={playerList} type='player' />}>
+                        {/* player pages */}
+                    </Route>
+                    <Route path='/chappie'>
 
-                </Route>
-            </Routes>
+                    </Route>
+                </Routes>
         </Box >
     );
 }

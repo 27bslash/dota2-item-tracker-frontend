@@ -75,7 +75,7 @@ const NavSearch = (props: searchProps) => {
                 disabled={false}
                 variant="standard"
                 value={value}
-                color={'success'}
+                // color={'secondary'}
                 onChange={(e) => setValue(e.target.value)} />
             {(!!sortedPlayers.length || !!sortedHeroes.length) &&
                 <SearchResults heroList={props.heroList} highlightHero={props.highlightHero} updateValue={updateValue} navigatePage={navigatePage} playerList={props.playerList} sortedHeroes={sortedHeroes} sortedPlayers={sortedPlayers} />

@@ -106,23 +106,35 @@ const Build = (props: BuildProps) => {
         setHeroBuilds({ type: 'clear' })
         for (let key in filteredData) {
             const buildData = filteredData[key]
-            const itemBuild = filterItems(buildData, props.itemData)
-            const abilityBuilds = abilityFilter(buildData)
-            const startingItemBuilds = countStartingItems(buildData)
-            const res = [itemBuild, abilityBuilds, startingItemBuilds]
-            setHeroBuilds({ [key]: res })
+            if (buildData.length > 1) {
+                const itemBuild = filterItems(buildData, props.itemData)
+                const abilityBuilds = abilityFilter(buildData)
+                const startingItemBuilds = countStartingItems(buildData)
+                const res = [itemBuild, abilityBuilds, startingItemBuilds]
+                setHeroBuilds({ [key]: res })
+            }
         }
     }, [filteredData])
     const [guideGuide, setGuideGuide] = useState(false)
     return (
-        <div className="build-wrapper" style={{ marginTop: '10px' }} >
+        <Box className="build-wrapper" style={{ marginTop: '20px' }} >
             {filteredData &&
-                <div className="build-container" style={{ position: 'relative' }}>
+                <Box className="build-container" sx={{
+                    position: 'relative', backgroundColor: open ? 'primary.dark' : 'inherit',
+                    '& .build-container': {
+                        backgroundColor: 'blue !important',
+                        '& > div': {
+                            backgroundColor: 'blue !important',
+
+                            // Your styles for the div inside .build-container
+
+                        },
+                    },
+                }}>
                     < Button sx={{
-                        backgroundColor: 'primary.light',
-                        color: '#fff',
+                        backgroundColor: 'primary',
                         '&:hover': {
-                            backgroundColor: grey[700],
+                            backgroundColor: 'primary.dark',
                         },
                     }} onClick={() => setOpen((prevstate) => !prevstate)} variant='contained'>Builds</Button>
                     {open &&
@@ -130,9 +142,8 @@ const Build = (props: BuildProps) => {
                             <Button variant='contained'
                                 sx={{
                                     backgroundColor: 'primary.light',
-                                    color: '#fff',
                                     '&:hover': {
-                                        backgroundColor: grey[700],
+                                        backgroundColor: 'primary.dark',
                                     }
                                 }} onClick={() => setProData((prevstate) => !prevstate)} >{!proData ? ' Pro data' : 'non pro'}</Button>
                             <Button variant='contained' color={'success'}
@@ -156,9 +167,9 @@ const Build = (props: BuildProps) => {
                             })}
                         </>
                     }
-                </div>
+                </Box>
             }
-        </div >
+        </Box >
     )
 }
 const BuildCell = (props: any) => {

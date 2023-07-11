@@ -72,7 +72,7 @@ const PickCounter = (props: pickProps) => {
     )
 }
 const BoldName = (props: { reset: () => void; color: string; name: string; }) => {
-    return <p onClick={() => props.reset()} className='bold-name' id='hero-name' style={{ 'color': props.color, textTransform: 'capitalize' }}><strong >{heroSwitcher(props.name).replace('_', ' ')}</strong></p>
+    return <p onClick={() => props.reset()} className='bold-name' id='hero-name' style={{ 'color': props.color, textTransform: 'capitalize' }}><strong >{heroSwitcher(props.name).replace(/_/g, ' ')}</strong></p>
 
 }
 const HeroPicks = (props: { base: any, role: string, reset: () => void, name: string; color: string; }) => {

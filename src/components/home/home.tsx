@@ -7,6 +7,7 @@ import Nav from "../nav/nav";
 import colourWins from '../colourWins';
 import ControlPanel from "./control";
 import { baseApiUrl } from "../../App";
+import { theme } from "../..";
 
 const Home = (props: any) => {
     const [winStats, setWinStats] = useState<any[]>()
@@ -68,6 +69,7 @@ const Home = (props: any) => {
         setHighlight(idx)
     }
     let pickStats: any = null
+    document.body.style.background = theme.palette.background.default
     return (
         <div className="home">
             <Nav filterHeroes={filterHeroes} heroList={props.heroList} playerList={props.playerList} highlightHero={highlightHero}></Nav>

@@ -1,5 +1,6 @@
 import { useEffect, useState, useRef } from 'react';
 import SearchResult from './searchResult';
+import { Box } from '@mui/material';
 
 interface SearchResultsProps {
     heroList: { name: string, id: number }[],
@@ -100,7 +101,7 @@ const SearchResults = (props: SearchResultsProps) => {
     }
     return (
         <>
-            <div className="suggestions">
+            <Box className="suggestions" bgcolor='primary.light'>
                 {props.sortedHeroes.length > 0 &&
                     <div className="suggestions-left">
                         <h5 className='suggestion-header'>Heroes</h5>
@@ -123,7 +124,7 @@ const SearchResults = (props: SearchResultsProps) => {
                         }
                     </div>
                 }
-            </div>
+            </Box>
 
         </>
     )

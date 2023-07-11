@@ -13,7 +13,9 @@
   display: flex;
 }
 .highlight {
-  background-color: rgb(53, 53, 53);
+  /* background-color: rgb(53, 53, 53); */
+  background: rgba(0, 0, 0, 0.1);
+  /* opacity: 0.8; */
 }
 .purchases {
   display: flex;
@@ -61,7 +63,7 @@ body {
   width: 1200px;
 }
 .build-container:has(div) {
-  background-color: rgb(48, 48, 54);
+  /* background-color: rgb(48, 48, 54); */
   padding: 10px;
   border: solid black 2px;
   border-radius: 5px;
@@ -212,11 +214,10 @@ ul {
 .suggestions {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  grid-column-gap: 10px;
+  /* grid-column-gap: 10px; */
   color: white;
   cursor: pointer;
   position: absolute;
-  background-color: var(--nav-bar);
   width: 320px;
   border-bottom: 1px solid white;
   border-left: 1px solid white;
@@ -227,7 +228,7 @@ ul {
 .suggestion-header {
   margin: 0px 0px 10px 10px;
   font-size: 1.1em;
-  color: rgb(155, 182, 182);
+  /* color: rgb(155, 182, 182); */
 }
 .suggestions-left {
   border-right: solid grey 1px;
@@ -378,14 +379,8 @@ a:hover {
 .best-games table {
   border-spacing: 0;
 }
-.best-games thead {
-  background: linear-gradient(
-    340deg,
-    rgb(54, 59, 61) 0%,
-    rgb(58, 94, 116) 100%
-  );
-  /* rgb(33,39,41) */
-}
+
+
 .best-games tbody tr:nth-child(odd) {
   background-color: rgba(30, 42, 46, 0.486);
 }

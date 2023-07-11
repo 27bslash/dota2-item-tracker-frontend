@@ -11,11 +11,11 @@ const root = ReactDOM.createRoot(
 export const theme = createTheme({
     palette: {
         background: {
-            default: '#292626'
+            default: '#1f393c'
         },
         primary: {
-            main: '#131212',
-            contrastText: 'grey'
+            main: '#597f80',
+            contrastText: 'white'
         },
         secondary: {
             main: '#ffffff'
