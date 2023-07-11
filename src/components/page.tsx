@@ -2,8 +2,8 @@ import HeroImg from './heroImg';
 import Nav from './nav/nav';
 import CustomTable from './table/table';
 import BestGames from './best_games/bestGames';
-import { useEffect, useState, useContext } from 'react';
-import { colors, FormControlLabel, styled, Switch, SwitchProps } from '@mui/material';
+import { useEffect, useState } from 'react';
+import { FormControlLabel, styled, Switch, SwitchProps } from '@mui/material';
 import TableSearch from './table/table_search/table_search';
 import { useParams } from 'react-router';
 import heroSwitcher from './heroSwitcher';
@@ -13,7 +13,7 @@ import { useSearchParams } from 'react-router-dom';
 import PickCounter from './pick_counter/pickCounter';
 import Build from './HeroBuilds/build';
 import Items from './types/Item';
-import { baseApiUrl, colorPaletteContext } from '../App';
+import { baseApiUrl } from '../App';
 import { fetchData, bulkRequest } from './fetchData';
 import Match from './types/matchData';
 import { theme } from '..';
@@ -70,7 +70,7 @@ const Page = (props: pageProps) => {
     const updateStarter = () => {
         setShowStarter(prev => !prev)
     }
-    const { type, setColorPaletteType } = useContext(colorPaletteContext)
+    // const { type, setColorPaletteType } = useContext(colorPaletteContext)
 
     useEffect(() => {
         document.title = nameParam;
@@ -152,12 +152,7 @@ const Page = (props: pageProps) => {
                         if (i['uncontrasted'][1] > 50 && i['uncontrasted'][1] - i['uncontrasted'][2] > 20 && (greenRatio > 0.6 || i['uncontrasted'][1] > 170)) {
                             continue
                         }
-                        if (type === 'uncontrasted') {
-                            const colorPalette = generateColorPalette([i['uncontrasted'][0], i['uncontrasted'][1], i['uncontrasted'][2]]);
-                        } else {
-                            const colorPalette = generateColorPalette([i['color'][0], i['color'][1], i['color'][2]]);
-                        }
-                        // console.log(colorPalette)
+                        generateColorPalette([i['uncontrasted'][0], i['uncontrasted'][1], i['uncontrasted'][2]]);
                     }
                 }
             }
@@ -218,14 +213,14 @@ const Page = (props: pageProps) => {
                                     itemData={itemData} totalMatchData={totalMatchData} role={Role}
                                     updateMatchData={updateMatchData} />
                             </div>
-                            </>
-                            <CustomTable
-                                baseApiUrl={baseApiUrl}
-                                type={props.type} role={Role}
-                                filteredData={filteredData} heroData={heroData} count={count} updateMatchData={updateMatchData}
-                                totalMatchData={totalMatchData} nameParam={nameParam} heroList={props.heroList} itemData={itemData}
-                                showStarter={showStarter} />
                         </>
+                        <CustomTable
+                            baseApiUrl={baseApiUrl}
+                            type={props.type} role={Role}
+                            filteredData={filteredData} heroData={heroData} count={count} updateMatchData={updateMatchData}
+                            totalMatchData={totalMatchData} nameParam={nameParam} heroList={props.heroList} itemData={itemData}
+                            showStarter={showStarter} />
+                    </>
 
                 </>
             }
