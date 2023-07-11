@@ -24,7 +24,7 @@
   display: flex;
 }
 :root {
-  --body-bg-colour: #292626;
+  --body-bg-colour: #1f393c;
   --table-row-odd-bg: rgb(42, 50, 53);
   --table-border: grey;
   --nav-bar: rgb(19, 18, 18);

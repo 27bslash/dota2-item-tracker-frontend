@@ -101,7 +101,7 @@ const SearchResults = (props: SearchResultsProps) => {
     }
     return (
         <>
-            <Box className="suggestions" bgcolor='primary.light'>
+            <Box className="suggestions" bgcolor='primary.main'>
                 {props.sortedHeroes.length > 0 &&
                     <div className="suggestions-left">
                         <h5 className='suggestion-header'>Heroes</h5>

@@ -155,6 +155,8 @@ const Page = (props: pageProps) => {
                         generateColorPalette([i['uncontrasted'][0], i['uncontrasted'][1], i['uncontrasted'][2]]);
                     }
                 }
+            } else {
+                setHeroColor('player')
             }
         })()
     }, [])
