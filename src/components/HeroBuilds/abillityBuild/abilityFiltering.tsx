@@ -8,14 +8,16 @@ const abilityFilter = (data: any, ab = '') => {
             // console.log(match)
             const key = match['abilities'].filter((ability: any) => ability.type !== 'talent').slice(0, 10).map((x: { img: string }) => x.img).join('__')
             aCount[key] = (aCount[key] + 1) || 1
-        } else {
-        }
+        } 
     }
+    // console.log(aCount)
     const res = []
     for (let i = 0; i < 10; i++) {
         const count: any = {}
         for (let abilityArr of abilities) {
-            count[abilityArr[i]] = (count[abilityArr[i]] || 0) + 1
+            if (abilityArr[i]) {
+                count[abilityArr[i]] = (count[abilityArr[i]] || 0) + 1
+            }
         }
         res.push(count)
     }
@@ -35,7 +37,7 @@ const abilityFilter = (data: any, ab = '') => {
 }
 export default abilityFilter
 
-const genAbilityArr = (res: any[], ab: string, totalCount: any, max_abilities: number) => {
+const genAbilityArr = (res: { [k: string]: number }[], ab: string, totalCount: any, max_abilities: number) => {
     const final = []
     let i = 0;
     for (let x of res) {
@@ -64,9 +66,14 @@ const genAbilityArr = (res: any[], ab: string, totalCount: any, max_abilities: n
                 break
             }
         }
-        const o = Object.fromEntries([sorted[idx]])
-        final.push(o)
-        i++
+        // console.log(sorted, idx)
+        try {
+            const o = Object.fromEntries([sorted[idx]])
+            final.push(o)
+            i++
+        } catch {
+            i++
+        }
     }
     return final
 }
