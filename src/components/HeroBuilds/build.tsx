@@ -119,38 +119,26 @@ const Build = (props: BuildProps) => {
     return (
         <Box className="build-wrapper" style={{ marginTop: '20px' }} >
             {filteredData &&
-                <Box className="build-container" sx={{
-                    position: 'relative', backgroundColor: open ? 'primary.dark' : 'inherit',
-                    '& .build-container': {
-                        backgroundColor: 'blue !important',
-                        '& > div': {
-                            backgroundColor: 'blue !important',
-
-                            // Your styles for the div inside .build-container
-
-                        },
-                    },
+                <Box className="build-container" bgcolor={open ? 'secondary.dark' : 'inherit'} sx={{
+                    position: 'relative'
                 }}>
-                    < Button sx={{
-                        backgroundColor: 'primary',
+                    < Button variant='contained' color='primary' sx={{
                         '&:hover': {
-                            backgroundColor: 'primary.dark',
+                            backgroundColor: 'secondary.main',
                         },
-                    }} onClick={() => setOpen((prevstate) => !prevstate)} variant='contained'>Builds</Button>
+                    }} onClick={() => setOpen((prevstate) => !prevstate)} >Builds</Button>
                     {open &&
                         <>
-                            <Button variant='contained'
+                            <Button variant='contained' color='primary' onClick={() => setProData((prevstate) => !prevstate)}
                                 sx={{
-                                    backgroundColor: 'primary.light',
                                     '&:hover': {
-                                        backgroundColor: 'primary.dark',
+                                        backgroundColor: 'secondary.main',
                                     }
-                                }} onClick={() => setProData((prevstate) => !prevstate)} >{!proData ? ' Pro data' : 'non pro'}</Button>
+                                }} >{!proData ? ' Pro data' : 'non pro'}</Button>
                             <Button variant='contained' color={'success'}
                                 sx={{
                                     marginLeft: '840px',
-                                }} onClick={() => setGuideGuide((prev) => !prev)}
-                            >get all guides</Button>
+                                }} onClick={() => setGuideGuide((prev) => !prev)}>get all guides</Button>
                             {guideGuide &&
                                 <Tooltip title=''>
                                     <div className='download-guides-help-text' style={{ position: 'absolute', right: '16px', zIndex: 99 }} >
@@ -162,7 +150,7 @@ const Build = (props: BuildProps) => {
                                 const role = build[0]
                                 const buildData = heroBuilds[role]
                                 return (
-                                    <BuildCell key={index} data={filteredData[role]} buildData={buildData} role={role} heroName={props.heroName} itemData={props.itemData} dataLength={roles.length} heroData={props.heroData} />
+                                    <BuildCell key={index} data={filteredData[role]} buildData={buildData} role={role} heroName={props.heroName} itemData={props.itemData} dataLength={Object.entries(heroBuilds).length} heroData={props.heroData} />
                                 )
                             })}
                         </>
