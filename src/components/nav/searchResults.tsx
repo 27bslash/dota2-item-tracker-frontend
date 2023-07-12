@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from 'react';
 import SearchResult from './searchResult';
-import { Box } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 
 interface SearchResultsProps {
     heroList: { name: string, id: number }[],
@@ -47,19 +47,27 @@ const SearchResults = (props: SearchResultsProps) => {
             }
         } else if (e.key === 'ArrowRight') {
             if (targetListRef.current === 0) {
-                setTargetList(1)
-                targetListRef.current = 1
+                if (combined[0] - 1 >= idxRef.current) {
+                    setTargetList(1)
+                    targetListRef.current = 1
+                }
             } else {
-                setTargetList(0)
-                targetListRef.current = 0
+                if (combined[0] - 1 >= idxRef.current) {
+                    setTargetList(0)
+                    targetListRef.current = 0
+                }
             }
         } else if (e.key === 'ArrowLeft') {
             if (targetListRef.current === 1) {
-                setTargetList(0)
-                targetListRef.current = 0
+                if (combined[0] - 1 >= idxRef.current) {
+                    setTargetList(0)
+                    targetListRef.current = 0
+                }
             } else {
-                setTargetList(1)
-                targetListRef.current = 1
+                if (combined[1] - 1 >= idxRef.current) {
+                    setTargetList(1)
+                    targetListRef.current = 1
+                }
             }
         } else if (e.key === 'Escape') {
             props.updateValue()
@@ -101,10 +109,10 @@ const SearchResults = (props: SearchResultsProps) => {
     }
     return (
         <>
-            <Box className="suggestions" bgcolor='primary.main'>
+            <Box className="suggestions" bgcolor='primary.main' sx={{ 'z-index': 99 }}>
                 {props.sortedHeroes.length > 0 &&
                     <div className="suggestions-left">
-                        <h5 className='suggestion-header'>Heroes</h5>
+                        <Typography align='center' color='#1ebdad' variant='h6' className='suggestion-header'>Heroes</Typography>
                         {props.sortedHeroes.map((value, i) => {
 
                             return (<SearchResult value={value} updateSearchIdx={updateSearchIdx} type='hero' idx={i} key={i} selectedidx={idxRef.current} list={0} targetList={targetList} />)
@@ -113,7 +121,7 @@ const SearchResults = (props: SearchResultsProps) => {
                 }
                 {props.sortedPlayers.length > 0 &&
                     <div className="suggestions-right">
-                        <h5 className='suggestion-header'>Players</h5>
+                        <Typography align='center' color='#1ebdad' variant='h6' className='suggestion-header'>Players</Typography>
                         {props.sortedPlayers.map((value, i) => {
                             // console.log(value)
 
@@ -122,9 +130,9 @@ const SearchResults = (props: SearchResultsProps) => {
                             )
                         })
                         }
-                    </div>
+                    </div >
                 }
-            </Box>
+            </Box >
 
         </>
     )

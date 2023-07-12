@@ -1,4 +1,3 @@
-import { Link } from "react-router-dom";
 import HomeButton from "./nav_button"
 import NavSearch from './search';
 interface NavProps {

@@ -231,7 +231,7 @@ ul {
   /* color: rgb(155, 182, 182); */
 }
 .suggestions-left {
-  border-right: solid grey 1px;
+  border-right: solid white 1.5px;
   grid-column: 1;
 }
 .suggestion {
@@ -275,10 +275,7 @@ ul {
   /* padding: 10px; */
   text-transform: uppercase;
 }
-.nav-button:hover {
-  /* background-color: rgb(0, 0, 0);
-  color: rgb(187, 187, 187); */
-}
+
 .nav-search {
   /* background-color: var(--nav-bar); */
   width: 100%;
@@ -293,9 +290,7 @@ ul {
   font-family: inherit;
   border: none;
 }
-#search {
-  /* background-color: var(--nav-bar); */
-}
+
 #table-search {
   background-color: #fff;
   color: black;
@@ -379,7 +374,6 @@ a:hover {
 .best-games table {
   border-spacing: 0;
 }
-
 
 .best-games tbody tr:nth-child(odd) {
   background-color: rgba(30, 42, 46, 0.486);

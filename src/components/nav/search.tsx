@@ -68,6 +68,10 @@ const NavSearch = (props: searchProps) => {
     return (
         <Box className='nav-search' bgcolor={'primary.main'}>
             <TextField
+                sx={{
+                    '& .MuiInput-underline:before': { borderBottomColor: 'primary.main' },
+                    '& .MuiInput-underline:after': { borderBottomColor: '#1976d2' },
+                }}
                 id="search"
                 placeholder='Search...'
                 label=""
@@ -75,7 +79,6 @@ const NavSearch = (props: searchProps) => {
                 disabled={false}
                 variant="standard"
                 value={value}
-                // color={'secondary'}
                 onChange={(e) => setValue(e.target.value)} />
             {(!!sortedPlayers.length || !!sortedHeroes.length) &&
                 <SearchResults heroList={props.heroList} highlightHero={props.highlightHero} updateValue={updateValue} navigatePage={navigatePage} playerList={props.playerList} sortedHeroes={sortedHeroes} sortedPlayers={sortedPlayers} />

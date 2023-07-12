@@ -1,5 +1,5 @@
 
-import { Box } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import { useState, useEffect } from 'react';
 const SearchResult = (props: any) => {
     let name = props.type === 'hero' ? props.value.name.replace(/\s/g, '_') : props.value
@@ -18,11 +18,9 @@ const SearchResult = (props: any) => {
     return (
         <Box className={`${highlight}`}>
             <a className='suggestion-link' key={props.idx} href={`/${props.type}/${name}`} >
-                {highlight ? (
-                    <div className='suggestion'>{displayName}</div>
-                ) : (
-                    <div className="suggestion" onMouseOver={() => props.updateSearchIdx(props.idx, props.type)}>{displayName}</div>
-                )}
+                <div className="suggestion" onMouseOver={() => props.updateSearchIdx(props.idx, props.type)}>
+                    <Typography variant='body1' padding='4px'>{displayName}</Typography>
+                </div>
             </a>
         </Box>
     )
