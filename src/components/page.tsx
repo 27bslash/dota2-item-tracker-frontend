@@ -85,11 +85,13 @@ const Page = (props: pageProps) => {
             const docLength = await fetchData(countDocsUrl)
             setTotalPicks(matches['picks'])
             let allMatches
-            if (docLength > 60) {
+            if (docLength > 15 && props.type === 'hero') {
                 // const worker = new Worker('./fetchData.ts')
                 allMatches = await bulkRequest(`${baseApiUrl}${props.type}/${nameParam}/react-test`, docLength)
                 const merged = allMatches.map((x: { [x: string]: any; }) => x['data']).flat()
                 setTotalMatchData(merged)
+            } else if (docLength <= 10 && props.type === 'hero') {
+                setTotalMatchData(matches['data'])
             } else {
                 allMatches = await fetchData(`${baseApiUrl}${props.type}/${nameParam}/react-test`)
                 console.log(allMatches)
@@ -238,7 +240,6 @@ export const generateColorPalette = (sourceColor: string[]) => {
     // console.log('rgba', colorMap)
     let [r, g, b] = [+colorMap[0], +colorMap[1], +colorMap[2]]
     const hsl = RGBToHSL(r, g, b).map((x: any) => parseInt(x))
-    const main = [...hsl]
     const dark = [...hsl]
     const light = [...hsl]
     // console.log(dark)
@@ -264,7 +265,10 @@ export const generateColorPalette = (sourceColor: string[]) => {
     // tableLight[1] = 30
     theme.palette.background.default = background
     document.body.style.background = background
+
     theme.palette.primary.main = hslToHex(light[0], light[1], light[2])
+    theme.palette.secondary.main = hslToHex(light[0], light[1], 45)
+    theme.palette.secondary.dark = hslToHex(light[0], light[1], 30)
     theme.palette.table.main = hslToHex(tableDark[0], tableDark[1], tableDark[2])
     theme.palette.table.secondary = hslToHex(tableLight[0], tableLight[1], tableLight[2])
     return {
@@ -296,7 +300,7 @@ const RGBToHSL = (r: number, g: number, b: number) => {
         (100 * (2 * l - s)) / 2,
     ];
 };
-function hslToHex(h: number, s: number, l: number) {
+function hslToHex(hue: number, saturation: number, lightness: number) {
     // const hue = Math.round(h * 360);
     // const saturation = Math.round(s * 100);
     // const lightness = Math.round(l * 100);
@@ -341,7 +345,7 @@ function hslToHex(h: number, s: number, l: number) {
         };
     };
 
-    const { r, g, b } = hslToRgb(h, s / 100, l / 100);
+    const { r, g, b } = hslToRgb(hue, saturation / 100, lightness / 100);
     // console.log(r, g, b)
     const toHex = (value: number) => {
         const hex = value.toString(16);
