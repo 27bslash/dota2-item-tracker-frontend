@@ -70,6 +70,9 @@ const Home = (props: any) => {
     }
     let pickStats: any = null
     document.body.style.background = theme.palette.background.default
+    theme.palette.primary.main = '#597f80'
+    theme.palette.secondary.main = '#486869'
+
     return (
         <div className="home">
             <Nav filterHeroes={filterHeroes} heroList={props.heroList} playerList={props.playerList} highlightHero={highlightHero}></Nav>
@@ -88,13 +91,12 @@ const Home = (props: any) => {
                             const stats = winStats.filter((x) => {
                                 return x.hero === heroName.replace(/\s/g, '_')
                             })
-                            const picks = stats[0][`${roleFilter}picks`]
-                            const wins = stats[0][`${roleFilter}wins`]
+                            const picks = stats[0][`${roleFilter}picks`] || 0
+                            const wins = stats[0][`${roleFilter}wins`] || 0
                             const bans = stats[0][`bans`]
-                            const winrate = ((wins / picks) * 100).toFixed(2) || 0
+                            const winrate = picks ? ((wins / picks) * 100).toFixed(2).replace('.00', '') : 0
                             pickStats = { 'picks': picks, 'wins': wins, 'bans': bans, 'winrate': winrate }
                         }
-                        // console.log(heroName, stats)
                         return (
                             <Grid key={i} className={`grid-item-${className}`} item >
                                 <HeroCard highlight={highlight} idx={i} key={i} searching={searching} heroName={heroName} stats={pickStats} role={roleFilter}></HeroCard>

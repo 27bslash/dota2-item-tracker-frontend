@@ -26,7 +26,6 @@ const roleSort = (stats: any, field: string) => {
     const sorted = [...filtered].sort((a: any, b: any) => {
         return b[field] - a[field]
     })
-    console.log(sorted.map((x: any) => x['hero']))
     return sorted
 }
 const RoleSelector = (props: any) => {
