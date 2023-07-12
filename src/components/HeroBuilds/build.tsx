@@ -81,8 +81,15 @@ const Build = (props: BuildProps) => {
         (async () => {
             const countDocsUrl = `${props.baseApiUrl}hero/${props.heroName}/count_docs?collection=non-pro`
             const docLength = await fetchData(countDocsUrl)
-            const data = await bulkRequest(`${props.baseApiUrl}hero/${props.heroName}/item_build`, docLength)
-            const merged = data.flat()
+            let merged = []
+            let data = []
+            if (docLength > 50) {
+                data = await bulkRequest(`${props.baseApiUrl}hero/${props.heroName}/item_build`, docLength)
+                merged = data.flat()
+            } else {
+                data = await fetchData(`${props.baseApiUrl}hero/${props.heroName}/item_build`)
+                merged = data.flat()
+            }
             setNonProData(merged.filter((x: any) => x.abilities && x.items))
         })()
     }, [])
@@ -93,7 +100,6 @@ const Build = (props: BuildProps) => {
             const o = { [props.role]: filtered }
             setFilteredData(o)
         } else if (data) {
-            console.log(props.role, roles)
             const tempObject: { [role: string]: NonProDataType[] } = {}
             for (let role of roles) {
                 const roleFiltered = data.filter(((item: NonProDataType) => item.role === role || (combinedRoles.includes(role) && combinedRoles.includes(item.role))))
@@ -106,13 +112,12 @@ const Build = (props: BuildProps) => {
         setHeroBuilds({ type: 'clear' })
         for (let key in filteredData) {
             const buildData = filteredData[key]
-            if (buildData.length > 1) {
-                const itemBuild = filterItems(buildData, props.itemData)
-                const abilityBuilds = abilityFilter(buildData)
-                const startingItemBuilds = countStartingItems(buildData)
-                const res = [itemBuild, abilityBuilds, startingItemBuilds]
-                setHeroBuilds({ [key]: res })
-            }
+            const itemBuild = filterItems(buildData, props.itemData)
+            const abilityBuilds = abilityFilter(buildData)
+            const startingItemBuilds = countStartingItems(buildData)
+            const res = [itemBuild, abilityBuilds, startingItemBuilds]
+            setHeroBuilds({ [key]: res })
+
         }
     }, [filteredData])
     const [guideGuide, setGuideGuide] = useState(false)
