@@ -252,7 +252,7 @@ export const generateColorPalette = (sourceColor: string[]) => {
     // console.log(dark)
     const tableDark = [...dark]
     const tableLight = [...dark]
-    dark[0] -= 20
+    dark[0] -= 10
     dark[0] = (dark[0] + 360) % 360
     light[2] = 60
     // console.log('light color', light, dark)
