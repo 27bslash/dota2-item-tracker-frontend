@@ -68,8 +68,7 @@ const Build = (props: BuildProps) => {
         return roles
     }
     const roles = useMemo(() => calc_common_roles(), [props.picks])
-    useEffect(() => {
-    }, [props.picks, proData, data, filteredData, props.role, roles, nonProData])
+
     useEffect(() => {
         if (proData) {
             setData(props.data)
@@ -83,11 +82,12 @@ const Build = (props: BuildProps) => {
             const docLength = await fetchData(countDocsUrl)
             let merged = []
             let data = []
+            const matchDataUrl = 'https://0f2ezc19w3.execute-api.eu-west-2.amazonaws.com/dev/'
             if (docLength > 50) {
-                data = await bulkRequest(`${props.baseApiUrl}hero/${props.heroName}/item_build`, docLength)
+                data = await bulkRequest(`${matchDataUrl}hero/${props.heroName}/item_build`, docLength)
                 merged = data.flat()
             } else {
-                data = await fetchData(`${props.baseApiUrl}hero/${props.heroName}/item_build`)
+                data = await fetchData(`${matchDataUrl}hero/${props.heroName}/item_build`)
                 merged = data.flat()
             }
             setNonProData(merged.filter((x: any) => x.abilities && x.items))

@@ -75,9 +75,10 @@ const Page = (props: pageProps) => {
     useEffect(() => {
         document.title = nameParam;
         (async () => {
-            let url = `${baseApiUrl}${props.type}/${nameParam}/react-test?skip=0&length=10`
+            const matchDataUrl = 'https://0f2ezc19w3.execute-api.eu-west-2.amazonaws.com/dev/'
+            let url = `${matchDataUrl}${props.type}/${nameParam}/react-test?skip=0&length=10`
             if (role) {
-                url = `${baseApiUrl}${props.type}/${nameParam}/react-test?role=${role}&skip=0&length=10`
+                url = `${matchDataUrl}${props.type}/${nameParam}/react-test?role=${role}&skip=0&length=10`
             }
             const countDocsUrl = `${baseApiUrl}hero/${nameParam}/count_docs?collection=heroes`
             const matches = await fetchData(url)
@@ -87,13 +88,13 @@ const Page = (props: pageProps) => {
             let allMatches
             if (docLength > 15 && props.type === 'hero') {
                 // const worker = new Worker('./fetchData.ts')
-                allMatches = await bulkRequest(`${baseApiUrl}${props.type}/${nameParam}/react-test`, docLength)
+                allMatches = await bulkRequest(`${matchDataUrl}${props.type}/${nameParam}/react-test`, docLength)
                 const merged = allMatches.map((x: { [x: string]: any; }) => x['data']).flat()
                 setTotalMatchData(merged)
             } else if (docLength <= 10 && props.type === 'hero') {
                 setTotalMatchData(matches['data'])
             } else {
-                allMatches = await fetchData(`${baseApiUrl}${props.type}/${nameParam}/react-test`)
+                allMatches = await fetchData(`${matchDataUrl}${props.type}/${nameParam}/react-test`)
                 console.log(allMatches)
                 setTotalMatchData(allMatches['data'])
             }
