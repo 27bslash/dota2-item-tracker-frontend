@@ -43,13 +43,13 @@ export const countItems = (data: any, itemData: any) => {
     // most common items try sorting them by time maybe that's good enough
     // otherwise bbuild by boots maybe?
     const items: any[] = []
+    const seenItems = new Set<string>()
     for (let match of data) {
-        const seenItems = new Set()
         for (let item of match['items']) {
             let time = typeof (item['time']) === 'string' ? humanToUnix(item['time']) : item['time']
             time = time < 0 ? 0 : time
             let key = item['key']
-            if (!consumables.includes(item['key']) && !seenItems.has(key)) {
+            if (!consumables.includes(item['key'])) {
                 // const idx = seenItems.filter((x) => x === key).length + 1
                 // key = idx > 1 ? `${key}__${idx}` : key
                 // key = key
@@ -59,14 +59,14 @@ export const countItems = (data: any, itemData: any) => {
                 // itemCount[key] ? itemCount[key] = ({ value: oKey['value'] + 1, time: oKey['time'] + time })
                 //     : itemCount[key] = { value: 1, time: time }
 
-                seenItems.add(item['key'])
+                seenItems.add(key)
             }
         };
 
     }
     let itemValues: any = {}
-    items.forEach((x, i) => {
-        const key = Object.keys(x)[0]
+    seenItems.forEach((x, i) => {
+        const key = x
         const filteredItemTimes: any[] = items.filter((item) => Object.keys(item)[0] === key).map((item) => Object.values(item)[0])
         if (filteredItemTimes) {
             const medianTime = medianValue(filteredItemTimes)
