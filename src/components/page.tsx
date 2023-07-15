@@ -188,10 +188,10 @@ const Page = (props: pageProps) => {
                 <>
                     <Nav playerList={props.playerList} heroList={props.heroList} />
                     <>
-                        <div className="flex" style={{}}>
+                        <div className="flex" style={{ 'minHeight': '87px' }}>
                             {props.type === 'hero' &&
                                 <>
-                                    <div className="hero-img-wrapper">
+                                    <div className="hero-img-wrapper" >
                                         <HeroImg baseApiUrl={baseApiUrl} heroData={heroData} heroName={nameParam} />
                                         <MostUsed baseApiUrl={baseApiUrl} matchData={totalMatchData} role={Role} updateMatchData={updateMatchData} itemData={itemData}></MostUsed>
                                     </div>
@@ -202,12 +202,14 @@ const Page = (props: pageProps) => {
                                 </>
                             }
                         </div>
-                        {!!heroData.length && itemData && nameParam && props.type === 'hero' && !!filteredData.length &&
-                            < Build baseApiUrl={baseApiUrl} role={Role} picks={totalPicks} searchRes={searchRes}
-                                data={filteredData} heroData={heroData} heroName={nameParam} itemData={itemData} updateMatchData={updateMatchData} />
-                        }
+                        <div style={{ 'minHeight': '45px', marginTop: '20px' }}>
+                            {!!heroData.length && itemData && nameParam && props.type === 'hero' && !!filteredData.length &&
+                                <Build baseApiUrl={baseApiUrl} role={Role} picks={totalPicks} searchRes={searchRes}
+                                    data={filteredData} heroData={heroData} heroName={nameParam} itemData={itemData} updateMatchData={updateMatchData} />
+                            }
+                        </div>
                         <>
-                            <div className="flex" style={{ 'width': '100%' }}>
+                            <div className="flex" style={{ 'width': '100%', minHeight: '53px' }}>
                                 <PickCounter type={props.type} nameParam={nameParam} role={Role} heroColor={heroColor} matchData={totalMatchData} searchRes={searchRes}
                                     count={count} filteredData={filteredData} totalPicks={totalPicks} updateRole={updateRole} updateMatchData={updateMatchData} />
                             </div>
