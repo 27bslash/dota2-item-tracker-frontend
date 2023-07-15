@@ -121,46 +121,47 @@ const Build = (props: BuildProps) => {
     }, [filteredData])
     const [guideGuide, setGuideGuide] = useState(false)
     return (
-        <Box className="build-wrapper" style={{ marginTop: '20px' }} >
-            {filteredData &&
-                <Box className="build-container" bgcolor={open ? 'secondary.dark' : 'inherit'} sx={{
-                    position: 'relative'
-                }}>
-                    < Button variant='contained' color='primary' sx={{
-                        '&:hover': {
-                            backgroundColor: 'secondary.main',
-                        },
-                    }} onClick={() => setOpen((prevstate) => !prevstate)} >Builds</Button>
-                    {open &&
-                        <>
-                            <Button variant='contained' color='primary' onClick={() => setProData((prevstate) => !prevstate)}
-                                sx={{
-                                    '&:hover': {
-                                        backgroundColor: 'secondary.main',
-                                    }
-                                }} >{!proData ? ' Pro data' : 'non pro'}</Button>
-                            <Button variant='contained' color={'success'}
-                                sx={{
-                                    marginLeft: '840px',
-                                }} onClick={() => setGuideGuide((prev) => !prev)}>get all guides</Button>
-                            {guideGuide &&
-                                <Tooltip title=''>
-                                    <div className='download-guides-help-text' style={{ position: 'absolute', right: '16px', zIndex: 99 }} >
-                                        <GuideGuide />
-                                    </div>
-                                </Tooltip>
-                            }
-                            {Object.entries(heroBuilds).map((build: any, index: number) => {
-                                const role = build[0]
-                                const buildData = heroBuilds[role]
-                                return (
-                                    <BuildCell key={index} data={filteredData[role]} buildData={buildData} role={role} heroName={props.heroName} itemData={props.itemData} dataLength={Object.entries(heroBuilds).length} heroData={props.heroData} />
-                                )
-                            })}
-                        </>
+        <Box className="build-wrapper">
+            <Box className="build-container" bgcolor={open ? 'secondary.dark' : 'inherit'} sx={{
+                position: 'relative'
+            }}>
+                < Button variant='contained' color='primary' disabled={!filteredData} sx={{
+                    '&:hover': {
+                        backgroundColor: 'secondary.main',
+                    }, '&.Mui-disabled': {
+                        backgroundColor: 'secondary.main',
+                        color: 'white'
                     }
-                </Box>
-            }
+                }} onClick={() => setOpen((prevstate) => !prevstate)} >Builds</Button>
+                {open && filteredData &&
+                    <>
+                        <Button variant='contained' color='primary' onClick={() => setProData((prevstate) => !prevstate)}
+                            sx={{
+                                '&:hover': {
+                                    backgroundColor: 'secondary.main',
+                                }
+                            }} >{!proData ? ' Pro data' : 'non pro'}</Button>
+                        <Button variant='contained' color={'success'}
+                            sx={{
+                                marginLeft: '840px',
+                            }} onClick={() => setGuideGuide((prev) => !prev)}>get all guides</Button>
+                        {guideGuide &&
+                            <Tooltip title=''>
+                                <div className='download-guides-help-text' style={{ position: 'absolute', right: '16px', zIndex: 99 }} >
+                                    <GuideGuide />
+                                </div>
+                            </Tooltip>
+                        }
+                        {Object.entries(heroBuilds).map((build: any, index: number) => {
+                            const role = build[0]
+                            const buildData = heroBuilds[role]
+                            return (
+                                <BuildCell key={index} data={filteredData[role]} buildData={buildData} role={role} heroName={props.heroName} itemData={props.itemData} dataLength={Object.entries(heroBuilds).length} heroData={props.heroData} />
+                            )
+                        })}
+                    </>
+                }
+            </Box>
         </Box >
     )
 }
