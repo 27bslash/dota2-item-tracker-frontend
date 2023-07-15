@@ -22,9 +22,15 @@ const ControlPanel = (props: any) => {
 
 }
 const roleSort = (stats: any, field: string) => {
-    let filtered = stats.filter((item: any) => item[field] > 0);
+    let filtered = stats.filter((item: any) => field !== 'winrate' ? item[field] > 0 : item['picks'] > 10);
     const sorted = [...filtered].sort((a: any, b: any) => {
-        return b[field] - a[field]
+        if (field !== 'winrate') {
+            return b[field] - a[field]
+        } else {
+            const winrate1 = a['picks'] ? ((a['wins'] / a['picks']) * 100) : 0
+            const winrate2 = b['picks'] ? ((b['wins'] / b['picks']) * 100) : 0
+            return winrate2 - winrate1
+        }
     })
     return sorted
 }
