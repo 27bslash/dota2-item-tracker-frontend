@@ -1,3 +1,5 @@
+import Items from "../../../types/Item"
+
 const recursive_remove = (item: any, itemdata: any, components: string[], data: any[], keys: any[], removedComponents: string[]): any => {
     const badQuals = ['component', 'common', 'consumable', 'secret_shop']
     for (let component of components) {
@@ -51,7 +53,7 @@ const recursive_remove = (item: any, itemdata: any, components: string[], data: 
             removedComponents.push(component)
             continue
         }
-        if (component === 'sange') {
+        if (component === 'sange' || component === 'soul_booster') {
             removedComponents.push(component)
         }
         if (!componentStats['hint'] && dataComponent[1]['time'] > 1200) {
@@ -78,15 +80,22 @@ const allComponents = (components: any, res: string[], itemdata: any): string[] 
     }
     return res
 }
-const filterComponents = (data: any[], itemData: any) => {
+export const filterComponents = (data: any[], itemData: Items) => {
+    // data is in the form of [string, {value ,time}]
     let toRemove: string[] = []
     const gpm = 400
+    // for (let k in itemData['items']) {
+    //     if (!itemData['items'][k]['hint'] && itemData['items'][k]['cost'] && itemData['items'][k]['cost'] > 1000 && !k.includes('recipe')) {
+    //         console.log(k, itemData['items'][k]['qual'])
+    //         noHint.push(k)
+    //     }
+    // }
+    // console.log(noHint)
     const itemdata: any = itemData
     const keys = data.map((x) => x[0])
     // console.log([...keys])
     const removedComponents: any = []
     const disassembleable = ['arcane_boots', 'echo_sabre', 'octarine_core', 'vanguard', 'mask_of_madness']
-    // console.log([...data])
     for (let i = 0; i < data.length; i++) {
         const item = data[i]
         const itemKey: string = item[0]
@@ -95,11 +104,11 @@ const filterComponents = (data: any[], itemData: any) => {
         const itemStats = itemdata['items'][itemKey.replace(/__\d+/g, '')]
         if (!itemStats) {
             continue
-        }
-        // console.log(itemKey, itemStats['qual'])
-        if (itemTime > 1000 && itemStats['cost'] < 500) {
+        } else if (itemTime > 1000 && itemStats['cost'] < 500) {
             toRemove.push(data[i][0])
             continue
+        } else if (itemTime > 1000 && !itemStats['hint'] && ['common', 'component', 'secret_shop'].includes(itemStats['qual'])) {
+            toRemove.push(data[i][0])
         }
         const cost: any = itemStats['cost']
         if (itemStats && itemStats['components']) {
@@ -114,11 +123,14 @@ const filterComponents = (data: any[], itemData: any) => {
                     const itemUses = slicedData.filter((x, i) => {
                         const parentComponents = allComponents(itemdata['items'][x[0]]['components'], [], itemdata)
                         // console.log(x[0], parentComponents)
+                        const core = x[1]['adjustedValue'] > 20 && item[1]['adjustedValue'] > 20
+                        const situtational = x[1]['adjustedValue'] < 20 && item[1]['adjustedValue'] < 20
+                        if (!core && !situtational) {
+                            return false
+                        }
                         if (parentComponents && parentComponents.includes(component)) {
-                            const core = x[1]['adjustedValue'] > 20 && item[1]['adjustedValue'] > 20
-                            const situtational = x[1]['adjustedValue'] < 20 && item[1]['adjustedValue'] < 20
                             const componentInParent = slicedData.filter((item, idx) => idx <= i && parentComponents.includes(item[0])).map((x) => x[0])
-                            if (componentInParent.length && !componentInParent.includes(component) && x[1]['value'] > item[1]['value'] / 2 && !parentComponents.includes(itemKey) && (core || situtational)) {
+                            if (componentInParent.length && !componentInParent.includes(component) && x[1]['value'] > item[1]['value'] / 2 && !parentComponents.includes(itemKey)) {
                                 // console.log(item, parentComponents, x, componentInParent)
                                 return true
                             }
@@ -132,9 +144,9 @@ const filterComponents = (data: any[], itemData: any) => {
                             dissassembledComponents.pop()
                         }
                         if (dissassembledComponents.length > 1) {
-                            // console.log(itemKey, itemUses, dissassembledComponents)
                             if (data[idx][1]['dissassembledComponents']) {
-                                data[idx][1]['dissassembledComponents'].push(dissassembledComponents)
+                                const itemIdx = data[idx][1]['dissassembledComponents'].findIndex((x: any) => dissassembledComponents.includes(x[0]))
+                                if (itemIdx === -1) data[idx][1]['dissassembledComponents'].push(dissassembledComponents)
                             } else {
                                 data[idx][1]['dissassembledComponents'] = [dissassembledComponents]
                             }
