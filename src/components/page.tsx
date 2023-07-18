@@ -75,7 +75,7 @@ const Page = (props: pageProps) => {
     useEffect(() => {
         document.title = nameParam;
         (async () => {
-            const matchDataUrl = 'https://0f2ezc19w3.execute-api.eu-west-2.amazonaws.com/dev/'
+            const matchDataUrl = props.type === 'hero' ? 'https://0f2ezc19w3.execute-api.eu-west-2.amazonaws.com/dev/' : baseApiUrl
             let url = `${matchDataUrl}${props.type}/${nameParam}/react-test?skip=0&length=10`
             if (role) {
                 url = `${matchDataUrl}${props.type}/${nameParam}/react-test?role=${role}&skip=0&length=10`
@@ -95,7 +95,6 @@ const Page = (props: pageProps) => {
                 setTotalMatchData(matches['data'])
             } else {
                 allMatches = await fetchData(`${matchDataUrl}${props.type}/${nameParam}/react-test`)
-                console.log(allMatches)
                 setTotalMatchData(allMatches['data'])
             }
             const itemData = await fetchData(`${baseApiUrl}files/items`)
