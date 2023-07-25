@@ -151,7 +151,8 @@ const Page = (props: pageProps) => {
                         setHeroColor(`rgb(${i['color'][0]}, ${i['color'][1]}, ${i['color'][2]})`)
                         const colorSUm = i['uncontrasted'][1] + i['uncontrasted'][2]
                         const greenRatio = i['uncontrasted'][1] / colorSUm
-                        if (i['uncontrasted'][1] > 50 && i['uncontrasted'][1] - i['uncontrasted'][2] > 20 && (greenRatio > 0.6 || i['uncontrasted'][1] > 170)) {
+                        if ((Math.max(...i['uncontrasted']) === i['uncontrasted'][1] ||
+                            Math.max(...i['uncontrasted']) - 50 <= i['uncontrasted'][1]) && i['uncontrasted'][1] - i['uncontrasted'][2] > 50 && (greenRatio > 0.6 || i['uncontrasted'][1] > 170)) {
                             continue
                         }
                         generateColorPalette([i['uncontrasted'][0], i['uncontrasted'][1], i['uncontrasted'][2]]);
@@ -267,7 +268,11 @@ export const generateColorPalette = (sourceColor: string[]) => {
     // tableLight[1] = 30
     theme.palette.background.default = background
     document.body.style.background = background
-
+    // button colour
+    // console.log(dark, light)
+    if (dark[1] > 60 || (light[0] > 60 && light[0] < 160)) {
+        light[2] = 35
+    }
     theme.palette.primary.main = hslToHex(light[0], light[1], light[2])
     theme.palette.secondary.main = hslToHex(light[0], light[1], 45)
     theme.palette.secondary.dark = hslToHex(light[0], light[1], 30)
