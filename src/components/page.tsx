@@ -246,7 +246,7 @@ export const generateColorPalette = (sourceColor: string[]) => {
     const dark = [...hsl]
     const light = [...hsl]
     // console.log(dark)
-    dark[2] -= 20
+    dark[2] = 20
     if (dark[2] <= 20) {
         dark[2] = 20
     }
