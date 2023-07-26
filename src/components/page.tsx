@@ -237,7 +237,10 @@ const Page = (props: pageProps) => {
 // Define the source color
 
 // Generate a Material-UI color palette based on the source color
-export const generateColorPalette = (sourceColor: string[]) => {
+export const generateColorPalette = (sourceColor: string[], heroName?: string, options?: any) => {
+    if (!options) {
+        options = {}
+    }
 
     const colorMap = sourceColor.map((x) => +x <= 255 ? parseInt(x) : 255)
     // console.log('rgba', colorMap)
@@ -248,30 +251,33 @@ export const generateColorPalette = (sourceColor: string[]) => {
     // console.log(dark)
     dark[2] = 20
     if (dark[2] <= 20) {
-        dark[2] = 20
+        dark[2] = options['bg-lightness'] || 14
+        dark[2] = 30
     }
     // dark[2] = (dark[2] + 100) % 100
     // dark[1] = 50
     // console.log(dark)
     const tableDark = [...dark]
     const tableLight = [...dark]
-    dark[0] -= 10
+    dark[0] -= options['bg-hue'] || 10
     dark[0] = (dark[0] + 360) % 360
-    light[2] = 60
+    light[2] = options['button-light'] || 50
     // console.log('light color', light, dark)
     // console.log(sourceColor)
     const [h, s, l] = dark
     const background = hslToHex(h, s, l)
-    tableDark[2] = 15
+    // tableDark[0] -= 8
+    tableDark[0] = (tableDark[0] + 360) % 360
+    tableDark[2] = options['table-dark'] || 10
     // tableDark[1] = 30
-    tableLight[2] = 20
+    tableLight[2] = options['table-light'] || 14
     // tableLight[1] = 30
     theme.palette.background.default = background
     document.body.style.background = background
     // button colour
     // console.log(dark, light)
     if (dark[1] > 60 || (light[0] > 60 && light[0] < 160)) {
-        light[2] = 35
+        light[2] = 25
     }
     theme.palette.primary.main = hslToHex(light[0], light[1], light[2])
     theme.palette.secondary.main = hslToHex(light[0], light[1], 45)
