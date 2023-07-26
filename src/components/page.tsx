@@ -155,7 +155,7 @@ const Page = (props: pageProps) => {
                             Math.max(...i['uncontrasted']) - 50 <= i['uncontrasted'][1]) && i['uncontrasted'][1] - i['uncontrasted'][2] > 50 && (greenRatio > 0.6 || i['uncontrasted'][1] > 170)) {
                             continue
                         }
-                        generateColorPalette([i['uncontrasted'][0], i['uncontrasted'][1], i['uncontrasted'][2]], nameParam, options);
+                        generateColorPalette([i['uncontrasted'][0], i['uncontrasted'][1], i['uncontrasted'][2]], nameParam);
                     }
                 }
             } else {
