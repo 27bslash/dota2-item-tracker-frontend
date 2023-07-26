@@ -155,7 +155,7 @@ const Page = (props: pageProps) => {
                             Math.max(...i['uncontrasted']) - 50 <= i['uncontrasted'][1]) && i['uncontrasted'][1] - i['uncontrasted'][2] > 50 && (greenRatio > 0.6 || i['uncontrasted'][1] > 170)) {
                             continue
                         }
-                        generateColorPalette([i['uncontrasted'][0], i['uncontrasted'][1], i['uncontrasted'][2]]);
+                        generateColorPalette([i['uncontrasted'][0], i['uncontrasted'][1], i['uncontrasted'][2]], nameParam, options);
                     }
                 }
             } else {
@@ -249,9 +249,10 @@ export const generateColorPalette = (sourceColor: string[], heroName?: string, o
     const dark = [...hsl]
     const light = [...hsl]
     // console.log(dark)
-    dark[2] = 20
+    dark[2] -= 20
     if (dark[2] <= 20) {
         dark[2] = options['bg-lightness'] || 14
+    } else if (heroName) {
         dark[2] = 30
     }
     // dark[2] = (dark[2] + 100) % 100
