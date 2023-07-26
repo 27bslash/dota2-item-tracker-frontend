@@ -70,28 +70,89 @@ const groupByTime = (data: any, itemData: any, matchData: any) => {
             }
         }
     }
-
+    const itemChoiceHandler = (optionKey: string, targetKey: string, itemGroup: any[], i: number, optionIdx: number) => {
+        // const option = itemObject[targetKey]['option'][0]
+        // const optionKey = option['choice']
+        // // console.log(targetKey, i, itemGroup[k])
+        // let idx = i
+        // console.log(optionKey, i, itemGroup[k])
+        // if (choiceSet.has(targetKey) || choiceSet.has(optionKey)) continue
+        // if (optionIdx < i) {
+        //     idx = optionIdx
+        // }
+        // delete itemObject[targetKey]['option']
+        // choiceSet.add(optionKey)
+        // choiceSet.add(targetKey)
+        const itemGroupLen = itemGroup.slice(6).length
+        // console.log(12 - itemGroupLen, optionIdx, optionIdx + (itemGroupLen - 12) + 7)
+        itemGroup.splice(optionIdx + (itemGroupLen - 6) + 7, 0, itemGroup[i])
+        itemGroup[optionIdx][optionKey]['longOption'] = optionKey
+        const newIdx = itemGroup.findIndex((x: any) => Object.keys(x)[0] === targetKey)
+        // console.log(i + 4, optionIdx, newIdx)
+        itemGroup.splice(newIdx, 1)
+        // console.log(itemGroup, newIdx, optionIdx)
+        return itemGroup
+    }
+    const padArray = (arr: any[]) => {
+        let desiredLength = 6;
+        const slice = arr.slice(6)
+        let paddingNeeded = desiredLength - slice.length;
+        let paddingLeft = Math.floor(paddingNeeded / 2);
+        let paddingRight = paddingNeeded - paddingLeft;
+        let paddedArray = Array(paddingLeft).fill({}).concat(slice, Array(paddingRight).fill({}));
+        return paddedArray
+    }
     const choiceSet = new Set()
     for (let itemGroup of res) {
         const keys: string[] = ['core', 'situational']
         for (let k of keys) {
-            for (let itemObject of itemGroup[k]) {
+            // const sli = itemGroup[k].slice(0, 6)
+            // console.log(sli)
+            // let sliced = padArray(itemGroup[k].slice(7))
+            // itemGroup[k] = sli.concat(sliced)
+            for (let [i, itemObject] of itemGroup[k].entries()) {
                 // console.log(Object.values(itemArr))
                 const objectKeys = Object.keys(itemObject)
                 const targetKey = objectKeys[0]
                 const values = Object.values(itemObject)[0]
                 if (!values) continue
-                if (Object.keys(values).includes('option')) {
+                if (Object.keys(values).includes('option') ) {
                     // itemGroup[k].concat(itemArr)
                     const option = itemObject[targetKey]['option'][0]
                     const optionKey = option['choice']
                     if (choiceSet.has(targetKey) || choiceSet.has(optionKey)) continue
                     const idx = itemGroup[k].findIndex((x: any) => Object.keys(x)[0] === optionKey)
                     itemObject[optionKey] = { 'value': option['targetValue'], 'adjustedValue': option['targetValue'], time: option['time'] }
-                    delete itemObject[targetKey]['option']
-                    choiceSet.add(optionKey)
-                    choiceSet.add(targetKey)
                     itemGroup[k].splice(idx, 1)
+
+                } else if (Object.keys(values).includes('option') && itemGroup[k].length > 6) {
+                    const option = itemObject[targetKey]['option'][0]
+                    const optionKey = option['choice']
+                    // console.log(targetKey, i, itemGroup[k])
+                    let idx = i
+                    // console.log(optionKey, i, itemGroup[k])
+                    if (choiceSet.has(targetKey) || choiceSet.has(optionKey)) continue
+                    const optionIdx = itemGroup[k].findIndex((x: any) => Object.keys(x)[0] === optionKey)
+                    // if (optionIdx < i) {
+                    //     idx = optionIdx
+                    // }
+                    // delete itemObject[targetKey]['option']
+                    // choiceSet.add(optionKey)
+                    // choiceSet.add(targetKey)
+                    // itemGroup[k].splice(optionIdx + 7, 0, itemGroup[k][i])
+                    // itemGroup[k][optionIdx][optionKey]['longOption'] = true
+                    // const newIdx = itemGroup[k].findIndex((x: any) => Object.keys(x)[0] === targetKey)
+                    // console.log(i + 4, optionIdx, newIdx)
+                    // itemGroup[k].splice(newIdx, 1)
+                    if (i <= optionIdx) {
+                        itemGroup[k] = itemChoiceHandler(targetKey, optionKey, itemGroup[k], optionIdx, i)
+                    } else {
+                        itemGroup[k] = itemChoiceHandler(optionKey, targetKey, itemGroup[k], i, optionIdx)
+                    }
+                    // itemObject[optionKey] = { 'value': option['targetValue'], 'adjustedValue': option['targetValue'], time: option['time'] }
+
+                    // delete itemObject[targetKey]['option']
+                    // itemGroup[k].splice(idx, 1)
 
                 }
             }
