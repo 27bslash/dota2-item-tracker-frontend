@@ -277,8 +277,10 @@ export const generateColorPalette = (sourceColor: string[], heroName?: string, o
     document.body.style.background = background
     // button colour
     // console.log(dark, light)
-    if (dark[1] > 60 || (light[0] > 60 && light[0] < 160)) {
+    if (dark[1] > 65) {
         light[2] = 30
+    } else if (dark[1] > 60) {
+        light[2] = 40
     }
     theme.palette.primary.main = hslToHex(light[0], light[1], light[2])
     theme.palette.secondary.main = hslToHex(light[0], light[1], 45)
