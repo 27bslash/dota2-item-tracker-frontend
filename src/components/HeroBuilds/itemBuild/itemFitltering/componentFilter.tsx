@@ -3,8 +3,17 @@ import Items from "../../../types/Item"
 const recursive_remove = (item: any, itemdata: any, components: string[], data: any[], keys: any[], removedComponents: string[]): any => {
     const badQuals = ['component', 'common', 'consumable', 'secret_shop']
     for (let component of components) {
+        const itemDupeNum = item[0].match(/\d+/g)
         const componentStats = itemdata['items'][component]
-        const idx = keys.indexOf(component)
+        let idx
+        let componentKey
+        if (itemDupeNum) {
+            idx = keys.findIndex((pot) => pot === (`${component}_${itemDupeNum}`))
+            componentKey = `${component}_${itemDupeNum}`
+        } else {
+            idx = keys.indexOf(component)
+            componentKey = component
+        }
 
         const dataComponent = data[idx]
         if (!dataComponent || component === 'blink' || component === 'boots' || component === 'travel_boots' || component === 'ultimate_scepter') {
@@ -14,13 +23,13 @@ const recursive_remove = (item: any, itemdata: any, components: string[], data: 
             // console.log(component, dataComponent[1]['time'] / componentStats['cost'] * 300)
             if ((!componentStats['hint'] || !componentStats['attrib'].length) && dataComponent[1]['time'] > 600) {
                 // console.log('qual remove: ', component, componentStats, data[idx])
-                removedComponents.push(component)
+                removedComponents.push(componentKey)
                 continue
             } else if (!component.includes('boots') && component !== 'ring_of_health' && component !== 'cornucopia' && component !== 'helm_of_iron_will'
                 && Math.abs(dataComponent[1]['time'] - item[1]['time']) < 300
                 && item[1]['value'] > 3) {
                 // console.log('lace', component, dataComponent, Math.abs(dataComponent[1]['time'] - item[1]['time']), item)
-                removedComponents.push(component)
+                removedComponents.push(componentKey)
                 continue
             }
             if (componentStats['components']) {
@@ -28,13 +37,13 @@ const recursive_remove = (item: any, itemdata: any, components: string[], data: 
             }
         } else if (badQuals.includes(componentStats['qual']) && componentStats['components']) {
             if (!componentStats['hint'] && dataComponent[1]['time'] > 1500) {
-                removedComponents.push(component)
+                removedComponents.push(componentKey)
                 continue
             }
         }
         if (dataComponent && componentStats['cost'] < 1500 && dataComponent[1]['time'] > 700 && item[1]['value'] * 2 > dataComponent[1]['value']) {
             // console.log('cost remove: ', component, componentStats['components'], componentStats)
-            removedComponents.push(component)
+            removedComponents.push(componentKey)
             if (componentStats['components']) {
                 // return recursive_remove(itemdata, componentStats['components'], data, keys, removedComponents)
             }
@@ -44,24 +53,24 @@ const recursive_remove = (item: any, itemdata: any, components: string[], data: 
             && dataComponent[1]['time'] > 400
             && componentStats['cost'] < 2000) {
             // console.log('final remove: ', item, components, component, dataComponent)
-            removedComponents.push(component)
+            removedComponents.push(componentKey)
             continue
 
         }
         if (componentStats['components'] && componentStats['cost'] < 900 && Math.abs(item[1]['time'] - dataComponent[1]['time']) < 300) {
             // console.log(component, componentStats)
-            removedComponents.push(component)
+            removedComponents.push(componentKey)
             continue
         }
         if (component === 'sange' || component === 'soul_booster') {
-            removedComponents.push(component)
+            removedComponents.push(componentKey)
         }
         if (!componentStats['hint'] && dataComponent[1]['time'] > 1200) {
-            removedComponents.push(component)
+            removedComponents.push(componentKey)
         }
         if (dataComponent[1]['time'] > 1800) {
             // console.log('time removal', component)
-            removedComponents.push(component)
+            removedComponents.push(componentKey)
         }
 
     }
@@ -101,7 +110,7 @@ export const filterComponents = (data: any[], itemData: Items) => {
         const itemKey: string = item[0]
         // console.log(itemKey, keys)
         const itemTime: number = item[1]['time']
-        const itemStats = itemdata['items'][itemKey.replace(/__\d+/g, '')]
+        const itemStats = itemdata['items'][itemKey.replace(/__\d+|_\d+/g, '')]
         if (!itemStats) {
             continue
         } else if (itemTime > 1000 && itemStats['cost'] < 500) {
@@ -113,15 +122,16 @@ export const filterComponents = (data: any[], itemData: Items) => {
         const cost: any = itemStats['cost']
         if (itemStats && itemStats['components']) {
             const components: string[] = itemStats['components']
-            toRemove = recursive_remove(data[i], itemData, components, data, keys, removedComponents)
-            // data = recursive_remove(itemData, components, data, keys)
+            toRemove = recursive_remove(item, itemData, components, data, keys, removedComponents)
 
-            if (components && (disassembleable.includes(itemKey.replace(/__\d+/g, '')) || components.includes('kaya') || components.includes('sange'))) {
+            // disassemble components section
+            if (components && item[1]['value'] > 10 && (disassembleable.includes(itemKey.replace(/__\d+/g, '')) || components.includes('kaya') || components.includes('sange'))) {
                 for (let component of components) {
                     // console.log(itemKey, component, components);
                     const slicedData = [...data].slice(i + 1)
                     const itemUses = slicedData.filter((x, i) => {
-                        const parentComponents = allComponents(itemdata['items'][x[0]]['components'], [], itemdata)
+                        const dotaItemKey = x[0].replace(/__\d+|_\d+/g, '')
+                        const parentComponents = allComponents(itemdata['items'][dotaItemKey]['components'], [], itemdata)
                         // console.log(x[0], parentComponents)
                         const core = x[1]['adjustedValue'] > 20 && item[1]['adjustedValue'] > 20
                         const situtational = x[1]['adjustedValue'] < 20 && item[1]['adjustedValue'] < 20
@@ -163,11 +173,21 @@ export const filterComponents = (data: any[], itemData: Items) => {
             }
         }
     }
+    const seenItems: string[] = []
     for (let item of toRemove) {
-        const idx = keys.indexOf(item)
-        if (idx !== -1) {
-            data.splice(idx, 1)
-            keys.splice(idx, 1)
+        if (seenItems.includes(item)) {
+            // console.log(item)
+        }
+        const filteredKeys = keys.filter((x) => {
+            return x.includes(item)
+        })
+        for (let k of filteredKeys) {
+            const idx = keys.indexOf(k)
+            if (idx !== -1) {
+                data.splice(idx, 1)
+                keys.splice(idx, 1)
+                seenItems.push(item)
+            }
         }
     }
     return data

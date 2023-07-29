@@ -174,7 +174,7 @@ const ItemBuildCell = (props: { itemkey: any; item: any; data: any; itemData: an
                 itemkey.map((k: string, idx: number) => {
                     const perc = item[k]['adjustedValue']
                     const avgTime = (Math.floor(item[k]['time'] / 60))
-                    const link = `${image_host}https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/items/${k}.png`
+                    const link = `${image_host}https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/items/${k.replace(/__\d+|_\d+/g, '')}.png`
                     const disassemble = item[k]['disassemble']
                     const components = item[k]['dissassembledComponents']
                     const orText = itemkey.length - 1 !== idx || item[k]['longOption'] ? 'or' : ''
@@ -186,7 +186,7 @@ const ItemBuildCell = (props: { itemkey: any; item: any; data: any; itemData: an
                             }
                             <div className="item-build-img">
                                 <p style={{ margin: '0', color: 'white' }}>{avgTime}m {disassemble ? 'D' : ''}</p>
-                                <TableItem type='item' height='40px' width='55px' itemKey={k} filteredData={data} totalMatchData={data}
+                                <TableItem type='item' height='40px' width='55px' itemKey={k.replace(/__\d+|_\d+/g, '')} filteredData={data} totalMatchData={data}
                                     items={itemData} role='' overlay={false} />
                                 {/* <p style={{ margin: '0', color: 'white' }}>{perc}%</p> */}
                                 <p style={{ margin: '0', color: 'white' }}>{perc.toFixed(2).replace('100.00', '100')}%</p>

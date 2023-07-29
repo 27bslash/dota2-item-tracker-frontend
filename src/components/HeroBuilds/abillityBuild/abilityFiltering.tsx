@@ -55,7 +55,7 @@ const genAbilityArr = (res: { [k: string]: number }[], ab: string, totalCount: a
                 key = Object.keys(final[i - 1])[0]
                 if (Object.keys(final[i - 1])[0] === entry[idx] && totalCount[entry[idx]] === 1) {
                     idx += 1
-                    console.log(i, key)
+                    // console.log(i, key)
                 }
             }
             const k = sorted[idx][0]
