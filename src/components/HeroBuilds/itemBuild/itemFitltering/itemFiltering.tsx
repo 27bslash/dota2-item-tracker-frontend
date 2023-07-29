@@ -23,6 +23,7 @@ export const countItems = (data: any, itemData: any) => {
     const consumables = [
         "tango",
         "flask",
+        "branches",
         "blood_grenade",
         "ward_observer",
         "ward_sentry",
@@ -131,7 +132,6 @@ export const countItems = (data: any, itemData: any) => {
 
     }).filter((x) => x)
     itemValues = map.sort((a: any, b: any) => a[1]['time'] - b[1]['time'])
-    // console.log(itemValues)
     return itemValues
 }
 
