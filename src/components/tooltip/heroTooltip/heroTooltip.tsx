@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react"
 import HeroAttributes from './heroAttributes';
 import HeroAghs from './heroAghanim';
 import Color from "color-thief-react";
+import heroSwitcher from './../../heroSwitcher';
 
 interface HeroTooltipProps {
     children: React.ReactNode;
@@ -41,7 +42,7 @@ const HeroTooltip = (props: HeroTooltipProps) => {
                                             <Bar heroData={heroData} stat='health' />
                                             <Bar heroData={heroData} stat='mana' />
                                         </div>
-                                        <h3 style={{ color: 'white', textTransform: 'capitalize' }}>{props.heroName.replace('_', ' ')}</h3>
+                                        <h3 style={{ color: 'white', textTransform: 'capitalize' }}>{heroSwitcher(props.heroName.replace('_', ' '))}</h3>
                                     </div>
                                 </div>
                                 <div className="tooltip-content">

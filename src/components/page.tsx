@@ -73,7 +73,7 @@ const Page = (props: pageProps) => {
     // const { type, setColorPaletteType } = useContext(colorPaletteContext)
 
     useEffect(() => {
-        document.title = nameParam;
+        document.title = heroSwitcher(nameParam);
         (async () => {
             const matchDataUrl = props.type === 'hero' ? 'https://0f2ezc19w3.execute-api.eu-west-2.amazonaws.com/dev/' : baseApiUrl
             let url = `${matchDataUrl}${props.type}/${nameParam}/react-test?skip=0&length=10`
@@ -278,7 +278,7 @@ export const generateColorPalette = (sourceColor: string[], heroName?: string, o
     // button colour
     // console.log(dark, light)
     if (dark[1] > 60 || (light[0] > 60 && light[0] < 160)) {
-        light[2] = 25
+        light[2] = 30
     }
     theme.palette.primary.main = hslToHex(light[0], light[1], light[2])
     theme.palette.secondary.main = hslToHex(light[0], light[1], 45)
