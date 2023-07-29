@@ -127,7 +127,10 @@ const GridRow = (props: { data: any, itemData: any, ObjectKey: 'core' | 'situati
 }
 const ItemBuilds = (props: { buildObject: any; timing: any; data: any; itemData: any, offset?: { left: number, top: number }, ObjectKey: 'core' | 'situational' }) => {
     const { buildObject, data, itemData, offset, timing, ObjectKey } = props
-
+    const odf = buildObject[ObjectKey].flat().some((x: any) => {
+        const key = Object.keys(x)[0]
+        return x[key]['option']
+    })
     return (
         <>
             {buildObject[ObjectKey][0].length !== 0 &&
@@ -136,14 +139,16 @@ const ItemBuilds = (props: { buildObject: any; timing: any; data: any; itemData:
                     <div className={`${ObjectKey} flex`} style={{ flexDirection: 'column' }}>
                         {buildObject[ObjectKey].map((itemGroup: any[], i: number) => {
                             // console.log('items', i, items)
-                            // const leftOffset = itemGroup.length % 2 === 0 || i === 0 ? '0px' : '-51px'
+                            const centerOffset = itemGroup.length % 2 === 0 || i === 0 ? '0px' : '-51px'
                             const leftOffset = offset ? offset.left + 'px' : '0px'
+                            const style = !odf ? { marginLeft: centerOffset, justifyContent: 'center' } : { marginLeft: leftOffset }
                             return (
-                                <div key={i} className='flex' style={{ marginLeft: leftOffset }}>
+                                <div key={i} className='flex' style={style}>
                                     {/* <div key={i} className='flex' style={{ justifyContent: 'center',marginLeft: leftOffset }}> */}
                                     {itemGroup.map((items: Item, j: number) => {
                                         const itemkey = Object.keys(items)
                                         const itemOffset = items[itemkey[0]]['offset'] || { top: '0px', left: '0px' }
+
                                         return (
                                             <div key={j} className="item-offset" style={{ marginTop: itemOffset['top'], marginLeft: itemOffset['left'] }}>
                                                 <ItemBuildCell itemkey={itemkey} item={items} data={data} itemData={itemData} />
@@ -174,7 +179,7 @@ const ItemBuildCell = (props: { itemkey: any; item: any; data: any; itemData: an
                 itemkey.map((k: string, idx: number) => {
                     const perc = item[k]['adjustedValue']
                     const avgTime = (Math.floor(item[k]['time'] / 60))
-                    const link = `${image_host}https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/items/${k.replace(/__\d+|_\d+/g, '')}.png`
+                    const link = `${image_host}https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/items/${k.replace(/__\d+/g, '')}.png`
                     const disassemble = item[k]['disassemble']
                     const components = item[k]['dissassembledComponents']
                     const orText = itemkey.length - 1 !== idx || item[k]['longOption'] ? 'or' : ''
@@ -186,7 +191,7 @@ const ItemBuildCell = (props: { itemkey: any; item: any; data: any; itemData: an
                             }
                             <div className="item-build-img">
                                 <p style={{ margin: '0', color: 'white' }}>{avgTime}m {disassemble ? 'D' : ''}</p>
-                                <TableItem type='item' height='40px' width='55px' itemKey={k.replace(/__\d+|_\d+/g, '')} filteredData={data} totalMatchData={data}
+                                <TableItem type='item' height='40px' width='55px' itemKey={k.replace(/__\d+/g, '')} filteredData={data} totalMatchData={data}
                                     items={itemData} role='' overlay={false} />
                                 {/* <p style={{ margin: '0', color: 'white' }}>{perc}%</p> */}
                                 <p style={{ margin: '0', color: 'white' }}>{perc.toFixed(2).replace('100.00', '100')}%</p>

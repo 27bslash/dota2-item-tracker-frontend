@@ -11,7 +11,7 @@ const timeBracket = (item: any) => {
 }
 
 const choice = (arr: any[], percentiles: any[], matchData: any, itemData: any) => {
-    const key: string = arr[0].replace(/__\d+|_\d+/g, '')
+    const key: string = arr[0].replace(/__\d+/g, '')
     const adjustedVal = arr[1]['adjustedValue']
     if (adjustedVal > 70 || adjustedVal < 30) {
         return
@@ -26,14 +26,14 @@ const choice = (arr: any[], percentiles: any[], matchData: any, itemData: any) =
     const res = []
     for (let targetArr of percentiles) {
 
-        if (key === targetArr[0].replace(/__\d+|_\d+/g, '')) {
+        if (key === targetArr[0].replace(/__\d+/g, '')) {
             continue
         }
 
         const targetVal = targetArr[1]['adjustedValue']
         if (targetVal > 70 || targetVal < 40) continue
         const t = timeBracket(targetArr)
-        const cost: number = itemData['items'][targetArr[0].replace(/__\d+|_\d+/g, '')]['cost']
+        const cost: number = itemData['items'][targetArr[0].replace(/__\d+/g, '')]['cost']
         if (Math.abs(mainItemCost - cost) > (mainItemCost / 100) * 20 || t !== time || targetVal < 40 || targetVal > 60 || Math.abs(targetArr[1]['time'] - arr[1]['time']) > 300) {
             continue
         }

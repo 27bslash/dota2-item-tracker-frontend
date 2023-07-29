@@ -110,7 +110,7 @@ export const filterComponents = (data: any[], itemData: Items) => {
         const itemKey: string = item[0]
         // console.log(itemKey, keys)
         const itemTime: number = item[1]['time']
-        const itemStats = itemdata['items'][itemKey.replace(/__\d+|_\d+/g, '')]
+        const itemStats = itemdata['items'][itemKey.replace(/__\d+/g, '')]
         if (!itemStats) {
             continue
         } else if (itemTime > 1000 && itemStats['cost'] < 500) {
@@ -130,7 +130,7 @@ export const filterComponents = (data: any[], itemData: Items) => {
                     // console.log(itemKey, component, components);
                     const slicedData = [...data].slice(i + 1)
                     const itemUses = slicedData.filter((x, i) => {
-                        const dotaItemKey = x[0].replace(/__\d+|_\d+/g, '')
+                        const dotaItemKey = x[0].replace(/__\d+/g, '')
                         const parentComponents = allComponents(itemdata['items'][dotaItemKey]['components'], [], itemdata)
                         // console.log(x[0], parentComponents)
                         const core = x[1]['adjustedValue'] > 20 && item[1]['adjustedValue'] > 20

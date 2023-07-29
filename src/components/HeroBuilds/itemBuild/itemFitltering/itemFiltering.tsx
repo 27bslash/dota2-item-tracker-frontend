@@ -57,7 +57,7 @@ export const countItems = (data: any, itemData: any) => {
             let key
             if (dupeCounter.includes(item['key']) && item['key'] !== 'aghanims_shard' && item['key'] !== 'ultimate_scepter') {
                 const itemCount = match['items'].slice(0, i).filter((x: any) => x['key'] === item['key']).length
-                key = `${item['key']}_${itemCount}`
+                key = `${item['key']}__${itemCount}`
                 dupeCounter.push(`${item['key']}_${itemCount}`)
             } else {
                 dupeCounter.push(item['key'])
@@ -105,13 +105,13 @@ export const countItems = (data: any, itemData: any) => {
             let dupeCount = 0
             const itemNum: string[] = item[0].match(/\d+/g)
             const inItems = match['items'].some((itemObj: any) => {
-                if (itemNum && dupeCount !== +itemNum[0] + 1 && itemObj.key === item[0].replace(/__\d+|_\d+/g, '')) {
+                if (itemNum && dupeCount !== +itemNum[0] + 1 && itemObj.key === item[0].replace(/__\d+/g, '')) {
                     dupeCount++
                     // console.log(dupeCount,itemNum)
                     // count++
                 }
                 if ((itemNum && dupeCount === +itemNum[0] + 1) || !itemNum) {
-                    return itemObj.key === item[0].replace(/__\d+|_\d+/g, '')
+                    return itemObj.key === item[0].replace(/__\d+/g, '')
                 }
             })
             if (!inItems && lastTime - 300 > item[1]['time']
@@ -141,13 +141,13 @@ export const boots_filter = (data: any[], itemData: Items) => {
         if (x[0].includes('boot') && x[0].match(/\d/g)) {
             return false
         }
-        return boots.includes(x[0].replace(/__\d+|_\d+/g, ''))
+        return boots.includes(x[0].replace(/__\d+/g, ''))
     }).length
     const filtered = data.filter((x) => {
         if (x[0].includes('boot') && x[0].match(/\d/g)) {
             return false
         }
-        if (boots.includes(x[0].replace(/__\d+|_\d+/g, ''))) {
+        if (boots.includes(x[0].replace(/__\d+/g, ''))) {
             return +(100 / x[1]['value']).toFixed(0) < bootsCount || +(100 / x[1]['value']).toFixed(0) === 1
         } else {
             return true

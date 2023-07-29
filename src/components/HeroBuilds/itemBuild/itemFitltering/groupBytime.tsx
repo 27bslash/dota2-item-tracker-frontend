@@ -4,7 +4,7 @@ const groupByTime = (data: any, itemData: any, matchData: any) => {
     const coreArr = []
     const seenItems = new Set()
     for (let item of data) {
-        const itemKey: any = item[0].replace(/_\d+/g, '')
+        const itemKey: any = item[0].replace(/__\d+/g, '')
         const itemTime: any = item[1]['time']
         if (itemTime <= 60) {
             continue
@@ -19,7 +19,7 @@ const groupByTime = (data: any, itemData: any, matchData: any) => {
             } else {
                 return false
             }
-        }).map((x: any) => [x[0].replace(/__\d+|_\d+/g, ''), x[1]]))
+        }))
         count = 0
         const situational = Object.fromEntries([...data].filter((x: any) => {
             if (Math.abs(itemTime - x[1]['time']) <= 40 && item[1]['adjustedValue'] < 20 && item[1]['adjustedValue'] > 5 && !seenItems.has(x[0]) && itemData['items'][itemKey]['components'] && count === 0) {
@@ -29,8 +29,6 @@ const groupByTime = (data: any, itemData: any, matchData: any) => {
             } else {
                 return false
             }
-        }).map((x: any) => {
-            return [x[0].replace(/__\d+|_\d+/g, ''), x[1]]
         }))
         // const filtereedData = matchData.filter((match: any) => match['items'].map((itemObject: any) => itemObject['key']).includes(item[0]))
         // console.log(filtereedData)
