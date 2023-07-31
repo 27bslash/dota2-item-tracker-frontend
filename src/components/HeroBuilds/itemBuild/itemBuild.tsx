@@ -69,9 +69,9 @@ const GridRow = (props: { data: any, itemData: any, ObjectKey: 'core' | 'situati
     const totalLen = props.dataLength.reduce((a: number, b: number) => a + b)
     const calcOffset = () => {
         props.data.forEach((buildObject: any) => {
+            let leftOffset = 0
+            const badIdxs = []
             if (buildObject[props.ObjectKey].length > 1) {
-                let leftOffset = 0
-                const badIdxs = []
                 for (let [i, itemSet] of buildObject[props.ObjectKey][0].entries()) {
                     const keys = Object.keys(itemSet)
                     if (itemSet[keys[0]]['dissassembledComponents']) {
@@ -92,11 +92,11 @@ const GridRow = (props: { data: any, itemData: any, ObjectKey: 'core' | 'situati
                         // i = leftOffset
                         let moveCount = 0
                         const keys = Object.keys(itemset)
-                        while (badIdxs.includes(i) && i <= 6 * 55) {
+                        if (badIdxs.includes(i)) {
                             i += 1
                             moveCount += 1
                         }
-                        badIdxs.push(i)
+                        badIdxs.push(i + moveCount)
                         // console.log(itemset, itemset[keys[0]]['offset'], badIdxs, i, leftOffset)
                         itemset[keys[0]]['offset'] = { 'left': moveCount * 55, top: -82 }
                         // console.log(itemset)
@@ -131,24 +131,25 @@ const ItemBuilds = (props: { buildObject: any; timing: any; data: any; itemData:
         const key = Object.keys(x)[0]
         return x[key]['option']
     })
+    const calcMargin = () => {
+        const len = buildObject[ObjectKey][0].length >= 6 ? 6 : buildObject[ObjectKey][0].length
+        return (7 - len) * 5 * 6
+    }
     return (
         <>
             {buildObject[ObjectKey][0].length !== 0 &&
                 <>
                     <h3 className='build-header'>{`${timing} ${ObjectKey}`}</h3>
-                    <div className={`${ObjectKey} flex`} style={{ flexDirection: 'column' }}>
+                    <div className={`${ObjectKey} flex`} style={{ flexDirection: 'column', marginLeft: odf ? `${calcMargin()}px` : '0px' }}>
                         {buildObject[ObjectKey].map((itemGroup: any[], i: number) => {
-                            // console.log('items', i, items)
                             const centerOffset = itemGroup.length % 2 === 0 || i === 0 ? '0px' : '-51px'
                             const leftOffset = offset ? offset.left + 'px' : '0px'
                             const style = !odf ? { marginLeft: centerOffset, justifyContent: 'center' } : { marginLeft: leftOffset }
                             return (
                                 <div key={i} className='flex' style={style}>
-                                    {/* <div key={i} className='flex' style={{ justifyContent: 'center',marginLeft: leftOffset }}> */}
                                     {itemGroup.map((items: Item, j: number) => {
                                         const itemkey = Object.keys(items)
                                         const itemOffset = items[itemkey[0]]['offset'] || { top: '0px', left: '0px' }
-
                                         return (
                                             <div key={j} className="item-offset" style={{ marginTop: itemOffset['top'], marginLeft: itemOffset['left'] }}>
                                                 <ItemBuildCell itemkey={itemkey} item={items} data={data} itemData={itemData} />
