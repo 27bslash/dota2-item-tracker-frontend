@@ -126,6 +126,7 @@ const Build = (props: BuildProps) => {
                 position: 'relative'
             }}>
                 < Button variant='contained' color='primary' disabled={!filteredData} sx={{
+                    marginRight: '4px',
                     '&:hover': {
                         backgroundColor: 'secondary.main',
                     }, '&.Mui-disabled': {
@@ -189,7 +190,7 @@ const BuildCell = (props: any) => {
             </h1>
             {open &&
                 <div className="buildData">
-                    <StartingItems data={props.buildData[2]} itemData={props.itemData} />
+                    <StartingItems data={props.data} startingItemData={props.buildData[2]} itemData={props.itemData} />
                     <ItemBuild data={props.buildData[0]} itemData={props.itemData} />
                     <AbilityBuild data={props.data} abilityBuild={props.buildData[1]} heroData={props.heroData} heroName={props.heroName} updateMatchData={props.updateMatchData} />
                 </div>

@@ -1,3 +1,4 @@
+import { Typography } from '@mui/material';
 import BigTalent from '../../big_talent/bigTalent';
 import { AbilityImg } from '../../table/tableItems';
 import { MatchDataAdj } from './../../page';
@@ -26,7 +27,7 @@ const AbilityBuild = (props: AbilityBuildProps) => {
             <div className="ability-build">
                 {props.abilityBuild[0].map((abilityArr, i) => {
                     return (
-                        <div className="flex" key={i}>
+                        <div className="flex" style={{ alignItems: 'center', paddingBottom: '5px' }} key={i}>
                             {abilityArr[0].split('__').map((ability: string, i: number) => {
                                 const link = `${imageHost}https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/abilities/${ability}.png`
                                 const abilityObj = { [ability]: 0 }
@@ -36,7 +37,7 @@ const AbilityBuild = (props: AbilityBuildProps) => {
                                 )
                             })}
                             <BigTalent matchData={props.data} heroName={props.heroName} heroData={props.heroData} width='65px' margin='-5px 0px 0px 0px' updateMatchData={props.updateMatchData} />
-                            <p style={{ color: 'white' }}>{abilityArr[1]}</p>
+                            <Typography style={{ color: 'white', marginLeft: '6px' }}>{(abilityArr[1] / props.data.length * 100).toFixed(2)}%</Typography>
                         </div>
                     )
                 })
