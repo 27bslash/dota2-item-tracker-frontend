@@ -29,6 +29,7 @@ const BestGames = (props: { totalMatchData: Match[]; matchData: Match[]; updateR
     const sumBenchmarks = () => {
         const bmarks = []
         for (let match of props.matchData) {
+            if (!match['parsed']) continue
             let sum: any = 0
             const benchmarks = match['benchmarks']
             sum = Object.values(benchmarks).reduce((a: any, b: any) => {
