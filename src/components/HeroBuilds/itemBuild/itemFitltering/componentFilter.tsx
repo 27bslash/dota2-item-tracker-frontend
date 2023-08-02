@@ -140,7 +140,7 @@ export const filterComponents = (data: any[], itemData: Items) => {
                         }
                         if (parentComponents && parentComponents.includes(component)) {
                             const componentInParent = slicedData.filter((item, idx) => idx <= i && parentComponents.includes(item[0])).map((x) => x[0])
-                            if (componentInParent.length && !componentInParent.includes(component) && x[1]['value'] > item[1]['value'] / 2 && !parentComponents.includes(itemKey)) {
+                            if (componentInParent.length && !componentInParent.includes(component) && x[1]['value'] > item[1]['value'] / 2 && !parentComponents.includes(itemKey.replace(/__\d+/g, ''))) {
                                 // console.log(item, parentComponents, x, componentInParent)
                                 return true
                             }

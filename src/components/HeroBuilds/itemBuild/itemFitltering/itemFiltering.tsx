@@ -89,9 +89,9 @@ export const countItems = (data: any, itemData: any) => {
             const medianTime = medianValue(filteredItemTimes)
             const avgTime = filteredItemTimes.reduce((a, b) => a + b) / filteredItemTimes.length
             const time = Math.min(medianTime, avgTime)
-            // console.log(key, avgTime, medianTime, items.length)
-            itemValues[key] = { value: filteredItemTimes.length, time: time }
-            // console.log(key, avgTime)
+            if (!key.match(/__\d+/g) || (key.match(/__\d+/g) && avgTime <= 800)) {
+                itemValues[key] = { value: filteredItemTimes.length, time: time }
+            }
         }
 
         // itemValues[key] ? itemValues[key] = ({ value: oKey['value'] + 1, time: oKey['time'] + time })
@@ -102,28 +102,27 @@ export const countItems = (data: any, itemData: any) => {
         const filteredData = data.filter((match: any) => {
             const lastTime = match['items'][match['items'].length - 1]['time']
             // console.log(match['items'], lastTime)
+            const cleanedKey = item[0].replace(/__\d+/g, '')
             let dupeCount = 0
             const itemNum: string[] = item[0].match(/\d+/g)
             const inItems = match['items'].some((itemObj: any) => {
-                if (itemNum && dupeCount !== +itemNum[0] + 1 && itemObj.key === item[0].replace(/__\d+/g, '')) {
+                if (itemNum && dupeCount !== +itemNum[0] + 1 && itemObj.key === cleanedKey) {
                     dupeCount++
-                    // console.log(dupeCount,itemNum)
-                    // count++
                 }
                 if ((itemNum && dupeCount === +itemNum[0] + 1) || !itemNum) {
-                    return itemObj.key === item[0].replace(/__\d+/g, '')
+                    return itemObj.key === cleanedKey
                 }
             })
             if (!inItems && lastTime - 300 > item[1]['time']
             ) {
+                // only count items where they're brought atleast 5 mins before game ending
                 count++
             } else if (inItems) {
                 return true
             }
 
         })
-        if (item[1]['value'] >= filteredData) {
-        }
+
         // console.log(item[0], item[1], avgTime, filteredData, count)
         // return [item[0], { value: (item[1]['value'] / data.length) * 100, 'time': avgTime }]
         return [item[0], { value: (item[1]['value'] / data.length) * 100, adjustedValue: (filteredData.length / (filteredData.length + count)) * 100, 'time': item[1]['time'] }]
