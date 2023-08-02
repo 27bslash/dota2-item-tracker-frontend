@@ -92,7 +92,7 @@ const GridRow = (props: { data: any, itemData: any, ObjectKey: 'core' | 'situati
                         // i = leftOffset
                         let moveCount = 0
                         const keys = Object.keys(itemset)
-                        if (badIdxs.includes(i)) {
+                        while (badIdxs.includes(i)) {
                             i += 1
                             moveCount += 1
                         }
@@ -131,20 +131,34 @@ const ItemBuilds = (props: { buildObject: any; timing: any; data: any; itemData:
         const key = Object.keys(x)[0]
         return x[key]['option']
     })
-    const calcMargin = () => {
+    const optionMargin = () => {
         const len = buildObject[ObjectKey][0].length >= 6 ? 6 : buildObject[ObjectKey][0].length
-        return (7 - len) * 5 * 6
+        return odf ? (7 - len) * 5 * 6 : 0
     }
+    const disassembleMargin = () => {
+        let ret = 0
+        buildObject[ObjectKey][0].forEach((x: any) => {
+            const key = Object.keys(x)[0]
+            if (x[key]['dissassembledComponents']) {
+                // console.log(x[key])
+                ret += x[key]['dissassembledComponents'].length
+            }
+            // console.log(ret)
+        })
+        return ret
+    }
+    console.log(disassembleMargin())
     return (
         <>
             {buildObject[ObjectKey][0].length !== 0 &&
                 <>
                     <h3 className='build-header'>{`${timing} ${ObjectKey}`}</h3>
-                    <div className={`${ObjectKey} flex`} style={{ flexDirection: 'column', marginLeft: odf ? `${calcMargin()}px` : '0px' }}>
+                    <div className={`${ObjectKey} flex`} style={{ flexDirection: 'column', marginLeft: `${optionMargin()}px` }}>
                         {buildObject[ObjectKey].map((itemGroup: any[], i: number) => {
-                            const centerOffset = itemGroup.length % 2 === 0 || i === 0 ? '0px' : '-51px'
+                            const centerOffset = itemGroup.length % 2 === 0 || i === 0 ? 0 : -51
                             const leftOffset = offset ? offset.left + 'px' : '0px'
-                            const style = !odf ? { marginLeft: centerOffset, justifyContent: 'center' } : { marginLeft: leftOffset }
+                            const underMarginLeft = i === 1 && disassembleMargin() ? disassembleMargin() * 27 : centerOffset
+                            const style = !odf ? { marginLeft: underMarginLeft + 'px', justifyContent: 'center' } : { marginLeft: leftOffset }
                             return (
                                 <div key={i} className='flex' style={style}>
                                     {itemGroup.map((items: Item, j: number) => {
@@ -157,7 +171,6 @@ const ItemBuilds = (props: { buildObject: any; timing: any; data: any; itemData:
                                         )
                                     })}
                                 </div>
-
                             )
                         })
                         }
@@ -211,6 +224,7 @@ const ItemComponents = (props: { components: string[][]; data: object[]; itemDat
             {components.map((componentArr, i) => (
                 <div className="pair" style={{ display: 'grid' }} key={i}>
                     {componentArr.map((component, i) => {
+                        component = component.replace(/__\d+/g, '')
                         return (
                             <div key={i} style={{ position: 'relative', }}>
                                 {i % 2 === 0 &&
