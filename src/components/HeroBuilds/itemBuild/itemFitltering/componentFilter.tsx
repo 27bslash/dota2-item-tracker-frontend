@@ -179,7 +179,7 @@ export const filterComponents = (data: any[], itemData: Items) => {
             // console.log(item)
         }
         const filteredKeys = keys.filter((x) => {
-            return x.includes(item)
+            return x.replace(/__\d+/g, '') === item
         })
         for (let k of filteredKeys) {
             const idx = keys.indexOf(k)
