@@ -62,7 +62,7 @@ const Page = (props: pageProps) => {
     const [query] = useSearchParams();
     const role = query.get('role') || ''
     const [Role, setRole] = useState(role)
-    const [heroData, setHeroData] = useState<any[]>([])
+    const [heroData, setHeroData] = useState<any>({})
     const nameParam = heroSwitcher(t['name'])
     const [searchRes, setSearchRes] = useState<SearchRes>()
     const [visited, setVisited] = useState<any>(new Set())
@@ -118,9 +118,9 @@ const Page = (props: pageProps) => {
             if (props.type !== 'player') {
                 const hData = await fetch(`${baseApiUrl}files/hero-data/${nameParam}`)
                 const hJson = await hData.json()
-                setHeroData([{ [nameParam]: hJson }])
+                setHeroData({ [nameParam]: hJson })
             } else {
-                for (let match of filteredData) {
+                for (let match of totalMatchData) {
                     sett.add(match['hero'])
                 }
                 setVisited(sett)
@@ -131,7 +131,9 @@ const Page = (props: pageProps) => {
     async function getHeroData(hero: string) {
         const hData = await fetch(`${baseApiUrl}files/hero-data/${hero}`)
         const hJson = await hData.json()
-        setHeroData((prev: any) => [...prev, { [hero]: hJson }])
+        const o = heroData
+        o[hero] = hJson
+        setHeroData(o)
     }
     useEffect(() => {
         for (let hero of visited) {
@@ -196,14 +198,14 @@ const Page = (props: pageProps) => {
                                         <MostUsed baseApiUrl={baseApiUrl} matchData={totalMatchData} role={Role} updateMatchData={updateMatchData} itemData={itemData}></MostUsed>
                                     </div>
                                     <BestGames matchData={filteredData} totalMatchData={totalMatchData} updateRole={updateRole}></BestGames>
-                                    {heroData.length && !!filteredData.length && props.type === 'hero' &&
+                                    {!!heroData && !!filteredData.length && props.type === 'hero' &&
                                         <BigTalent totalMatchData={totalMatchData} matchData={filteredData} heroData={heroData} heroName={nameParam} width='100px' margin='2% 0px 0px 230px' updateMatchData={updateMatchData} />
                                     }
                                 </>
                             }
                         </div>
                         <div style={{ 'minHeight': '45px', marginTop: '20px' }}>
-                            {!!heroData.length && itemData && nameParam && props.type === 'hero' && !!filteredData.length &&
+                            {!!heroData && itemData && nameParam && props.type === 'hero' && !!filteredData.length &&
                                 <Build baseApiUrl={baseApiUrl} role={Role} picks={totalPicks} searchRes={searchRes}
                                     data={filteredData} heroData={heroData} heroName={nameParam} itemData={itemData} updateMatchData={updateMatchData} />
                             }

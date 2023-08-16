@@ -4,11 +4,9 @@ import Color from "color-thief-react";
 
 const AghanimTooltip = (props: any) => {
     let abilities: any[] = []
-    props.heroData.forEach((hero: any) => {
-        if (hero[props.heroName]) {
-            abilities = hero[props.heroName]['abilities']
-        }
-    })
+    if (props.heroData[props.heroName]) {
+        abilities = props.heroData[props.heroName]['abilities']
+    }
     const aghanimAbility = extractAghanim(abilities, props.type)
     const aghText = aghanimAbility[`${props.type}_loc`] || aghanimAbility['desc_loc']
     const aghanimDescription = extract_hidden_values(aghText, aghanimAbility['special_values'])

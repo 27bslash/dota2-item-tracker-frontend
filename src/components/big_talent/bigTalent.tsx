@@ -9,7 +9,7 @@ const BigTalent: React.FC<BigTalentProps> = (props: BigTalentProps) => {
     const [talents, setTalents] = useState<any>([])
     const [open, setOpen] = useState(false)
     useEffect(() => {
-        const heroData = props.heroData[0][props.heroName]
+        const heroData = props.heroData[props.heroName]
         const sorted = countTalents(heroData, props.matchData)
         setTalents(sorted)
     }, [props.matchData])

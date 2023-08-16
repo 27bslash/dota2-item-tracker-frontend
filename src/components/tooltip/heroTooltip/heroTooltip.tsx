@@ -21,8 +21,8 @@ const HeroTooltip = (props: HeroTooltipProps) => {
         setOpen(b)
     }
     let heroData: any = undefined
-    if (props.heroData.length) {
-        heroData = props.heroData[0][props.heroName]
+    if (props.heroData) {
+        heroData = props.heroData[props.heroName]
     }
     return (
         <Color src={props.img} crossOrigin="anonymous" format="hex">

@@ -56,7 +56,7 @@ const ItemTooltip = (props: ItemTooltipProps) => {
                 </div>
             )}
             {
-                props.heroData?.length && props.heroName && (
+                props.heroData && props.heroName && (
                     <AghanimTooltip heroName={props.heroName} heroData={props.heroData} type={props.type}></AghanimTooltip>
                 )
             }
