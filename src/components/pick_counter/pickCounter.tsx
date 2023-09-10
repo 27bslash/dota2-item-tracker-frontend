@@ -64,7 +64,8 @@ const PickCounter = (props: pickProps) => {
                     )}
                     {props.type === 'player' && !searching &&
                         <>
-                            <TotalPickCounter type={props.type} reset={reset} role={props.role} totalPicks={props.matchData.length} name={props.nameParam} />
+                            <TotalPickCounter type={props.type} updateMatchData={props.updateMatchData}
+                                reset={reset} role={props.role} totalPicks={props.matchData.length} name={props.nameParam} data={props.matchData} />
                             {/* <RoleCounter totalPicks={props.totalPicks} matchData={props.matchData} role={props.role} roleSearch={roleSearch}></RoleCounter> */}
                         </>
                     }
@@ -74,8 +75,9 @@ const PickCounter = (props: pickProps) => {
     )
 }
 const BoldName = (props: { reset: () => void; color: string; name: string; }) => {
-    return <p onClick={() => props.reset()} className='bold-name' id='hero-name' style={{ 'color': props.color, textTransform: 'capitalize' }}><strong >{heroSwitcher(props.name).replace(/_/g, ' ')}</strong></p>
-
+    return <p onClick={() => props.reset()} className='bold-name' id='hero-name' style={{ 'color': props.color, textTransform: 'capitalize' }}>
+        <strong >{heroSwitcher(props.name).replace(/_/g, ' ')}</strong>
+    </p>
 }
 const HeroPicks = (props: { base: any, role: string, reset: () => void, name: string; color: string; }) => {
     const { base, role, name, color, reset } = props
@@ -107,14 +109,101 @@ const TotalPickCounter = (props: any) => {
         props.type === 'hero' ? (
             <HeroPicks role={props.role} name={props.name} base={totalPicks} color={props.color} reset={props.reset} />
         ) : (
-            <PlayerPicks role={props.role} name={props.name} base={totalPicks} reset={props.reset} />
+            <PlayerPicks role={props.role} name={props.name} base={totalPicks} reset={props.reset} data={props.data} updateMatchData={props.updateMatchData} />
         )
     )
 }
 const PlayerPicks = (props: any) => {
+    const heroCount: Record<string, Record<string, { picks: number; win: number }>> = {}
+    for (let match of props.data) {
+        if (heroCount[match['hero']] && heroCount[match['hero']][match['role']]) {
+            heroCount[match['hero']][match['role']]['picks'] += 1
+            if (match['win']) {
+                heroCount[match['hero']][match['role']]['win'] += 1
+            }
+        } else {
+            const o = { 'picks': 1, 'win': match['win'] }
+            if (heroCount[match['hero']]) {
+                heroCount[match['hero']][match['role']] = o
+            } else {
+                heroCount[match['hero']] = { [match['role']]: { 'picks': 1, 'win': match['win'] } }
+            }
+        }
+    }
+    Object.entries(heroCount).forEach((element) => {
+        const pickDataObj: any = element[1]
+        const roleKeys: string[] = Object.keys(pickDataObj)
+        let temp = 0
+        let highestRole = ''
+        for (let roleKey of roleKeys) {
+            const pickData = pickDataObj[roleKey]
+            if (pickData['picks'] > temp) {
+                temp = pickData['picks']
+                highestRole = roleKey
+            } else if (pickData['picks'] === temp) {
+                if (pickDataObj[highestRole]['wins'] < pickData['wins']) {
+                    highestRole = roleKey
+                }
+            }
+        }
+        for (let roleKey of roleKeys) {
+            if (roleKey !== highestRole) {
+                delete pickDataObj[roleKey]
+            }
+        }
+    })
+
+    let sortedData = Object.entries(heroCount)
+        .sort(([aKey, aValue], [bKey, bValue]) => {
+            // Compare first by picks
+            const aRole = Object.keys(aValue)[0]
+            const bRole = Object.keys(bValue)[0]
+            if (aValue[aRole].picks !== bValue[bRole].picks) {
+                return bValue[bRole].picks - aValue[aRole].picks
+            }
+
+            // If picks are equal, compare by wins
+            return bValue[bRole].win - aValue[aRole].win;
+        });
+    sortedData = sortedData.slice(0, 4)
+    const updateData = (hero?: string, role?: string) => {
+        let filteredMatches
+        if (hero && role) {
+            filteredMatches = props.data.filter((x: Match) => x['hero'] === hero && x['role'] === role)
+        } else if (hero) {
+            filteredMatches = props.data.filter((x: Match) => x['hero'] === hero)
+        } else {
+            filteredMatches = props.data.filter((x: Match) => x['role'] === role)
+        }
+        props.updateMatchData(filteredMatches)
+    }
     return (
-        <div className="pal">
-            <p className='bold-name'>{props.name} has played {props.base} times. He mostly plays: </p>
+        <div className="player-pick-counter">
+            <div className="flex" style={{ width: '100%' }}>
+                <p className='bold-name' onClick={() => props.reset()}>{props.name} has played {props.base} times. He mostly plays: </p>
+            </div>
+            <div className="flex boxContainer">
+                {sortedData.map((x, i) => {
+                    const roleKey = Object.keys(x[1])[0]
+                    return (
+                        <Box key={i} className="" bgcolor='primary.main' padding={1} margin={1} sx={{
+                            width: '100px', '&:hover': {
+                                cursor: 'pointer'
+                            }
+                        }} >
+                            <div className="flex" style={{ justifyContent: 'space-around' }}>
+                                <img src={require(`../../images/minimap_icons/${x[0]}.jpg`).default} alt={`${x[0]} minimap icon`} onClick={() => updateData(x[0])}></img>
+                                <div className="svg-icon" id={roleKey.replace(' ', '-')} onClick={() => updateData(undefined, roleKey)}></div>
+                            </div>
+                            <div className="flex" style={{ justifyContent: 'space-around' }} onClick={() => updateData(x[0], roleKey)}>
+                                <Typography>{x[1][roleKey]['picks']}</Typography>
+                                <Typography color={colourWins(x[1][roleKey]['win'] / x[1][roleKey]['picks'] * 100)}>
+                                    {cleanDecimal((x[1][roleKey]['win'] / x[1][roleKey]['picks'] * 100))}%</Typography>
+                            </div>
+                        </Box>
+                    )
+                })}
+            </div>
         </div>
     )
 }

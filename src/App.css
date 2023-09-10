@@ -629,6 +629,9 @@ label {
 .bold-name {
   margin-right: 6px;
 }
+.bold-name:hover {
+  cursor: pointer;
+}
 .disassemble-overlay {
   /* background: url(./images/disassemble.png); */
   /* background-size: 75%; */
