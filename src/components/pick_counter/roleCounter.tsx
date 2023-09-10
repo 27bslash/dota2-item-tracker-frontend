@@ -1,4 +1,4 @@
-import colourWins from '../colourWins';
+import colourWins from '../../utils/colourWins';
 
 const RoleCounter = (props: any) => {
     // const roles = props.totalPicks.filter((x: any) => typeof (x) === 'object')

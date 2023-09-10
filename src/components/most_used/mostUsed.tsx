@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import itemSearch from "../table/table_search/item_search";
 import ArrowButton from './../arrowButton';
+import Match from "../types/matchData";
 
 
 const MostUsed = (props: any) => {
@@ -53,7 +54,7 @@ const MostUsed = (props: any) => {
     );
 }
 
-const calculateMostUsed = (data: any) => {
+const calculateMostUsed = (data: any[]) => {
     const consumables = ['tango', 'flask', 'ward_observer',
         'ward_sentry', 'smoke_of_deceit', 'enchanted_mango', 'clarity', 'tpscroll', 'dust', 'tome_of_knowledge']
     let itemCount: any = {}

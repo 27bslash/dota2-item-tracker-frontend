@@ -18,7 +18,6 @@ const medianValue = (values: number[]) => {
     const half = Math.floor(values.length / 2);
     return values.length % 2 ? values[half] : (values[half - 1] + values[half]) / 2.0;
 }
-
 export const countItems = (data: any, itemData: any) => {
     const consumables = [
         "tango",
@@ -125,12 +124,16 @@ export const countItems = (data: any, itemData: any) => {
 
         // console.log(item[0], item[1], avgTime, filteredData, count)
         // return [item[0], { value: (item[1]['value'] / data.length) * 100, 'time': avgTime }]
-        return [item[0], { value: (item[1]['value'] / data.length) * 100, adjustedValue: (filteredData.length / (filteredData.length + count)) * 100, 'time': item[1]['time'] }]
+        return [item[0], {
+            value: (item[1]['value'] / data.length) * 100,
+            adjustedValue: (filteredData.length / (filteredData.length + count)) * 100, 'time': item[1]['time']
+        }]
         // if (filteredData > 0)
         // return [item[0], { value: (item[1]['value'] / data.length) * 100, adjustedValue: `${filteredData} / `, 'time': avgTime }]
 
     }).filter((x) => x)
     itemValues = map.sort((a: any, b: any) => a[1]['time'] - b[1]['time'])
+    // console.log(itemValues)
     return itemValues
 }
 

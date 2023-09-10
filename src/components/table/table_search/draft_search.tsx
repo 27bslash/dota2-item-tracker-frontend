@@ -1,5 +1,5 @@
 import { matchSorter } from "match-sorter"
-import heroSwitcher from "../../heroSwitcher"
+import heroSwitcher from "../../../utils/heroSwitcher"
 
 class DraftSearch {
     heroSearch = (search: string, heroList: any[], hero: string) => {

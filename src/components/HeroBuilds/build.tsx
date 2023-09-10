@@ -6,7 +6,7 @@ import { Box, Button, Tooltip } from "@mui/material";
 import filterItems from "./itemBuild/itemFitltering/itemFiltering";
 import abilityFilter from "./abillityBuild/abilityFiltering";
 import countStartingItems from "./itemBuild/startingItems/startingItemsFilter";
-import { bulkRequest, fetchData } from "../fetchData";
+import { bulkRequest, fetchData } from "../../utils/fetchData";
 import GuideGuide from "./guideDownload";
 import { MatchDataAdj } from "../page";
 

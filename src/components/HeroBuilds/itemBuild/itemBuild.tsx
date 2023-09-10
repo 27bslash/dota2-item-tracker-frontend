@@ -1,5 +1,6 @@
 import { Grid } from '@mui/material';
 import TableItem from './../../table/tableItem';
+import { cleanDecimal } from '../../../utils/cleanDecimal';
 type Item = {
     [k: string]: { value: number, adjustedValue: number, time: number, disassemble?: boolean, dissassembledComponents?: string[], offset?: { left: number, top: number } }
 }
@@ -208,7 +209,7 @@ const ItemBuildCell = (props: { itemkey: any; item: any; data: any; itemData: an
                                 <TableItem type='item' height='40px' width='55px' itemKey={k.replace(/__\d+/g, '')} filteredData={data} totalMatchData={data}
                                     items={itemData} role='' overlay={false} />
                                 {/* <p style={{ margin: '0', color: 'white' }}>{perc}%</p> */}
-                                <p style={{ margin: '0', color: 'white' }}>{perc.toFixed(2).replace('100.00', '100')}%</p>
+                                <p style={{ margin: '0', color: 'white' }}>{cleanDecimal(perc)}%</p>
                                 <p style={{ margin: 0, color: 'white' }}>{orText}</p>
                             </div>
                         </div>

@@ -1,13 +1,14 @@
 import { Grid, Typography } from "@mui/material"
-import heroSwitcher from "../heroSwitcher"
-import { useEffect, useContext } from 'react';
+import heroSwitcher from "../../utils/heroSwitcher"
+import { useEffect } from 'react';
 import { useState } from 'react';
 import { Link } from "react-router-dom";
 import Nav from "../nav/nav";
-import colourWins from '../colourWins';
+import colourWins from '../../utils/colourWins';
 import ControlPanel from "./control";
 import { baseApiUrl } from "../../App";
 import { theme } from "../..";
+import { cleanDecimal } from "../../utils/cleanDecimal";
 
 const Home = (props: any) => {
     const [winStats, setWinStats] = useState<any[]>()
@@ -94,7 +95,7 @@ const Home = (props: any) => {
                             const picks = stats[0][`${roleFilter}picks`] || 0
                             const wins = stats[0][`${roleFilter}wins`] || 0
                             const bans = stats[0][`bans`]
-                            const winrate = picks ? ((wins / picks) * 100).toFixed(2).replace('.00', '') : 0
+                            const winrate = picks ? cleanDecimal(((wins / picks) * 100)) : 0
                             pickStats = { 'picks': picks, 'wins': wins, 'bans': bans, 'winrate': winrate }
                         }
                         return (

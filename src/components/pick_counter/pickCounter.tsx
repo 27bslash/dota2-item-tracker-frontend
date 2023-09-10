@@ -1,10 +1,12 @@
 import { useEffect } from 'react';
 import { useState } from 'react';
-import colourWins from '../colourWins';
-import heroSwitcher from '../heroSwitcher';
+import colourWins from '../../utils/colourWins';
+import heroSwitcher from '../../utils/heroSwitcher';
 import stringSearch from '../table/table_search/string_search';
 import RoleCounter from './roleCounter';
 import Match from '../types/matchData';
+import { Box, Typography } from '@mui/material';
+import { cleanDecimal } from '../../utils/cleanDecimal';
 interface pickProps {
     matchData: any,
     filteredData: Match[],
@@ -224,7 +226,7 @@ const SearchResultText = (props: any) => {
             }
             const matches = data[key][matchKey]
             const totalWins = matches.filter((match: any) => match.win === 1).length
-            const winRate = ((totalWins / matches.length) * 100).toFixed(2)
+            const winRate = cleanDecimal(((totalWins / matches.length) * 100))
             const k = heroSwitcher(key.replace(/[+\-_]/g, x => x === '_' ? ' ' : ''))
             let end = ','
             if (i === props.filteredData.length - 1) {

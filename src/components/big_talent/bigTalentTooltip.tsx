@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
 import { useState, Fragment } from 'react';
+import { cleanDecimal } from '../../utils/cleanDecimal';
 
 const BigTalentTooltip = (props: any) => {
     const pairTalents = () => {
@@ -54,7 +55,7 @@ const TalentRow = (props: any) => {
                 {talentKey}
             </p>
             <div className="talent-bar" style={{ width: perc + '%' }}></div>
-            <p>{perc.toFixed(2).replace(/\.00/, '')}%</p>
+            <p>{cleanDecimal(perc)}%</p>
         </div>
     )
 }

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react"
 import HeroAttributes from './heroAttributes';
 import HeroAghs from './heroAghanim';
 import Color from "color-thief-react";
-import heroSwitcher from './../../heroSwitcher';
+import heroSwitcher from '../../../utils/heroSwitcher';
 
 interface HeroTooltipProps {
     children: React.ReactNode;

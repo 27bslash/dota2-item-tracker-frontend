@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 import { FormControlLabel, styled, Switch, SwitchProps } from '@mui/material';
 import TableSearch from './table/table_search/table_search';
 import { useParams } from 'react-router';
-import heroSwitcher from './heroSwitcher';
+import heroSwitcher from '../utils/heroSwitcher';
 import MostUsed from './most_used/mostUsed';
 import BigTalent from './big_talent/bigTalent';
 import { useSearchParams } from 'react-router-dom';
@@ -14,7 +14,7 @@ import PickCounter from './pick_counter/pickCounter';
 import Build from './HeroBuilds/build';
 import Items from './types/Item';
 import { baseApiUrl } from '../App';
-import { fetchData, bulkRequest } from './fetchData';
+import { fetchData, bulkRequest } from '../utils/fetchData';
 import Match from './types/matchData';
 import { theme } from '..';
 
@@ -63,7 +63,7 @@ const Page = (props: pageProps) => {
     const role = query.get('role') || ''
     const [Role, setRole] = useState(role)
     const [heroData, setHeroData] = useState<any>({})
-    const nameParam = heroSwitcher(t['name'])
+    const nameParam = t['name'] ? heroSwitcher(t['name']) : ''
     const [searchRes, setSearchRes] = useState<SearchRes>()
     const [visited, setVisited] = useState<any>(new Set())
     const [total, setTotal] = useState<any>([])

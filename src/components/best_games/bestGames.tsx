@@ -5,6 +5,7 @@ import { useEffect } from 'react';
 import blurred from '../../images/blurred-best-games.jpg'
 import Match from '../types/matchData';
 import { theme } from '../..';
+import { cleanDecimal } from '../../utils/cleanDecimal';
 
 interface BenchmarksProps {
     benchmarks: {},
@@ -113,8 +114,7 @@ const BestGamesTableBody = (props: { updateRole: any; bestgames: Match[]; benchm
                                 let pct = match.benchmarks[k]['pct']
                                 let raw = match.benchmarks[k]['raw']
                                 if (typeof pct == 'number') {
-                                    pct = (pct * 100).toFixed(2)
-                                    raw = raw.toFixed(2)
+                                    pct = (pct * 100)
                                 }
                                 let color = '#EC494B'
                                 if (pct >= 80) color = '#5AA563'
@@ -125,8 +125,8 @@ const BestGamesTableBody = (props: { updateRole: any; bestgames: Match[]; benchm
                                     <td key={idx} className='benchmark-cell' style={{ textAlign: 'center', justifyContent: 'center' }}>
                                         {pct &&
                                             <>
-                                                <span className='benchmark-pct' style={{ color: color }}>{String(pct).replace(/\.00+/, '')}% </span>
-                                                <span className='benchmark-raw'>{String(raw).replace(/\.00+/, '')}</span>
+                                                <span className='benchmark-pct' style={{ color: color }}>{cleanDecimal(pct)}% </span>
+                                                <span className='benchmark-raw'>{cleanDecimal(raw)}</span>
                                             </>
                                         }
                                     </td>
