@@ -35,6 +35,7 @@ const Build = (props: BuildProps) => {
     const [nonProData, setNonProData] = useState<NonProDataType[]>()
     const [proData, setProData] = useState(false)
     const [open, setOpen] = useState(false)
+    const [displayedRoles, setDisplayedRoles] = useState<string[]>([])
     const [heroBuilds, setHeroBuilds] = useReducer((states: any, updates: any) => {
         switch (updates.type) {
             case 'clear':
@@ -45,32 +46,52 @@ const Build = (props: BuildProps) => {
     }, {})
     // switch to toggle only known pro accounts
     const combinedRoles = ['Support', 'Roaming']
-    const calc_common_roles = () => {
-        const picks = props.picks.picks
+    const calc_common_roles = (pickData?: any) => {
+        const picks: BuildProps["picks"] = pickData || props.picks
+        let totalPicks = 0
+        for (let o of Object.entries(picks)) {
+            totalPicks += o[1]['picks']
+        }
+        totalPicks = totalPicks || props.picks.picks
         const roles: string[] = []
-        const sorted = Object.entries(props.picks).filter((x) => typeof (x[1]) === 'object').sort((a, b) => b[1]['picks'] - a[1]['picks'])
+        const sorted = Object.entries(picks).filter((x) => typeof (x[1]) === 'object').sort((a, b) => b[1]['picks'] - a[1]['picks'])
         let combinedRole = null
         for (let k of sorted) {
             const role = k[0]
-            let totalRolePicks = props.picks[role].picks
+            let totalRolePicks = picks[role].picks
             if (!combinedRole && combinedRoles.includes(role)) {
-                const otherRole: string | undefined = combinedRoles.find((pos) => pos !== role && pos in props.picks)
-                const otherRolePicks = otherRole ? props.picks[otherRole].picks : 0
-                totalRolePicks = props.picks[role].picks + otherRolePicks
+                const otherRole: string | undefined = combinedRoles.find((pos) => pos !== role && pos in picks)
+                const otherRolePicks = otherRole ? picks[otherRole].picks : 0
+                totalRolePicks = picks[role].picks + otherRolePicks
                 combinedRole = true
             }
-            let perc = totalRolePicks / picks
+            let perc = totalRolePicks / totalPicks
             if (perc > 0.1) {
                 roles.push(role)
             }
         }
         return roles
     }
-    const roles = useMemo(() => calc_common_roles(), [props.picks])
+    useEffect(() => {
+        setDisplayedRoles(calc_common_roles())
+    }, [props.picks])
+
 
     useEffect(() => {
         if (proData) {
             setData(props.data)
+            const roleCount: BuildProps['picks'] = {}
+            for (let match of props.data) {
+                if (roleCount[match['role']]) {
+                    roleCount[match['role']]['picks'] += 1
+                    roleCount[match['role']]['wins'] += 1
+                } else {
+                    roleCount[match['role']] = {
+                        'picks': 1, 'wins': match['win']
+                    }
+                }
+            }
+            setDisplayedRoles(calc_common_roles(roleCount))
         } else {
             setData(nonProData)
         }
@@ -100,7 +121,7 @@ const Build = (props: BuildProps) => {
             setFilteredData(o)
         } else if (data) {
             const tempObject: { [role: string]: NonProDataType[] } = {}
-            for (let role of roles) {
+            for (let role of displayedRoles) {
                 const roleFiltered = data.filter(((item: NonProDataType) => item.role === role || (combinedRoles.includes(role) && combinedRoles.includes(item.role))))
                 tempObject[role] = roleFiltered
             }

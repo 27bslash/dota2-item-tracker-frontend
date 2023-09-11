@@ -8,7 +8,7 @@ const abilityFilter = (data: any, ab = '') => {
             // console.log(match)
             const key = match['abilities'].filter((ability: any) => ability.type !== 'talent').slice(0, 10).map((x: { img: string }) => x.img).join('__')
             aCount[key] = (aCount[key] + 1) || 1
-        } 
+        }
     }
     // console.log(aCount)
     const res = []
@@ -23,6 +23,9 @@ const abilityFilter = (data: any, ab = '') => {
     }
     const totalCount: any = {}
     const final: any = []
+    if (!abilities.length) {
+        return [[]]
+    }
     let max_abilities = !abilities[0].includes('invoker') ? 4 : 7
     const abilityBuilds = genAbilityArr(res, ab, totalCount, max_abilities)
     let mostPickedBuild: any = []

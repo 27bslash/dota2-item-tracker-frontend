@@ -148,7 +148,7 @@ const ItemBuilds = (props: { buildObject: any; timing: any; data: any; itemData:
         })
         return ret
     }
-    console.log(disassembleMargin())
+    // console.log(disassembleMargin())
     return (
         <>
             {buildObject[ObjectKey][0].length !== 0 &&
