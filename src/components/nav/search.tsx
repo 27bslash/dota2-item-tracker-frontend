@@ -32,10 +32,11 @@ const NavSearch = (props: searchProps) => {
             const sorted = matchSorter(copy.map((x: any) => {
                 x.name = x.name.replace(/-|_/g, ' ')
                 return x
-            }), value, { keys: [{ threshold: matchSorter.rankings.ACRONYM, key: 'name' }] }).slice(0, 15).reverse()
-            console.log(sorted)
-            const srtedPlayers = filterPlayers(props.playerList, value).slice(0, 15)
-            setSortedHeroes(sorted)
+            }), value, { keys: [{ threshold: matchSorter.rankings.CONTAINS, key: 'name' }] }).slice(0, 8)
+            const acronyms = acronymFinder(copy, value)
+            const filteredHeroes = acronyms.concat(sorted)
+            const srtedPlayers = filterPlayers(props.playerList, value).slice(0, 8)
+            setSortedHeroes(filteredHeroes)
             setSortedPlayers(srtedPlayers)
             if (props.filterHeroes) { props.filterHeroes(sorted) }
         } else {
@@ -49,6 +50,20 @@ const NavSearch = (props: searchProps) => {
         window.addEventListener('keydown', autoFocus, false);
         return () => window.removeEventListener('keydown', autoFocus, false);
     }, [])
+    const acronymFinder = (heroList: heroList[], target: string) => {
+        const acronyms = []
+        for (let hero of heroList) {
+            const split = hero['name'].split(' ')
+            if (split.length === 1) {
+                continue
+            }
+            const acronym = split[0][0] + split[1][0]
+            if (acronym === target) {
+                acronyms.push(hero)
+            }
+        }
+        return acronyms
+    }
     const autoFocus = (e: KeyboardEvent) => {
         let keyCodes = [13, 27, 40, 38, 39, 37, 9];
         // focus search on keypress
