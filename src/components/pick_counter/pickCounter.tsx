@@ -5,7 +5,7 @@ import heroSwitcher from '../../utils/heroSwitcher';
 import stringSearch from '../table/table_search/string_search';
 import RoleCounter from './roleCounter';
 import Match from '../types/matchData';
-import { Box, Typography } from '@mui/material';
+import { Box, Button, Typography } from '@mui/material';
 import { cleanDecimal } from '../../utils/cleanDecimal';
 interface pickProps {
     matchData: any,
@@ -233,7 +233,7 @@ const SearchResultsText = (props: any) => {
     }
     return (
         <div className="table-search-results">
-            <h3 onClick={() => props.reset()}>Search Results:</h3>
+            <h3 style={{ margin: 0 }} onClick={() => props.reset()}>Search Results:</h3>
             {players && Object.keys(players).length > 0 &&
                 <>
                     {/* <SearchResultText data={players} handleClick={handleClick} filteredData={playerKeys} type={'player'} /> */}
@@ -259,6 +259,9 @@ const SearchResultsText = (props: any) => {
                     <SearchResultText data={role} handleClick={handleClick} filteredData={roleKeys} type={'role'} />
                 </>
             }
+            <div className="reset-wrapper" style={{ marginTop: '7px' }}>
+                <Button variant='contained' color='primary' sx={{padding: '6px 10px 6px 10px'}} onClick={() => reset()}>RESET</Button>
+            </div>
         </div>
     )
 }
