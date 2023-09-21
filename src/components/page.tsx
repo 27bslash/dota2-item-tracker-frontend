@@ -3,7 +3,7 @@ import Nav from './nav/nav';
 import CustomTable from './table/table';
 import BestGames from './best_games/bestGames';
 import { useEffect, useState } from 'react';
-import { FormControlLabel, styled, Switch, SwitchProps } from '@mui/material';
+import { FormControlLabel, styled, Switch, SwitchProps, Typography } from '@mui/material';
 import TableSearch from './table/table_search/table_search';
 import { useParams } from 'react-router';
 import heroSwitcher from '../utils/heroSwitcher';
@@ -17,6 +17,7 @@ import { baseApiUrl } from '../App';
 import { fetchData, bulkRequest } from '../utils/fetchData';
 import Match from './types/matchData';
 import { theme } from '..';
+import { generateColorPalette } from '../utils/changeTheme';
 
 //  TODO
 //  add chappie section
@@ -67,6 +68,7 @@ const Page = (props: pageProps) => {
     const [searchRes, setSearchRes] = useState<SearchRes>()
     const [visited, setVisited] = useState<any>(new Set())
     const [total, setTotal] = useState<any>([])
+    const [patch, setPatch] = useState<{ 'patch': string, 'patch_timestamp': number }>()
     const updateStarter = () => {
         setShowStarter(prev => !prev)
     }
@@ -97,6 +99,9 @@ const Page = (props: pageProps) => {
                 allMatches = await fetchData(`${matchDataUrl}${props.type}/${nameParam}/react-test`)
                 setTotalMatchData(allMatches['data'])
             }
+            const currentPatch = await fetchData(`${baseApiUrl}files/patch`)
+            setPatch(currentPatch)
+            setShowPatchMsg(!allMatches.find((match: any) => match['unix_time'] <= currentPatch['patch_timestamp']))
             const itemData = await fetchData(`${baseApiUrl}files/items`)
             setItemData(itemData)
         })()
@@ -184,12 +189,21 @@ const Page = (props: pageProps) => {
         setRole(role)
         // setFilteredData([...filteredData].filter((x) => x.role === role))
     }
+    const filterByPatch = () => {
+        const patchFilteredData = filteredData.filter((match) => match['unix_time'] >= patch!['patch_timestamp'])
+        setTotalMatchData(patchFilteredData)
+        setFilteredData(patchFilteredData)
+        setCount(totalMatchData.length)
+    }
     return (
         <div className="page" >
             {heroColor &&
                 <>
                     <Nav playerList={props.playerList} heroList={props.heroList} />
                     <>
+                        {patch && totalMatchData.find((match: any) => match['unix_time'] <= patch['patch_timestamp']) &&
+                            <Typography align='center' color={'white'} onClick={() => filterByPatch()}>Filter matches by new patch</Typography>
+                        }
                         <div className="flex" style={{ 'minHeight': '87px' }}>
                             {props.type === 'hero' &&
                                 <>
@@ -198,7 +212,7 @@ const Page = (props: pageProps) => {
                                         <MostUsed baseApiUrl={baseApiUrl} matchData={totalMatchData} role={Role} updateMatchData={updateMatchData} itemData={itemData}></MostUsed>
                                     </div>
                                     <BestGames matchData={filteredData} totalMatchData={totalMatchData} updateRole={updateRole}></BestGames>
-                                    {!!heroData && !!filteredData.length && props.type === 'hero' &&
+                                    {!!Object.keys(heroData).length && !!filteredData.length && props.type === 'hero' &&
                                         <BigTalent totalMatchData={totalMatchData} matchData={filteredData} heroData={heroData} heroName={nameParam} width='100px' margin='2% 0px 0px 230px' updateMatchData={updateMatchData} />
                                     }
                                 </>
