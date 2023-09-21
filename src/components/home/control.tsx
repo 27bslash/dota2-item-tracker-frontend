@@ -1,5 +1,5 @@
 import { Grid } from "@mui/material";
-import ArrowButton from "../arrowButton"
+import ArrowButton from "../ui_elements/arrowButton"
 
 const ControlPanel = (props: any) => {
     return (

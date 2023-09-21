@@ -1,41 +1,38 @@
-import HeroImg from './heroImg';
 import Nav from './nav/nav';
 import CustomTable from './table/table';
-import BestGames from './best_games/bestGames';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { FormControlLabel, styled, Switch, SwitchProps, Typography } from '@mui/material';
 import TableSearch from './table/table_search/table_search';
 import { useParams } from 'react-router';
 import heroSwitcher from '../utils/heroSwitcher';
-import MostUsed from './most_used/mostUsed';
-import BigTalent from './big_talent/bigTalent';
 import { useSearchParams } from 'react-router-dom';
 import PickCounter from './pick_counter/pickCounter';
-import Build from './HeroBuilds/build';
 import Items from './types/Item';
 import { baseApiUrl } from '../App';
 import { fetchData, bulkRequest } from '../utils/fetchData';
 import Match from './types/matchData';
 import { theme } from '..';
 import { generateColorPalette } from '../utils/changeTheme';
+import { HeroPageTopSection } from './hero_page/hero_page';
 
 //  TODO
 //  add chappie section
-//  item guides 
-//  on search reset page
 //  talent search
 //  player search substitute numbers for letters
 //  fix search style
 //  lazyload images
 //  get items from github for tooltips
 //  lone druid bear items
+//  refactor into hero and player pages
 
 interface pageProps {
     type: string,
     heroList: any,
     playerList?: any,
-    palette?: string
+    palette?: string,
+    options?: any,
 }
+
 interface SearchRes {
     items?: { string: { matches: Match[] } },
     draft?: { string: { matches: Match[] } },
@@ -68,6 +65,7 @@ const Page = (props: pageProps) => {
     const [searchRes, setSearchRes] = useState<SearchRes>()
     const [visited, setVisited] = useState<any>(new Set())
     const [total, setTotal] = useState<any>([])
+    const [patchShowMsg, setShowPatchMsg] = useState(false)
     const [patch, setPatch] = useState<{ 'patch': string, 'patch_timestamp': number }>()
     const updateStarter = () => {
         setShowStarter(prev => !prev)
@@ -101,7 +99,6 @@ const Page = (props: pageProps) => {
             }
             const currentPatch = await fetchData(`${baseApiUrl}files/patch`)
             setPatch(currentPatch)
-            setShowPatchMsg(!allMatches.find((match: any) => match['unix_time'] <= currentPatch['patch_timestamp']))
             const itemData = await fetchData(`${baseApiUrl}files/items`)
             setItemData(itemData)
         })()
@@ -213,26 +210,13 @@ const Page = (props: pageProps) => {
                         {patch && totalMatchData.find((match: any) => match['unix_time'] <= patch['patch_timestamp']) &&
                             <Typography align='center' color={'white'} onClick={() => filterByPatch()}>Filter matches by new patch</Typography>
                         }
-                        <div className="flex" style={{ 'minHeight': '87px' }}>
-                            {props.type === 'hero' &&
-                                <>
-                                    <div className="hero-img-wrapper" >
-                                        <HeroImg baseApiUrl={baseApiUrl} heroData={heroData} heroName={nameParam} />
-                                        <MostUsed baseApiUrl={baseApiUrl} matchData={totalMatchData} role={Role} updateMatchData={updateMatchData} itemData={itemData}></MostUsed>
-                                    </div>
-                                    <BestGames matchData={filteredData} totalMatchData={totalMatchData} updateRole={updateRole}></BestGames>
-                                    {!!Object.keys(heroData).length && !!filteredData.length && props.type === 'hero' &&
-                                        <BigTalent totalMatchData={totalMatchData} matchData={filteredData} heroData={heroData} heroName={nameParam} width='100px' margin='2% 0px 0px 230px' updateMatchData={updateMatchData} />
-                                    }
-                                </>
-                            }
-                        </div>
-                        <div style={{ 'minHeight': '45px', marginTop: '20px' }}>
-                            {!!heroData && itemData && nameParam && props.type === 'hero' && !!filteredData.length &&
-                                <Build baseApiUrl={baseApiUrl} role={Role} picks={totalPicks} searchRes={searchRes}
-                                    data={filteredData} heroData={heroData} heroName={nameParam} itemData={itemData} updateMatchData={updateMatchData} />
-                            }
-                        </div>
+                        {props.type === 'hero' &&
+                            < HeroPageTopSection heroData={heroData} nameParam={nameParam}
+                                totalMatchData={totalMatchData} filteredData={filteredData}
+                                itemData={itemData} Role={Role} updateMatchData={updateMatchData} updateRole={updateRole}
+                                totalPicks={totalPicks}
+                            ></HeroPageTopSection>
+                        }
                         <>
                             <div className="flex" style={{ 'width': '100%', minHeight: '53px' }}>
                                 <PickCounter type={props.type} nameParam={nameParam} role={Role} heroColor={heroColor} matchData={totalMatchData} searchRes={searchRes}

@@ -3,7 +3,7 @@ import AbilityTooltip from "../tooltip/abilityTooltip";
 import TalentTooltip from "../tooltip/talentTooltip";
 import TableItem from './tableItem';
 import TalentImg from "./talentImg";
-import ArrowButton from './../arrowButton';
+import ArrowButton from '../ui_elements/arrowButton';
 import Tip from "../tooltip/tooltip";
 import Draft from "./draft";
 import Match from "../types/matchData";
