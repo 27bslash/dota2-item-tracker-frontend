@@ -59,6 +59,7 @@ const calculateMostUsed = (data: any[]) => {
         'ward_sentry', 'smoke_of_deceit', 'enchanted_mango', 'clarity', 'tpscroll', 'dust', 'tome_of_knowledge']
     let itemCount: any = {}
     for (let match of data) {
+        if (!match) continue
         for (let item of match['final_items']) {
             if (!consumables.includes(item['key'])) {
                 itemCount[item['key']] = (itemCount[item['key']] + 1) || 1;
