@@ -193,7 +193,9 @@ const Page = (props: pageProps) => {
     }
     const updateRole = (role: string) => {
         setRole(role)
-        // setFilteredData([...filteredData].filter((x) => x.role === role))
+        if (role) {
+            setFilteredData([...filteredData].filter((x) => x.role === role))
+        }
     }
     const filterByPatch = () => {
         const patchFilteredData = filteredData.filter((match) => match['unix_time'] >= patch!['patch_timestamp'])
