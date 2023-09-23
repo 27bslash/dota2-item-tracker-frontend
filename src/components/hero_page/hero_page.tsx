@@ -16,7 +16,7 @@ export const HeroPageTopSection = (props: {
     return (
         <>
             <div className="flex" style={{ 'minHeight': '87px' }}>
-                <div className="hero-img-wrapper" >
+                <div className="hero-img-wrapper" style={{ width: '250px' }} >
                     <HeroImg baseApiUrl={baseApiUrl} heroData={heroData} heroName={nameParam} />
                     {!!totalMatchData.length &&
                         <MostUsed baseApiUrl={baseApiUrl} matchData={totalMatchData} role={Role} updateMatchData={updateMatchData} itemData={itemData}></MostUsed>
@@ -29,8 +29,8 @@ export const HeroPageTopSection = (props: {
 
             </div>
             <div style={{ 'minHeight': '45px', marginTop: '20px' }}>
-                {!!heroData && itemData && nameParam && !!filteredData.length &&
-                    <Build baseApiUrl={baseApiUrl} role={Role} picks={totalPicks} searchRes={searchRes}
+                {itemData &&
+                    < Build baseApiUrl={baseApiUrl} role={Role} picks={totalPicks} searchRes={searchRes}
                         data={filteredData} heroData={heroData} heroName={nameParam} itemData={itemData} updateMatchData={updateMatchData} />
                 }
             </div>
