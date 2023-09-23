@@ -150,25 +150,25 @@ const Page = (props: pageProps) => {
             if (props.type === 'hero') {
                 const hc = await fetch(`${baseApiUrl}files/colors`)
                 const json = await hc.json()
-                for (let i of json['colors']) {
+                for (let colorObj of json['colors']) {
                     let targetHero = nameParam
                     if (targetHero === 'earth_spirit') targetHero = 'undying'
                     const badReds = ['ursa', 'lion']
                     const badBrowns = ['dragon_knight', 'bristleback', 'monkey_king',]
-                    if (badReds.includes(i['hero'])) targetHero = 'doom_bringer'
-                    if (badBrowns.includes(i['hero'])) targetHero = 'gyrocopter'
+                    if (badReds.includes(nameParam)) targetHero = 'doom_bringer'
+                    if (badBrowns.includes(nameParam)) targetHero = 'gyrocopter'
                     if (nameParam === 'ember_spirit' || nameParam === 'rattletrap') targetHero = 'clinkz'
                     if (nameParam === 'abyssal_underlord') targetHero = 'muerta'
-                    if (i['hero'] !== targetHero) continue
-                    setHeroColor(`rgb(${i['color'][0]}, ${i['color'][1]}, ${i['color'][2]})`)
-                    const colorSUm = i['uncontrasted'][1] + i['uncontrasted'][2]
-                    const greenRatio = i['uncontrasted'][1] / colorSUm
-                    if ((Math.max(...i['uncontrasted']) === i['uncontrasted'][1] ||
-                        Math.max(...i['uncontrasted']) - 50 <= i['uncontrasted'][1])
-                        && i['uncontrasted'][1] - i['uncontrasted'][2] > 50 && (greenRatio > 0.6 || i['uncontrasted'][1] > 170)) {
+                    if (colorObj['hero'] !== targetHero) continue
+                    setHeroColor(`rgb(${colorObj['color'][0]}, ${colorObj['color'][1]}, ${colorObj['color'][2]})`)
+                    const colorSUm = colorObj['uncontrasted'][1] + colorObj['uncontrasted'][2]
+                    const greenRatio = colorObj['uncontrasted'][1] / colorSUm
+                    if ((Math.max(...colorObj['uncontrasted']) === colorObj['uncontrasted'][1] ||
+                        Math.max(...colorObj['uncontrasted']) - 50 <= colorObj['uncontrasted'][1])
+                        && colorObj['uncontrasted'][1] - colorObj['uncontrasted'][2] > 50 && (greenRatio > 0.6 || colorObj['uncontrasted'][1] > 170)) {
                         continue
                     }
-                    generateColorPalette([i['uncontrasted'][0], i['uncontrasted'][1], i['uncontrasted'][2]], targetHero, props.options);
+                    generateColorPalette([colorObj['uncontrasted'][0], colorObj['uncontrasted'][1], colorObj['uncontrasted'][2]], targetHero);
 
                 }
             } else {
