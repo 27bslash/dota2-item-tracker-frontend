@@ -12,16 +12,19 @@ const AbilityTooltip = (props: any) => {
     const [open, setOpen] = useState(false)
     const [ability, setAbility] = useState<any>()
     useEffect(() => {
-        if (props.heroData[props.heroName] && id && !ability) {
-            setAbility(props.heroData[props.heroName].abilities[+id])
-        } else if (!ability) {
-            const abilities = props.heroData[props.heroName].abilities
-            const k = Object.keys(props.ability)[0]
-            const a = Object.entries(abilities).find((x: any) => x[1].name === k)
-            if (a)
-                setAbility(a[1])
+        if (props.heroData && Object.keys(props.heroData).length) {
+            if (props.heroData[props.heroName] && id && !ability) {
+                setAbility(props.heroData[props.heroName].abilities[+id])
+            } else if (!ability) {
+                console.log(props.heroName, props.heroData)
+                const abilities = props.heroData[props.heroName].abilities
+                const k = Object.keys(props.ability)[0]
+                const a = Object.entries(abilities).find((x: any) => x[1].name === k)
+                if (a)
+                    setAbility(a[1])
+            }
         }
-    }, [open])
+    }, [open, props.heroData])
     // const fac = new FastAverageColor()
     // const options = { width: '55px', height: '55px' }
     let image = new Image(55, 55)
