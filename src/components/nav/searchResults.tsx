@@ -72,7 +72,7 @@ const SearchResults = (props: SearchResultsProps) => {
         } else if (e.key === 'Escape') {
             props.updateValue()
         } else if (e.key === 'Enter') {
-            if (targetListRef.current === 0) {
+            if (targetListRef.current === 0 && props.sortedHeroes[idxRef.current]) {
                 const link = props.sortedHeroes[idxRef.current].name
                 props.navigatePage(`/hero/${link}`)
             } else {
