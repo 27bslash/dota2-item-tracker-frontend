@@ -9,13 +9,13 @@ import countStartingItems from "./itemBuild/startingItems/startingItemsFilter";
 import { bulkRequest, fetchData } from "../../utils/fetchData";
 import GuideGuide from "./guideDownload";
 import { MatchDataAdj } from "../page";
+import { baseApiUrl } from "../../App";
 
 interface BuildProps extends MatchDataAdj {
     data?: any,
     itemData: any,
     heroName: string,
     heroData: any,
-    baseApiUrl: string
     role: string,
     searchRes?: any,
     picks: { [key: string]: any }
@@ -98,7 +98,7 @@ const Build = (props: BuildProps) => {
     }, [proData, nonProData, props.data])
     useEffect(() => {
         (async () => {
-            const countDocsUrl = `${props.baseApiUrl}hero/${props.heroName}/count_docs?collection=non-pro`
+            const countDocsUrl = `${baseApiUrl}hero/${props.heroName}/count_docs?collection=non-pro`
             const docLength = await fetchData(countDocsUrl)
             let merged = []
             let data = []

@@ -12,7 +12,6 @@ interface TableProps {
     showStarter: boolean,
     heroList: any,
     heroData: any,
-    baseApiUrl: string,
     itemData: any,
     nameParam: string,
     type: string,
@@ -122,7 +121,7 @@ const CustomTable = (props: TableProps) => {
                                 onRequestSort={handleRequestSort}
                                 showStarter={props.showStarter}
                             />
-                            <CustomTableBody baseApiUrl={props.baseApiUrl} data={sortTable()} heroData={props.heroData} type={props.type} page={page} nameParam={props.nameParam}
+                            <CustomTableBody data={sortTable()} heroData={props.heroData} type={props.type} page={page} nameParam={props.nameParam}
                                 totalMatchData={totalMatchData} heroList={props.heroList} itemData={props.itemData}
                                 showStarter={props.showStarter} role={props.role} updateMatchData={props.updateMatchData}></CustomTableBody>
                             <TableFooter >

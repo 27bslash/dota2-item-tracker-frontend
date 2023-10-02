@@ -204,6 +204,13 @@ const Page = (props: pageProps) => {
         setFilteredData(patchFilteredData)
         setCount(totalMatchData.length)
     }
+
+    const commonProps = {
+        heroData: heroData, nameParam: nameParam,
+        totalMatchData: totalMatchData, filteredData: filteredData,
+        itemData: itemData, role: Role, updateMatchData: updateMatchData,
+        type: props.type, heroList: props.heroList, playerList: props.playerList
+    }
     return (
         <div className="page" >
             {exists(heroColor) &&
@@ -214,30 +221,30 @@ const Page = (props: pageProps) => {
                             <Typography align='center' color={'white'} onClick={() => filterByPatch()}>Filter matches by new patch</Typography>
                         }
                         {props.type === 'hero' &&
-                            < HeroPageTopSection heroData={heroData} nameParam={nameParam}
-                                totalMatchData={totalMatchData} filteredData={filteredData}
-                                itemData={itemData} Role={Role} updateMatchData={updateMatchData} updateRole={updateRole}
+                            < HeroPageTopSection {...commonProps}
+                                updateRole={updateRole}
                                 totalPicks={totalPicks}
                             ></HeroPageTopSection>
                         }
                         <>
                             <div className="flex" style={{ 'width': '100%', minHeight: '53px' }}>
-                                <PickCounter type={props.type} nameParam={nameParam} role={Role} heroColor={heroColor} matchData={totalMatchData} searchRes={searchRes}
-                                    count={count} filteredData={filteredData} totalPicks={totalPicks} updateRole={updateRole} updateMatchData={updateMatchData} />
+                                <PickCounter
+                                    {...commonProps}
+                                    heroColor={heroColor} matchData={totalMatchData} searchRes={searchRes}
+                                    count={count} totalPicks={totalPicks} updateRole={updateRole} />
                             </div>
                             <div className="flex">
                                 <StarterToggle updateStarter={updateStarter} />
-                                <TableSearch type={props.type} disabled={filteredData.length === 0 || !itemData || !props.heroList}
-                                    heroName={nameParam} heroList={props.heroList} playerList={props.playerList}
-                                    itemData={itemData} totalMatchData={totalMatchData} role={Role}
-                                    updateMatchData={updateMatchData} />
+                                <TableSearch {...commonProps}
+                                    disabled={filteredData.length === 0 || !itemData || !props.heroList}
+                                    heroName={nameParam}
+                                    itemData={itemData} />
                             </div>
                         </>
                         <CustomTable
-                            baseApiUrl={baseApiUrl}
-                            type={props.type} role={Role}
-                            filteredData={filteredData} heroData={heroData} count={count} updateMatchData={updateMatchData}
-                            totalMatchData={totalMatchData} nameParam={nameParam} heroList={props.heroList} itemData={itemData}
+                            {...commonProps}
+                            count={count}
+                            heroList={props.heroList}
                             showStarter={showStarter} />
                     </>
                 </>

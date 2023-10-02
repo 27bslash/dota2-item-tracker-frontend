@@ -8,7 +8,6 @@ import { theme } from "../.."
 import Match from "../types/matchData"
 interface BodyProps {
     nameParam: string,
-    baseApiUrl: string,
     type: string,
     page: number,
     totalMatchData: object[],

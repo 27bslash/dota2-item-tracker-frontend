@@ -65,6 +65,7 @@ const FinalItems = (props: {
             {props.bear &&
                 <img src='https://ailhumfakp.cloudimg.io/v7/https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/abilities/lone_druid_spirit_bear.png'
                     height='55'
+                    alt='lone druid bear'
                 ></img>
             }
             {props.itemList.map((item: any, i: number) => {
@@ -106,21 +107,34 @@ const TableItems = (props: TitemProps) => {
     }
     const width = '900'
     const heroName = props.row['hero']
+    const finalItemsProps = {
+        row: props.row,
+        heroName: heroName,
+        heroData: props.heroData,
+        role: props.role,
+        updateMatchData: props.updateMatchData,
+        filteredData: props.filteredData,
+        totalMatchData: props.totalMatchData,
+        items: props.items,
+    };
+    const tableItemProps = {
+        matchId: props.row.id, overlay: true,
+        role: props.role, updateMatchData: props.updateMatchData,
+        filteredData: props.filteredData, totalMatchData: props.totalMatchData, items: props.items,
+    }
     return (
         <TableCell sx={{ padding: '6px 0px 6px 10px', maxWidth: `${width}px`, minWidth: `${width}px`, width: width + 'px', height: '200px', maxHeight: '200px' }}>
             <div className="items flex">
                 <div className="purchases">
                     {!props.showStarter ? (
                         <>
-                            <FinalItems row={props.row} heroName={heroName} itemList={props.row.final_items}
-                                heroData={props.heroData} role={props.role} updateMatchData={props.updateMatchData}
-                                filteredData={props.filteredData} totalMatchData={props.totalMatchData}
-                                items={props.items}
+                            <FinalItems {...finalItemsProps}
+                                itemList={props.row.final_items}
                             ></FinalItems>
-                            <FinalItems row={props.row} heroName={heroName} bear={!!exists(props.row.additional_units)} itemList={props.row.additional_units || []}
-                                heroData={props.heroData} role={props.role} updateMatchData={props.updateMatchData}
-                                filteredData={props.filteredData} totalMatchData={props.totalMatchData}
-                                items={props.items}
+                            <FinalItems
+                                {...finalItemsProps}
+                                bear={!!exists(props.row.additional_units)}
+                                itemList={props.row.additional_units || []}
                             ></FinalItems>
                         </>
                     ) : (
@@ -128,18 +142,20 @@ const TableItems = (props: TitemProps) => {
                         <div className="flex">
                             {props.row.starting_items.map((item: any, i: number) => {
                                 const time = humanReadableTime(item['time'])
-                                return <TableItem matchId={props.row.id} time={time} overlay={true}
-                                    role={props.role} updateMatchData={props.updateMatchData}
-                                    filteredData={props.filteredData} totalMatchData={props.totalMatchData} key={i} item={item} items={props.items} itemKey={item.key} type='item' starter={true}></TableItem>
+                                return <TableItem
+                                    {...tableItemProps}
+                                    time={time} key={i} item={item} itemKey={item.key} type='item' starter={true}>
+                                </TableItem>
                             })}
                         </div>
                     )}
                 </div>
                 {props.row.item_neutral && !props.showStarter &&
-                    <TableItem matchId={props.row.id} role={props.role} overlay={true} updateMatchData={props.updateMatchData} filteredData={props.filteredData} totalMatchData={props.totalMatchData} itemKey={props.row.item_neutral} items={props.items} type='neutral'></TableItem>
+                    <TableItem {...tableItemProps} updateMatchData={props.updateMatchData} itemKey={props.row.item_neutral} type='neutral'></TableItem>
                 }
                 {props.row.aghanims_shard && !props.showStarter &&
-                    <TableItem matchId={props.row.id} role={props.role} overlay={true} time={humanReadableTime(props.row.aghanims_shard[0]['time'])} updateMatchData={props.updateMatchData} filteredData={props.filteredData} totalMatchData={props.totalMatchData} itemKey='aghanims_shard' type='shard' items={props.items} heroName={heroName}
+                    <TableItem {...tableItemProps}
+                        time={humanReadableTime(props.row.aghanims_shard[0]['time'])} itemKey='aghanims_shard' type='shard' heroName={heroName}
                         heroData={props.heroData} item={props.row.aghanims_shard}>
                     </TableItem>
                     // time={humanReadableTime(props.row.aghanims_shard['time'])}
@@ -151,9 +167,10 @@ const TableItems = (props: TitemProps) => {
                         if (item['time'] < 600 && item['time'] > 0 && !consumables.includes(item['key'])) {
                             const time = humanReadableTime(item['time'])
                             return (
-                                <TableItem matchId={props.row.id} role={props.role} overlay={true} updateMatchData={props.updateMatchData}
-                                    filteredData={props.filteredData} totalMatchData={props.totalMatchData}
-                                    key={i} item={item} items={props.items} time={time} itemKey={item.key} type='item'></TableItem>
+                                <TableItem
+                                    {...tableItemProps}
+                                    key={i} item={item} time={time} itemKey={item.key} type='item'>
+                                </TableItem>
                             )
                         }
                     })}
@@ -166,8 +183,10 @@ const TableItems = (props: TitemProps) => {
                             const time = humanReadableTime(item['time'])
                             if (!consumables.includes(item['key'])) {
                                 return (
-                                    <TableItem matchId={props.row.id} role={props.role} overlay={true} updateMatchData={props.updateMatchData}
-                                        filteredData={props.filteredData} totalMatchData={props.totalMatchData} key={i} item={item} time={time} items={props.items} itemKey={item.key} type='item'></TableItem>)
+                                    <TableItem
+                                        {...tableItemProps}
+                                        key={i} item={item} time={time} itemKey={item.key} type='item'>
+                                    </TableItem>)
                             }
                         }
                         )
