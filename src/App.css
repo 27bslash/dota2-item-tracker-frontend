@@ -17,9 +17,7 @@
   background: rgba(0, 0, 0, 0.1);
   /* opacity: 0.8; */
 }
-.purchases {
-  display: flex;
-}
+
 .abilities {
   display: flex;
 }
@@ -674,7 +672,6 @@ label {
   width: 10px;
 }
 .purchases {
-  display: flex;
   margin-bottom: 10px;
 }
 .purchase-log {

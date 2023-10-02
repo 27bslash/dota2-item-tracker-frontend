@@ -14,6 +14,7 @@ import Match from './types/matchData';
 import { theme } from '..';
 import { generateColorPalette } from '../utils/changeTheme';
 import { HeroPageTopSection } from './hero_page/hero_page';
+import { exists } from './../utils/exists';
 
 //  TODO
 //  add chappie section
@@ -205,7 +206,7 @@ const Page = (props: pageProps) => {
     }
     return (
         <div className="page" >
-            {heroColor &&
+            {exists(heroColor) &&
                 <>
                     <Nav playerList={props.playerList} heroList={props.heroList} />
                     <>
@@ -239,7 +240,6 @@ const Page = (props: pageProps) => {
                             totalMatchData={totalMatchData} nameParam={nameParam} heroList={props.heroList} itemData={itemData}
                             showStarter={showStarter} />
                     </>
-
                 </>
             }
         </div>

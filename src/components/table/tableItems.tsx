@@ -7,6 +7,7 @@ import ArrowButton from '../ui_elements/arrowButton';
 import Tip from "../tooltip/tooltip";
 import Draft from "./draft";
 import Match from "../types/matchData";
+import { exists } from "../../utils/exists";
 
 interface TitemProps {
     row: {
@@ -21,6 +22,7 @@ interface TitemProps {
         hero: string,
         radiant_draft: string[]
         dire_draft: string[],
+        additional_units: any[] | undefined
     },
     showStarter: boolean,
     items: object[],
@@ -53,6 +55,36 @@ const humanReadableTime = (time: number | string) => {
     const timeString = `${minutes}:${secs}`
     return minutes > 0 ? timeString : '0'
 }
+const FinalItems = (props: {
+    row: TitemProps['row'], bear?: boolean; role: string; heroName: string; itemList: any[];
+    updateMatchData: ((data: any, searchResults?: any) => void);
+    filteredData: object[]; totalMatchData: object[]; items: any; heroData: object[]
+}) => {
+    return (
+        <div className="flex">
+            {props.bear &&
+                <img src='https://ailhumfakp.cloudimg.io/v7/https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/abilities/lone_druid_spirit_bear.png'
+                    height='55'
+                ></img>
+            }
+            {props.itemList.map((item: any, i: number) => {
+                const time = humanReadableTime(item['time'])
+                if (item.key === 'ultimate_scepter') {
+                    return <TableItem matchId={props.row.id} role={props.role} overlay={true} updateMatchData={props.updateMatchData}
+                        filteredData={props.filteredData} totalMatchData={props.totalMatchData} key={i} itemKey='ultimate_scepter' type='scepter'
+                        items={props.items} heroName={props.heroName}
+                        heroData={props.heroData} item={item} time={time}>
+                    </TableItem>
+                } else {
+                    return <TableItem matchId={props.row.id} time={time} role={props.role} overlay={true} updateMatchData={props.updateMatchData}
+                        filteredData={props.filteredData} totalMatchData={props.totalMatchData} key={i} item={item}
+                        itemId={item.id} items={props.items} itemKey={item.key} type='item'></TableItem>
+                }
+            }
+            )}
+        </div>
+    )
+}
 const TableItems = (props: TitemProps) => {
     const image_host = "https://ailhumfakp.cloudimg.io/v7/"
     const consumables = ['tango', 'flask', 'ward_observer',
@@ -79,29 +111,28 @@ const TableItems = (props: TitemProps) => {
             <div className="items flex">
                 <div className="purchases">
                     {!props.showStarter ? (
-                        props.row.final_items.concat(props.row.backpack).map((item: any, i: number) => {
-                            const time = humanReadableTime(item['time'])
-                            if (item.key === 'ultimate_scepter') {
-                                return <TableItem matchId={props.row.id} role={props.role} overlay={true} updateMatchData={props.updateMatchData}
-                                    filteredData={props.filteredData} totalMatchData={props.totalMatchData} key={i} itemKey='ultimate_scepter' type='scepter'
-                                    items={props.items} heroName={heroName}
-                                    heroData={props.heroData} item={item} time={time}>
-                                </TableItem>
-                            } else {
-                                return <TableItem matchId={props.row.id} time={time} role={props.role} overlay={true} updateMatchData={props.updateMatchData}
-                                    filteredData={props.filteredData} totalMatchData={props.totalMatchData} key={i} item={item}
-                                    itemId={item.id} items={props.items} itemKey={item.key} type='item'></TableItem>
-                            }
-                        }
-                        )
+                        <>
+                            <FinalItems row={props.row} heroName={heroName} itemList={props.row.final_items}
+                                heroData={props.heroData} role={props.role} updateMatchData={props.updateMatchData}
+                                filteredData={props.filteredData} totalMatchData={props.totalMatchData}
+                                items={props.items}
+                            ></FinalItems>
+                            <FinalItems row={props.row} heroName={heroName} bear={!!exists(props.row.additional_units)} itemList={props.row.additional_units || []}
+                                heroData={props.heroData} role={props.role} updateMatchData={props.updateMatchData}
+                                filteredData={props.filteredData} totalMatchData={props.totalMatchData}
+                                items={props.items}
+                            ></FinalItems>
+                        </>
                     ) : (
                         props.row.starting_items &&
-                        props.row.starting_items.map((item: any, i: number) => {
-                            const time = humanReadableTime(item['time'])
-                            return <TableItem matchId={props.row.id} time={time} overlay={true}
-                                role={props.role} updateMatchData={props.updateMatchData}
-                                filteredData={props.filteredData} totalMatchData={props.totalMatchData} key={i} item={item} items={props.items} itemKey={item.key} type='item' starter={true}></TableItem>
-                        })
+                        <div className="flex">
+                            {props.row.starting_items.map((item: any, i: number) => {
+                                const time = humanReadableTime(item['time'])
+                                return <TableItem matchId={props.row.id} time={time} overlay={true}
+                                    role={props.role} updateMatchData={props.updateMatchData}
+                                    filteredData={props.filteredData} totalMatchData={props.totalMatchData} key={i} item={item} items={props.items} itemKey={item.key} type='item' starter={true}></TableItem>
+                            })}
+                        </div>
                     )}
                 </div>
                 {props.row.item_neutral && !props.showStarter &&
