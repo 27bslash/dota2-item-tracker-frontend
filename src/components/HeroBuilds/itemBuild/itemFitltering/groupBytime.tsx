@@ -6,7 +6,8 @@ const groupByTime = (data: any, itemData: any, matchData: any) => {
     for (let item of data) {
         const itemKey: any = item[0].replace(/__\d+/g, '')
         const itemTime: any = item[1]['time']
-        if (itemTime <= 60) {
+        // hard coded mid lane item fix
+        if (itemTime <= 60 && itemKey !== 'bottle') {
             continue
         }
         let count = 0
