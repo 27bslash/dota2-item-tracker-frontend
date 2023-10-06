@@ -67,7 +67,7 @@ const Page = (props: pageProps) => {
     const [visited, setVisited] = useState<any>(new Set())
     const [total, setTotal] = useState<any>([])
     const [patchShowMsg, setShowPatchMsg] = useState(false)
-    const [patch, setPatch] = useState({'patch': '', 'patch_timestamp': 0})
+    const [patch, setPatch] = useState({ 'patch': '', 'patch_timestamp': 0 })
     const updateStarter = () => {
         setShowStarter(prev => !prev)
     }
@@ -218,7 +218,9 @@ const Page = (props: pageProps) => {
                     <Nav playerList={props.playerList} heroList={props.heroList} />
                     <>
                         {patch && totalMatchData.find((match: any) => match['unix_time'] <= patch['patch_timestamp']) &&
-                            <Typography align='center' color={'white'} onClick={() => filterByPatch()}>Filter matches by new patch</Typography>
+                            <Typography sx={{
+                                '&:hover': { cursor: 'pointer', opacity: 0.75 }
+                            }} variant='h5' align='center' color={'white'} onClick={() => filterByPatch()}>Filter matches by new patch</Typography>
                         }
                         {props.type === 'hero' &&
                             < HeroPageTopSection {...commonProps}

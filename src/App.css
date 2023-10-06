@@ -401,6 +401,7 @@ a:hover {
   margin-right: 100px;
 }
 .player-name:hover {
+  cursor: pointer;
   opacity: 0.75;
 }
 .copy-match-id:hover {
