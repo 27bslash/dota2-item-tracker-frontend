@@ -29,6 +29,7 @@ type Match = {
     hero: string;
     hero_damage: number;
     id: number;
+    match_id?: number;
     item_neutral: string;
     items: Items; // Update this to the appropriate item type
     kills: number;
@@ -41,6 +42,7 @@ type Match = {
     mmr: string;
     name: string;
     parsed: boolean;
+    patch: string,
     radiant_draft: string[];
     replay_url: string;
     role: string;
