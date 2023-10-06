@@ -67,7 +67,7 @@ const Page = (props: pageProps) => {
     const [visited, setVisited] = useState<any>(new Set())
     const [total, setTotal] = useState<any>([])
     const [patchShowMsg, setShowPatchMsg] = useState(false)
-    const [patch, setPatch] = useState<{ 'patch': string, 'patch_timestamp': number }>()
+    const [patch, setPatch] = useState({'patch': '', 'patch_timestamp': 0})
     const updateStarter = () => {
         setShowStarter(prev => !prev)
     }
@@ -199,7 +199,7 @@ const Page = (props: pageProps) => {
         }
     }
     const filterByPatch = () => {
-        const patchFilteredData = filteredData.filter((match) => match['unix_time'] >= patch!['patch_timestamp'])
+        const patchFilteredData = filteredData.filter((match) => match['patch'] === patch['patch'])
         setTotalMatchData(patchFilteredData)
         setFilteredData(patchFilteredData)
         setCount(totalMatchData.length)
