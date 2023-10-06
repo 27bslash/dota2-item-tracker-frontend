@@ -150,6 +150,7 @@ const Build = (props: BuildProps) => {
             color: 'white'
         }
     };
+    const disabledOpacity = !filteredData ? 0.3 : 1
     return (
         <Box className="build-wrapper">
             <Box className="build-container" bgcolor={open ? 'secondary.dark' : 'inherit'} sx={{
@@ -157,7 +158,8 @@ const Build = (props: BuildProps) => {
             }}>
                 < Button variant='contained' color='primary' disabled={!filteredData} sx={{
                     ...baseButtonStyle,
-                    marginRight: '4px'
+                    marginRight: '4px',
+                    opacity: disabledOpacity
                 }} onClick={() => setOpen((prevstate) => !prevstate)} >Builds</Button>
                 {open && filteredData &&
                     <>
