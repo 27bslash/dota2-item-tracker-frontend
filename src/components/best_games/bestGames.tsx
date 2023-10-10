@@ -16,7 +16,8 @@ interface BenchmarksProps {
     role: string
 }
 
-
+// TODO
+// add a search for bestgames icon
 const BestGames = (props: { totalMatchData: Match[]; matchData: Match[]; updateRole: (role: string) => void }) => {
     const [bestgames, setBestgames] = useState<any>([])
     const [benchmarkKeys, setbenchmarkKeys] = useState<any>([])
@@ -30,7 +31,7 @@ const BestGames = (props: { totalMatchData: Match[]; matchData: Match[]; updateR
     const sumBenchmarks = () => {
         const bmarks = []
         for (let match of props.matchData) {
-            if (!match['parsed']) continue
+            if (!match['parsed'] || !match['benchmarks']) continue
             let sum: any = 0
             const benchmarks = match['benchmarks']
             sum = Object.values(benchmarks).reduce((a: any, b: any) => {
