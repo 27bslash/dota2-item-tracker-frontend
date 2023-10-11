@@ -118,6 +118,12 @@ export const filterComponents = (data: any[], itemData: Items) => {
             continue
         } else if (itemTime > 1000 && !itemStats['hint'] && ['common', 'component', 'secret_shop'].includes(itemStats['qual'])) {
             toRemove.push(data[i][0])
+            continue 
+        }
+        else if (itemTime > 1800 && itemStats['cost'] < 1000) {
+            toRemove.push(data[i][0])
+            console.log('remove low cost item after 30 mins: ' ,data[i][0])
+            continue
         }
         const cost: any = itemStats['cost']
         if (itemStats && itemStats['components']) {
