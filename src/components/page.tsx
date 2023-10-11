@@ -237,10 +237,12 @@ const Page = (props: pageProps) => {
                             </div>
                             <div className="flex">
                                 <StarterToggle updateStarter={updateStarter} />
-                                <TableSearch {...commonProps}
-                                    disabled={filteredData.length === 0 || !itemData || !props.heroList}
-                                    heroName={nameParam}
-                                    itemData={itemData} />
+                                {filteredData &&
+                                    <TableSearch {...commonProps}
+                                        disabled={filteredData.length === 0 || !itemData || !props.heroList}
+                                        heroName={nameParam}
+                                        itemData={itemData} />
+                                }
                             </div>
                         </>
                         <CustomTable
