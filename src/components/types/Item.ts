@@ -16,6 +16,6 @@ type Item = {
     qual: string,
 }
 type Items = {
-    items: Item[]
+    items: { [key: string]: Item }
 }
 export default Items
