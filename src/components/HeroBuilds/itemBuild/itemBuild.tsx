@@ -156,7 +156,7 @@ const ItemBuilds = (props: { buildObject: any; timing: any; data: any; itemData:
                     <h3 className='build-header'>{`${timing} ${ObjectKey}`}</h3>
                     <div className={`${ObjectKey} flex`} style={{ flexDirection: 'column', marginLeft: `${optionMargin()}px` }}>
                         {buildObject[ObjectKey].map((itemGroup: any[], i: number) => {
-                            const centerOffset = itemGroup.length % 2 === 0 || i === 0 ? 0 : -51
+                            const centerOffset = itemGroup.length % 2 === 0 || i === 0 ? 0 : -54
                             const leftOffset = offset ? offset.left + 'px' : '0px'
                             const underMarginLeft = i === 1 && disassembleMargin() ? disassembleMargin() * 27 : centerOffset
                             const style = !odf ? { marginLeft: underMarginLeft + 'px', justifyContent: 'center' } : { marginLeft: leftOffset }
