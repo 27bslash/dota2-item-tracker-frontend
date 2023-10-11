@@ -196,14 +196,16 @@ const TableItems = (props: TitemProps) => {
             }
 
             <Abilities abilities={props.row.abilities} heroName={heroName} visitedTalents={visitedTalents} heroData={props.heroData} imageHost={image_host} width={width} />
-            <div className="draft">
-                <div className="radiant-draft">
-                    <Draft hero={props.row.hero} heroList={props.heroList} totalMatchData={props.totalMatchData} updateMatchData={props.updateMatchData} draft={props.row.radiant_draft}></Draft>
+            {props.row.radiant_draft &&
+                <div className="draft">
+                    <div className="radiant-draft">
+                        <Draft hero={props.row.hero} heroList={props.heroList} totalMatchData={props.totalMatchData} updateMatchData={props.updateMatchData} draft={props.row.radiant_draft}></Draft>
+                    </div>
+                    <div className="dire-draft">
+                        <Draft hero={props.row.hero} heroList={props.heroList} totalMatchData={props.totalMatchData} updateMatchData={props.updateMatchData} draft={props.row.dire_draft}></Draft>
+                    </div>
                 </div>
-                <div className="dire-draft">
-                    <Draft hero={props.row.hero} heroList={props.heroList} totalMatchData={props.totalMatchData} updateMatchData={props.updateMatchData} draft={props.row.dire_draft}></Draft>
-                </div>
-            </div>
+            }
         </TableCell >)
 }
 // const ConditionalLink = (props: { condition: any; to: string; children: any }) => {
