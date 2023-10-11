@@ -10,6 +10,12 @@ const groupByTime = (data: any, itemData: any, matchData: any) => {
         if (itemTime <= 60 && itemKey !== 'bottle') {
             continue
         }
+        // filter out any dissassembled compotents that are also a an item choice
+        if (item[1]['dissassembledComponents'] && item[1]['option']) {
+            item[1]['dissassembledComponents'] = item[1]['dissassembledComponents'].filter((x: any[]) =>
+                !item[1]['option'].find((k: any) => k['choice'] === x[0])
+            )
+        }
         let count = 0
         const core = Object.fromEntries([...data].filter((x: any) => {
             // group items into sections of 2 mins apart also filter situational items out

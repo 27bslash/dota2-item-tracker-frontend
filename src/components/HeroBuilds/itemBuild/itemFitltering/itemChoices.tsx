@@ -31,17 +31,20 @@ const choice = (arr: any[], percentiles: any[], matchData: any, itemData: any) =
         }
 
         const targetVal = targetArr[1]['adjustedValue']
-        if (targetVal > 70 || targetVal < 40) continue
+        // if (targetVal > 70 || targetVal < 40) continue
         const t = timeBracket(targetArr)
         const cost: number = itemData['items'][targetArr[0].replace(/__\d+/g, '')]['cost']
-        if (Math.abs(mainItemCost - cost) > (mainItemCost / 100) * 20 || t !== time || targetVal < 40 || targetVal > 60 || Math.abs(targetArr[1]['time'] - arr[1]['time']) > 300) {
+        if (Math.abs(mainItemCost - cost) > (mainItemCost / 100) * 20 || t !== time || Math.abs(targetArr[1]['time'] - arr[1]['time']) > 300) {
             continue
         }
+        // check if item is in same bracket
+        if ((targetArr[1]['adjustedValue'] > 25 && adjustedVal < 25) || (targetArr[1]['adjustedValue'] < 25 && adjustedVal > 25)) continue
+        if (targetVal > 80) continue
         // console.log(key, cost)
         if (count.includes(targetArr[0])) {
             const cIdx = count.findIndex((x: any) => x === targetArr[0])
             const targetItem = posCount[cIdx]
-            if (Math.abs(targetItem[1]['adjustedValue'] - adjustedVal) > 35) {
+            if (Math.abs(targetItem[1]['adjustedValue'] - adjustedVal) > 20) {
                 // console.log(key, 'target value: ', adjustedVal, 'new value: ', targetItem[1]['adjustedValue'], time)
                 res.push({ 'original': key, 'value': adjustedVal, 'choice': targetItem[0], 'targetValue': targetArr[1]['adjustedValue'], 'time': targetArr[1]['time'] })
             }
