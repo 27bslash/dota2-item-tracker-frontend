@@ -76,7 +76,7 @@ const recursive_remove = (item: any, itemdata: any, components: string[], data: 
     }
     return removedComponents
 }
-const allComponents = (components: any, res: string[], itemdata: any): string[] => {
+const allComponents = (components: any, res: string[], itemdata: Items): string[] => {
     if (!components) return res
     for (let component of components) {
         res.push(component)
@@ -104,7 +104,7 @@ export const filterComponents = (data: any[], itemData: Items) => {
     const keys = data.map((x) => x[0])
     // console.log([...keys])
     const removedComponents: any = []
-    const disassembleable = ['arcane_boots', 'echo_sabre', 'octarine_core', 'vanguard', 'mask_of_madness']
+    const disassembleable = ['arcane_boots', 'echo_sabre', 'vanguard', 'mask_of_madness']
     for (let i = 0; i < data.length; i++) {
         const item = data[i]
         const itemKey: string = item[0]
@@ -146,7 +146,7 @@ export const filterComponents = (data: any[], itemData: Items) => {
                         }
                         if (parentComponents && parentComponents.includes(component)) {
                             const componentInParent = slicedData.filter((item, idx) => idx <= i && parentComponents.includes(item[0])).map((x) => x[0])
-                            if (componentInParent.length && !componentInParent.includes(component) && x[1]['value'] > item[1]['value'] / 2 && !parentComponents.includes(itemKey.replace(/__\d+/g, ''))) {
+                            if (componentInParent.length && !componentInParent.includes(component) && x[1]['value'] > item[1]['value'] / 1.1 && !parentComponents.includes(itemKey.replace(/__\d+/g, ''))) {
                                 // console.log(item, parentComponents, x, componentInParent)
                                 return true
                             }

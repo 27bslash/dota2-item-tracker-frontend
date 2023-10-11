@@ -1,3 +1,4 @@
+import Items from "../../../types/Item"
 import { countItems } from "./itemFiltering"
 
 const timeBracket = (item: any) => {
@@ -9,14 +10,28 @@ const timeBracket = (item: any) => {
         return 'late'
     }
 }
+const componentChecker = (itemData: Items, arr: string, targetItem: string) => {
+    const components = itemData['items'][arr]['components']
+    const targetComponents = itemData['items'][targetItem]['components']
+    if (!components) return
+    for (let component of components) {
+        const componentCost = itemData['items'][component]['cost']
+        if (componentCost && componentCost >= 1000 && targetComponents?.includes(component)) {
+            console.log(arr, targetItem, components, targetComponents)
+            return true
+        }
+    }
 
+}
 const choice = (arr: any[], percentiles: any[], matchData: any, itemData: any) => {
     const key: string = arr[0].replace(/__\d+/g, '')
     const adjustedVal = arr[1]['adjustedValue']
-    if (adjustedVal > 70 || adjustedVal < 30) {
+    if (adjustedVal > 90 || adjustedVal < 20) {
         return
     }
-
+    if (arr[1]['value'] < 5) {
+        return
+    }
     const time = timeBracket(arr)
     const filteredByItem = matchData.filter((match: any) => match['items'].map((m: any) => m['key']).includes(key))
     const posCount = countItems(filteredByItem, [])
@@ -25,18 +40,23 @@ const choice = (arr: any[], percentiles: any[], matchData: any, itemData: any) =
     const count = posCount.map((x: any) => x[0])
     const res = []
     for (let targetArr of percentiles) {
-
-        if (key === targetArr[0].replace(/__\d+/g, '')) {
+        const targetKey = targetArr[0].replace(/__\d+/g, '')
+        if (targetKey === key) continue
+        if (key === targetKey) {
+            continue
+        }
+        if (!componentChecker(itemData, key, targetKey)) {
             continue
         }
 
         const targetVal = targetArr[1]['adjustedValue']
         // if (targetVal > 70 || targetVal < 40) continue
         const t = timeBracket(targetArr)
-        const cost: number = itemData['items'][targetArr[0].replace(/__\d+/g, '')]['cost']
-        if (Math.abs(mainItemCost - cost) > (mainItemCost / 100) * 20 || t !== time || Math.abs(targetArr[1]['time'] - arr[1]['time']) > 300) {
+        const cost: number = itemData['items'][targetKey]['cost']
+        if (Math.abs(mainItemCost - cost) > (mainItemCost / 100) * 20 || t !== time || Math.abs(targetArr[1]['time'] - arr[1]['time']) > 900) {
             continue
         }
+
         // check if item is in same bracket
         if ((targetArr[1]['adjustedValue'] > 25 && adjustedVal < 25) || (targetArr[1]['adjustedValue'] < 25 && adjustedVal > 25)) continue
         if (targetVal > 80) continue
@@ -44,12 +64,12 @@ const choice = (arr: any[], percentiles: any[], matchData: any, itemData: any) =
         if (count.includes(targetArr[0])) {
             const cIdx = count.findIndex((x: any) => x === targetArr[0])
             const targetItem = posCount[cIdx]
-            if (Math.abs(targetItem[1]['adjustedValue'] - adjustedVal) > 20) {
+            if (Math.abs(targetItem[1]['adjustedValue'] - adjustedVal) > 30) {
                 // console.log(key, 'target value: ', adjustedVal, 'new value: ', targetItem[1]['adjustedValue'], time)
                 res.push({ 'original': key, 'value': adjustedVal, 'choice': targetItem[0], 'targetValue': targetArr[1]['adjustedValue'], 'time': targetArr[1]['time'] })
             }
         } else if (!count.includes(targetArr[0])) {
-            // console.log(key, value)
+            console.log(key)
             res.push({ 'original': key, 'value': adjustedVal, 'choice': targetArr[0], 'targetValue': targetArr[1]['adjustedValue'], 'time': targetArr[1]['time'] })
         }
         // for (let match of matchData) {
