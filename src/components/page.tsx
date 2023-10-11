@@ -91,12 +91,12 @@ const Page = (props: pageProps) => {
                 // const worker = new Worker('./fetchData.ts')
                 allMatches = await bulkRequest(`${matchDataUrl}${props.type}/${nameParam}/react-test`, docLength)
                 const merged = allMatches.map((x: { [x: string]: any; }) => x['data']).flat()
-                setTotalMatchData(merged)
+                setTotalMatchData(merged.filter((x: any) => x))
             } else if (docLength <= 10 && props.type === 'hero') {
-                setTotalMatchData(matches['data'])
+                setTotalMatchData(matches['data'].filter((x: any) => x))
             } else {
                 allMatches = await fetchData(`${matchDataUrl}${props.type}/${nameParam}/react-test`)
-                setTotalMatchData(allMatches['data'])
+                setTotalMatchData(allMatches['data'].filter((x: any) => x))
             }
             const currentPatch = await fetchData(`${baseApiUrl}files/patch`)
             setPatch(currentPatch)
@@ -217,7 +217,7 @@ const Page = (props: pageProps) => {
                 <>
                     <Nav playerList={props.playerList} heroList={props.heroList} />
                     <>
-                        {patch && totalMatchData.find((match: any) => match['unix_time'] <= patch['patch_timestamp']) &&
+                        {patch && totalMatchData.find((match: Match) => match && match['unix_time'] <= patch['patch_timestamp']) &&
                             <Typography sx={{
                                 '&:hover': { cursor: 'pointer', opacity: 0.75 }
                             }} variant='h5' align='center' color={'white'} onClick={() => filterByPatch()}>Filter matches by new patch</Typography>
