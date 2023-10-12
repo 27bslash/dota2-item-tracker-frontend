@@ -31,8 +31,9 @@ export const mostUsedNeutrals = (matchData: NonProDataType[], itemData: Items) =
     for (let tierArr of tierCountArr) {
         const sorted: any[] = Object.entries(tierArr).sort((a: any, b: any) => {
             return b[1]['count'] - a[1]['count']
-        }).slice(0, 3)
-        ret.push(sorted)
+        })
+        console.log('sorted neutral items: ', sorted)
+        ret.push(sorted.slice(0, 4))
     }
     return ret
     // const countArr = Object.values(count)
