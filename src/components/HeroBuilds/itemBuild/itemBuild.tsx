@@ -1,6 +1,8 @@
 import { Grid } from '@mui/material';
 import TableItem from './../../table/tableItem';
 import { cleanDecimal } from '../../../utils/cleanDecimal';
+import { NonProDataType } from '../build';
+import Items from '../../types/Item';
 type Item = {
     [k: string]: { value: number, adjustedValue: number, time: number, disassemble?: boolean, dissassembledComponents?: string[], offset?: { left: number, top: number } }
 }
@@ -89,6 +91,7 @@ const GridRow = (props: { data: any, itemData: any, ObjectKey: 'core' | 'situati
                     // console.log('left', leftOffset)
                 }
                 if (badIdxs.length) {
+                    let looped = false
                     for (let [i, itemset] of buildObject[props.ObjectKey][1].entries()) {
                         // i = leftOffset
                         let moveCount = 0
@@ -98,8 +101,11 @@ const GridRow = (props: { data: any, itemData: any, ObjectKey: 'core' | 'situati
                             moveCount += 1
                         }
                         badIdxs.push(i + moveCount)
+                        // if (looped) moveCount = 0
+                        looped = true
                         // console.log(itemset, itemset[keys[0]]['offset'], badIdxs, i, leftOffset)
                         itemset[keys[0]]['offset'] = { 'left': moveCount * 55, top: -82 }
+
                         // console.log(itemset)
                     }
                 }
@@ -204,19 +210,27 @@ const ItemBuildCell = (props: { itemkey: any; item: any; data: any; itemData: an
                             {components &&
                                 <ItemComponents components={components} data={data} itemData={itemData} />
                             }
-                            <div className="item-build-img">
-                                <p style={{ margin: '0', color: 'white' }}>{avgTime}m {disassemble ? 'D' : ''}</p>
-                                <TableItem type='item' height='40px' width='55px' itemKey={k.replace(/__\d+/g, '')} filteredData={data} totalMatchData={data}
-                                    items={itemData} role='' overlay={false} />
-                                {/* <p style={{ margin: '0', color: 'white' }}>{perc}%</p> */}
-                                <p style={{ margin: '0', color: 'white' }}>{cleanDecimal(perc)}%</p>
-                                <p style={{ margin: 0, color: 'white' }}>{orText}</p>
-                            </div>
+                            <ItemBuildImage k={k} orText={orText} itemData={itemData} perc={perc} data={data}
+                                disassemble={disassemble}></ItemBuildImage>
                         </div>
                     )
+
+
                 })
             }
         </div >)
+}
+export const ItemBuildImage = (props: { k: string, avgTime?: string, disassemble?: any; data: NonProDataType[]; itemData: Items; perc: string | number; orText?: string }) => {
+    return < div className="item-build-img">
+        {props.avgTime &&
+            <p style={{ margin: '0', color: 'white' }}>{props.avgTime}m {props.disassemble ? 'D' : ''}</p>
+        }
+        <TableItem type='item' height='40px' width='55px' itemKey={props.k.replace(/__\d+/g, '')} filteredData={props.data} totalMatchData={props.data}
+            items={props.itemData} role='' overlay={false} />
+        {/* <p style={{ margin: '0', color: 'white' }}>{perc}%</p> */}
+        <p style={{ margin: '0', color: 'white', textAlign: 'center' }}>{cleanDecimal(props.perc)}%</p>
+        <p style={{ margin: 0, color: 'white' }}>{props.orText}</p>
+    </div>;
 }
 const ItemComponents = (props: { components: string[][]; data: object[]; itemData: any; }) => {
     const components = props.components.slice(0, 2)

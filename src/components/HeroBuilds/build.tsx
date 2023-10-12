@@ -10,6 +10,7 @@ import { bulkRequest, fetchData } from "../../utils/fetchData";
 import GuideGuide from "./guideDownload";
 import { MatchDataAdj } from "../page";
 import { baseApiUrl } from "../../App";
+import { NeutralItems } from "./itemBuild/neutralItems/neutralItems";
 
 interface BuildProps extends MatchDataAdj {
     data?: any,
@@ -20,14 +21,15 @@ interface BuildProps extends MatchDataAdj {
     searchRes?: any,
     picks: { [key: string]: any }
 }
-type NonProDataType = {
+export type NonProDataType = {
     abilities: [{ id: string, img: string, key: string, level: number, type: string }],
     hero: string,
     id: number,
     items: [{ id: string, key: string, time: number }],
     match_id: number,
     starting_items: [{ id: string, key: string, time: number }],
-    role: string
+    role: string,
+    item_neutral?: string
 }
 const Build = (props: BuildProps) => {
     const [filteredData, setFilteredData] = useState<{ [k: string]: NonProDataType[] }>()
@@ -116,13 +118,13 @@ const Build = (props: BuildProps) => {
 
     useEffect(() => {
         if (props.role && data) {
-            const filtered = data.filter(((item: NonProDataType) => item.role === props.role))
+            const filtered = data.filter(((match: NonProDataType) => match.role === props.role))
             const o = { [props.role]: filtered }
             setFilteredData(o)
         } else if (data) {
             const tempObject: { [role: string]: NonProDataType[] } = {}
             for (let role of displayedRoles) {
-                const roleFiltered = data.filter(((item: NonProDataType) => item.role === role || (combinedRoles.includes(role) && combinedRoles.includes(item.role))))
+                const roleFiltered = data.filter(((match: NonProDataType) => match.role === role || (combinedRoles.includes(role) && combinedRoles.includes(match.role))))
                 tempObject[role] = roleFiltered
             }
             setFilteredData(tempObject)
@@ -213,6 +215,7 @@ const BuildCell = (props: any) => {
                 <div className="buildData">
                     <StartingItems data={props.data} startingItemData={props.buildData[2]} itemData={props.itemData} />
                     <ItemBuild data={props.buildData[0]} itemData={props.itemData} />
+                    <NeutralItems data={props.data} itemData={props.itemData} />
                     <AbilityBuild data={props.data} abilityBuild={props.buildData[1]} heroData={props.heroData} heroName={props.heroName} updateMatchData={props.updateMatchData} />
                 </div>
             }

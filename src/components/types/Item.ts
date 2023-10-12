@@ -14,6 +14,7 @@ type Item = {
     mc?: number,
     notes?: string,
     qual: string,
+    tier?: number,
 }
 type Items = {
     items: { [key: string]: Item }
