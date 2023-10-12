@@ -210,7 +210,7 @@ const ItemBuildCell = (props: { itemkey: any; item: any; data: any; itemData: an
                             {components &&
                                 <ItemComponents components={components} data={data} itemData={itemData} />
                             }
-                            <ItemBuildImage k={k} orText={orText} itemData={itemData} perc={perc} data={data}
+                            <ItemBuildImage k={k} orText={orText} avgTime={avgTime} itemData={itemData} perc={perc} data={data}
                                 disassemble={disassemble}></ItemBuildImage>
                         </div>
                     )
@@ -220,7 +220,7 @@ const ItemBuildCell = (props: { itemkey: any; item: any; data: any; itemData: an
             }
         </div >)
 }
-export const ItemBuildImage = (props: { k: string, avgTime?: string, disassemble?: any; data: NonProDataType[]; itemData: Items; perc: string | number; orText?: string }) => {
+export const ItemBuildImage = (props: { k: string, avgTime?: number, disassemble?: any; data: NonProDataType[]; itemData: Items; perc: string | number; orText?: string, }) => {
     return < div className="item-build-img">
         {props.avgTime &&
             <p style={{ margin: '0', color: 'white' }}>{props.avgTime}m {props.disassemble ? 'D' : ''}</p>
