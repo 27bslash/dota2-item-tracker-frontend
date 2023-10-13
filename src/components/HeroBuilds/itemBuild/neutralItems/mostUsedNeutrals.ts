@@ -8,7 +8,6 @@ export const mostUsedNeutrals = (matchData: NonProDataType[], itemData: Items) =
     for (let i = 1; i < 6; i++) {
         const count: any = {}
         const totalGameOfTier = matchData.filter((match: { item_neutral?: string }) => match['item_neutral'] && itemData['items'][match['item_neutral']]['tier'] === i).length
-
         for (let match of matchData) {
             if (match['item_neutral']) {
                 const neutralTier = itemData['items'][match['item_neutral']]['tier']
@@ -27,6 +26,7 @@ export const mostUsedNeutrals = (matchData: NonProDataType[], itemData: Items) =
         }
         tierCountArr.push(count)
     }
+    console.log('all neutrals: ', tierCountArr)
     const ret = []
     for (let tierArr of tierCountArr) {
         const sorted: any[] = Object.entries(tierArr).sort((a: any, b: any) => {
