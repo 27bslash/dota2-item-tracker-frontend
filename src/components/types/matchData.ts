@@ -7,6 +7,7 @@ type Ability = {
     key: string;
     level: number;
     type: string;
+    slot?: number;
 };
 
 type Match = {
@@ -31,7 +32,7 @@ type Match = {
     id: number;
     match_id?: number;
     item_neutral: string;
-    items: Items; // Update this to the appropriate item type
+    items: Items;
     kills: number;
     kills_ten: number;
     lane_efficiency: number;
