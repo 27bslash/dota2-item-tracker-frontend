@@ -17,7 +17,7 @@ const componentChecker = (itemData: Items, arr: string, targetItem: string) => {
     for (let component of components) {
         const componentCost = itemData['items'][component]['cost']
         if (componentCost && componentCost >= 1000 && targetComponents?.includes(component)) {
-            console.log(arr, targetItem, components, targetComponents)
+            // console.log(arr, targetItem, components, targetComponents)
             return true
         }
     }
@@ -69,7 +69,7 @@ const choice = (arr: any[], percentiles: any[], matchData: any, itemData: any) =
                 res.push({ 'original': key, 'value': adjustedVal, 'choice': targetItem[0], 'targetValue': targetArr[1]['adjustedValue'], 'time': targetArr[1]['time'] })
             }
         } else if (!count.includes(targetArr[0])) {
-            console.log(key)
+            // console.log(key)
             res.push({ 'original': key, 'value': adjustedVal, 'choice': targetArr[0], 'targetValue': targetArr[1]['adjustedValue'], 'time': targetArr[1]['time'] })
         }
         // for (let match of matchData) {
