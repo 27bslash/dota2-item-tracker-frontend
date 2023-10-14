@@ -32,13 +32,13 @@ export const TalentBuild = (props: { matchData: Match[], heroData: any, numbered
                 const talentDetails = heroTalents[talentId]
                 const talentName = talentDetails['name_loc']
                 return (
-                    <Box >
-                        {props.numbered &&
-                            <Typography color='white' align="center">{talentObj[1]['level']}</Typography>
-                        }
+                    <Box key={i} padding={0.5}>
+                        <Typography color='white' align="center">{talentObj[1]['level']}</Typography>
+
                         <Tip component={<TalentTooltip talent={{ 'key': talentName }} />}>
                             <TalentImg talents={visitedTalents} width='65px' ability={talentDetails}></TalentImg>
                         </Tip>
+                        <Typography color='white' align="center">{talentObj[1]['perc']}%</Typography>
                     </Box>
                 )
             })}

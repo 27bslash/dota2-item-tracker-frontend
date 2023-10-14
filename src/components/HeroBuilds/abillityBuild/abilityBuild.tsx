@@ -1,4 +1,4 @@
-import { Typography } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import BigTalent from '../../big_talent/bigTalent';
 import { AbilityImg } from '../../table/tableItems';
 import { MatchDataAdj } from './../../page';
@@ -15,7 +15,7 @@ const AbilityBuild = (props: AbilityBuildProps) => {
     // const secAbilities = abilityFilter(props.data, fistAB)
     // console.log(abilities)
     return (
-        <>
+        <Box justifyContent='space-between' padding={4} className='ability-builds flex'>
             {/* <div className='ability-build flex'>
                 {abilities[1].map((ability: {}, i: number) => {
                     const key = Object.keys(ability)[0]
@@ -26,6 +26,7 @@ const AbilityBuild = (props: AbilityBuildProps) => {
                 <BigTalent matchData={props.data} heroName={props.heroName} heroData={props.heroData} width='65px' margin='-5px 0px 0px 0px' />
             </div> */}
             <div className="ability-build">
+                <Typography color='white' align='center' variant='h4'>Abilities</Typography>
                 {props.abilityBuild[0].map((abilityArr, i) => {
                     return (
                         <div className="flex" style={{ alignItems: 'center', paddingBottom: '5px' }} key={i}>
@@ -33,7 +34,7 @@ const AbilityBuild = (props: AbilityBuildProps) => {
                                 const link = `${imageHost}https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/abilities/${ability}.png`
                                 const abilityObj = { [ability]: 0 }
                                 return (
-                                    <div>
+                                    <div key={idx}>
                                         {i === 0 &&
                                             <Typography align='center' color={'white'}>{idx + 1}</Typography>
                                         }
@@ -42,17 +43,18 @@ const AbilityBuild = (props: AbilityBuildProps) => {
                                     // <div className="terst"></div>)
                                 )
                             })}
-                            {i === 0 ? (
-                                <TalentBuild matchData={props.data} heroData={props.heroData} numbered={true}></TalentBuild>) : (
-                                <TalentBuild matchData={props.data} heroData={props.heroData}></TalentBuild>)}
-                            {/* <BigTalent matchData={props.data} heroName={props.heroName} heroData={props.heroData} width='65px' margin='-5px 0px 0px 0px' updateMatchData={props.updateMatchData} /> */}
+                            {/* <BigTalent matchData={props.data} heroName={props.heroName} heroData={props.heroData} width='65px' margin='-5px 0px 0px 0px' updateMatchData={props.updateMatchData} />  */}
                             <Typography style={{ color: 'white', marginLeft: '6px' }}>{(abilityArr[1] / props.data.length * 100).toFixed(2)}%</Typography>
                         </div>
                     )
                 })
                 }
             </div>
-        </>
+            <div className="talent-build">
+                <Typography variant='h4' color='white' align='center'>Talents</Typography>
+                <TalentBuild matchData={props.data} heroData={props.heroData} numbered={true}></TalentBuild>
+            </div>
+        </Box>
     )
 }
 export default AbilityBuild
