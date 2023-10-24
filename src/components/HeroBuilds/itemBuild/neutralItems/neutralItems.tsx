@@ -15,7 +15,7 @@ export const NeutralItems = (props: { data: NonProDataType[], itemData: Items })
             {!!neutralItems.flat().length &&
                 <>
                     <Typography align={'center'} variant='h5' color='white' >Neutral Items</Typography>
-                    <Box alignItems={"start"} justifyContent={'center'} alignSelf={'center'} className="neutral-item-container flex">
+                    <Box alignItems={"start"} justifyContent={'space-evenly'} alignSelf={'center'} className="neutral-item-container flex">
                         {mapped.map((tierArr, i) => {
                             return (
                                 <Box padding={0} margin={0}>
