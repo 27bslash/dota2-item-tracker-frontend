@@ -1,4 +1,4 @@
-import { Grid } from '@mui/material';
+import { Grid, Typography } from '@mui/material';
 import TableItem from './../../table/tableItem';
 import { cleanDecimal } from '../../../utils/cleanDecimal';
 import { NonProDataType } from '../build';
@@ -6,6 +6,7 @@ import Items from '../../types/Item';
 type Item = {
     [k: string]: { value: number, adjustedValue: number, time: number, disassemble?: boolean, dissassembledComponents?: string[], offset?: { left: number, top: number } }
 }
+
 const ItemBuild = (props: any) => {
     // const data = useMemo(() => filterItems(props.data, props.itemData), [props.data])
     // console.log(data)
@@ -159,7 +160,7 @@ const ItemBuilds = (props: { buildObject: any; timing: any; data: any; itemData:
         <>
             {buildObject[ObjectKey][0].length !== 0 &&
                 <>
-                    <h3 className='build-header'>{`${timing} ${ObjectKey}`}</h3>
+                    <Typography variant={'h6'} className='build-header'>{`${timing} ${ObjectKey}`}</Typography>
                     <div className={`${ObjectKey} flex`} style={{ flexDirection: 'column', marginLeft: `${optionMargin()}px` }}>
                         {buildObject[ObjectKey].map((itemGroup: any[], i: number) => {
                             const centerOffset = itemGroup.length % 2 === 0 || i === 0 ? 0 : -54
