@@ -114,20 +114,21 @@ export const filterPlayers = (accounts: string[], value: string) => {
     return result.flat()
 }
 const substituteLettersForNumbers = (string: string) => {
-    const allLetterCombos = [string];
+    const allLetterCombos = new Set([string])
     const letterPairs: { [key: string]: string } = { a: "4", o: "0", 1: "i", 5: "s" };
     const strArr: string[] = string.split("");
     strArr.forEach((char, i: number) => {
         const keys = Object.keys(letterPairs);
         const values = Object.values(letterPairs);
+        let temp = string.split("")
         if (keys.includes(char)) {
             const newChar = letterPairs[char];
-            strArr[i] = newChar;
-            allLetterCombos.push(strArr.join(""));
+            temp[i] = newChar;
+            allLetterCombos.add(temp.join(""));
         } else if (values.includes(char)) {
             const newChar = keys.find((key) => letterPairs[key] === char);
-            if (newChar) strArr[i] = newChar;
-            allLetterCombos.push(strArr.join(""));
+            if (newChar) temp[i] = newChar;
+            allLetterCombos.add(temp.join(""));
         }
     })
     return allLetterCombos;
