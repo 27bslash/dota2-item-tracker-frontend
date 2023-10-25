@@ -386,6 +386,10 @@ a:hover {
 .benchmark-cell {
   padding: 10px;
 }
+.benchmark-icon:hover {
+  cursor: pointer;
+  opacity: 0.89;
+}
 .benchmark-pct {
   margin: 0;
   font-size: 15px;

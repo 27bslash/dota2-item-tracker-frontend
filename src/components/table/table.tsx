@@ -10,6 +10,7 @@ import CustomTableBody from "./tablebody"
 import Match from "../types/matchData"
 interface TableProps {
     showStarter: boolean,
+    pageNumber?: number,
     heroList: any,
     heroData: any,
     itemData: any,
@@ -23,12 +24,12 @@ interface TableProps {
 }
 TimeAgo.addDefaultLocale(en)
 const CustomTable = (props: TableProps) => {
-    const [page, setPage] = useState(0);
+    const [page, setPage] = useState(props.pageNumber || 0);
     const [count, setCount] = useState(props.count)
     const [orderBy, setOrderBy] = useState('unix_time')
     const [sortDirection, setSortDirection] = useState('desc')
     const { filteredData, totalMatchData } = props
-
+    console.log(props.pageNumber, page)
     useEffect(() => {
         setCount(props.count)
         if (page * 10 > props.count) {
@@ -36,6 +37,11 @@ const CustomTable = (props: TableProps) => {
             setPage(0)
         }
     }, [props.count])
+    useEffect(() => {
+        if (props.pageNumber) {
+            setPage(props.pageNumber)
+        }
+    }, [props.pageNumber])
 
     // const updateData = async (length: number, skip: number) => {
     //     if (length === -1) length = totalPicks['picks']

@@ -18,13 +18,8 @@ import { exists } from './../utils/exists';
 
 //  TODO
 //  add chappie section
-//  talent search
-//  player search substitute numbers for letters
 //  fix search style
 //  lazyload images
-//  get items from github for tooltips
-//  lone druid bear items
-//  refactor into hero and player pages
 
 interface pageProps {
     type: string,
@@ -66,13 +61,21 @@ const Page = (props: pageProps) => {
     const [searchRes, setSearchRes] = useState<SearchRes>()
     const [visited, setVisited] = useState<any>(new Set())
     const [total, setTotal] = useState<any>([])
-    const [patchShowMsg, setShowPatchMsg] = useState(false)
+    const [pageNumber, setPageNumber] = useState(0)
     const [patch, setPatch] = useState({ 'patch': '', 'patch_timestamp': 0 })
     const updateStarter = () => {
         setShowStarter(prev => !prev)
     }
     // const { type, setColorPaletteType } = useContext(colorPaletteContext)
+    const scrollGameIntoView = (idx: number) => {
+        const pageIdx = Math.ceil(idx / 10) - 1
+        setPageNumber(pageIdx)
+        const elPageIdx = idx - (10 * (pageIdx))
+        const tbodys = document.querySelectorAll('tbody')
+        const element = tbodys[1].children[elPageIdx]
+        element.scrollIntoView({ behavior: 'smooth' })
 
+    }
     useEffect(() => {
         document.title = heroSwitcher(nameParam);
         (async () => {
@@ -224,6 +227,7 @@ const Page = (props: pageProps) => {
                         }
                         {props.type === 'hero' &&
                             < HeroPageTopSection {...commonProps}
+                                updatePageNumber={scrollGameIntoView}
                                 updateRole={updateRole}
                                 totalPicks={totalPicks}
                             ></HeroPageTopSection>
@@ -248,6 +252,7 @@ const Page = (props: pageProps) => {
                         <CustomTable
                             {...commonProps}
                             count={count}
+                            pageNumber={pageNumber}
                             heroList={props.heroList}
                             showStarter={showStarter} />
                     </>

@@ -8,7 +8,7 @@ import Items from "../types/Item"
 import Match from "../types/matchData"
 
 export const HeroPageTopSection = (props: {
-    heroData: {}; nameParam: string; totalMatchData: any[]; role: string;
+    heroData: {}; nameParam: string; totalMatchData: any[]; role: string; updatePageNumber: (idx: number) => void;
     updateMatchData: (match: Match[]) => void; itemData?: Items; filteredData: any[]; updateRole: (role: string) => void; searchRes?: any
     totalPicks: any
 }) => {
@@ -22,7 +22,7 @@ export const HeroPageTopSection = (props: {
                         <MostUsed matchData={totalMatchData} r={role} updateMatchData={updateMatchData} itemData={itemData}></MostUsed>
                     }
                 </div>
-                <BestGames matchData={filteredData} totalMatchData={totalMatchData} updateRole={updateRole}></BestGames>
+                <BestGames matchData={filteredData} totalMatchData={totalMatchData} updatePageNumber={props.updatePageNumber} updateRole={updateRole}></BestGames>
                 {!!Object.keys(heroData).length && !!filteredData.length &&
                     <BigTalent totalMatchData={totalMatchData} matchData={filteredData} heroData={heroData} heroName={nameParam} width='100px' margin='2% 0px 0px 230px' updateMatchData={updateMatchData} />
                 }
