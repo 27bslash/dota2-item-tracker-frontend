@@ -6,7 +6,6 @@ import { Box, Typography } from '@mui/material';
 
 export const NeutralItems = (props: { data: NonProDataType[], itemData: Items }) => {
     const neutralItems = mostUsedNeutrals(props.data, props.itemData)
-    // TODO add neutral item tier colors
     const mapped = neutralItems.map((itemArr) => itemArr.length < 3 ? [itemArr] : [itemArr.slice(0, 2), itemArr.slice(2, 4)])
     const tierColours = ['white', '#99D98B', '#97a6e8', '#C783E8', '#F5DFA6']
 
@@ -18,13 +17,13 @@ export const NeutralItems = (props: { data: NonProDataType[], itemData: Items })
                     <Box alignItems={"start"} justifyContent={'space-evenly'} alignSelf={'center'} className="neutral-item-container flex">
                         {mapped.map((tierArr, i) => {
                             return (
-                                <Box padding={0} margin={0}>
+                                <Box key={i} padding={0} margin={0}>
                                     {tierArr.flat().length > 0 &&
                                         <Typography variant='h6' fontWeight={'bold'} align={'center'} justifySelf={'center'} color={tierColours[i]} >Tier {i + 1}</Typography>
                                     }
-                                    {tierArr.map((x, iii) => {
+                                    {tierArr.map((x, itemIndex) => {
                                         if (x.length) {
-                                            return <div className={`test ${i}`}>
+                                            return <div key={itemIndex} className={`test ${i}`}>
                                                 <NeutralItem key={i} idx={i} tierArr={x} data={props.data} itemData={props.itemData}></NeutralItem>
                                             </div>
                                         }
