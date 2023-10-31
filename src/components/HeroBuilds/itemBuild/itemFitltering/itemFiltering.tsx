@@ -133,7 +133,6 @@ export const countItems = (data: any, itemData: any) => {
 
     }).filter((x) => x)
     itemValues = map.sort((a: any, b: any) => a[1]['time'] - b[1]['time'])
-    // console.log(itemValues)
     return itemValues
 }
 
@@ -158,14 +157,14 @@ export const boots_filter = (data: any[], itemData: Items) => {
     return filtered
 }
 
-const filterItems = (matchData: any, itemData: any) => {
+const filterItems = (matchData: any, itemData: any, roleKey: string) => {
     // const start = performance.now()
     let itemBuild = countItems(matchData, itemData)
     // const end = performance.now()
     itemBuild = filterComponents(itemBuild, itemData)
     itemBuild = boots_filter(itemBuild, itemData)
     itemBuild = addItemChoices(itemBuild, matchData, itemData)
-    itemBuild = groupByTime(itemBuild, itemData, matchData)
+    itemBuild = groupByTime(itemBuild, itemData, roleKey)
     // console.log('filterCompoentns:', performance.now() - start, 'ms')
     return itemBuild
 }

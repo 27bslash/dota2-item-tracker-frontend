@@ -158,7 +158,7 @@ const ItemBuilds = (props: { buildObject: any; timing: any; data: any; itemData:
     // console.log(disassembleMargin())
     return (
         <>
-            {buildObject[ObjectKey][0].length !== 0 &&
+            {buildObject[ObjectKey][0] && buildObject[ObjectKey][0].length !== 0 &&
                 <>
                     <Typography variant={'h6'} className='build-header'>{`${timing} ${ObjectKey}`}</Typography>
                     <div className={`${ObjectKey} flex`} style={{ flexDirection: 'column', marginLeft: `${optionMargin()}px` }}>

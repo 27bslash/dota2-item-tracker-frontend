@@ -120,7 +120,7 @@ export const filterComponents = (data: any[], itemData: Items) => {
             toRemove.push(data[i][0])
             continue 
         }
-        else if (itemTime > 1800 && itemStats['cost'] < 1000) {
+        else if (itemTime > 1800 && itemStats['cost'] < 2000) {
             toRemove.push(data[i][0])
             console.log('remove low cost item after 30 mins: ' ,data[i][0])
             continue

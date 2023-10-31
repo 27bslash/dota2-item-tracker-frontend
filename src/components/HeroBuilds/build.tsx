@@ -118,7 +118,7 @@ const Build = (props: BuildProps) => {
 
     useEffect(() => {
         if (props.role && data) {
-            const filtered = data.filter(((match: NonProDataType) => match.role === props.role))
+            const filtered = data.filter(((match) => match.role === props.role))
             const o = { [props.role]: filtered }
             setFilteredData(o)
         } else if (data) {
@@ -134,7 +134,7 @@ const Build = (props: BuildProps) => {
         setHeroBuilds({ type: 'clear' })
         for (let key in filteredData) {
             const buildData = filteredData[key]
-            const itemBuild = filterItems(buildData, props.itemData)
+            const itemBuild = filterItems(buildData, props.itemData, key)
             const abilityBuilds = abilityFilter(buildData)
             const startingItemBuilds = countStartingItems(buildData)
             const res = [itemBuild, abilityBuilds, startingItemBuilds]
