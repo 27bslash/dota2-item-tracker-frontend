@@ -197,7 +197,7 @@ const BuildCell = (props: any) => {
     // maybe a hook for once
     return (
         <div className="builds" >
-            <h1 onClick={() => setOpen(prev => !prev)}>{props.role}
+            <Typography variant="h4" fontWeight='bold' padding={1.3} sx={{ '&:hover': { cursor: 'pointer', 'opacity': 0.7 } }} onClick={() => setOpen(prev => !prev)}>{props.role}
                 {/* <svg height="30" viewBox="0 0 24 24">
                     <path fill-rule="evenodd" clip-rule="evenodd" d="M18.442 18.141l2.167-1.25c.398-.23.898-.219 1.286.03l1.93 1.238a.373.373 0 01.005.63c-1.77 1.183-8 5.211-10.744 5.211-.926 0-7.725-2.034-7.725-2.034v-6.999h2.704c.881 0 1.741.265 2.46.755l1.635 1.117h3.671c.438 0 1.482 0 1.482 1.302 0 1.41-1.14 1.41-1.482 1.41h-5.395a.555.555 0 00-.565.543c0 .3.254.543.565.543h5.75s.82.004 1.473-.56c.414-.359.783-.944.783-1.936z" fill="#FFFFFF"></path>
                     <path fill-rule="evenodd" clip-rule="evenodd" d="M4.399 15.02c0-.583-.494-1.058-1.1-1.058h-2.2c-.606 0-1.099.475-1.099 1.059v6.998c0 .583.493 1.057 1.099 1.057h2.2c.606 0 1.1-.474 1.1-1.057v-6.998z" fill="url(#wrist_66_dark)" fill-opacity="0.7"></path>
@@ -213,7 +213,7 @@ const BuildCell = (props: any) => {
                         </linearGradient>
                     </defs>
                 </svg> */}
-            </h1>
+            </Typography >
             {open &&
                 <div className="buildData">
                     <StartingItems data={props.data} startingItemData={props.buildData[2]} itemData={props.itemData} />
