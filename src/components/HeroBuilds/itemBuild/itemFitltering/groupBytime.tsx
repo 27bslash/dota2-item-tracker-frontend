@@ -3,6 +3,7 @@ const groupByTime = (data: any, itemData: any, matchData: any) => {
     const res = [structuredClone(itemObj), structuredClone(itemObj), structuredClone(itemObj)]
     const coreArr = []
     const seenItems = new Set()
+    // TODO different values for core situational based on role
     for (let item of data) {
         const itemKey: any = item[0].replace(/__\d+/g, '')
         const itemTime: any = item[1]['time']
@@ -19,7 +20,7 @@ const groupByTime = (data: any, itemData: any, matchData: any) => {
         let count = 0
         const core = Object.fromEntries([...data].filter((x: any) => {
             // group items into sections of 2 mins apart also filter situational items out
-            if (Math.abs(itemTime - x[1]['time']) <= 40 && !seenItems.has(x[0]) && x[1]['adjustedValue'] > 20 && count === 0) {
+            if (Math.abs(itemTime - x[1]['time']) <= 40 && !seenItems.has(x[0]) && x[1]['adjustedValue'] > 40 && count === 0) {
                 seenItems.add(x[0])
                 count++
                 return x
@@ -29,7 +30,7 @@ const groupByTime = (data: any, itemData: any, matchData: any) => {
         }))
         count = 0
         const situational = Object.fromEntries([...data].filter((x: any) => {
-            if (Math.abs(itemTime - x[1]['time']) <= 40 && item[1]['adjustedValue'] < 20 && item[1]['adjustedValue'] > 5 && !seenItems.has(x[0]) && itemData['items'][itemKey]['components'] && count === 0) {
+            if (Math.abs(itemTime - x[1]['time']) <= 40 && x[1]['adjustedValue'] < 40 && x[1]['adjustedValue'] > 10 && !seenItems.has(x[0]) && itemData['items'][itemKey]['components'] && count === 0) {
                 seenItems.add(x[0])
                 count++
                 return x
@@ -39,7 +40,6 @@ const groupByTime = (data: any, itemData: any, matchData: any) => {
         }))
         // const filtereedData = matchData.filter((match: any) => match['items'].map((itemObject: any) => itemObject['key']).includes(item[0]))
         // console.log(filtereedData)
-
         const coreLength = Object.keys(core).length !== 0
         // console.log(data.length, (item[1]['value'] / matchData.length) * 100, item[0])
         // if (item[1]['value'] < 3 && itemData['items'][itemKey]['components']) {
