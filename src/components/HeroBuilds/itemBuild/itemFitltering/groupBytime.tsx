@@ -3,7 +3,6 @@ const groupByTime = (data: any, itemData: any, roleKey: string) => {
     const res = [structuredClone(itemObj), structuredClone(itemObj), structuredClone(itemObj)]
     const coreArr = []
     const seenItems = new Set<string>()
-    // TODO different values for core situational based on role
     const filteredData = data.filter((x: any) => x[1]['adjustedValue'] > 10)
     let c = 0
     const filterItems = (data: any, roleKey: string, time: number, type: string) => {
