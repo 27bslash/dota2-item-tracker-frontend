@@ -27,7 +27,7 @@ const BestGames = (props: { totalMatchData: Match[]; matchData: Match[]; updateR
             let sum: any = 0
             const benchmarks = match['benchmarks']
             sum = Object.values(benchmarks).reduce((a: any, b: any) => {
-                b = +b['pct']
+                b = +b['pct'] || 0
                 return a + b
             }, sum)
             bmarks.push([match['id'], sum])
