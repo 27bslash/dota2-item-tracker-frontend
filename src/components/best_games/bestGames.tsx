@@ -52,12 +52,16 @@ const BestGames = (props: { totalMatchData: Match[]; matchData: Match[]; updateR
         loading ? (
             <img src={blurred} alt='blurred benchmarks' />
         ) : (
-            <div className="best-games" style={{ 'width': '1200px', 'maxHeight': '140px', height: 'fit-content' }}>
-                <table>
-                    <BestGamesTableHeader benchmarkKeys={benchmarkKeys!}></BestGamesTableHeader>
-                    <BestGamesTableBody matchData={props.matchData} updateRole={props.updateRole} updatePageNumber={props.updatePageNumber} benchmarkKeys={benchmarkKeys!} bestgames={bestgames}></BestGamesTableBody>
-                </table>
-            </div>
+            <>
+                {benchmarkKeys &&
+                    <div className="best-games" style={{ 'width': '1200px', 'maxHeight': '140px', height: 'fit-content' }}>
+                        <table>
+                            <BestGamesTableHeader benchmarkKeys={benchmarkKeys}></BestGamesTableHeader>
+                            <BestGamesTableBody matchData={props.matchData} updateRole={props.updateRole} updatePageNumber={props.updatePageNumber} benchmarkKeys={benchmarkKeys!} bestgames={bestgames}></BestGamesTableBody>
+                        </table>
+                    </div>
+                }
+            </>
         )
     )
 }
