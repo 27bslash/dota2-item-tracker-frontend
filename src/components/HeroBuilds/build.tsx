@@ -1,6 +1,6 @@
 import ItemBuild from "./itemBuild/itemBuild"
 import AbilityBuild from './abillityBuild/abilityBuild';
-import { useEffect, useMemo, useReducer, useState } from "react";
+import { useState } from "react";
 import StartingItems from "./itemBuild/startingItems/startingItems";
 import { Box, Button, Tooltip, Typography } from "@mui/material";
 import filterItems from "./itemBuild/itemFitltering/itemFiltering";
@@ -11,8 +11,10 @@ import GuideGuide from "./guideDownload";
 import { MatchDataAdj } from "../page";
 import { baseApiUrl } from "../../App";
 import { NeutralItems } from "./itemBuild/neutralItems/neutralItems";
+import { useHeroBuilds } from "./buildHooks/buildHook";
+import { useParseMatchData } from "./buildHooks/parseMatchDataHook";
 
-interface BuildProps extends MatchDataAdj {
+export interface BuildProps extends MatchDataAdj {
     data?: any,
     itemData: any,
     heroName: string,
@@ -32,116 +34,11 @@ export type NonProDataType = {
     item_neutral?: string
 }
 const Build = (props: BuildProps) => {
-    const [filteredData, setFilteredData] = useState<{ [k: string]: NonProDataType[] }>()
-    const [data, setData] = useState<NonProDataType[]>()
-    const [nonProData, setNonProData] = useState<NonProDataType[]>()
     const [proData, setProData] = useState(false)
     const [open, setOpen] = useState(false)
-    const [displayedRoles, setDisplayedRoles] = useState<string[]>([])
-    const [heroBuilds, setHeroBuilds] = useReducer((states: any, updates: any) => {
-        switch (updates.type) {
-            case 'clear':
-                return ({})
-            default:
-                return ({ ...states, ...updates })
-        }
-    }, {})
-    // switch to toggle only known pro accounts
-    const combinedRoles = ['Support', 'Roaming']
-    const calc_common_roles = (pickData?: any) => {
-        const picks: BuildProps["picks"] = pickData || props.picks
-        let totalPicks = 0
-        for (let o of Object.entries(picks)) {
-            totalPicks += o[1]['picks']
-        }
-        totalPicks = totalPicks || props.picks.picks
-        const roles: string[] = []
-        const sorted = Object.entries(picks).filter((x) => typeof (x[1]) === 'object').sort((a, b) => b[1]['picks'] - a[1]['picks'])
-        let combinedRole = null
-        for (let k of sorted) {
-            const role = k[0]
-            let totalRolePicks = picks[role].picks
-            if (!combinedRole && combinedRoles.includes(role)) {
-                const otherRole: string | undefined = combinedRoles.find((pos) => pos !== role && pos in picks)
-                const otherRolePicks = otherRole ? picks[otherRole].picks : 0
-                totalRolePicks = picks[role].picks + otherRolePicks
-                combinedRole = true
-            }
-            let perc = totalRolePicks / totalPicks
-            if (perc > 0.1) {
-                roles.push(role)
-            }
-        }
-        return roles
-    }
-    useEffect(() => {
-        setDisplayedRoles(calc_common_roles())
-    }, [props.picks])
 
-
-    useEffect(() => {
-        if (proData) {
-            setData(props.data)
-            const roleCount: BuildProps['picks'] = {}
-            for (let match of props.data) {
-                if (roleCount[match['role']]) {
-                    roleCount[match['role']]['picks'] += 1
-                    roleCount[match['role']]['wins'] += 1
-                } else {
-                    roleCount[match['role']] = {
-                        'picks': 1, 'wins': match['win']
-                    }
-                }
-            }
-            setDisplayedRoles(calc_common_roles(roleCount))
-        } else {
-            setData(nonProData)
-        }
-    }, [proData, nonProData, props.data])
-    useEffect(() => {
-        (async () => {
-            const countDocsUrl = `${baseApiUrl}hero/${props.heroName}/count_docs?collection=non-pro`
-            const docLength = await fetchData(countDocsUrl)
-            let merged = []
-            let data = []
-            const matchDataUrl = 'https://0f2ezc19w3.execute-api.eu-west-2.amazonaws.com/dev/'
-            if (docLength > 50) {
-                data = await bulkRequest(`${matchDataUrl}hero/${props.heroName}/item_build`, docLength)
-                merged = data.flat()
-            } else {
-                data = await fetchData(`${matchDataUrl}hero/${props.heroName}/item_build`)
-                merged = data.flat()
-            }
-            setNonProData(merged.filter((x: any) => x.abilities && x.items))
-        })()
-    }, [])
-
-    useEffect(() => {
-        if (props.role && data) {
-            const filtered = data.filter(((match) => match.role === props.role))
-            const o = { [props.role]: filtered }
-            setFilteredData(o)
-        } else if (data) {
-            const tempObject: { [role: string]: NonProDataType[] } = {}
-            for (let role of displayedRoles) {
-                const roleFiltered = data.filter(((match: NonProDataType) => match.role === role || (combinedRoles.includes(role) && combinedRoles.includes(match.role))))
-                tempObject[role] = roleFiltered
-            }
-            setFilteredData(tempObject)
-        }
-    }, [props.role, data])
-    useEffect(() => {
-        setHeroBuilds({ type: 'clear' })
-        for (let key in filteredData) {
-            const buildData = filteredData[key]
-            const itemBuild = filterItems(buildData, props.itemData, key)
-            const abilityBuilds = abilityFilter(buildData)
-            const startingItemBuilds = countStartingItems(buildData)
-            const res = [itemBuild, abilityBuilds, startingItemBuilds]
-            setHeroBuilds({ [key]: res })
-
-        }
-    }, [filteredData])
+    const filteredData = useParseMatchData(proData, props.data, props.heroName, props)
+    const heroBuilds = useHeroBuilds(filteredData, props.itemData)    // switch to toggle only known pro accounts
     const [guideGuide, setGuideGuide] = useState(false)
 
     const baseButtonStyle = {
