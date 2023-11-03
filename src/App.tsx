@@ -40,7 +40,7 @@ function App() {
                     {/* home page */}
                 </Route>
                 <Route path='/hero/:name' element={
-                    <Page heroList={heroList} playerList={playerList} type='hero' options={options} />
+                    <Page heroList={heroList} playerList={playerList} type='hero'/>
                 }>
                     {/* hero pages */}
                 </Route>
