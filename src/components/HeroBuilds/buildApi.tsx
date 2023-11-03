@@ -11,7 +11,7 @@ const BuildDataCom = (props: any) => {
     const filteredData = useParseMatchData(false, undefined, props.heroName, { 'picks': props.totalPicks }, 0.19)
     const updatedBuildData = useHeroBuilds(filteredData, props.itemData!)
     return (
-        updatedBuildData ? (
+        exists(updatedBuildData) ? (
             <div className="data">
                 {JSON.stringify(updatedBuildData)}
             </div>
