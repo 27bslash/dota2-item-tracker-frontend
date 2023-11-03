@@ -7,6 +7,7 @@ import {
 } from "react-router-dom";
 import Home from './components/home/home';
 import { Box } from '@mui/material';
+import { BuildApi } from './components/HeroBuilds/buildApi';
 
 interface heroList {
     name: string,
