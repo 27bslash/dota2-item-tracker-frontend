@@ -16,7 +16,6 @@ type TItemProp = {
     heroName?: string
     itemId?: number | undefined,
     children?: React.ReactNode;
-    filteredData: object[],
     totalMatchData: object[],
     updateMatchData?: (data: any, searchResults?: any) => void
     role: string,

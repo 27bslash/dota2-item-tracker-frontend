@@ -1,17 +1,16 @@
 import Items from "../../../types/Item"
 import { NonProDataType } from "../../build"
 import { ItemBuildImage } from "../itemBuild";
-import { mostUsedNeutrals } from "./mostUsedNeutrals"
 import { Box, Typography } from '@mui/material';
 
-export const NeutralItems = (props: { data: NonProDataType[], itemData: Items }) => {
-    const neutralItems = mostUsedNeutrals(props.data, props.itemData)
-    const mapped = neutralItems.map((itemArr) => itemArr.length < 3 ? [itemArr] : [itemArr.slice(0, 2), itemArr.slice(2, 4)])
+export const NeutralItems = (props: { neutralItems: any[], data: NonProDataType[], itemData: Items }) => {
+    // const neutralItems = mostUsedNeutrals(props.data, props.itemData)
+    const mapped = props.neutralItems.map((itemArr) => itemArr.length < 3 ? [itemArr] : [itemArr.slice(0, 2), itemArr.slice(2, 4)])
     const tierColours = ['white', '#99D98B', '#97a6e8', '#C783E8', '#F5DFA6']
 
     return (
         <>
-            {!!neutralItems.flat().length &&
+            {!!props.neutralItems.flat().length &&
                 <>
                     <Typography align={'center'} variant='h5' color='white' >Neutral Items</Typography>
                     <Box alignItems={"start"} justifyContent={'space-evenly'} alignSelf={'center'} className="neutral-item-container flex">

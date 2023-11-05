@@ -17,7 +17,7 @@ import { HeroPageTopSection } from './hero_page/hero_page';
 import { exists } from './../utils/exists';
 
 //  TODO
-//  add chappie section
+//  add chappie section ( probs not)
 //  fix search style
 //  lazyload images
 
@@ -26,7 +26,6 @@ interface pageProps {
     heroList: any,
     playerList?: any,
     palette?: string,
-    options?: any,
 }
 
 interface SearchRes {

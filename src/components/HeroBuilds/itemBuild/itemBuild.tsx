@@ -6,7 +6,15 @@ import Items from '../../types/Item';
 type Item = {
     [k: string]: { value: number, adjustedValue: number, time: number, disassemble?: boolean, dissassembledComponents?: string[], offset?: { left: number, top: number } }
 }
-
+const chunkArray = (array: any[], size: number) => {
+    const chunks = [];
+    let index = 0;
+    while (index < array.length) {
+        chunks.push(array.slice(index, index + size));
+        index += size;
+    }
+    return chunks;
+}
 const ItemBuild = (props: any) => {
     // const data = useMemo(() => filterItems(props.data, props.itemData), [props.data])
     // console.log(data)
@@ -70,33 +78,44 @@ const GridRow = (props: { data: any, itemData: any, ObjectKey: 'core' | 'situati
     // console.log(props.data)
     // 18 6
     // 18 
+    props.data.map((buildObject: { [x: string]: any; }) => {
+        if (buildObject[props.ObjectKey].length > 5) {
+            // console.log('test', k)
+            buildObject[props.ObjectKey] = chunkArray(buildObject[props.ObjectKey], 6)
+            // console.log(buildObject[props.ObjectKey])
+        } else {
+            buildObject[props.ObjectKey] = [buildObject[props.ObjectKey]]
+        }
+    })
     const totalLen = props.dataLength.reduce((a: number, b: number) => a + b)
     const calcOffset = () => {
         props.data.forEach((buildObject: any) => {
             let leftOffset = 0
             const badIdxs = []
             if (buildObject[props.ObjectKey].length > 1) {
-                for (let [i, itemSet] of buildObject[props.ObjectKey][0].entries()) {
-                    const keys = Object.keys(itemSet)
-                    if (itemSet[keys[0]]['dissassembledComponents']) {
-                        if (leftOffset === 0) {
-                            leftOffset = (55 * itemSet[keys[0]]['dissassembledComponents'].length) || 0
-                            // buildObject[props.ObjectKey][1].push({ 'offset': leftOffset })
-                            // console.log(itemSet)
+                for (let itemSet of buildObject[props.ObjectKey]) {
+                    for (let [i, item] of itemSet.entries()) {
+                        if (item['dissassembledComponents']) {
+                            if (leftOffset === 0) {
+                                leftOffset = (55 * item['dissassembledComponents'].length) || 0
+                                // buildObject[props.ObjectKey][1].push({ 'offset': leftOffset })
+                                // console.log(item)
+                            }
                         }
-                    }
-                    if (keys.length > 1) {
-                        // console.log(buildObject[props.ObjectKey][0], i, itemSet)
-                        badIdxs.push(i)
+                        if (item['option']) {
+                            // console.log(buildObject[props.ObjectKey][0], i, itemSet)
+                            badIdxs.push(i)
+                        }
                     }
                     // console.log('left', leftOffset)
                 }
                 if (badIdxs.length) {
                     let looped = false
+                    let idx = 0
                     for (let [i, itemset] of buildObject[props.ObjectKey][1].entries()) {
                         // i = leftOffset
                         let moveCount = 0
-                        const keys = Object.keys(itemset)
+                        // const keys = Object.keys(itemset)
                         while (badIdxs.includes(i)) {
                             i += 1
                             moveCount += 1
@@ -105,8 +124,8 @@ const GridRow = (props: { data: any, itemData: any, ObjectKey: 'core' | 'situati
                         // if (looped) moveCount = 0
                         looped = true
                         // console.log(itemset, itemset[keys[0]]['offset'], badIdxs, i, leftOffset)
-                        itemset[keys[0]]['offset'] = { 'left': moveCount * 55, top: -82 }
-
+                        itemset['offset'] = { 'left': moveCount * 55, top: -82 }
+                        idx += 1
                         // console.log(itemset)
                     }
                 }
@@ -137,7 +156,7 @@ const ItemBuilds = (props: { buildObject: any; timing: any; data: any; itemData:
     const { buildObject, data, itemData, offset, timing, ObjectKey } = props
     const odf = buildObject[ObjectKey].flat().some((x: any) => {
         const key = Object.keys(x)[0]
-        return x[key]['option']
+        return x['option']
     })
     const optionMargin = () => {
         const len = buildObject[ObjectKey][0].length >= 6 ? 6 : buildObject[ObjectKey][0].length
@@ -147,34 +166,35 @@ const ItemBuilds = (props: { buildObject: any; timing: any; data: any; itemData:
         let ret = 0
         buildObject[ObjectKey][0].forEach((x: any) => {
             const key = Object.keys(x)[0]
-            if (x[key]['dissassembledComponents']) {
-                // console.log(x[key])
-                ret += x[key]['dissassembledComponents'].length
+            if (x['dissassembledComponents']) {
+                // console.log(x)
+                ret += x['dissassembledComponents'].length
             }
             // console.log(ret)
         })
         return ret
     }
     // console.log(disassembleMargin())
+
     return (
         <>
-            {buildObject[ObjectKey][0] && buildObject[ObjectKey][0].length !== 0 &&
+            {buildObject[ObjectKey] && buildObject[ObjectKey].length !== 0 &&
                 <>
                     <Typography variant={'h6'} className='build-header'>{`${timing} ${ObjectKey}`}</Typography>
                     <div className={`${ObjectKey} flex`} style={{ flexDirection: 'column', marginLeft: `${optionMargin()}px` }}>
-                        {buildObject[ObjectKey].map((itemGroup: any[], i: number) => {
+                        {buildObject[ObjectKey].map((itemGroup: any, i: number) => {
                             const centerOffset = itemGroup.length % 2 === 0 || i === 0 ? 0 : -54
                             const leftOffset = offset ? offset.left + 'px' : '0px'
                             const underMarginLeft = i === 1 && disassembleMargin() ? disassembleMargin() * 27 : centerOffset
                             const style = !odf ? { marginLeft: underMarginLeft + 'px', justifyContent: 'center' } : { marginLeft: leftOffset }
                             return (
                                 <div key={i} className='flex' style={style}>
-                                    {itemGroup.map((items: Item, j: number) => {
-                                        const itemkey = Object.keys(items)
-                                        const itemOffset = items[itemkey[0]]['offset'] || { top: '0px', left: '0px' }
+                                    {itemGroup.map((group: any, j: number) => {
+                                        const itemkey = group['key']
+                                        const itemOffset = group['offset'] || { top: '0px', left: '0px' }
                                         return (
                                             <div key={j} className="item-offset" style={{ marginTop: itemOffset['top'], marginLeft: itemOffset['left'] }}>
-                                                <ItemBuildCell itemkey={itemkey} item={items} data={data} itemData={itemData} />
+                                                <ItemBuildCell itemkey={itemkey} item={group} data={data} itemData={itemData} />
                                             </div>
                                         )
                                     })}
@@ -194,31 +214,28 @@ const ItemBuildCell = (props: { itemkey: any; item: any; data: any; itemData: an
     // itemkey.sort((a: any, b: any) => {
     //     return item[b]['time'] - item[a]['time']
     // })
-    // console.log(itemkey)
+    const perc = item['adjustedValue']
+    const avgTime = (Math.floor(item['time'] / 60))
+    const link = `${image_host}https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/items/${itemkey.replace(/__\d+/g, '')}.png`
+    const disassemble = item['disassemble']
+    const components = item['dissassembledComponents']
+    const orText = item['option'] || item['longOption'] ? 'or' : ''
     return (
         <div className="img-cell" >
-            {
-                itemkey.map((k: string, idx: number) => {
-                    const perc = item[k]['adjustedValue']
-                    const avgTime = (Math.floor(item[k]['time'] / 60))
-                    const link = `${image_host}https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/items/${k.replace(/__\d+/g, '')}.png`
-                    const disassemble = item[k]['disassemble']
-                    const components = item[k]['dissassembledComponents']
-                    const orText = itemkey.length - 1 !== idx || item[k]['longOption'] ? 'or' : ''
-                    k = k.replace(/__\d+/g, '')
-                    return (
-                        <div key={idx} className='itembuild-img-cell flex' style={{ alignItems: 'center', justifyContent: 'end' }} >
-                            {components &&
-                                <ItemComponents components={components} data={data} itemData={itemData} />
-                            }
-                            <ItemBuildImage k={k} orText={orText} avgTime={avgTime} itemData={itemData} perc={perc} data={data}
-                                disassemble={disassemble}></ItemBuildImage>
-                        </div>
-                    )
 
-
-                })
-            }
+            <div className='itembuild-img-cell flex' style={{ alignItems: 'center', justifyContent: 'end' }} >
+                {components &&
+                    <ItemComponents components={components} data={data} itemData={itemData} />
+                }
+                <div>
+                    <ItemBuildImage k={itemkey} orText={orText} avgTime={avgTime} itemData={itemData} perc={perc} data={data}
+                        disassemble={disassemble}></ItemBuildImage>
+                    {item['option'] &&
+                        <ItemBuildImage k={item['option'][0]['choice']} avgTime={Math.floor(item['option'][0]['time'] / 60)} itemData={itemData} perc={item['option'][0]['targetValue']} data={data}
+                            disassemble={disassemble}></ItemBuildImage>
+                    }
+                </div>
+            </div>
         </div >)
 }
 export const ItemBuildImage = (props: { k: string, avgTime?: number, disassemble?: any; data: NonProDataType[]; itemData: Items; perc: string | number; orText?: string, }) => {
@@ -226,7 +243,7 @@ export const ItemBuildImage = (props: { k: string, avgTime?: number, disassemble
         {props.avgTime &&
             <p style={{ margin: '0', color: 'white' }}>{props.avgTime}m {props.disassemble ? 'D' : ''}</p>
         }
-        <TableItem type='item' height='40px' width='55px' itemKey={props.k.replace(/__\d+/g, '')} filteredData={props.data} totalMatchData={props.data}
+        <TableItem type='item' height='40px' width='55px' itemKey={props.k.replace(/__\d+/g, '')} totalMatchData={props.data}
             items={props.itemData} role='' overlay={false} />
         {/* <p style={{ margin: '0', color: 'white' }}>{perc}%</p> */}
         <p style={{ margin: '0', color: 'white', textAlign: 'center' }}>{cleanDecimal(props.perc)}%</p>
@@ -246,7 +263,7 @@ const ItemComponents = (props: { components: string[][]; data: object[]; itemDat
                                 {i % 2 === 0 &&
                                     <div className="disassemble-overlay"></div>
                                 }
-                                <TableItem height='20px' type='item' itemKey={component} filteredData={props.data} totalMatchData={props.data}
+                                <TableItem height='20px' type='item' itemKey={component} totalMatchData={props.data}
                                     items={props.itemData} role='' overlay={false} />
                             </div>
                         )

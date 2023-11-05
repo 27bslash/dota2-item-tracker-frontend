@@ -72,13 +72,13 @@ const FinalItems = (props: {
                 const time = humanReadableTime(item['time'])
                 if (item.key === 'ultimate_scepter') {
                     return <TableItem matchId={props.row.id} role={props.role} overlay={true} updateMatchData={props.updateMatchData}
-                        filteredData={props.filteredData} totalMatchData={props.totalMatchData} key={i} itemKey='ultimate_scepter' type='scepter'
+                        totalMatchData={props.totalMatchData} key={i} itemKey='ultimate_scepter' type='scepter'
                         items={props.items} heroName={props.heroName}
                         heroData={props.heroData} item={item} time={time}>
                     </TableItem>
                 } else {
                     return <TableItem matchId={props.row.id} time={time} role={props.role} overlay={true} updateMatchData={props.updateMatchData}
-                        filteredData={props.filteredData} totalMatchData={props.totalMatchData} key={i} item={item}
+                        totalMatchData={props.totalMatchData} key={i} item={item}
                         itemId={item.id} items={props.items} itemKey={item.key} type='item'></TableItem>
                 }
             }
