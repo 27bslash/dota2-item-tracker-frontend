@@ -6,7 +6,7 @@ const groupByTime = (data: any, itemData: any, roleKey: string) => {
     const filteredData = data.filter((x: any) => x[1]['adjustedValue'] > 10)
     let c = 0
     const filterItems = (data: any, roleKey: string, time: number, type: string) => {
-        const ret: any = []
+        const ret: any[] = []
         const supportRoles = ['Hard Support', 'Support', 'Roaming']
 
         let percForCore = time <= 1800 && !supportRoles.includes(roleKey) ? 60 : 40
@@ -19,11 +19,13 @@ const groupByTime = (data: any, itemData: any, roleKey: string) => {
             const coreStatement = x[1]['time'] < time && !seenItems.has(x[0]) && x[1]['adjustedValue'] > percForCore
             if ((type === 'core' && coreStatement)) {
                 seenItems.add(x[0])
-                ret.push({ [x[0]]: x[1] })
+                x[1]['key'] = x[0]
+                ret.push(x[1])
                 return x
             } else if (type === 'situational' && x[1]['time'] < time && !seenItems.has(x[0]) && x[1]['adjustedValue'] < percForCore && x[1]['adjustedValue'] > 10) {
                 seenItems.add(x[0])
-                ret.push({ [x[0]]: x[1] })
+                x[1]['key'] = x[0]
+                ret.push(x[1])
                 return x
             }
             else {
@@ -38,12 +40,12 @@ const groupByTime = (data: any, itemData: any, roleKey: string) => {
     const midSituational = filterItems(filteredData, roleKey, 1800, 'situational')
     const lateCore = filterItems(filteredData, roleKey, 999999, 'core')
     const lateSituational = filterItems(filteredData, roleKey, 999999, 'situational')
-    if (Object.keys(earlyCore).length) res[0]['core'] = earlyCore
-    if (Object.keys(midCore).length) res[1]['core'] = midCore
-    if (Object.keys(lateCore).length) res[2]['core'] = lateCore
-    if (Object.keys(earlySituational).length) res[0]['situational'] = earlySituational
-    if (Object.keys(midSituational).length) res[1]['situational'] = midSituational
-    if (Object.keys(lateSituational).length) res[2]['situational'] = lateSituational
+    if (earlyCore.length) res[0]['core'] = earlyCore
+    if (midCore.length) res[1]['core'] = midCore
+    if (lateCore.length) res[2]['core'] = lateCore
+    if (earlySituational.length) res[0]['situational'] = earlySituational
+    if (midSituational.length) res[1]['situational'] = midSituational
+    if (lateSituational.length) res[2]['situational'] = lateSituational
     for (let item of filteredData) {
         const itemKey: any = item[0].replace(/__\d+/g, '')
         const itemTime: any = item[1]['time']
@@ -52,9 +54,9 @@ const groupByTime = (data: any, itemData: any, roleKey: string) => {
             continue
         }
         // filter out any dissassembled compotents that are also a an item choice
-        if (item[1]['dissassembledComponents'] && item[1]['option']) {
-            item[1]['dissassembledComponents'] = item[1]['dissassembledComponents'].filter((x: any[]) =>
-                !item[1]['option'].find((k: any) => k['choice'] === x[0])
+        if (item['dissassembledComponents'] && item['option']) {
+            item['dissassembledComponents'] = item['dissassembledComponents'].filter((x: any[]) =>
+                !item['option'].find((k: any) => k['choice'] === x[0])
             )
         }
         let count = 0
@@ -101,30 +103,28 @@ const groupByTime = (data: any, itemData: any, roleKey: string) => {
             // itemGroup[k] = sli.concat(sliced)
             for (let [i, itemObject] of itemGroup[k].entries()) {
                 // console.log(Object.values(itemArr))
-                const objectKeys = Object.keys(itemObject)
-                const targetKey = objectKeys[0]
-                const values = Object.values(itemObject)[0]
+                const targetKey = itemObject['key']
+                const values = Object.values(itemObject)
                 if (!values) continue
-                if (Object.keys(values).includes('option')) {
+                if (itemObject['option']) {
                     // itemGroup[k].concat(itemArr)
-                    const option = itemObject[targetKey]['option'][0]
+                    const option = itemObject['option']
                     const optionKey = option['choice']
                     if (choiceSet.has(targetKey) || choiceSet.has(optionKey)) continue
                     // remove the option from the situational if core
                     const otherSet = k === 'core' ? 'situational' : 'core'
-                    const idx = itemGroup[k].findIndex((x: any) => Object.keys(x)[0] === optionKey)
-                    const situationalIdx = itemGroup[otherSet].findIndex((x: any) => Object.keys(x)[0] === optionKey)
+                    const idx = itemGroup[k].findIndex((x: any) => x['key'] === optionKey)
+                    const situationalIdx = itemGroup[otherSet].findIndex((x: any) => x['key'] === optionKey)
                     itemObject[optionKey] = { 'value': option['targetValue'], 'adjustedValue': option['targetValue'], time: option['time'] }
                     if (idx !== -1) itemGroup[k].splice(idx, 1); itemGroup[otherSet].splice(situationalIdx, 1)
 
-                } else if (Object.keys(values).includes('option') && itemGroup[k].length > 6) {
-                    const option = itemObject[targetKey]['option'][0]
+                } else if (itemObject['option'] && itemGroup[k].length > 6) {
+                    const option = itemObject['option']
                     const optionKey = option['choice']
                     // console.log(targetKey, i, itemGroup[k])
-                    let idx = i
                     // console.log(optionKey, i, itemGroup[k])
                     if (choiceSet.has(targetKey) || choiceSet.has(optionKey)) continue
-                    const optionIdx = itemGroup[k].findIndex((x: any) => Object.keys(x)[0] === optionKey)
+                    const optionIdx = itemGroup[k].findIndex((x: any) => x['key'] === optionKey)
                     // if (optionIdx < i) {
                     //     idx = optionIdx
                     // }
@@ -148,26 +148,10 @@ const groupByTime = (data: any, itemData: any, roleKey: string) => {
 
                 }
             }
-            if (itemGroup[k].length > 5) {
-                // console.log('test', k)
-                itemGroup[k] = chunkArray(itemGroup[k], 6)
-                // console.log(itemGroup[k])
-            } else {
-                itemGroup[k] = [itemGroup[k]]
-            }
         }
     }
-    console.log(res)
+    console.log('item build: ', res)
     return res
 
-}
-const chunkArray = (array: any[], size: number) => {
-    const chunks = [];
-    let index = 0;
-    while (index < array.length) {
-        chunks.push(array.slice(index, index + size));
-        index += size;
-    }
-    return chunks;
 }
 export default groupByTime

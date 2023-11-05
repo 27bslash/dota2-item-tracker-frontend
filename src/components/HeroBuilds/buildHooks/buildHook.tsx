@@ -4,6 +4,7 @@ import Items from "../../types/Item";
 import abilityFilter from "../abillityBuild/abilityFiltering";
 import filterItems from "../itemBuild/itemFitltering/itemFiltering";
 import countStartingItems from "../itemBuild/startingItems/startingItemsFilter";
+import { mostUsedNeutrals } from "../itemBuild/neutralItems/mostUsedNeutrals";
 
 export const useHeroBuilds = (filteredData: { [key: string]: NonProDataType[] } | undefined, itemData: Items) => {
     const [heroBuilds, setHeroBuilds] = useReducer((states: any, updates: any) => {
@@ -23,7 +24,8 @@ export const useHeroBuilds = (filteredData: { [key: string]: NonProDataType[] } 
                 const itemBuild = filterItems(buildData, itemData, key);
                 const abilityBuilds = abilityFilter(buildData);
                 const startingItemBuilds = countStartingItems(buildData);
-                const res = [itemBuild, abilityBuilds, startingItemBuilds];
+                const neutralItems = mostUsedNeutrals(buildData, itemData)
+                const res = [itemBuild, abilityBuilds, startingItemBuilds, neutralItems];
                 setHeroBuilds({ [key]: res })
             }
         };
