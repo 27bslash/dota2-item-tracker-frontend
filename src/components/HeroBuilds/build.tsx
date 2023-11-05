@@ -111,7 +111,7 @@ const BuildCell = (props: any) => {
                     <StartingItems data={props.data} startingItemData={props.buildData[2]} itemData={props.itemData} />
                     <ItemBuild data={props.buildData[0]} itemData={props.itemData} />
                     <NeutralItems neutralItems={props.buildData[3]} data={props.data} itemData={props.itemData} />
-                    <AbilityBuild data={props.data} abilityBuild={props.buildData[1]} heroData={props.heroData} heroName={props.heroName} updateMatchData={props.updateMatchData} />
+                    <AbilityBuild data={props.data} abilityBuilds={props.buildData[1]} heroData={props.heroData} heroName={props.heroName} updateMatchData={props.updateMatchData} />
                 </div>
             }
         </div>

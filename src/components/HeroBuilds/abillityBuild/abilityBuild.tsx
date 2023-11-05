@@ -7,7 +7,7 @@ import { TalentBuild } from './talentBuild';
 interface AbilityBuildProps extends MatchDataAdj {
     heroName: string,
     data: any,
-    abilityBuild: { [key: string]: any }[][]
+    abilityBuilds: { [key: string]: any }[][]
     heroData: any
 }
 const AbilityBuild = (props: AbilityBuildProps) => {
@@ -27,7 +27,7 @@ const AbilityBuild = (props: AbilityBuildProps) => {
             </div> */}
             <div className="ability-build">
                 <Typography color='white' align='center' variant='h4'>Abilities</Typography>
-                {props.abilityBuild[0].map((abilityArr, i) => {
+                {props.abilityBuilds[0].map((abilityArr, i) => {
                     return (
                         <div className="flex" style={{ alignItems: 'center', paddingBottom: '5px' }} key={i}>
                             {abilityArr[0].split('__').map((ability: string, idx: number) => {
