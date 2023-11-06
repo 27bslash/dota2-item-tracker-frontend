@@ -1,5 +1,5 @@
+import { medianValue } from "../../../utils/medianValue";
 import { NonProDataType } from "../build";
-import { medianValue } from "../itemBuild/itemFitltering/itemFiltering";
 
 const abilityFilter = (data: NonProDataType[], ab = '') => {
     const { abilities, aCount }: { abilities: any[]; aCount: { [key: string]: number } } = groupAbilities(data)

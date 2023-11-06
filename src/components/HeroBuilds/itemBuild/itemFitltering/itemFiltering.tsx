@@ -1,3 +1,4 @@
+import { medianValue } from "../../../../utils/medianValue"
 import Items from "../../../types/Item"
 import filterComponents from "./componentFilter"
 import groupByTime from "./groupBytime"
@@ -13,11 +14,7 @@ const humanToUnix = (time: string | number) => {
     const secs = +split[1]
     return hours + mins + secs
 }
-const medianValue = (values: number[]) => {
-    values.sort()
-    const half = Math.floor(values.length / 2);
-    return values.length % 2 ? values[half] : (values[half - 1] + values[half]) / 2.0;
-}
+
 export const countItems = (data: any, itemData: any) => {
     const consumables = [
         "tango",
