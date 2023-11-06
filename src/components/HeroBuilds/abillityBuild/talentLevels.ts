@@ -1,7 +1,8 @@
 import Match from "../../types/matchData";
+import { NonProDataType } from "../build";
 
 
-export const mostUsedTalents = (MatchData: Match[]) => {
+export const mostUsedTalents = (MatchData: NonProDataType[]) => {
     const talents: any = []
     for (let match of MatchData) {
         for (let ability of match['abilities']) {

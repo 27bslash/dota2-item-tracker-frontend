@@ -1,11 +1,11 @@
 import TalentImg from "../../table/talentImg"
 import TalentTooltip from "../../tooltip/talentTooltip"
 import Tip from "../../tooltip/tooltip"
-import Match from "../../types/matchData"
+import { NonProDataType } from "../build"
 import { mostUsedTalents } from "./talentLevels"
 import { Box, Typography } from '@mui/material';
 
-export const TalentBuild = (props: { matchData: Match[], heroData: any, numbered?: boolean }) => {
+export const TalentBuild = (props: { matchData: NonProDataType[], heroData: any, numbered?: boolean }) => {
     const mostUsedTals = mostUsedTalents(props.matchData)
     const heroTalents = props.heroData[Object.keys(props.heroData)[0]]['talents']
     const visitedTalents: any = []

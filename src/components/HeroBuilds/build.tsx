@@ -19,7 +19,7 @@ export interface BuildProps extends MatchDataAdj {
     picks: { [key: string]: any }
 }
 export type NonProDataType = {
-    abilities: [{ id: string, img: string, key: string, level: number, type: string }],
+    abilities: [{ id: string, img: string, key: string, level: number, type: string, slot?: number }],
     hero: string,
     id: number,
     items: [{ id: string, key: string, time: number }],
@@ -33,7 +33,7 @@ const Build = (props: BuildProps) => {
     const [open, setOpen] = useState(false)
 
     const filteredData = useParseMatchData(proData, props.data, props.heroName, props)
-    const heroBuilds = useHeroBuilds(filteredData, props.itemData)    // switch to toggle only known pro accounts
+    const heroBuilds = useHeroBuilds(filteredData!, props.heroData, props.itemData)    // switch to toggle only known pro accounts
     const [guideGuide, setGuideGuide] = useState(false)
 
     const baseButtonStyle = {
@@ -108,10 +108,10 @@ const BuildCell = (props: any) => {
             </Typography >
             {open &&
                 <div className="buildData">
-                    <StartingItems data={props.data} startingItemData={props.buildData[2]} itemData={props.itemData} />
-                    <ItemBuild data={props.buildData[0]} itemData={props.itemData} />
-                    <NeutralItems neutralItems={props.buildData[3]} data={props.data} itemData={props.itemData} />
-                    <AbilityBuild data={props.data} abilityBuilds={props.buildData[1]} heroData={props.heroData} heroName={props.heroName} updateMatchData={props.updateMatchData} />
+                    <StartingItems data={props.data} startingItemData={props.buildData['starting_items']} itemData={props.itemData} />
+                    <ItemBuild data={props.buildData['item_builds']} itemData={props.itemData} />
+                    <NeutralItems neutralItems={props.buildData['neutral_items']} data={props.data} itemData={props.itemData} />
+                    <AbilityBuild data={props.data} abilityBuilds={props.buildData['ability_builds']}  heroData={props.heroData} heroName={props.heroName} updateMatchData={props.updateMatchData} />
                 </div>
             }
         </div>
