@@ -1,4 +1,7 @@
-const countStartingItems = (data: any) => {
+import { exists } from "../../../../utils/exists"
+import { NonProDataType } from "../../build"
+
+const countStartingItems = (data: NonProDataType[]) => {
     const wards = [
         "ward_observer",
         "ward_sentry",
@@ -16,16 +19,18 @@ const countStartingItems = (data: any) => {
             // console.log('key', key)
             comboCount[key] = (comboCount[key] + 1) || 1
         }
-        const amounts: any = {}
-        // for (let item of match['starting_items']) {
-        //     const charges = item['charges'] || 1
-        //     amounts[item['key']] = (amounts[item['key']] + charges) || 1;
-        // }
-        // // console.log(match['id'], amounts, match['starting_items'])
-        // for (let item of match['starting_items']) {
-        //     const k = `${item['key']}_${amounts[item['key']]}`
-        //     itemCount[k] = (itemCount[k] + 1) || 1;
-        // }
+    }
+    if (!Object.keys(comboCount).length) {
+        const test = data
+            .map(match => {
+                const items = match['starting_items']
+                    .map(item => item['key'])
+                    .sort();
+                return items.join('__');
+            });
+        for (let x of test) {
+            comboCount[x] = (comboCount[x] + 1) || 1
+        }
     }
     const count = Object.entries(comboCount).sort((a: any, b: any) => b[1] - a[1]).slice(0, 2)
     return count
