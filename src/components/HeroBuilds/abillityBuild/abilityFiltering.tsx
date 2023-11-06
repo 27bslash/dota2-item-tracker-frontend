@@ -1,4 +1,5 @@
 import { NonProDataType } from "../build";
+import { medianValue } from "../itemBuild/itemFitltering/itemFiltering";
 
 const abilityFilter = (data: NonProDataType[], ab = '') => {
     const { abilities, aCount }: { abilities: any[]; aCount: { [key: string]: number } } = groupAbilities(data)
@@ -13,15 +14,45 @@ const abilityFilter = (data: NonProDataType[], ab = '') => {
         }
         res.push(count)
     }
-    const totalCount: any = {}
+    let second_occurance: { [key: string]: { count: number; level: (number)[] } } = {};
+
+    for (const match of data) {
+        const d: { [key: string]: { count: number; level: number } } = {};
+        for (const ability of match["abilities"]) {
+            if (ability["type"] !== "ability") {
+                continue;
+            }
+            const img = ability["img"];
+            if (d.hasOwnProperty(img)) {
+                d[img] = { count: d[img].count + 1, level: ability["level"] };
+            } else {
+                d[img] = { count: 1, level: ability["level"] };
+            }
+
+            if (d[img].count === 2) {
+                if (second_occurance.hasOwnProperty(img)) {
+                    second_occurance[img].count++;
+                    second_occurance[img].level.push(ability["level"]);
+                } else {
+                    second_occurance[img] = { count: 1, level: [ability["level"]] };
+                }
+            }
+        }
+    }
+    const medianLevelsForAbility: { [key: string]: number } = Object.keys(second_occurance).reduce((result: any, key) => {
+        const levels = second_occurance[key].level;
+        const median = medianValue(levels);
+        result[key] = median;
+        return result;
+    }, {});
+    // {'antimage_mana_break': {'count': 103, 'level': [...]}, 'antimage_blink': {'count': 103, 'level': [...]}, 'antimage_counterspell': {'count': 98, 'level': [...]}, 'antimage_mana_void': {'count': 100, 'level': [...]}}
     if (!abilities.length) {
         return [[]]
     }
-    let max_abilities = !abilities[0].includes('invoker') ? 4 : 7
-    const abilityBuilds = genAbilityArr(res, ab, totalCount, max_abilities)
+    // const abilityBuilds = genAbilityArr(res, ab, totalCount, max_abilities)
     const mostCommonBuilds = genMostCommonBuilds(aCount);
     console.log(mostCommonBuilds)
-    return [mostCommonBuilds, abilityBuilds]
+    return [mostCommonBuilds, medianLevelsForAbility]
 }
 export default abilityFilter
 export const testForSimilarBuilds = (abilityBuild: string, targetAbilityBuild: string, threshold: number) => {
