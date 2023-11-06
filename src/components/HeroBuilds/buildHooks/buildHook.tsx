@@ -40,7 +40,7 @@ export const useHeroBuilds = (filteredData: { [role: string]: NonProDataType[] }
                 const talentBuild = mostUsedTalents(buildData)
                 const ultimate_ability = getUltimateAbility()
                 const res = {
-                    'item_builds': itemBuild, 'ability_builds': abilityBuilds, 'starting_items': startingItemBuilds,
+                    'item_builds': itemBuild, 'ability_builds': abilityBuilds[0], 'ability_medians': abilityBuilds[1], 'starting_items': startingItemBuilds,
                     'neutral_items': neutralItems, 'talents': talentBuild, 'ultimate_ability': ultimate_ability
                 };
                 setHeroBuilds({ [key]: res })
