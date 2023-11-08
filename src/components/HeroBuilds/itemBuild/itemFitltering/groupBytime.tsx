@@ -8,9 +8,8 @@ const groupByTime = (data: any, itemData: any, roleKey: string) => {
     const filterItems = (data: any, roleKey: string, time: number, type: string) => {
         const ret: any[] = []
         const supportRoles = ['Hard Support', 'Support', 'Roaming']
-
         let percForCore = time <= 1800 && !supportRoles.includes(roleKey) ? 60 : 40
-        if (supportRoles.includes(roleKey) && time <= 1800) {
+        if (supportRoles.includes(roleKey) && time < 1800) {
             percForCore = 50
         } else if (supportRoles.includes(roleKey)) {
             percForCore = 20
