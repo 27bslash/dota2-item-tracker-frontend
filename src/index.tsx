@@ -11,20 +11,20 @@ const root = ReactDOM.createRoot(
 export const theme = createTheme({
     palette: {
         background: {
-            default: '#1f393c'
+            default: '#15252e'
         },
         primary: {
-            main: '#597f80',
+            main: '#1d5455',
             contrastText: 'white'
         },
         secondary: {
-            main: '#486869'
+            main: '#486869',
+            dark: '#223746'
         },
         table: {
-            main: '#212729',
-            secondary: '#2a3235'
+            main: '#0a1a1e',
+            secondary: '#0d262b'
         }
-
     }
 })
 root.render(

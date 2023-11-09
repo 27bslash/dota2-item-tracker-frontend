@@ -1,9 +1,10 @@
 import { Grid } from "@mui/material";
 import ArrowButton from "../ui_elements/arrowButton"
+import { theme } from "../..";
 
 const ControlPanel = (props: any) => {
     return (
-        <ArrowButton transition='fade' style={{ transform: "rotate(-90deg)", position: 'absolute', top: '17%', left: '-20px' }}>
+        <ArrowButton transition='fade' style={{ transform: "rotate(-90deg)", position: 'absolute', top: '17%', left: '-20px', backgroundColor: theme.palette.primary.main }}>
             <div className="control-panel">
                 <Grid container spacing={0} sx={{ marginLeft: '10px', backgroundColor: 'rgb(58, 61, 61)', width: '270px', zIndex: 5, position: 'absolute', left: '23px', top: '88px' }}>
                     <RoleSelector sortHeroes={props.sortHeroes} winStats={props.winStats}></RoleSelector>

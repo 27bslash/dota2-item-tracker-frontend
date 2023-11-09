@@ -71,7 +71,7 @@ const Home = (props: any) => {
     }
     let pickStats: any = null
     document.body.style.background = theme.palette.background.default
-    theme.palette.primary.main = '#597f80'
+    theme.palette.primary.main = '#1d5455'
     theme.palette.secondary.main = '#486869'
 
     return (
