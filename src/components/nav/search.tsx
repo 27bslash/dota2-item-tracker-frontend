@@ -38,7 +38,7 @@ const NavSearch = (props: searchProps) => {
             const srtedPlayers = filterPlayers(props.playerList, value).slice(0, 8)
             setSortedHeroes(filteredHeroes)
             setSortedPlayers(srtedPlayers)
-            if (props.filterHeroes) { props.filterHeroes(sorted) }
+            if (props.filterHeroes) { props.filterHeroes(filteredHeroes) }
         } else {
             setSortedHeroes([])
             setSortedPlayers([])
