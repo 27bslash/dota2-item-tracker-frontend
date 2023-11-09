@@ -3,6 +3,7 @@ import { useState, useEffect, useRef } from 'react';
 import { matchSorter } from 'match-sorter'
 import SearchResults from './searchResults';
 import { Box } from '@mui/material';
+import heroSwitcher from './../../utils/heroSwitcher';
 interface heroList {
     name: string,
     id: number
@@ -26,26 +27,52 @@ const NavSearch = (props: searchProps) => {
         const link = value.replace(/\s/g, '_')
         window.location.href = `${link}`
     }
+    const legacyNames: { [key: string]: any } = {
+        'bounty_hunter': 'gondar', 'io': 'wisp', 'jakiro': 'thd', 'leshrac': 'disco_pony', 'lifestealer': 'naix', 'mirana': 'priestess_of_the_moon', 'night_stalker': 'balanar',
+        'spirit_breaker': 'bara', 'undying': 'dirge',
+    }
     useEffect(() => {
         if (value.length > 1) {
             const copy = [...props.heroList]
-            const sorted = matchSorter(copy.map((x: any) => {
+            const heroMatches = matchSorter(copy.map((x: any) => {
                 x.name = x.name.replace(/-|_/g, ' ')
                 return x
             }), value, { keys: [{ threshold: matchSorter.rankings.CONTAINS, key: 'name' }] }).slice(0, 8)
-            const acronyms = acronymFinder(copy, value)
-            const filteredHeroes = acronyms.concat(sorted)
-            const srtedPlayers = filterPlayers(props.playerList, value).slice(0, 8)
+            const legacyList = [...props.heroList].map((x) => {
+                const newName = legacyNames.hasOwnProperty(x['name'].replace(' ', '_')) ? legacyNames[x['name'].replace(' ', '_')] : undefined
+                if (newName)
+                    return { 'id': x['id'], 'name': newName }
+                return x
+            })
+            const legacyHeroMatches = matchSorter(legacyList.map((x: any) => {
+                x.name = x.name.replace(/-|_/g, ' ')
+                return x
+            }), value, { keys: [{ threshold: matchSorter.rankings.CONTAINS, key: 'name' }] }).slice(0, 8)
+            const combinedLists = copy.concat(legacyList)
+            const acronyms = acronymFinder(combinedLists, value)
+            const allResults = acronyms.concat(heroMatches).concat(legacyHeroMatches)
+            const filteredHeroes = []
+            const seenIds = new Set()
+            for (let heroObj of allResults) {
+                const heroId = heroObj['id']
+                if (!seenIds.has(heroId)) {
+                    const convertedHero: any = copy.find((x) => x['id'] === heroId)
+                    filteredHeroes.push(convertedHero)
+                    seenIds.add(heroId)
+                }
+            }
             setSortedHeroes(filteredHeroes)
+
+            const srtedPlayers = filterPlayers(props.playerList, value).slice(0, 8)
             setSortedPlayers(srtedPlayers)
             if (props.filterHeroes) { props.filterHeroes(filteredHeroes) }
         } else {
             setSortedHeroes([])
             setSortedPlayers([])
             if (props.filterHeroes) props.filterHeroes(props.heroList)
-
         }
     }, [value])
+
     useEffect(() => {
         window.addEventListener('keydown', autoFocus, false);
         return () => window.removeEventListener('keydown', autoFocus, false);
