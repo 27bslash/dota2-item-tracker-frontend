@@ -12,7 +12,7 @@ import { cleanDecimal } from "../../utils/cleanDecimal";
 
 const Home = (props: any) => {
     const [winStats, setWinStats] = useState<any[]>()
-    const [filtered, setFiltered] = useState<any[]>()
+    const [filteredHeroes, setFilteredHeroes] = useState<any[]>()
     const [roleFilter, setRoleFilter] = useState('')
     const [searching, setSearching] = useState(false)
     const [highlight, setHighlight] = useState<number>()
@@ -38,13 +38,13 @@ const Home = (props: any) => {
         }
         const m = props.heroList.map((hero: any) => ({ 'name': hero['name'].replace(/\s/g, '_'), 'id': hero['id'] }))
         const hList = m.sort((a: any, b: any) => a['name'].localeCompare(b['name']))
-        setFiltered(hList)
+        setFilteredHeroes(hList)
 
 
     }, [props.heroList])
     const filterHeroes = (list: any) => {
         const newList = list.map((x: any) => x.name.replace(/\s/g, '_'))
-        setFiltered(newList)
+        setFilteredHeroes(newList)
         if (newList.length !== props.heroList.length) {
             setSearching(true)
         } else {
@@ -52,7 +52,7 @@ const Home = (props: any) => {
         }
     }
     const sortHeroes = (list: any, search: string, role?: string) => {
-        setFiltered(list)
+        setFilteredHeroes(list)
         setSearchVal(search)
         setRoleFilter('')
         if (role) {
@@ -77,15 +77,15 @@ const Home = (props: any) => {
     return (
         <div className="home">
             <Nav filterHeroes={filterHeroes} heroList={props.heroList} playerList={props.playerList} highlightHero={highlightHero}></Nav>
-            {filtered &&
+            {filteredHeroes &&
                 <ControlPanel sortHeroes={sortHeroes} winStats={winStats}></ControlPanel>
             }
             {sort && !searching &&
                 <SortTitle role={roleFilter} sort={sort}></SortTitle>
             }
             <GridContainer className={className} width={width}>
-                {filtered && (
-                    filtered.map((x: any, i: number) => {
+                {filteredHeroes && (
+                    filteredHeroes.map((x: any, i: number) => {
                         let heroName = x['name'] || x['hero'] || x
                         if (heroName === 'anti_mage') heroName = 'anti-mage'
                         if (winStats) {
