@@ -14,6 +14,7 @@ type Match = {
     abilities: Ability[];
     account_id: null | number;
     aghanims_shard: null | boolean;
+    additional_units?: any[],
     assists: number;
     backpack: Items;
     bans: string[];
