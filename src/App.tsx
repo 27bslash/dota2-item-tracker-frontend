@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import './App.css';
-import Page from './components/page';
+import Page from './components/stat_page/page';
 import {
     Routes,
     Route

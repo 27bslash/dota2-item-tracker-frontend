@@ -3,7 +3,7 @@ import { SetStateAction, useState } from 'react';
 import Items from '../../types/Item';
 import search from './search';
 import Match from '../../types/matchData';
-import { MatchDataAdj } from '../../page';
+import { MatchDataAdj } from '../../stat_page/page';
 
 interface TableSearchProps extends MatchDataAdj {
     heroName: string,

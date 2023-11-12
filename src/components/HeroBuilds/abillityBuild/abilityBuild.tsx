@@ -1,7 +1,7 @@
 import { Box, Typography } from '@mui/material';
 import BigTalent from '../../big_talent/bigTalent';
 import { AbilityImg } from '../../table/tableItems';
-import { MatchDataAdj } from './../../page';
+import { MatchDataAdj } from '../../stat_page/page';
 import { TalentBuild } from './talentBuild';
 
 interface AbilityBuildProps extends MatchDataAdj {

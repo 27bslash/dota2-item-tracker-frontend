@@ -29,7 +29,6 @@ const CustomTable = (props: TableProps) => {
     const [orderBy, setOrderBy] = useState('unix_time')
     const [sortDirection, setSortDirection] = useState('desc')
     const { filteredData, totalMatchData } = props
-    console.log(props.pageNumber, page)
     useEffect(() => {
         setCount(props.count)
         if (page * 10 > props.count) {
@@ -43,57 +42,12 @@ const CustomTable = (props: TableProps) => {
         }
     }, [props.pageNumber])
 
-    // const updateData = async (length: number, skip: number) => {
-    //     if (length === -1) length = totalPicks['picks']
-    //     const req = await fetch(`../${props.type}/${props.nameParam}/react-test?skip=${skip}&length=${length}`)
-    //     let json = await req.json()
-    //     props.updateMatchData(json['data'])
-    // }
     const handleChangePage = (
         event: React.MouseEvent<HTMLButtonElement> | null,
         newPage: number,
     ) => {
         setPage(newPage);
     };
-    // const handleChangeRowsPerPage = (
-    //     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-    // ) => {
-    //     setRowsPerPage(parseInt(event.target.value, 10));
-    //     setPage(0);
-    // };
-
-
-    // useEffect(() => {
-    //     // console.log('dataa,')
-    //     if (filteredData.length > 0) {
-    //         console.log(filteredData)
-    //         // setData(filteredData)
-    //     } else {
-
-    //     }
-    // }, [filteredData])
-
-    // useEffect(() => {
-    //     (async () => {
-    //         const d = await fetch(`../${props.type}/${props.nameParam}/react-test`)
-    //         let j = await d.json()
-    //         setTotalMatchData(j['data'])
-    //         const chunked = chunkData(j['data'])
-    //         setFilteredData(chunked[page])
-    //     })()
-    // }, [data])
-
-    // const chunkData = (data: any) => {
-    //     const res = [];
-    //     for (let i = 0; i < data.length; i += rowsPerPage) {
-    //         const chunk = data.slice(i, i + rowsPerPage);
-    //         res.push(chunk);
-    //     }
-    //     return res;
-    // }
-
-
-
 
     const handleRequestSort = (property: any) => {
         const isAsc = sortDirection === 'asc';

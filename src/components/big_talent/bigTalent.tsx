@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import BigTalentTooltip from './bigTalentTooltip';
-import { MatchDataAdj } from '../page';
+import { MatchDataAdj } from '../stat_page/page';
 
 interface BigTalentProps extends MatchDataAdj {
     heroName: string, heroData: any, width: string, margin: string

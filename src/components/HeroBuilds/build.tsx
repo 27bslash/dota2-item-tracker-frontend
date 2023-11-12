@@ -4,7 +4,7 @@ import { useState } from "react";
 import StartingItems from "./itemBuild/startingItems/startingItems";
 import { Box, Button, Tooltip, Typography } from "@mui/material";
 import GuideGuide from "./guideDownload";
-import { MatchDataAdj } from "../page";
+import { MatchDataAdj } from "../stat_page/page";
 import { NeutralItems } from "./itemBuild/neutralItems/neutralItems";
 import { useHeroBuilds } from "./buildHooks/buildHook";
 import { useParseMatchData } from "./buildHooks/parseMatchDataHook";
