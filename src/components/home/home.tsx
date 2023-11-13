@@ -48,6 +48,8 @@ const Home = (props: any) => {
         if (newList.length !== props.heroList.length) {
             setSearching(true)
         } else {
+            const hList = newList.sort((a: any, b: any) => a.localeCompare(b))
+            setFilteredHeroes(hList)
             setSearching(false)
         }
     }
