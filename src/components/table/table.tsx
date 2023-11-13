@@ -72,36 +72,34 @@ const CustomTable = (props: TableProps) => {
                 <CircularProgress sx={{ width: '100px', 'position': 'absolute' }} />
             }
             {(!!filteredData.length) &&
-                <>
-                    <TableContainer>
-                        <Table padding="none">
-                            <TableHeader
-                                sortDirection={sortDirection}
-                                orderBy={orderBy}
-                                onRequestSort={handleRequestSort}
-                                showStarter={props.showStarter}
-                            />
-                            <CustomTableBody data={sortTable()} heroData={props.heroData} type={props.type} page={page} nameParam={props.nameParam}
-                                totalMatchData={totalMatchData} heroList={props.heroList} itemData={props.itemData}
-                                showStarter={props.showStarter} role={props.role} updateMatchData={props.updateMatchData}></CustomTableBody>
-                            <TableFooter >
-                                <TableRow>
-                                    <TablePagination sx={{ color: 'white' }}
-                                        rowsPerPageOptions={[10]}
-                                        colSpan={3}
-                                        count={count}
-                                        rowsPerPage={10}
-                                        page={page}
-                                        onPageChange={handleChangePage}
-                                        ActionsComponent={TablePaginationActions}
-                                        showFirstButton
-                                        showLastButton
-                                    />
-                                </TableRow>
-                            </TableFooter>
-                        </Table>
-                    </TableContainer>
-                </>
+                <TableContainer>
+                    <Table padding="none">
+                        <TableHeader
+                            sortDirection={sortDirection}
+                            orderBy={orderBy}
+                            onRequestSort={handleRequestSort}
+                            showStarter={props.showStarter}
+                        />
+                        <CustomTableBody data={sortTable()} heroData={props.heroData} type={props.type} page={page} nameParam={props.nameParam}
+                            totalMatchData={totalMatchData} heroList={props.heroList} itemData={props.itemData}
+                            showStarter={props.showStarter} role={props.role} updateMatchData={props.updateMatchData}></CustomTableBody>
+                        <TableFooter >
+                            <TableRow>
+                                <TablePagination sx={{ color: 'white' }}
+                                    rowsPerPageOptions={[10]}
+                                    colSpan={3}
+                                    count={count}
+                                    rowsPerPage={10}
+                                    page={page}
+                                    onPageChange={handleChangePage}
+                                    ActionsComponent={TablePaginationActions}
+                                    showFirstButton
+                                    showLastButton
+                                />
+                            </TableRow>
+                        </TableFooter>
+                    </Table>
+                </TableContainer>
             }
         </div >
     )
