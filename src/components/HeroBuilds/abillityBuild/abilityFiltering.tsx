@@ -1,7 +1,8 @@
+/* eslint-disable no-prototype-builtins */
 import { medianValue } from "../../../utils/medianValue";
 import { NonProDataType } from "../build";
 
-const abilityFilter = (data: NonProDataType[], ab = '') => {
+const abilityFilter = (data: NonProDataType[]) => {
     const { abilities, aCount }: { abilities: any[]; aCount: { [key: string]: number } } = groupAbilities(data)
     // console.log(aCount)
     const res = []
@@ -62,7 +63,7 @@ export const testForSimilarBuilds = (abilityBuild: string, targetAbilityBuild: s
     let lastSwap = 0
     // console.log(split, mostPickedSplit)
     if (split[0] !== mostPickedSplit[0]) difference = 1
-    for (let [i, ability] of split.entries()) {
+    for (const [i, ability] of split.entries()) {
         const sl = split.slice(7, 9).sort().join()
         const sl2 = mostPickedSplit.slice(7, 9).sort().join()
         if (lastSwap + 2 === i) lastSwap = 0
@@ -93,46 +94,7 @@ export const testForSimilarBuilds = (abilityBuild: string, targetAbilityBuild: s
 
 }
 
-const genAbilityArr = (res: { [k: string]: number }[], ab: string, totalCount: any, max_abilities: number) => {
-    const final = []
-    let i = 0;
-    for (let x of res) {
-        const entries: any[] = Object.entries(x)
-        const sorted = entries.sort((a: any, b: any) => {
-            return b[1] - a[1]
-        })
-        let idx = 0
-        for (let entry of sorted) {
-            let key = entry[0]
-            if (i === 0 && key === ab) {
-                idx += 1
-            }
-            if (final.length && i === 1) {
-                key = Object.keys(final[i - 1])[0]
-                if (Object.keys(final[i - 1])[0] === entry[idx] && totalCount[entry[idx]] === 1) {
-                    idx += 1
-                    // console.log(i, key)
-                }
-            }
-            const k = sorted[idx][0]
-            if (totalCount[k] === max_abilities || (i < 4 && totalCount[k] === 2)) {
-                idx += 1
-            } else {
-                totalCount[k] = (totalCount[k] || 0) + 1
-                break
-            }
-        }
-        // console.log(sorted, idx)
-        try {
-            const o = Object.fromEntries([sorted[idx]])
-            final.push(o)
-            i++
-        } catch {
-            i++
-        }
-    }
-    return final
-}
+
 export const genMostCommonBuilds = (aCount: { [key: string]: number; }) => {
     let srt = Object.entries(aCount).sort((a: any, b: any) => b[1] - a[1]);
     // console.log([...srt])
@@ -158,7 +120,7 @@ const jackSort = (abilityString: string, testAbilityString: string) => {
     const abilityArr = abilityString.split('__').slice(0, 8)
     const abilitySet = new Set<string>()
     const abilityValues: string[] = []
-    for (let ability of testAbilityArr) {
+    for (const ability of testAbilityArr) {
         if (!abilitySet.has(ability)) {
             abilitySet.add(ability)
             abilityValues.push(ability)
@@ -166,7 +128,7 @@ const jackSort = (abilityString: string, testAbilityString: string) => {
     }
     const sumval = (testAbilityArr: string[]) => {
         let total = 0;
-        for (let ability of testAbilityArr) {
+        for (const ability of testAbilityArr) {
             const valueIndex = abilityValues.findIndex((ab) => ab === ability);
             const convertedVal = Math.pow(10, valueIndex);
             total += convertedVal;
@@ -174,11 +136,11 @@ const jackSort = (abilityString: string, testAbilityString: string) => {
         return total;
     }
     // get sum of ability numbers
-    let testTotal = String(sumval(testAbilityArr))
-    let total = String(sumval(abilityArr))
-    // calculate difference between totals 
+    const testTotal = String(sumval(testAbilityArr))
+    const total = String(sumval(abilityArr))
+    // calculate difference between totals
     let difference = 0
-    for (let [i, digit] of testTotal.split('').entries()) {
+    for (const [i, digit] of testTotal.split('').entries()) {
         if (digit !== total[i]) {
             difference += Math.abs(+digit - +total[i])
         }
@@ -189,12 +151,12 @@ const jackSort = (abilityString: string, testAbilityString: string) => {
     }
 }
 export const groupSimilarBuilds = (srt: [string, number, any?][]) => {
-    // console.log(srt)
     for (const b of srt) {
         for (const [i, testBuild] of srt.entries()) {
             if (b[0] === testBuild[0]) {
                 continue;
             }
+            if (b[1] < testBuild[1]) continue
             if (testForSimilarBuilds(b[0], testBuild[0], 1) && jackSort(b[0], testBuild[0])) {
                 b[1] += testBuild[1];
                 if (b[2]) {
