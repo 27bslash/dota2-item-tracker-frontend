@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import TooltipAttributes from "./tooltipAttributes"
 import CdMc from './cdmc';
 import Color from "color-thief-react";

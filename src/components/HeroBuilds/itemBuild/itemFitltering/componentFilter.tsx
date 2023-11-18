@@ -1,9 +1,8 @@
 import Items from "../../../types/Item"
-import { NonProDataType } from "../../build"
 
 const recursive_remove = (item: any, itemdata: any, components: string[], data: any[], keys: any[], removedComponents: string[]): any => {
     const badQuals = ['component', 'common', 'consumable', 'secret_shop']
-    for (let component of components) {
+    for (const component of components) {
         const itemDupeNum = item[0].match(/\d+/g)
         const componentStats = itemdata['items'][component]
         let idx
@@ -81,11 +80,11 @@ export const allComponents = (itemKey: string, itemdata: Items): string[] => {
     const res: string[] = []
     const components = 'components' in itemdata['items'][itemKey] ? itemdata['items'][itemKey]['components'] : undefined
     if (!components) return res
-    for (let component of components) {
+    for (const component of components) {
         res.push(component)
         const componentStats = itemdata['items'][component]['components']
         if (componentStats) {
-            for (let subComponent of componentStats) {
+            for (const subComponent of componentStats) {
                 res.push(subComponent)
             }
         }
@@ -95,7 +94,6 @@ export const allComponents = (itemKey: string, itemdata: Items): string[] => {
 export const filterComponents = (data: any[], itemData: Items) => {
     // data is in the form of [string, {value ,time}]
     let toRemove: string[] = []
-    const gpm = 400
     // for (let k in itemData['items']) {
     //     if (!itemData['items'][k]['hint'] && itemData['items'][k]['cost'] && itemData['items'][k]['cost'] > 1000 && !k.includes('recipe')) {
     //         console.log(k, itemData['items'][k]['qual'])
@@ -128,7 +126,6 @@ export const filterComponents = (data: any[], itemData: Items) => {
             console.log('remove low cost item after 30 mins: ', data[i][0])
             continue
         }
-        const cost: any = itemStats['cost']
         if (itemStats && itemStats['components']) {
             const components: string[] = itemStats['components']
             toRemove = recursive_remove(item, itemData, components, data, keys, removedComponents)
@@ -137,19 +134,18 @@ export const filterComponents = (data: any[], itemData: Items) => {
             if (components && item[1]['value'] > 10 && (disassembleable.includes(itemKey.replace(/__\d+/g, '')) || components.includes('kaya') || components.includes('sange'))) {
                 disassembledComponents(components, data, i, itemdata, item, itemKey, keys)
             }
-            if (components.length !== toRemove.length) {
-            }
+
         }
     }
     const seenItems: string[] = []
-    for (let item of toRemove) {
+    for (const item of toRemove) {
         if (seenItems.includes(item)) {
             // console.log(item)
         }
         const filteredKeys = keys.filter((x) => {
             return x.replace(/__\d+/g, '') === item
         })
-        for (let k of filteredKeys) {
+        for (const k of filteredKeys) {
             const idx = keys.indexOf(k)
             if (idx !== -1) {
                 data.splice(idx, 1)
@@ -166,12 +162,11 @@ export default filterComponents
 export const disassembledComponents = (components: string[], data: any[], i: number, itemdata: any, itemObj: any, itemKey: string, keys: any[]) => {
     // check for future items that are missing the component
     // then add the disassembled components to data[1]
-    for (let component of components) {
+    for (const component of components) {
         // console.log(itemKey, component, components);
         const slicedData = [...data].slice(i + 1)
         console.log(slicedData)
         const itemUses = slicedData.filter((x, i) => {
-            const dotaItemKey = x[0].replace(/__\d+/g, '')
             const parentComponents = allComponents(x[0].replace(/__\d+/g, ''), itemdata)
             // console.log(x[0], parentComponents)
             const core = x[1]['adjustedValue'] > 20 && itemObj[1]['adjustedValue'] > 20

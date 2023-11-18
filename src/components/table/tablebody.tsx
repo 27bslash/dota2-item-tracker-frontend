@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { faCopy } from "@fortawesome/free-solid-svg-icons"
 import { TableBody, TableRow, TableCell } from "@mui/material"
 import TimeAgo from "javascript-time-ago"
@@ -10,12 +11,12 @@ interface BodyProps {
     nameParam: string,
     type: string,
     page: number,
-    totalMatchData: object[],
+    totalMatchData: any[],
     data: any[],
     updateMatchData: (data: Match[]) => void,
-    heroList: object[],
+    heroList: any[],
     heroData: any,
-    itemData: object[],
+    itemData: any,
     showStarter: boolean,
     role: string
 }

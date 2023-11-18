@@ -8,8 +8,8 @@ export const generateColorPalette = (sourceColor: string[], heroName?: string, o
 
     const colorMap = sourceColor.map((x) => +x <= 255 ? parseInt(x) : 255)
     // console.log('rgba', colorMap)
-    let [r, g, b] = [+colorMap[0], +colorMap[1], +colorMap[2]]
-    const hsl = RGBToHSL(r, g, b).map((x: any) => parseInt(x))
+    const [r, g, b] = [+colorMap[0], +colorMap[1], +colorMap[2]]
+    const hsl = RGBToHSL(r, g, b)
     const dark = [...hsl]
     const light = [...hsl]
     // console.log(dark)

@@ -1,17 +1,18 @@
+import { filterPlayers } from '../../nav/filterPlayers/filterPlayersHook';
+import Match from '../../types/matchData';
 import DraftSearch from './draft_search';
 import itemSearch from './item_search';
-import { filterPlayers } from './../../nav/search';
 
-const playerSearch = (matchData: any, playerList: string[], searchValue: string, i = 0) => {
+const playerSearch = (matchData: Match[], playerList: string[], searchValue: string, i = 0) => {
     const noSymbl = searchValue.replace('-', '')
     const symbolMatch = searchValue.match(/^-/)
     let symbol = ''
     if (symbolMatch) symbol = '-'
     const players = filterPlayers(playerList, noSymbl)
-    const dict: { [playerName: string]: { index: number, matches: any[], totalFilteredMatches: any[] } } = {}
-    const allPlayers = matchData.map((x: any) => x.name)
+    const dict: { [playerName: string]: { index: number, matches: Match[], totalFilteredMatches: Match[] } } = {}
+    const allPlayers = matchData.map((x) => x.name)
     players.forEach((player) => {
-        const data = matchData.filter((match: any) => {
+        const data = matchData.filter((match) => {
             const noSmurf = match.name.replace(/\(smurf.*\)/, '').trim()
             if (searchValue.startsWith('-')) {
                 return player !== noSmurf && allPlayers.includes(player)
@@ -20,8 +21,8 @@ const playerSearch = (matchData: any, playerList: string[], searchValue: string,
             }
         })
         if (data.length) {
-            const totalFilteredMatches = matchData.filter((match: any) => match['name'] === player)
-            dict[`${symbol}${player}`] = { 'matches': data, index: i, totalFilteredMatches: totalFilteredMatches }
+            const totalFilteredMatches = matchData.filter((match) => match['name'] === player)
+            dict[`${symbol}${player}`] = { matches: data, index: i, totalFilteredMatches: totalFilteredMatches }
         }
 
     })

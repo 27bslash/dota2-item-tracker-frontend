@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { useEffect, useState } from "react";
 import AghanimTooltip from "./aghanimTooltip";
 import TooltipAttributes from './tooltipAttributes';
@@ -19,7 +20,7 @@ interface ItemTooltipProps {
     items: any,
     itemKey: string,
     type: string,
-    heroData?: object[],
+    heroData?: any[],
     img: string,
     heroName?: string,
 }
@@ -63,4 +64,4 @@ const ItemTooltip = (props: ItemTooltipProps) => {
         </>
     )
 }
-export default ItemTooltip 
+export default ItemTooltip

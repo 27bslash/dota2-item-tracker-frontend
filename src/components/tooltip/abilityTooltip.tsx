@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { useState } from 'react';
 import { useEffect } from 'react';
 import TooltipAttributes from './tooltipAttributes';

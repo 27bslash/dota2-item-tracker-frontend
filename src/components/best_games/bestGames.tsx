@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { faCopy, faSearch } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useState } from 'react';
@@ -15,14 +16,14 @@ const BestGames = (props: { totalMatchData: Match[]; matchData: Match[]; updateR
     const [benchmarkKeys, setbenchmarkKeys] = useState<BenchMarksKeys[]>()
     const [loading, setLoading] = useState(true)
     useEffect(() => {
-        if (!!props.totalMatchData.length) {
+        if (props.totalMatchData.length) {
             sumBenchmarks()
             setLoading(false)
         }
     }, [props.matchData, props.totalMatchData])
     const sumBenchmarks = () => {
         const bmarks = []
-        for (let match of props.matchData) {
+        for (const match of props.matchData) {
             if (!match['parsed'] || !match['benchmarks']) continue
             let sum: any = 0
             const benchmarks = match['benchmarks']
@@ -123,7 +124,7 @@ const BestGamesTableBody = (props: {
                         {benchmarkKeys.map((k: BenchMarksKeys, idx: number) => {
                             if (k in match.benchmarks) {
                                 let pct: string | number = match.benchmarks[k]['pct']
-                                let raw = match.benchmarks[k]['raw']
+                                const raw = match.benchmarks[k]['raw']
                                 if (typeof pct === 'number') {
                                     pct = (pct * 100)
                                 }

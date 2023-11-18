@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
+/* eslint-disable no-undef */
+/* eslint-disable no-unused-vars */
 import { useEffect } from 'react';
 import { useState } from 'react';
 import colourWins from '../../utils/colourWins';
@@ -17,10 +20,10 @@ interface pickProps {
     }, types?: string[]) => void,
     updateRole: (role: string) => void,
     type: string,
-    totalPicks: object[],
+    totalPicks: any[],
     count: number
     heroColor: string,
-    searchRes?: object
+    searchRes?: any
 }
 const PickCounter = (props: pickProps) => {
     const name = props.nameParam
@@ -97,7 +100,7 @@ const HeroPicks = (props: { base: any, role: string, reset: () => void, name: st
                 <p>was picked {base['picks']} times with a win rate of <span style={{ color: colourWins(base['winrate']), marginRight: '5px' }}>
                     {base['winrate']}%
                 </span>
-                    it's mostly played:
+                    {"it's mostly played"}:
                 </p>
             </>
         )
@@ -135,7 +138,7 @@ const PlayerPicks = (props: any) => {
         const roleKeys: string[] = Object.keys(pickDataObj)
         let temp = 0
         let highestRole = ''
-        for (let roleKey of roleKeys) {
+        for (const roleKey of roleKeys) {
             const pickData = pickDataObj[roleKey]
             if (pickData['picks'] > temp) {
                 temp = pickData['picks']
@@ -146,7 +149,7 @@ const PlayerPicks = (props: any) => {
                 }
             }
         }
-        for (let roleKey of roleKeys) {
+        for (const roleKey of roleKeys) {
             if (roleKey !== highestRole) {
                 delete pickDataObj[roleKey]
             }
@@ -260,7 +263,7 @@ const SearchResultsText = (props: any) => {
                 </>
             }
             <div className="reset-wrapper" style={{ marginTop: '7px' }}>
-                <Button variant='contained' color='primary' sx={{padding: '6px 10px 6px 10px'}} onClick={() => reset()}>RESET</Button>
+                <Button variant='contained' color='primary' sx={{ padding: '6px 10px 6px 10px' }} onClick={() => reset()}>RESET</Button>
             </div>
         </div>
     )

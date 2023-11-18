@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { baseApiUrl } from "../../App"
 import Build from "../HeroBuilds/build"
 import BestGames from "../best_games/bestGames"
@@ -8,7 +9,7 @@ import Items from "../types/Item"
 import Match from "../types/matchData"
 
 export const HeroPageTopSection = (props: {
-    heroData: {}; nameParam: string; totalMatchData: any[]; role: string; updatePageNumber: (idx: number) => void;
+    heroData: any; nameParam: string; totalMatchData: any[]; role: string; updatePageNumber: (idx: number) => void;
     updateMatchData: (match: Match[]) => void; itemData?: Items; filteredData: any[]; updateRole: (role: string) => void; searchRes?: any
     totalPicks: any
 }) => {

@@ -30,13 +30,13 @@ const TableSearch = (props: TableSearchProps) => {
         setErrorMsg('')
         const searchTerms = value.split(',')
         const data = props.role ? props.totalMatchData.filter((match: any) => match.role === props.role) : props.totalMatchData
-        let searchResults = search(searchTerms, data, props.itemData, props.heroList, props.playerList, props.heroName)
+        const searchResults = search(searchTerms, data, props.itemData, props.heroList, props.playerList, props.heroName)
         const combinedMatches = combineMatches(searchResults)
         const matchIds: number[] = []
         const targetArr = combinedMatches.find((arr) => arr.length > 0) || []
-        for (let matchId of targetArr) {
+        for (const matchId of targetArr) {
             const tempArr = [];
-            for (let comparisonArr of combinedMatches) {
+            for (const comparisonArr of combinedMatches) {
                 if (!comparisonArr || comparisonArr.includes(matchId) || !comparisonArr.length) {
                     tempArr.push(matchId);
                 }
@@ -71,8 +71,8 @@ const TableSearch = (props: TableSearchProps) => {
 }
 export function combineMatches(searchResults: any) {
     const result: number[][] = [];
-    for (let key in searchResults) {
-        for (let k in searchResults[key]) {
+    for (const key in searchResults) {
+        for (const k in searchResults[key]) {
             const idx = searchResults[key][k]["index"];
             const matches = searchResults[key][k]["matches"];
             const m = matches.map(({ id }: any) => id) || [];
@@ -82,7 +82,7 @@ export function combineMatches(searchResults: any) {
     return result;
 }
 const addToResults = (array: any, matchIdSet: any, searchResults: any) => {
-    for (let match of array) {
+    for (const match of array) {
         if (!matchIdSet.has(match['id'])) {
             matchIdSet.add(match['id'])
             searchResults.push(match)

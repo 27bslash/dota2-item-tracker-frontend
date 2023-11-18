@@ -1,11 +1,11 @@
-import { useState, useEffect } from 'react';
+import { FC, useState, useEffect } from 'react';
 import BigTalentTooltip from './bigTalentTooltip';
 import { MatchDataAdj } from '../stat_page/page';
 
 interface BigTalentProps extends MatchDataAdj {
     heroName: string, heroData: any, width: string, margin: string
 }
-const BigTalent: React.FC<BigTalentProps> = (props: BigTalentProps) => {
+const BigTalent: FC<BigTalentProps> = (props: BigTalentProps) => {
 
     const [talents, setTalents] = useState<any>([])
     const [open, setOpen] = useState(false)
@@ -17,6 +17,7 @@ const BigTalent: React.FC<BigTalentProps> = (props: BigTalentProps) => {
 
     return (
         <div className="talent-wrapper" style={{ height: '100%' }}
+
             onMouseLeave={() => setOpen(false)}>
             {talents &&
                 <BigTalentTooltip talents={talents} updateMatchData={props.updateMatchData} filteredData={props.matchData} matchData={props.matchData} open={open}>
@@ -36,7 +37,7 @@ const BigTalent: React.FC<BigTalentProps> = (props: BigTalentProps) => {
 }
 export const countTalents = (heroData: any, matchData: any) => {
     const talentCount: any = {}
-    // initialise object 
+    // initialise object
     for (let k in heroData['talents']) {
         const talent = heroData['talents'][k]
         let lvl = 0
@@ -63,6 +64,7 @@ export const countTalents = (heroData: any, matchData: any) => {
                     const count = talentCount[k]['count']
                     talentCount[k]['count'] = count + 1
                 } catch {
+                    console.log('pass')
                 }
 
             }

@@ -14,7 +14,7 @@ const componentChecker = (itemData: Items, arr: string, targetItem: string) => {
     const components = itemData['items'][arr]['components']
     const targetComponents = itemData['items'][targetItem]['components']
     if (!components) return
-    for (let component of components) {
+    for (const component of components) {
         const componentCost = itemData['items'][component]['cost']
         if (componentCost && componentCost >= 1000 && targetComponents?.includes(component)) {
             // console.log(arr, targetItem, components, targetComponents)
@@ -34,12 +34,12 @@ const choice = (arr: any[], percentiles: any[], matchData: any, itemData: any) =
     }
     const time = timeBracket(arr)
     const filteredByItem = matchData.filter((match: any) => match['items'].map((m: any) => m['key']).includes(key))
-    const posCount = countItems(filteredByItem, [])
+    const posCount = countItems(filteredByItem)
     const mainItemCost = itemData['items'][key]['cost']
     // console.log(posCount, nCount)
     const count = posCount.map((x: any) => x[0])
     const res = []
-    for (let targetArr of percentiles) {
+    for (const targetArr of percentiles) {
         const targetKey = targetArr[0].replace(/__\d+/g, '')
         if (targetKey === key) continue
         if (key === targetKey) {

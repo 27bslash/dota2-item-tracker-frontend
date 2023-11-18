@@ -1,12 +1,9 @@
-import { type } from "@testing-library/user-event/dist/type"
 import { useEffect, useState } from "react"
 import { baseApiUrl } from "../../../App"
-import heroSwitcher from "../../../utils/heroSwitcher"
 import Match from "../../types/matchData"
 
 export const useHeroData = (type: string, totalMatchData: Match[], role: string, nameParam: string) => {
-    const [filteredData, setFilteredData] = useState<Match[]>([])
-    const [count, setCount] = useState(0)
+
     const [heroData, setHeroData] = useState<any>({})
     const [visited, setVisited] = useState<any>(new Set())
     const [total, setTotal] = useState<any>([])
@@ -20,7 +17,7 @@ export const useHeroData = (type: string, totalMatchData: Match[], role: string,
                 const hJson = await hData.json()
                 setHeroData({ [nameParam]: hJson })
             } else {
-                for (let match of totalMatchData) {
+                for (const match of totalMatchData) {
                     sett.add(match['hero'])
                 }
                 setVisited(sett)
@@ -36,12 +33,12 @@ export const useHeroData = (type: string, totalMatchData: Match[], role: string,
         setHeroData(o)
     }
     useEffect(() => {
-        for (let hero of visited) {
+        for (const hero of visited) {
             if (!total.includes(hero)) {
                 getHeroData(hero)
                 setTotal((prev: any) => [...prev, hero])
             }
         }
     }, [visited])
-    return  heroData 
+    return heroData
 }

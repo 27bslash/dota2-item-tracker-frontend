@@ -1,5 +1,6 @@
 import { medianValue } from "../../../../utils/medianValue"
 import Items from "../../../types/Item"
+import { NonProDataType } from "../../build"
 import filterComponents from "./componentFilter"
 import groupByTime from "./groupBytime"
 import { addItemChoices } from "./itemChoices"
@@ -15,7 +16,7 @@ const humanToUnix = (time: string | number) => {
     return hours + mins + secs
 }
 
-export const countItems = (data: any, itemData: any) => {
+export const countItems = (data: any) => {
     const consumables = [
         "tango",
         "flask",
@@ -44,9 +45,9 @@ export const countItems = (data: any, itemData: any) => {
 
     const items: any[] = []
     const seenItems = new Set<string>()
-    for (let match of data) {
+    for (const match of data) {
         const dupeCounter: string[] = []
-        for (let [i, item] of match['items'].entries()) {
+        for (const [i, item] of match['items'].entries()) {
             if (consumables.includes(item['key'])) {
                 continue
             }
@@ -59,12 +60,12 @@ export const countItems = (data: any, itemData: any) => {
                 dupeCounter.push(item['key'])
                 key = item['key']
             }
-            let time = typeof (item['time']) === 'string' ? humanToUnix(item['time']) : item['time']
+            const time = typeof (item['time']) === 'string' ? humanToUnix(item['time']) : item['time']
             if (time <= 0) continue
             // const idx = seenItems.filter((x) => x === key).length + 1
             // key = idx > 1 ? `${key}__${idx}` : key
             // key = key
-            // let oKey = itemCount[item['key']]
+            // const oKey = itemCount[item['key']]
             // console.log(key)
             items.push({ [key]: time })
             // itemCount[key] ? itemCount[key] = ({ value: oKey['value'] + 1, time: oKey['time'] + time })
@@ -72,13 +73,13 @@ export const countItems = (data: any, itemData: any) => {
 
             seenItems.add(key)
 
-        };
+        }
         // console.log(dupeCounter)
 
     }
     let itemValues: any = {}
     // console.log(seenItems)
-    seenItems.forEach((x, i) => {
+    seenItems.forEach((x) => {
         const key = x
         const filteredItemTimes: any[] = items.filter((item) => Object.keys(item)[0] === key).map((item) => Object.values(item)[0])
         if (filteredItemTimes) {
@@ -133,7 +134,7 @@ export const countItems = (data: any, itemData: any) => {
     return itemValues
 }
 
-export const boots_filter = (data: any[], itemData: Items) => {
+export const boots_filter = (data: any[]) => {
     const boots = ['tranquil_boots', 'arcane_boots', 'power_treads', 'phase_boots']
     const bootsCount = data.filter((x) => {
         if (x[0].includes('boot') && x[0].match(/\d/g)) {
@@ -154,14 +155,14 @@ export const boots_filter = (data: any[], itemData: Items) => {
     return filtered
 }
 
-const filterItems = (matchData: any, itemData: any, roleKey: string) => {
+const filterItems = (matchData: NonProDataType[], itemData: Items, roleKey: string) => {
     // const start = performance.now()
-    let itemBuild = countItems(matchData, itemData)
+    let itemBuild = countItems(matchData)
     // const end = performance.now()
     itemBuild = filterComponents(itemBuild, itemData)
-    itemBuild = boots_filter(itemBuild, itemData)
+    itemBuild = boots_filter(itemBuild)
     itemBuild = addItemChoices(itemBuild, matchData, itemData)
-    itemBuild = groupByTime(itemBuild, itemData, roleKey)
+    itemBuild = groupByTime(itemBuild, roleKey)
     // console.log('filterCompoentns:', performance.now() - start, 'ms')
     return itemBuild
 }

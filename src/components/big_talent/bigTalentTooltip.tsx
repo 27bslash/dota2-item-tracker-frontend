@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { useState, Fragment } from 'react';
+import { Fragment } from 'react';
 import { cleanDecimal } from '../../utils/cleanDecimal';
 
 const BigTalentTooltip = (props: any) => {

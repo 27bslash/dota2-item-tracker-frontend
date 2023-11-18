@@ -1,11 +1,9 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import itemSearch from "../table/table_search/item_search";
 import ArrowButton from '../ui_elements/arrowButton';
-import Match from "../types/matchData";
 
 
 const MostUsed = (props: any) => {
-    const [open, setOpen] = React.useState(false);
     const [mostUsed, setMostUsed] = useState([])
     const [max, setMax] = useState(0)
 

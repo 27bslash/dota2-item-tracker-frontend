@@ -1,6 +1,7 @@
+/* eslint-disable no-unused-vars */
 import { TableContainer, TableRow, Table, TableFooter, TablePagination, CircularProgress } from "@mui/material"
 import TablePaginationActions from "@mui/material/TablePagination/TablePaginationActions"
-import { useEffect, useState } from "react"
+import React, { useEffect, useState } from "react"
 import TableHeader from "./tableHeader"
 import TimeAgo from 'javascript-time-ago'
 
@@ -19,7 +20,7 @@ interface TableProps {
     filteredData: Match[],
     count: number,
     updateMatchData: (data: Match[]) => void,
-    totalMatchData: object[],
+    totalMatchData: Match[],
     role: string
 }
 TimeAgo.addDefaultLocale(en)
@@ -68,7 +69,7 @@ const CustomTable = (props: TableProps) => {
     }
     return (
         <div className="item-table">
-            {(!Boolean(filteredData.length)) &&
+            {(!(filteredData.length)) &&
                 <CircularProgress sx={{ width: '100px', 'position': 'absolute' }} />
             }
             {(!!filteredData.length) &&

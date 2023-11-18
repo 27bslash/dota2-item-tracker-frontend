@@ -17,10 +17,10 @@ class DraftSearch {
         const heroName = search.replace(/\+|-/g, '')
         const heroes = this.heroSearch(heroName, heroList, hero)
         // console.log('h', heroes)
-        for (let tHero of heroes) {
+        for (const tHero of heroes) {
             const targetHero = heroSwitcher(tHero)
             // console.log(targetHero)
-            for (let match of matchData) {
+            for (const match of matchData) {
                 let symbol = null
                 symbol = search.match(/\+|-/g)
                 if (symbol) symbol = symbol[0]

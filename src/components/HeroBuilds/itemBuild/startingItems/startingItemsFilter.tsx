@@ -1,4 +1,3 @@
-import { exists } from "../../../../utils/exists"
 import { NonProDataType } from "../../build"
 
 const countStartingItems = (data: NonProDataType[]) => {
@@ -8,9 +7,8 @@ const countStartingItems = (data: NonProDataType[]) => {
         "smoke_of_deceit"
     ]
 
-    let itemCount: any = {}
     const comboCount: { [key: string]: number } = {}
-    for (let match of data) {
+    for (const match of data) {
         const key = match['starting_items'].filter((x: { key: string }) => {
             if (!wards.includes(x['key']))
                 return x['key']
@@ -28,11 +26,11 @@ const countStartingItems = (data: NonProDataType[]) => {
                     .sort();
                 return items.join('__');
             });
-        for (let x of test) {
+        for (const x of test) {
             comboCount[x] = (comboCount[x] + 1) || 1
         }
     }
-    const count = Object.entries(comboCount).sort((a: any, b: any) => b[1] - a[1]).slice(0, 2)
+    const count = Object.entries(comboCount).sort((a, b) => b[1] - a[1]).slice(0, 2)
     return count
 }
 export default countStartingItems

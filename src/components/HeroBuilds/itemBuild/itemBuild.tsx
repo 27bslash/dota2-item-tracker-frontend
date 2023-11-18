@@ -3,9 +3,9 @@ import TableItem from './../../table/tableItem';
 import { cleanDecimal } from '../../../utils/cleanDecimal';
 import { NonProDataType } from '../build';
 import Items from '../../types/Item';
-type Item = {
-    [k: string]: { value: number, adjustedValue: number, time: number, disassemble?: boolean, dissassembledComponents?: string[], offset?: { left: number, top: number } }
-}
+// type Item = {
+// 	[k: string]: { value: number, adjustedValue: number, time: number, disassemble?: boolean, dissassembledComponents?: string[], offset?: { left: number, top: number } }
+// }
 const chunkArray = (array: any[], size: number) => {
     const chunks = [];
     let index = 0;
@@ -30,11 +30,10 @@ const ItemBuild = (props: any) => {
     //     return !dataKeys.includes(match[0])
     // })
     // console.log(filteredItems, dataKeys.length)
-    const sortedData = props.data.map((o: any) => ({ 'core': o['core'] })).concat(props.data.map((o: any) => ({ 'situational': o['situational'] })));
     const totalLen = props.data.map((x: any) => {
         const keys = ['core', 'situational']
         let currMax = 0
-        for (let k of keys) {
+        for (const k of keys) {
 
             if (x[k].map((y: any) => y).length > currMax) {
                 currMax = x[k].length
@@ -77,7 +76,7 @@ const ItemBuild = (props: any) => {
 const GridRow = (props: { data: any, itemData: any, ObjectKey: 'core' | 'situational', dataLength: number[] }) => {
     // console.log(props.data)
     // 18 6
-    // 18 
+    // 18
     props.data.map((buildObject: { [x: string]: any; }) => {
         if (buildObject[props.ObjectKey].length > 5) {
             // console.log('test', k)
@@ -93,8 +92,8 @@ const GridRow = (props: { data: any, itemData: any, ObjectKey: 'core' | 'situati
             let leftOffset = 0
             const badIdxs = []
             if (buildObject[props.ObjectKey].length > 1) {
-                for (let itemSet of buildObject[props.ObjectKey]) {
-                    for (let [i, item] of itemSet.entries()) {
+                for (const itemSet of buildObject[props.ObjectKey]) {
+                    for (const [i, item] of itemSet.entries()) {
                         if (item['dissassembledComponents']) {
                             if (leftOffset === 0) {
                                 leftOffset = (55 * item['dissassembledComponents'].length) || 0
@@ -110,8 +109,6 @@ const GridRow = (props: { data: any, itemData: any, ObjectKey: 'core' | 'situati
                     // console.log('left', leftOffset)
                 }
                 if (badIdxs.length) {
-                    let looped = false
-                    let idx = 0
                     for (let [i, itemset] of buildObject[props.ObjectKey][1].entries()) {
                         // i = leftOffset
                         let moveCount = 0
@@ -122,10 +119,8 @@ const GridRow = (props: { data: any, itemData: any, ObjectKey: 'core' | 'situati
                         }
                         badIdxs.push(i + moveCount)
                         // if (looped) moveCount = 0
-                        looped = true
                         // console.log(itemset, itemset[keys[0]]['offset'], badIdxs, i, leftOffset)
                         itemset['offset'] = { 'left': moveCount * 55, top: -82 }
-                        idx += 1
                         // console.log(itemset)
                     }
                 }
@@ -135,12 +130,12 @@ const GridRow = (props: { data: any, itemData: any, ObjectKey: 'core' | 'situati
     calcOffset()
     return (
         props.data.map((buildObject: any, i: number) => {
-            let timing = i === 1 || i === 4 ? 'Mid' : (i === 2 || i === 5 ? 'Late' : 'Early')
+            const timing = i === 1 || i === 4 ? 'Mid' : (i === 2 || i === 5 ? 'Late' : 'Early')
             let maxWidth = 12 / (totalLen / props.dataLength[i])
             if (maxWidth > 6) maxWidth = 6
             const widthPerc = (maxWidth / 12) * 100
             const adjustedWidth = widthPerc - widthPerc / 100 * 15
-            const l = buildObject[props.ObjectKey].map((x: any) => x).flat().length
+            // const l = buildObject[props.ObjectKey].map((x: any) => x).flat().length
             // console.log(l)
             // console.log(buildObject)
 
@@ -155,7 +150,7 @@ const GridRow = (props: { data: any, itemData: any, ObjectKey: 'core' | 'situati
 const ItemBuilds = (props: { buildObject: any; timing: any; data: any; itemData: any, offset?: { left: number, top: number }, ObjectKey: 'core' | 'situational' }) => {
     const { buildObject, data, itemData, offset, timing, ObjectKey } = props
     const odf = buildObject[ObjectKey].flat().some((x: any) => {
-        const key = Object.keys(x)[0]
+        // const key = Object.keys(x)[0]
         return x['option']
     })
     const optionMargin = () => {
@@ -165,7 +160,7 @@ const ItemBuilds = (props: { buildObject: any; timing: any; data: any; itemData:
     const disassembleMargin = () => {
         let ret = 0
         buildObject[ObjectKey][0].forEach((x: any) => {
-            const key = Object.keys(x)[0]
+            // const key = Object.keys(x)[0]
             if (x['dissassembledComponents']) {
                 // console.log(x)
                 ret += x['dissassembledComponents'].length
@@ -210,13 +205,11 @@ const ItemBuilds = (props: { buildObject: any; timing: any; data: any; itemData:
 }
 const ItemBuildCell = (props: { itemkey: any; item: any; data: any; itemData: any; }) => {
     const { itemkey, item, data, itemData } = props
-    const image_host = "https://ailhumfakp.cloudimg.io/v7/"
     // itemkey.sort((a: any, b: any) => {
     //     return item[b]['time'] - item[a]['time']
     // })
     const perc = item['adjustedValue']
     const avgTime = (Math.floor(item['time'] / 60))
-    const link = `${image_host}https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/items/${itemkey.replace(/__\d+/g, '')}.png`
     const disassemble = item['disassemble']
     const components = item['dissassembledComponents']
     const orText = item['option'] || item['longOption'] ? 'or' : ''
@@ -250,7 +243,7 @@ export const ItemBuildImage = (props: { k: string, avgTime?: number, disassemble
         <p style={{ margin: 0, color: 'white' }}>{props.orText}</p>
     </div>;
 }
-const ItemComponents = (props: { components: string[][]; data: object[]; itemData: any; }) => {
+const ItemComponents = (props: { components: string[][]; data: any[]; itemData: any; }) => {
     const components = props.components.slice(0, 2)
     return (
         <div className='components' style={{ height: '300%', display: 'flex' }}>

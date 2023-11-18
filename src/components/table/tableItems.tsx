@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { TableCell } from "@mui/material"
 import AbilityTooltip from "../tooltip/abilityTooltip";
 import TalentTooltip from "../tooltip/talentTooltip";
@@ -8,28 +9,29 @@ import Tip from "../tooltip/tooltip";
 import Draft from "./draft";
 import Match from "../types/matchData";
 import { exists } from "../../utils/exists";
-
+import React from 'react'
+import Items from "../types/Item";
 interface TitemProps {
     row: {
         id: number
-        final_items: object[],
-        backpack: object[],
-        starting_items: object[],
+        final_items: any[],
+        backpack: any[],
+        starting_items: any[],
         item_neutral: string,
         aghanims_shard: { time: string, key: string, id: number }[],
-        items: object[],
-        abilities: object[],
+        items: any[],
+        abilities: any[],
         hero: string,
         radiant_draft: string[]
         dire_draft: string[],
         additional_units: any[] | undefined
     },
     showStarter: boolean,
-    items: object[],
-    heroData: object[],
-    heroList: object[],
-    totalMatchData: object[],
-    filteredData: object[],
+    items: Items,
+    heroData: any[],
+    heroList: any[],
+    totalMatchData: any[],
+    filteredData: any[],
     updateMatchData: (data: Match[]) => void,
     children: React.ReactNode;
     role: string
@@ -58,7 +60,7 @@ const humanReadableTime = (time: number | string) => {
 const FinalItems = (props: {
     row: TitemProps['row'], bear?: boolean; role: string; heroName: string; itemList: any[];
     updateMatchData: ((data: any, searchResults?: any) => void);
-    filteredData: object[]; totalMatchData: object[]; items: any; heroData: object[]
+    filteredData: Match[]; totalMatchData: Match[]; items: any; heroData: any[]
 }) => {
     return (
         <div className="flex">
@@ -93,12 +95,12 @@ const TableItems = (props: TitemProps) => {
     const visitedTalents: any = []
     const talents: any = props.row.abilities.filter((ability: any) => ability['type'] === 'talent')
     const s = new Set()
-    for (let talent of talents) {
+    for (const talent of talents) {
         const t = []
         if (!s.has(talent['id'])) {
             s.add(talent['id'])
             const newA = Array.from(s)
-            for (let _id of newA) {
+            for (const _id of newA) {
                 const f = talents.filter((x: any) => _id === x['id'])
                 t.push(f[0])
             }

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useState } from "react"
 import HeroAttributes from './heroAttributes';
 import HeroAghs from './heroAghanim';
 import Color from "color-thief-react";

@@ -1,8 +1,5 @@
-import { visitEachChild } from "typescript"
 
 const TalentImg = (props: any) => {
-    const talent = props.ability
-    const visited: any = []
     const talents = props.talents.filter((arr: any) => arr[arr.length - 1]['id'] === props.ability['id'])[0]
 
     return (

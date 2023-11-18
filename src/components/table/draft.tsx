@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
+/* eslint-disable no-undef */
 import DraftSearch from "./table_search/draft_search";
 
 const Draft = (props: any) => {

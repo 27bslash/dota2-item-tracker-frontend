@@ -1,10 +1,10 @@
 
-const itemSearch = (item: string, data: any, itemData: any, role: string = '', i = 0) => {
+const itemSearch = (item: string, data: any, itemData: any, role = '', i = 0) => {
     if (!data || !itemData) {
         return {}
     }
     data = data.filter((match: any) => match['items'])
-    const matches: object[] = []
+    const matches: any[] = []
     const noSymbl = item.replace('-', '')
     const symbolMatch = item.match(/^-/)
     let symbol = ''

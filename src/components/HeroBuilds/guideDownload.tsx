@@ -1,3 +1,4 @@
+/* eslint-disable no-useless-escape */
 import { faCopy } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 const code = `// ==UserScript==

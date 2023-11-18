@@ -1,6 +1,8 @@
+/* eslint-disable no-unused-vars */
 import { useNavigate } from "react-router";
 import ItemTooltip from "../tooltip/itemTooltip"
 import itemSearch from './table_search/item_search';
+import React from 'react'
 import Tip from "../tooltip/tooltip";
 type TItemProp = {
     matchId?: number,
@@ -12,11 +14,11 @@ type TItemProp = {
     starter?: boolean,
     itemKey: string,
     colors?: any,
-    heroData?: object[],
+    heroData?: any[],
     heroName?: string
     itemId?: number | undefined,
     children?: React.ReactNode;
-    totalMatchData: object[],
+    totalMatchData: any[],
     updateMatchData?: (data: any, searchResults?: any) => void
     role: string,
     time?: string,
