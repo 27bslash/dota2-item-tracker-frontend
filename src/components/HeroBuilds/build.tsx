@@ -1,5 +1,5 @@
 import ItemBuild from "./itemBuild/itemBuild"
-import AbilityBuild from './abillityBuild/abilityBuild';
+import AbilityBuilds from './abillityBuild/abilityBuild';
 import { useState } from "react";
 import StartingItems from "./itemBuild/startingItems/startingItems";
 import { Box, Button, Tooltip, Typography } from "@mui/material";
@@ -33,7 +33,7 @@ const Build = (props: BuildProps) => {
     const [open, setOpen] = useState(false)
 
     const filteredData = useParseMatchData(proData, props.data, props.heroName, props)
-    const heroBuilds = useHeroBuilds(filteredData!, props.heroData, props.itemData)    // switch to toggle only known pro accounts
+    const heroBuilds = useHeroBuilds(filteredData!, props.heroData, props.itemData)
     const [guideGuide, setGuideGuide] = useState(false)
 
     const baseButtonStyle = {
@@ -111,7 +111,7 @@ const BuildCell = (props: any) => {
                     <StartingItems data={props.data} startingItemData={props.buildData['starting_items']} itemData={props.itemData} />
                     <ItemBuild data={props.buildData['item_builds']} itemData={props.itemData} />
                     <NeutralItems neutralItems={props.buildData['neutral_items']} data={props.data} itemData={props.itemData} />
-                    <AbilityBuild data={props.data} abilityBuilds={props.buildData['ability_builds']}  heroData={props.heroData} heroName={props.heroName} updateMatchData={props.updateMatchData} />
+                    <AbilityBuilds data={props.data} abilityBuilds={props.buildData['ability_builds']} heroData={props.heroData} heroName={props.heroName} updateMatchData={props.updateMatchData} />
                 </div>
             }
         </div>
