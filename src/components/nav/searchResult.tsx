@@ -1,24 +1,33 @@
 
 import { Box, Typography } from '@mui/material';
 import { useState, useEffect } from 'react';
-const SearchResult = (props: any) => {
-    let name = props.type === 'hero' ? props.value.name.replace(/\s/g, '_') : props.value
+type SearchResult = {
+    type: 'hero' | 'player'
+    targetList: number,
+    list: number,
+    selectedIdx: number,
+    value: string,
+    idx: number,
+    updateSearchIdx: (idx: number, type: SearchResult['type']) => void
+}
+const SearchResult = ({ type, targetList, list, selectedIdx, value, idx, updateSearchIdx }: SearchResult) => {
+    let name = type === 'hero' ? value.replace(/\s/g, '_') : value
     // anti mage edge case
     const displayName = name.replace(/_/g, ' ')
     if (name === 'anti_mage') name = 'anti-mage'
     const [highlight, setHighlight] = useState('')
     useEffect(() => {
-        if (props.idx === props.selectedidx && props.list === props.targetList) {
+        if (idx === selectedIdx && list === targetList) {
             setHighlight('highlight')
         } else {
             setHighlight('')
         }
-    }, [props.targetList, props.selectedidx])
+    }, [targetList, selectedIdx])
 
     return (
         <Box className={`${highlight}`}>
-            <a className='suggestion-link' key={props.idx} href={`/${props.type}/${name}`} >
-                <div className="suggestion" onMouseOver={() => props.updateSearchIdx(props.idx, props.type)}>
+            <a className='suggestion-link' key={idx} href={`/${type}/${name}`} >
+                <div className="suggestion" onMouseOver={() => updateSearchIdx(idx, type)}>
                     <Typography variant='body1' padding='4px'>{displayName}</Typography>
                 </div>
             </a>

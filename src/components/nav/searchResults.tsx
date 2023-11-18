@@ -1,18 +1,17 @@
+/* eslint-disable no-unused-vars */
 import { useEffect, useState, useRef } from 'react';
 import SearchResult from './searchResult';
 import { Box, Typography } from '@mui/material';
 
 interface SearchResultsProps {
-    heroList: { name: string, id: number }[],
-    playerList: string[],
-    sortedHeroes: { name: string, id: number }[],
+    sortedHeroes: string[],
     sortedPlayers: string[],
     updateValue: () => void,
     navigatePage: (value: string) => void,
     highlightHero?: (data: number) => void
 
 }
-const SearchResults = (props: SearchResultsProps) => {
+const SearchResults = ({ sortedHeroes, sortedPlayers, updateValue, navigatePage, highlightHero }: SearchResultsProps) => {
 
     const [combined, setCombined] = useState<number[]>([])
     const [searchResultIdx, setSearchResultIdx] = useState(0)
@@ -24,9 +23,9 @@ const SearchResults = (props: SearchResultsProps) => {
     useEffect(() => {
         setCombined([])
         setCombined(prev => {
-            return prev.concat(props.sortedHeroes.length, props.sortedPlayers.length)
+            return prev.concat(sortedHeroes.length, sortedPlayers.length)
         })
-    }, [props])
+    }, [sortedHeroes, sortedPlayers])
 
     const handle = (e: any) => {
         if (e.key === 'ArrowDown' && idxRef.current < combined[targetListRef.current]) {
@@ -70,20 +69,20 @@ const SearchResults = (props: SearchResultsProps) => {
                 }
             }
         } else if (e.key === 'Escape') {
-            props.updateValue()
+            updateValue()
         } else if (e.key === 'Enter') {
-            if (targetListRef.current === 0 && props.sortedHeroes[idxRef.current]) {
-                const link = props.sortedHeroes[idxRef.current].name
-                props.navigatePage(`/hero/${link}`)
+            if (targetListRef.current === 0 && sortedHeroes[idxRef.current]) {
+                const link = sortedHeroes[idxRef.current]
+                navigatePage(`/hero/${link}`)
             } else {
-                const link = props.sortedPlayers[idxRef.current]
-                props.navigatePage(`/player/${link}`)
+                const link = sortedPlayers[idxRef.current]
+                navigatePage(`/player/${link}`)
             }
         }
     }
     useEffect(() => {
-        if (props.highlightHero && targetList === 0) {
-            props.highlightHero(searchResultIdx)
+        if (highlightHero && targetList === 0) {
+            highlightHero(searchResultIdx)
         }
     }, [searchResultIdx])
     useEffect(() => {
@@ -94,12 +93,12 @@ const SearchResults = (props: SearchResultsProps) => {
         return () => {
             window.removeEventListener('keydown', handle)
         }
-    }, [props, combined])
+    }, [combined])
 
-    const updateSearchIdx = (i: number, list: string) => {
+    const updateSearchIdx = (i: number, type: string) => {
         setSearchResultIdx(i)
         idxRef.current = i
-        if (list === 'hero') {
+        if (type === 'hero') {
             targetListRef.current = 0
             setTargetList(0)
         } else {
@@ -110,23 +109,21 @@ const SearchResults = (props: SearchResultsProps) => {
     return (
         <>
             <Box className="suggestions" bgcolor='primary.main' sx={{ 'z-index': 99 }}>
-                {props.sortedHeroes.length > 0 &&
+                {sortedHeroes.length > 0 &&
                     <div className="suggestions-left">
                         <Typography align='center' color='#1ebdad' variant='h6' className='suggestion-header'>Heroes</Typography>
-                        {props.sortedHeroes.map((value, i) => {
+                        {sortedHeroes.map((value, i) => {
 
-                            return (<SearchResult value={value} updateSearchIdx={updateSearchIdx} type='hero' idx={i} key={i} selectedidx={idxRef.current} list={0} targetList={targetList} />)
+                            return (<SearchResult value={value} updateSearchIdx={updateSearchIdx} type='hero' idx={i} key={i} selectedIdx={idxRef.current} list={0} targetList={targetList} />)
                         })}
                     </div>
                 }
-                {props.sortedPlayers.length > 0 &&
+                {sortedPlayers.length > 0 &&
                     <div className="suggestions-right">
                         <Typography align='center' color='#1ebdad' variant='h6' className='suggestion-header'>Players</Typography>
-                        {props.sortedPlayers.map((value, i) => {
-                            // console.log(value)
-
+                        {sortedPlayers.map((value, i) => {
                             return (
-                                <SearchResult value={value} updateSearchIdx={updateSearchIdx} type='player' idx={i} key={i} selectedidx={idxRef.current} list={1} targetList={targetList} />
+                                <SearchResult value={value} updateSearchIdx={updateSearchIdx} type='player' idx={i} key={i} selectedIdx={idxRef.current} list={1} targetList={targetList} />
                             )
                         })
                         }
