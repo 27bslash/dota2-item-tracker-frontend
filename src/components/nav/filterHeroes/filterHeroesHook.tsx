@@ -15,11 +15,11 @@ const acronymFinder = (heroList: Hero[], target: string) => {
     }
     return acronyms
 }
-export const useFilterHeroes = (heroList: Hero[], value: string) => {
+export const useFilterHeroes = (heroList: Hero[], filteredHeroes: string[] | undefined, value: string) => {
     const [sortedHeroes, setSortedHeroes] = useState<string[]>([])
     useEffect(() => {
         const legacyNames: { [key: string]: string } = {
-            'bounty_hunter': 'gondar', 'io': 'wisp', 'jakiro': 'thd', 'leshrac': 'disco_pony', 'lifestealer': 'naix', 'mirana': 'priestess_of_the_moon', 'night_stalker': 'balanar',
+            'bounty_hunter': 'gondar', 'bristleback': 'bristle_back', 'io': 'wisp', 'jakiro': 'thd', 'leshrac': 'disco_pony', 'lifestealer': 'naix', 'mirana': 'priestess_of_the_moon', 'night_stalker': 'balanar',
             'spirit_breaker': 'bara', 'undying': 'dirge',
         }
         if (value.length > 1) {
@@ -43,20 +43,24 @@ export const useFilterHeroes = (heroList: Hero[], value: string) => {
             const combinedLists = copy.concat(legacyList)
             const acronyms = acronymFinder(combinedLists, searchText)
             const allResults = acronyms.concat(heroMatches).concat(legacyHeroMatches)
-            const filteredHeroes: string[] = []
+            const filteredBySearch: string[] = []
             const seenIds = new Set()
             for (const heroObj of allResults) {
                 const heroId = heroObj['id']
                 if (!seenIds.has(heroId)) {
                     const convertedHero = copy.find((x) => x['id'] === heroId)
 
-                    filteredHeroes.push(convertedHero!.name)
+                    filteredBySearch.push(convertedHero!.name)
                     seenIds.add(heroId)
                 }
             }
-            setSortedHeroes(filteredHeroes)
+            setSortedHeroes(filteredBySearch)
         } else {
-            setSortedHeroes([])
+            if (filteredHeroes) {
+                setSortedHeroes(filteredHeroes)
+            } else {
+                setSortedHeroes([...heroList].map((x) => x.name.replace(/\s/g, '_')))
+            }
         }
     }, [value])
     return sortedHeroes

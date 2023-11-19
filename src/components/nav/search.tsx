@@ -12,26 +12,39 @@ import { useFilterPlayers } from './filterPlayers/filterPlayersHook';
 
 interface searchProps {
     filterHeroes?: (data: string[]) => void,
+    filteredByButton?: string[],
     heroList: Hero[],
     playerList: string[],
     highlightHero?: (data: number) => void
 }
-const NavSearch = ({ heroList, playerList, filterHeroes, highlightHero }: searchProps) => {
+const NavSearch = ({ heroList, playerList, filterHeroes, filteredByButton, highlightHero }: searchProps) => {
     const [value, setValue] = useState('')
+    const [showSearchResults, setShowSearchResults] = useState(false)
     const searchRef = useRef<HTMLInputElement | null>(null)
     // const data = 'data'
     const updateValue = () => {
         setValue('')
+        setShowSearchResults(false)
     }
     const navigatePage = (value: string) => {
         const link = value.replace(/\s/g, '_')
         window.location.href = `${link}`
     }
-    const sortedHeroes = useFilterHeroes(heroList, value)
+    const sortedHeroes = useFilterHeroes(heroList, filteredByButton, value)
     const sortedPlayers = useFilterPlayers(playerList, value)
     useEffect(() => {
-        if (filterHeroes) { filterHeroes(sortedHeroes) }
-    }, [])
+        if (filterHeroes) {
+            if (value.length > 1 && !!sortedPlayers.length || sortedHeroes.length !== heroList.length && !filteredByButton?.length) {
+                setShowSearchResults(true)
+            } else {
+                setShowSearchResults(false)
+            }
+            filterHeroes(sortedHeroes)
+        } else {
+            !!sortedPlayers.length || !!sortedHeroes.length
+            setShowSearchResults(!!sortedPlayers.length || sortedHeroes.length !== heroList.length)
+        }
+    }, [sortedHeroes])
     useEffect(() => {
         window.addEventListener('keydown', autoFocus, false);
         return () => window.removeEventListener('keydown', autoFocus, false);
@@ -67,7 +80,7 @@ const NavSearch = ({ heroList, playerList, filterHeroes, highlightHero }: search
                 variant="standard"
                 value={value}
                 onChange={(e) => setValue(e.target.value)} />
-            {(!!sortedPlayers.length || !!sortedHeroes.length) &&
+            {showSearchResults &&
                 <SearchResults highlightHero={highlightHero} updateValue={updateValue} navigatePage={navigatePage} sortedHeroes={sortedHeroes} sortedPlayers={sortedPlayers} />
             }
         </Box>

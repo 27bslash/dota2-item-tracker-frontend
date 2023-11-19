@@ -32,6 +32,7 @@ type HomeProps = {
 function Home({ heroList, playerList }: HomeProps) {
     const [winStats, setWinStats] = useState<any[]>();
     const [filteredHeroes, setFilteredHeroes] = useState<string[]>();
+    const [filteredByButton, setfilteredByButton] = useState<string[]>()
     const [roleFilter, setRoleFilter] = useState('');
     const [searching, setSearching] = useState(false);
     const [highlight, setHighlight] = useState<number>();
@@ -62,16 +63,21 @@ function Home({ heroList, playerList }: HomeProps) {
     const filterHeroes = (list: string[]) => {
         const newList = list.map((x) => x.replace(/\s/g, '_'));
         setFilteredHeroes(newList);
-        if (newList.length !== heroList.length) {
+        if (!filteredByButton && newList.length !== heroList.length) {
             setSearching(true);
-        } else {
+        } else if (!filteredByButton) {
             const hList = newList.sort((a, b) => a.localeCompare(b));
             setFilteredHeroes(hList);
             setSearching(false);
+        } else if (filteredByButton.length === list.length) {
+            setSearching(false)
+        } else if (filteredByButton && filteredByButton.length !== list.length) {
+            setSearching(true)
         }
     };
     const sortHeroes = (list: string[], search: string, role?: string) => {
         setFilteredHeroes(list);
+        setfilteredByButton(list)
         setSearchVal(search);
         setRoleFilter('');
         if (role) {
@@ -94,7 +100,7 @@ function Home({ heroList, playerList }: HomeProps) {
     theme.palette.secondary.main = '#486869';
     return (
         <div className="home">
-            <Nav filterHeroes={filterHeroes} heroList={heroList} playerList={playerList} highlightHero={highlightHero} />
+            <Nav filterHeroes={filterHeroes} filteredByButton={filteredByButton} heroList={heroList} playerList={playerList} highlightHero={highlightHero} />
             {filteredHeroes && winStats &&
                 <ControlPanel sortHeroes={sortHeroes} winStats={winStats} />
             }

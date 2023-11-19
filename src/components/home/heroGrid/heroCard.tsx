@@ -14,7 +14,6 @@ function HeroCard({ stats, heroName, role, searching, idx, highlight, }: HeroCar
     const width = heroHighlight ? '113' : '110'
     const img = `https://ailhumfakp.cloudimg.io/v7/https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/heroes/${imgName}.png?v=5926546`;
     const heroname = heroName.replace(/\s/g, '_');
-
     let link = `/hero/${heroname}`;
     if (role) {
         link = `/hero/${heroname}?role=${role.replace('_', '')}`;

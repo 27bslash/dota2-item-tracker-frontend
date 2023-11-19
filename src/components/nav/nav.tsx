@@ -7,15 +7,16 @@ interface NavProps {
     playerList: string[],
     highlightHero?: (idx: number) => void
     filterHeroes?: (heroList: string[]) => void
+    filteredByButton?: string[]
 }
 
-const Nav = ({ highlightHero, filterHeroes, heroList, playerList }: NavProps) => {
+const Nav = ({ highlightHero, filterHeroes, filteredByButton, heroList, playerList }: NavProps) => {
     return (
         <div className="navbar">
             <HomeButton text='HOME' link='/' />
             {/* <HomeButton text='CHAPPIE' link='/chappie' /> */}
             <div className="search-container" style={{ width: '100%' }}>
-                <NavSearch highlightHero={highlightHero} filterHeroes={filterHeroes} heroList={heroList} playerList={playerList} />
+                <NavSearch highlightHero={highlightHero} filterHeroes={filterHeroes} filteredByButton={filteredByButton} heroList={heroList} playerList={playerList} />
             </div>
         </div>
     )
