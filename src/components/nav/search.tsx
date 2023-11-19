@@ -1,6 +1,5 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-prototype-builtins */
-
 import TextField from '@mui/material/TextField';
 import { useState, useEffect, useRef } from 'react';
 import { matchSorter } from 'match-sorter'
@@ -41,7 +40,6 @@ const NavSearch = ({ heroList, playerList, filterHeroes, filteredByButton, highl
             }
             filterHeroes(sortedHeroes)
         } else {
-            !!sortedPlayers.length || !!sortedHeroes.length
             setShowSearchResults(!!sortedPlayers.length || sortedHeroes.length !== heroList.length)
         }
     }, [sortedHeroes])
