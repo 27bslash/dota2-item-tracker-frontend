@@ -8,6 +8,7 @@ import { cleanDecimal } from '../../utils/cleanDecimal';
 import GridContainer from './heroGrid/gridContainer';
 import HeroCard from './heroGrid/heroCard';
 import Hero from '../types/heroList';
+import { PickStats } from './types/pickStats.types';
 
 
 const SortTitle = ({ role, sort }: { sort: string, role?: string }) => {
@@ -29,11 +30,12 @@ type HomeProps = {
     heroList: Hero[],
     playerList: string[]
 }
+export type RoleStrings = '' | 'Hard Support' | 'Support' | 'Roaming' | 'Offlane' | 'Midlane' | 'Safelane'
 function Home({ heroList, playerList }: HomeProps) {
-    const [winStats, setWinStats] = useState<any[]>();
+    const [winStats, setWinStats] = useState<PickStats[]>();
     const [filteredHeroes, setFilteredHeroes] = useState<string[]>();
     const [filteredByButton, setfilteredByButton] = useState<string[]>()
-    const [roleFilter, setRoleFilter] = useState('');
+    const [roleFilter, setRoleFilter] = useState<RoleStrings>('');
     const [searching, setSearching] = useState(false);
     const [highlight, setHighlight] = useState<number>();
     const [sort, setSearchVal] = useState('');
@@ -41,8 +43,8 @@ function Home({ heroList, playerList }: HomeProps) {
         document.title = 'Dota2 Item Tracker';
         (async () => {
             const req = await fetch(`${baseApiUrl}/files/win-stats`);
-            let json = await req.json();
-            json = json.sort((a: any, b: any) => a.hero.localeCompare(b.hero));
+            let json: PickStats[] = await req.json();
+            json = json.sort((a, b) => a.hero.localeCompare(b.hero));
             setWinStats(json);
         })();
     }, []);
@@ -56,8 +58,8 @@ function Home({ heroList, playerList }: HomeProps) {
         if (!heroList.length) {
             return;
         }
-        const m = heroList.map((hero: any) => hero.name.replace(/\s/g, '_'));
-        const hList = m.sort((a: any, b: any) => a.localeCompare(b));
+        const m = heroList.map((hero: Hero) => hero.name.replace(/\s/g, '_'));
+        const hList = m.sort((a, b) => a.localeCompare(b));
         setFilteredHeroes(hList);
     }, [heroList]);
     const filterHeroes = (list: string[]) => {
@@ -75,14 +77,14 @@ function Home({ heroList, playerList }: HomeProps) {
             setSearching(true)
         }
     };
-    const sortHeroes = (list: string[], search: string, role?: string) => {
+    const sortHeroes = (list: string[], search: string, role?: RoleStrings) => {
         setFilteredHeroes(list);
         setfilteredByButton(list)
         setSearchVal(search);
         setRoleFilter('');
         if (role) {
-            const roleF = `${role}_`;
-            setRoleFilter(roleF);
+            const roleF = `${role}`;
+            setRoleFilter(role);
         }
     };
     let className = '';
@@ -94,7 +96,7 @@ function Home({ heroList, playerList }: HomeProps) {
     const highlightHero = (idx: number) => {
         setHighlight(idx);
     };
-    let pickStats: any = null;
+    let pickStats: { [key: string]: number };
     document.body.style.background = theme.palette.background.default;
     theme.palette.primary.main = '#1d5455';
     theme.palette.secondary.main = '#486869';
@@ -112,10 +114,13 @@ function Home({ heroList, playerList }: HomeProps) {
                         if (heroName === 'anti_mage') heroName = 'anti-mage';
                         if (winStats) {
                             const stats = winStats.filter((x) => x.hero === heroName.replace(/\s/g, '_'));
-                            const picks = stats[0][`${roleFilter}picks`] || 0;
-                            const wins = stats[0][`${roleFilter}wins`] || 0;
+                            // const picks = roleFilter !== '' ? stats[0][`${roleFilter}_picks`] || stats[0]['picks'] || 0 : 0;
+                            // const wins = roleFilter !== '' ? stats[0][`${roleFilter}_wins`] || stats[0]['picks'] || 0 : 0;
+                            const roleFilterKey = roleFilter !== '' ? `${roleFilter}_` : '';
+                            const picks = (stats[0][`${roleFilterKey}picks` as keyof PickStats] as number) || 0;
+                            const wins = (stats[0][`${roleFilterKey}wins` as keyof PickStats] as number) || 0;
                             const { bans } = stats[0];
-                            const winrate = picks ? cleanDecimal(((wins / picks) * 100)) : 0;
+                            const winrate = picks ? +cleanDecimal(((wins / picks) * 100)) : 0;
                             pickStats = {
                                 picks, wins, bans, winrate,
                             };

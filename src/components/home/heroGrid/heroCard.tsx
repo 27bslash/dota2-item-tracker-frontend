@@ -3,7 +3,7 @@ import colourWins from "../../../utils/colourWins";
 import heroSwitcher from "../../../utils/heroSwitcher";
 
 interface HeroCardProps {
-    heroName: string, role: string, searching: boolean, highlight?: number, idx: number, stats: { picks: number, wins: number, bans: number, winrate: string | number },
+    heroName: string, role: string, searching: boolean, highlight?: number, idx: number, stats: { [key: string]: number }
 }
 function HeroCard({ stats, heroName, role, searching, idx, highlight, }: HeroCardProps) {
     const imgName = heroSwitcher(heroName);
