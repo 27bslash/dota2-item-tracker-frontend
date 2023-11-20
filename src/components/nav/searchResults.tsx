@@ -27,7 +27,7 @@ const SearchResults = ({ sortedHeroes, sortedPlayers, updateValue, navigatePage,
         })
     }, [sortedHeroes, sortedPlayers])
 
-    const handle = (e: any) => {
+    const handle = (e: { key: string; }) => {
         if (e.key === 'ArrowDown' && idxRef.current < combined[targetListRef.current]) {
             setSearchResultIdx(prev => prev + 1)
             idxRef.current += 1
