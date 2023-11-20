@@ -7,7 +7,7 @@ import TalentImg from "./talentImg";
 import ArrowButton from '../ui_elements/arrowButton';
 import Tip from "../tooltip/tooltip";
 import Draft from "./draft";
-import Match from "../types/matchData";
+import DotaMatch from "../types/matchData";
 import { exists } from "../../utils/exists";
 import React from 'react'
 import Items from "../types/Item";
@@ -32,7 +32,7 @@ interface TitemProps {
     heroList: any[],
     totalMatchData: any[],
     filteredData: any[],
-    updateMatchData: (data: Match[]) => void,
+    updateMatchData: (data: DotaMatch[]) => void,
     children: React.ReactNode;
     role: string
 
@@ -60,7 +60,7 @@ const humanReadableTime = (time: number | string) => {
 const FinalItems = (props: {
     row: TitemProps['row'], bear?: boolean; role: string; heroName: string; itemList: any[];
     updateMatchData: ((data: any, searchResults?: any) => void);
-    filteredData: Match[]; totalMatchData: Match[]; items: any; heroData: any[]
+    filteredData: DotaMatch[]; totalMatchData: DotaMatch[]; items: any; heroData: any[]
 }) => {
     return (
         <div className="flex">
@@ -223,9 +223,9 @@ const Abilities = (props: { abilities: any; heroData: any; imageHost: string; wi
     return (
         <div className="abilities">
             {abilities.map((ability: any, i: number) => {
-                let len = abilities.length;
-                let imgWidth = Math.floor((+width - 50) / len)
-                let link = `${imageHost}https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/abilities/${ability.img}.png`
+                const len = abilities.length;
+                const imgWidth = Math.floor((+width - 50) / len)
+                const link = `${imageHost}https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/abilities/${ability.img}.png`
 
                 return (
                     <div className="ability-image-wrapper" key={i}>

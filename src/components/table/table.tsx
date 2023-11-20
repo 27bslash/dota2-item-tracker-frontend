@@ -8,7 +8,7 @@ import TimeAgo from 'javascript-time-ago'
 // English.
 import en from 'javascript-time-ago/locale/en'
 import CustomTableBody from "./tablebody"
-import Match from "../types/matchData"
+import DotaMatch from "../types/matchData"
 interface TableProps {
     showStarter: boolean,
     pageNumber?: number,
@@ -17,10 +17,10 @@ interface TableProps {
     itemData: any,
     nameParam: string,
     type: string,
-    filteredData: Match[],
+    filteredData: DotaMatch[],
     count: number,
-    updateMatchData: (data: Match[]) => void,
-    totalMatchData: Match[],
+    updateMatchData: (data: DotaMatch[]) => void,
+    totalMatchData: DotaMatch[],
     role: string
 }
 TimeAgo.addDefaultLocale(en)

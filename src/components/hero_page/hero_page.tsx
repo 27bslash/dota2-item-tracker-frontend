@@ -4,13 +4,14 @@ import Build from "../HeroBuilds/build"
 import BestGames from "../best_games/bestGames"
 import BigTalent from "../big_talent/bigTalent"
 import HeroImg from "../heroImg"
+import { RoleStrings } from "../home/home"
 import MostUsed from "../most_used/mostUsed"
 import Items from "../types/Item"
-import Match from "../types/matchData"
+import DotaMatch from "../types/matchData"
 
 export const HeroPageTopSection = (props: {
     heroData: any; nameParam: string; totalMatchData: any[]; role: string; updatePageNumber: (idx: number) => void;
-    updateMatchData: (match: Match[]) => void; itemData?: Items; filteredData: any[]; updateRole: (role: string) => void; searchRes?: any
+    updateMatchData: (match: DotaMatch[]) => void; itemData?: Items; filteredData: any[]; updateRole: (role: RoleStrings) => void; searchRes?: any
     totalPicks: any
 }) => {
     const { heroData, nameParam, totalMatchData, filteredData, role, updateRole, updateMatchData, itemData, searchRes, totalPicks } = props

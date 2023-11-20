@@ -10,7 +10,7 @@ type Ability = {
     slot?: number;
 };
 
-type Match = {
+type DotaMatch = {
     abilities: Ability[];
     account_id: null | number;
     aghanims_shard: null | boolean;
@@ -56,4 +56,4 @@ type Match = {
     xpm_ten: number;
 }
 
-export default Match
+export default DotaMatch

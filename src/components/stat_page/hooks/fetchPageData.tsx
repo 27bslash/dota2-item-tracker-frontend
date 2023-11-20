@@ -5,17 +5,17 @@ import { baseApiUrl } from "../../../App"
 import { fetchData, bulkRequest } from "../../../utils/fetchData"
 import heroSwitcher from "../../../utils/heroSwitcher"
 import Items from "../../types/Item"
-import Match from "../../types/matchData"
+import DotaMatch from "../../types/matchData"
 
 export const useFetchAllData = (type: string) => {
-    const [filteredMatchData, setfilteredMatchData] = useState<Match[]>()
-    const [totalMatches, setTotalMatches] = useState<Match[]>()
+    const [filteredMatchData, setfilteredMatchData] = useState<DotaMatch[]>()
+    const [totalMatches, setTotalMatches] = useState<DotaMatch[]>()
     const [itemData, setItemData] = useState<Items>()
     const [totalPicks, setTotalPicks] = useState<any>()
-    let t = useParams()
+    const params = useParams()
     const [query] = useSearchParams();
     const role = query.get('role') || ''
-    const nameParam = t['name'] ? heroSwitcher(t['name']) : ''
+    const nameParam = params['name'] ? heroSwitcher(params['name']) : ''
     const [patch, setPatch] = useState({ 'patch': '', 'patch_timestamp': 0 })
     const getData = async () => {
         const matchDataUrl = type === 'hero' ? 'https://0f2ezc19w3.execute-api.eu-west-2.amazonaws.com/dev/' : baseApiUrl

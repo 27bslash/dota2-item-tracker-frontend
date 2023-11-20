@@ -4,14 +4,15 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useState } from 'react';
 import { useEffect } from 'react';
 import blurred from '../../images/blurred-best-games.jpg'
-import Match from '../types/matchData';
+import DotaMatch from '../types/matchData';
 import { theme } from '../..';
 import { cleanDecimal } from '../../utils/cleanDecimal';
 import BenchmarksData from '../types/benchmarks';
+import { RoleStrings } from '../home/home';
 
 type BenchMarksKeys = keyof BenchmarksData
 
-const BestGames = (props: { totalMatchData: Match[]; matchData: Match[]; updateRole: (role: string) => void; updatePageNumber: (idx: number) => void }) => {
+const BestGames = (props: { totalMatchData: DotaMatch[]; matchData: DotaMatch[]; updateRole: (role: RoleStrings) => void; updatePageNumber: (idx: number) => void }) => {
     const [bestgames, setBestgames] = useState<any>([])
     const [benchmarkKeys, setbenchmarkKeys] = useState<BenchMarksKeys[]>()
     const [loading, setLoading] = useState(true)
@@ -95,8 +96,8 @@ const BestGamesTableHeader = (props: { benchmarkKeys: BenchMarksKeys[] }) => {
     )
 }
 const BestGamesTableBody = (props: {
-    matchData: Match[];
-    updateRole: any; updatePageNumber: (idx: number) => void, bestgames: Match[]; benchmarkKeys: BenchMarksKeys[]
+    matchData: DotaMatch[];
+    updateRole: any; updatePageNumber: (idx: number) => void, bestgames: DotaMatch[]; benchmarkKeys: BenchMarksKeys[]
 }) => {
     const { bestgames, benchmarkKeys, updatePageNumber } = props
     const findGame = (matchId: number) => {

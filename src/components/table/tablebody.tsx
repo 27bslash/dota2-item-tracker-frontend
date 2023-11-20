@@ -6,14 +6,14 @@ import TableItems from "./tableItems"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import stringSearch from './table_search/string_search';
 import { theme } from "../.."
-import Match from "../types/matchData"
+import DotaMatch from "../types/matchData"
 interface BodyProps {
     nameParam: string,
     type: string,
     page: number,
     totalMatchData: any[],
     data: any[],
-    updateMatchData: (data: Match[]) => void,
+    updateMatchData: (data: DotaMatch[]) => void,
     heroList: any[],
     heroData: any,
     itemData: any,

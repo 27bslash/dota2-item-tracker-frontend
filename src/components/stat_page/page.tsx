@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import Nav from '../nav/nav';
 import CustomTable from '../table/table';
 import { createContext, useEffect, useState } from 'react';
@@ -7,13 +8,16 @@ import { useParams } from 'react-router';
 import heroSwitcher from '../../utils/heroSwitcher';
 import { useSearchParams } from 'react-router-dom';
 import PickCounter from '../pick_counter/pickCounter';
-import Match from '../types/matchData';
+import DotaMatch from '../types/matchData';
 import { HeroPageTopSection } from '../hero_page/hero_page';
 import { exists } from '../../utils/exists';
 import { useHeroColor } from './hooks/heroColorHook';
 import { useHeroData } from './hooks/heroDataHook';
 import { useFetchAllData } from './hooks/fetchPageData';
 import { StarterToggle } from './starterToggle';
+import Hero from '../types/heroList';
+import { TableSearchResults } from '../table/table_search/types/tableSearchResult.types';
+import { RoleStrings } from '../home/home';
 
 
 //  TODO
@@ -23,36 +27,26 @@ import { StarterToggle } from './starterToggle';
 
 interface pageProps {
     type: string,
-    heroList: any,
-    playerList?: any,
+    heroList: Hero[],
+    playerList: string[],
     palette?: string,
 }
-
-interface SearchRes {
-    items?: { string: { matches: Match[] } },
-    draft?: { string: { matches: Match[] } },
-    role?: { string: { matches: Match[] } },
-    player?: { string: { matches: Match[] } },
-    talents?: { string: { matches: Match[] } }
-}
 export interface MatchDataAdj {
-    updateMatchData: (data: Match[], searchValue?: {
-        [key: string]: { matches: Match[] }
-    }, types?: string[]) => void,
-    matchData?: Match[],
-    totalMatchData?: Match[],
-    filteredData?: Match[]
+    updateMatchData: (data: DotaMatch[], searchValue?: TableSearchResults, types?: string[]) => void,
+    matchData?: DotaMatch[],
+    totalMatchData?: DotaMatch[],
+    filteredData?: DotaMatch[]
 }
 
 const Page = ({ type, heroList, playerList }: pageProps) => {
-    const [filteredData, setFilteredData] = useState<Match[]>([])
-    const [totalMatchData, setTotalMatchData] = useState<Match[]>([])
+    const [filteredData, setFilteredData] = useState<DotaMatch[]>([])
+    const [totalMatchData, setTotalMatchData] = useState<DotaMatch[]>([])
     const [showStarter, setShowStarter] = useState(false)
     const [pageNumber, setPageNumber] = useState(0)
-    const [searchRes, setSearchRes] = useState<SearchRes>()
+    const [searchRes, setSearchRes] = useState<TableSearchResults>()
     const params = useParams()
     const [query] = useSearchParams();
-    const role = query.get('role') || ''
+    const role = (query.get('role') || '') as RoleStrings
     const [Role, setRole] = useState(role)
     const [count, setCount] = useState(0)
     const nameParam = params['name'] ? heroSwitcher(params['name']) : ''
@@ -95,9 +89,7 @@ const Page = ({ type, heroList, playerList }: pageProps) => {
 
     const heroData = useHeroData(type, totalMatchData, Role, nameParam)
 
-    const updateMatchData = (data: Match[], searchValue?: {
-        [key: string]: { matches: Match[] }
-    }, types?: string[]) => {
+    const updateMatchData = (data: DotaMatch[], searchValue?: TableSearchResults, types?: string[]) => {
         // setMatchData(data) ]
         if (!data.length) return
         setFilteredData(data)
@@ -109,7 +101,7 @@ const Page = ({ type, heroList, playerList }: pageProps) => {
             setSearchRes(undefined)
         }
     }
-    const updateRole = (role: string) => {
+    const updateRole = (role: RoleStrings) => {
         setRole(role)
         if (role) {
             setFilteredData([...filteredData].filter((x) => x.role === role))

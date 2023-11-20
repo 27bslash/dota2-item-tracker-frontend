@@ -1,19 +1,21 @@
 import { TextField } from '@mui/material';
-import { SetStateAction, useState } from 'react';
+import { FormEvent, SetStateAction, useState } from 'react';
 import Items from '../../types/Item';
 import search from './search';
-import Match from '../../types/matchData';
 import { MatchDataAdj } from '../../stat_page/page';
+import Hero from '../../types/heroList';
+import { TableSearchResults } from './types/tableSearchResult.types';
+import DotaMatch from './../../types/matchData';
 
 interface TableSearchProps extends MatchDataAdj {
     heroName: string,
-    heroList: [{ id: number, name: string }],
-    playerList: any[]
-    itemData: Items | undefined,
+    heroList: Hero[],
+    playerList: string[]
+    itemData?: Items,
     type: string,
     disabled: boolean,
     role?: string,
-    totalMatchData: Match[]
+    totalMatchData: DotaMatch[]
 }
 const TableSearch = (props: TableSearchProps) => {
     const [value, setValue] = useState('')
@@ -24,13 +26,13 @@ const TableSearch = (props: TableSearchProps) => {
         setValue(e.target.value)
         setErrorMsg('')
     }
-    const handleSubmit = async (e: any) => {
+    const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault()
         setError(false)
         setErrorMsg('')
         const searchTerms = value.split(',')
-        const data = props.role ? props.totalMatchData.filter((match: any) => match.role === props.role) : props.totalMatchData
-        const searchResults = search(searchTerms, data, props.itemData, props.heroList, props.playerList, props.heroName)
+        const data = props.role ? props.totalMatchData.filter((match) => match.role === props.role) : props.totalMatchData
+        const searchResults = search(searchTerms, data, props.itemData!, props.heroList, props.playerList, props.heroName)
         const combinedMatches = combineMatches(searchResults)
         const matchIds: number[] = []
         const targetArr = combinedMatches.find((arr) => arr.length > 0) || []
@@ -45,7 +47,7 @@ const TableSearch = (props: TableSearchProps) => {
                 matchIds.push(tempArr[0]);
             }
         }
-        const matches = [...props.totalMatchData].filter((x: any) => (matchIds.includes(x.id) && x.role === props.role) || (matchIds.includes(x.id) && !props.role))
+        const matches = [...props.totalMatchData].filter((x) => (matchIds.includes(x.id) && x.role === props.role) || (matchIds.includes(x.id) && !props.role))
         if (!matches.length) {
             setError(true)
             setErrorMsg(`No results found for ${value}`)
@@ -69,25 +71,17 @@ const TableSearch = (props: TableSearchProps) => {
         </div >
     )
 }
-export function combineMatches(searchResults: any) {
+export function combineMatches(searchResults: TableSearchResults) {
     const result: number[][] = [];
     for (const key in searchResults) {
         for (const k in searchResults[key]) {
             const idx = searchResults[key][k]["index"];
             const matches = searchResults[key][k]["matches"];
-            const m = matches.map(({ id }: any) => id) || [];
+            const m = matches.map(({ id }) => id) || [];
             result[idx] = result[idx] ? result[idx].concat(m) : m;
         }
     }
     return result;
 }
-const addToResults = (array: any, matchIdSet: any, searchResults: any) => {
-    for (const match of array) {
-        if (!matchIdSet.has(match['id'])) {
-            matchIdSet.add(match['id'])
-            searchResults.push(match)
-        }
-    }
-    return searchResults
-}
+
 export default TableSearch

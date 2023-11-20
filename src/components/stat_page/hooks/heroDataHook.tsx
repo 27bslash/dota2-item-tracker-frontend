@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react"
 import { baseApiUrl } from "../../../App"
-import Match from "../../types/matchData"
+import DotaMatch from "../../types/matchData"
 
-export const useHeroData = (type: string, totalMatchData: Match[], role: string, nameParam: string) => {
+export const useHeroData = (type: string, totalMatchData: DotaMatch[], role: string, nameParam: string) => {
 
     const [heroData, setHeroData] = useState<any>({})
     const [visited, setVisited] = useState<any>(new Set())
