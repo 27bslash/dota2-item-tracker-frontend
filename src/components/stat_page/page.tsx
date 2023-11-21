@@ -134,16 +134,15 @@ const Page = ({ type, heroList, playerList }: pageProps) => {
         return null;
     };
     const renderFilterByPatch = () => {
+        const oldPatch = totalMatchData.filter((x) => x.patch !== patch['patch'])
         return (
-            patch &&
-            totalMatchData.find((match) => match && match['unix_time'] <= patch['patch_timestamp']) && (
-                <Typography variant='h5' color='white' align='center'
-                    onClick={() => filterByPatch()}
-                >
-                    Filter matches by new patch
-                </Typography>
-            )
-        );
+            patch && totalMatchData.length !== oldPatch.length &&
+            <Typography variant='h5' color='white' align='center'
+                onClick={() => filterByPatch()}
+            >
+                Filter matches by new patch
+            </Typography>
+        )
     };
     const renderPageContent = () => {
         if (!exists(heroColor)) return null
