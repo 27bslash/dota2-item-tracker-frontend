@@ -137,7 +137,7 @@ const Page = ({ type, heroList, playerList }: pageProps) => {
         return (
             patch &&
             totalMatchData.find((match) => match && match['unix_time'] <= patch['patch_timestamp']) && (
-                <Typography
+                <Typography variant='h5' color='white' align='center'
                     onClick={() => filterByPatch()}
                 >
                     Filter matches by new patch
@@ -153,10 +153,11 @@ const Page = ({ type, heroList, playerList }: pageProps) => {
                 {renderFilterByPatch()}
                 {renderHeroPageTopSection()}
                 <div className="flex" style={{ 'width': '100%', minHeight: '53px' }}>
-                    <PickCounter
-                        {...commonProps}
-                        heroColor={heroColor} matchData={totalMatchData} searchRes={searchRes}
-                        count={count} totalPicks={totalPicks} updateRole={updateRole} />
+                    {totalPicks &&
+                        <PickCounter
+                            {...commonProps}
+                            heroColor={heroColor} matchData={totalMatchData} searchRes={searchRes}
+                            count={count} totalPicks={totalPicks} updateRole={updateRole} />}
                 </div>
                 <div className="flex">
                     <StarterToggle updateStarter={updateStarter} />

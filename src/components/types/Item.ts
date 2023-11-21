@@ -1,4 +1,4 @@
-type Item = {
+export type Item = {
     attrib?: Array<{ footer: string, header: string, key: string, value: string }>,
     cd: number,
     charges: boolean,
@@ -16,7 +16,7 @@ type Item = {
     qual: string,
     tier?: number,
 }
-type Items = {
+export type Items = {
     items: { [key: string]: Item }
 }
 export default Items

@@ -1,7 +1,7 @@
 import Items from "./Item";
 import BenchmarksData from "./benchmarks";
 
-type Ability = {
+export type HeroAbility = {
     id: string;
     img: string;
     key: string;
@@ -11,19 +11,19 @@ type Ability = {
 };
 
 type DotaMatch = {
-    abilities: Ability[];
+    abilities: HeroAbility[];
     account_id: null | number;
-    aghanims_shard: null | boolean;
-    additional_units?: any[],
+    aghanims_shard: null |  SimpleItems[];
+    additional_units?: SimpleItems[],
     assists: number;
-    backpack: Items;
+    backpack: SimpleItems[];
     bans: string[];
     benchmarks: BenchmarksData;
     deaths: number;
     deaths_ten: number;
     dire_draft: string[];
     duration: number;
-    final_items: Items;
+    final_items: SimpleItems[];
     gold: number;
     gold_adv: number;
     gpm: number;
@@ -33,7 +33,7 @@ type DotaMatch = {
     id: number;
     match_id?: number;
     item_neutral: string;
-    items: Items;
+    items: SimpleItems[];
     kills: number;
     kills_ten: number;
     lane_efficiency: number;
@@ -48,12 +48,17 @@ type DotaMatch = {
     radiant_draft: string[];
     replay_url: string;
     role: string;
-    starting_items: Items;
+    starting_items: SimpleItems[];
     tower_damage: number;
     unix_time: number;
     win: number;
     xpm: number;
     xpm_ten: number;
+}
+type SimpleItems = {
+    id: number;
+    key: string;
+    time: number | string;
 }
 
 export default DotaMatch

@@ -24,12 +24,12 @@ const ToggleSwitch = styled((props: SwitchProps) => (
     }
 }))
 
-export const StarterToggle = (props: any) => {
+export const StarterToggle = ({ updateStarter }: { updateStarter: () => void }) => {
     return (
         <div className="starter-toggle">
             <FormControlLabel
                 value="start"
-                control={<ToggleSwitch color="success" onChange={props.updateStarter} />}
+                control={<ToggleSwitch color="success" onChange={updateStarter} />}
                 label="Starting Items"
                 labelPlacement="start"
                 sx={{ padding: '4px 0px 4px 8px', backgroundColor: theme.palette.primary.main, borderRadius: '5px', border: ' solid 2px black', margin: '0', marginRight: 'auto', }}

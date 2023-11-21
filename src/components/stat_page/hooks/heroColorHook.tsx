@@ -9,7 +9,7 @@ export const useHeroColor = (type: string, heroName: string) => {
             if (type === 'hero') {
                 const hc = await fetch(`${baseApiUrl}files/colors`)
                 const json = await hc.json()
-                for (let colorObj of json['colors']) {
+                for (const colorObj of json['colors']) {
                     let targetHero = heroName
                     if (targetHero === 'earth_spirit') targetHero = 'undying'
                     const badReds = ['ursa', 'lion']

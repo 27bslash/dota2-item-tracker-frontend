@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react"
 import { baseApiUrl } from "../../../App"
 import DotaMatch from "../../types/matchData"
+import { PageHeroData } from "../../types/heroData"
 
 export const useHeroData = (type: string, totalMatchData: DotaMatch[], role: string, nameParam: string) => {
 
-    const [heroData, setHeroData] = useState<any>({})
-    const [visited, setVisited] = useState<any>(new Set())
-    const [total, setTotal] = useState<any>([])
+    const [heroData, setHeroData] = useState<PageHeroData>({})
+    const [visited, setVisited] = useState<Set<string>>(new Set())
+    const [total, setTotal] = useState<string[]>([])
 
     useEffect(() => {
         (async () => {
@@ -36,7 +37,7 @@ export const useHeroData = (type: string, totalMatchData: DotaMatch[], role: str
         for (const hero of visited) {
             if (!total.includes(hero)) {
                 getHeroData(hero)
-                setTotal((prev: any) => [...prev, hero])
+                setTotal((prev) => [...prev, hero])
             }
         }
     }, [visited])
