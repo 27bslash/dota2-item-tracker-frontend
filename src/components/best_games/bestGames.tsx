@@ -11,40 +11,45 @@ import BenchmarksData from '../types/benchmarks';
 import { RoleStrings } from '../home/home';
 
 type BenchMarksKeys = keyof BenchmarksData
-
-const BestGames = (props: { totalMatchData: DotaMatch[]; matchData: DotaMatch[]; updateRole: (role: RoleStrings) => void; updatePageNumber: (idx: number) => void }) => {
-    const [bestgames, setBestgames] = useState<any>([])
+type BestGamesProps = {
+    totalMatchData: DotaMatch[];
+    matchData: DotaMatch[];
+    updateRole: (role: RoleStrings) => void;
+    updatePageNumber: (idx: number) => void
+}
+const BestGames = ({ totalMatchData, matchData, updateRole, updatePageNumber }: BestGamesProps) => {
+    const [bestgames, setBestgames] = useState<DotaMatch[]>([])
     const [benchmarkKeys, setbenchmarkKeys] = useState<BenchMarksKeys[]>()
     const [loading, setLoading] = useState(true)
     useEffect(() => {
-        if (props.totalMatchData.length) {
+        if (totalMatchData.length) {
             sumBenchmarks()
             setLoading(false)
         }
-    }, [props.matchData, props.totalMatchData])
+    }, [matchData, totalMatchData])
     const sumBenchmarks = () => {
         const bmarks = []
-        for (const match of props.matchData) {
+        for (const match of matchData) {
             if (!match['parsed'] || !match['benchmarks']) continue
-            let sum: any = 0
+            let sum = 0
             const benchmarks = match['benchmarks']
-            sum = Object.values(benchmarks).reduce((a: any, b: any) => {
-                b = +b['pct'] || 0
-                return a + b
+            sum = Object.values(benchmarks).reduce((a, b) => {
+                const benchmarkPct = +b['pct'] || 0
+                return a + benchmarkPct
             }, sum)
             bmarks.push([match['id'], sum])
         }
-        const sorted = bmarks.sort((a: any, b: any) => {
+        const sorted = bmarks.sort((a, b) => {
             return b[1] - a[1]
         }).slice(0, 2).map((x) => x[0])
-        const filtered = props.matchData.filter((x: any) => sorted.includes(x['id']))
+        const filtered = matchData.filter((x) => sorted.includes(x['id']))
         setBestgames(filtered)
 
         const sortingArr = ['gold_per_min', 'xp_per_min',
             'kills_per_min', 'last_hits_per_min', 'hero_damage_per_min', 'hero_healing_per_min', 'tower_damage', 'stuns_per_min', 'lhten']
         if (filtered.length) {
             // sort benchmarks into correct order based on sortingArr
-            const sortedBenchmarks = Object.keys(filtered[0]['benchmarks']).sort((a: any, b: any) => {
+            const sortedBenchmarks = Object.keys(filtered[0]['benchmarks']).sort((a, b) => {
                 return sortingArr.indexOf(a) - sortingArr.indexOf(b)
             }) as (BenchMarksKeys)[]
             setbenchmarkKeys(sortedBenchmarks)
@@ -59,7 +64,7 @@ const BestGames = (props: { totalMatchData: DotaMatch[]; matchData: DotaMatch[];
                     <div className="best-games" style={{ 'width': '1200px', 'maxHeight': '140px', height: 'fit-content' }}>
                         <table>
                             <BestGamesTableHeader benchmarkKeys={benchmarkKeys}></BestGamesTableHeader>
-                            <BestGamesTableBody matchData={props.matchData} updateRole={props.updateRole} updatePageNumber={props.updatePageNumber} benchmarkKeys={benchmarkKeys!} bestgames={bestgames}></BestGamesTableBody>
+                            <BestGamesTableBody matchData={matchData} updateRole={updateRole} updatePageNumber={updatePageNumber} benchmarkKeys={benchmarkKeys!} bestgames={bestgames}></BestGamesTableBody>
                         </table>
                     </div>
                 }
@@ -81,7 +86,7 @@ const BestGamesTableHeader = (props: { benchmarkKeys: BenchMarksKeys[] }) => {
                     {/* icon header */}
                 </th>
                 <th>ROLE</th>
-                {props.benchmarkKeys.map((benchmarkKey: any, i: number) => {
+                {props.benchmarkKeys.map((benchmarkKey, i: number) => {
                     let header = benchmarkKey.split('_').map((char: string) => char[0]).join('')
                     if (header.length === 4) {
                         header = header.replace('p', '')
