@@ -5,8 +5,8 @@ import { useParseMatchData } from "./buildHooks/parseMatchDataHook"
 import { fetchData } from "../../utils/fetchData"
 import { useEffect, useState } from 'react';
 import { baseApiUrl } from "../../App"
-import Items from "../types/Item"
 import { exists } from './../../utils/exists';
+import { Items } from "../types/Item"
 
 
 const BuildDataJson = (props: any) => {

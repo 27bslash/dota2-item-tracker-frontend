@@ -1,13 +1,14 @@
 import { useReducer, useEffect } from "react";
 import { NonProDataType } from "../build";
-import Items from "../../types/Item";
 import abilityFilter from "../abillityBuild/abilityFiltering";
 import filterItems from "../itemBuild/itemFitltering/itemFiltering";
 import countStartingItems from "../itemBuild/startingItems/startingItemsFilter";
 import { mostUsedNeutrals } from "../itemBuild/neutralItems/mostUsedNeutrals";
 import { mostUsedTalents } from "../abillityBuild/talentLevels";
+import { Items } from "../../types/Item";
+import { PageHeroData } from "../../types/heroData";
 
-export const useHeroBuilds = (filteredData: { [role: string]: NonProDataType[] }, heroData: any, itemData: Items) => {
+export const useHeroBuilds = (filteredData: { [role: string]: NonProDataType[] }, heroData: PageHeroData, itemData: Items) => {
     const [heroBuilds, setHeroBuilds] = useReducer((states: any, updates: any) => {
         switch (updates.type) {
             case 'clear':
@@ -17,9 +18,9 @@ export const useHeroBuilds = (filteredData: { [role: string]: NonProDataType[] }
         }
     }, {})
     const getUltimateAbility = () => {
-        for (let k in heroData) {
+        for (const k in heroData) {
             const abilities = heroData[k]['abilities']
-            for (let abilityKey in abilities) {
+            for (const abilityKey in abilities) {
                 const ability = abilities[abilityKey]
                 if (ability['max_level'] === 3) {
                     return ability['name']
@@ -31,7 +32,7 @@ export const useHeroBuilds = (filteredData: { [role: string]: NonProDataType[] }
     useEffect(() => {
         const updateHeroBuilds = () => {
             setHeroBuilds({ type: 'clear' })
-            for (let key in filteredData) {
+            for (const key in filteredData) {
                 const buildData = filteredData[key];
                 const itemBuild = filterItems(buildData, itemData, key);
                 const abilityBuilds = abilityFilter(buildData);

@@ -1,8 +1,8 @@
 import { Box, Button, Typography } from '@mui/material';
-import { AbilityImg } from '../../table/tableItems';
 import { MatchDataAdj } from '../../stat_page/page';
 import { TalentBuild } from './talentBuild';
 import { useState } from 'react';
+import { AbilityImg } from '../../table/tableAbilities/abilityImg';
 interface AbilityBuildProps extends MatchDataAdj {
     heroName: string,
     data: any,

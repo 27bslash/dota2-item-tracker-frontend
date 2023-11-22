@@ -1,4 +1,4 @@
-import Items from "../../../types/Item"
+import { Items } from "../../../types/Item"
 
 const recursive_remove = (item: any, itemdata: any, components: string[], data: any[], keys: any[], removedComponents: string[]): any => {
     const badQuals = ['component', 'common', 'consumable', 'secret_shop']
@@ -165,7 +165,6 @@ export const disassembledComponents = (components: string[], data: any[], i: num
     for (const component of components) {
         // console.log(itemKey, component, components);
         const slicedData = [...data].slice(i + 1)
-        console.log(slicedData)
         const itemUses = slicedData.filter((x, i) => {
             const parentComponents = allComponents(x[0].replace(/__\d+/g, ''), itemdata)
             // console.log(x[0], parentComponents)

@@ -1,4 +1,4 @@
-import Items from "../../../types/Item";
+import { Items } from "../../../types/Item";
 import { NonProDataType } from "../../build";
 
 export const mostUsedNeutrals = (matchData: NonProDataType[], itemData: Items) => {

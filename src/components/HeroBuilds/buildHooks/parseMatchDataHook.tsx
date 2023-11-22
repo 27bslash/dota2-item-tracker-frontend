@@ -22,7 +22,7 @@ const calc_common_roles = (props: any, pickData?: any, threshold?: number) => {
             totalRolePicks = picks[role].picks + otherRolePicks
             combinedRole = true
         }
-        let perc = totalRolePicks / totalPicks
+        const perc = totalRolePicks / totalPicks
         if (perc > threshold) {
             roles.push(role)
         }
@@ -42,10 +42,10 @@ export const useParseMatchData = (proData: boolean, totalMatchData: any, heroNam
     }, [props.picks])
     const combinedRoles = ['Support', 'Roaming']
     useEffect(() => {
-        if (proData) {
+        if (proData && totalMatchData) {
             setData(totalMatchData)
             const roleCount: BuildProps['picks'] = {}
-            for (let match of totalMatchData) {
+            for (const match of totalMatchData) {
                 if (roleCount[match['role']]) {
                     roleCount[match['role']]['picks'] += 1
                     roleCount[match['role']]['wins'] += 1
@@ -67,8 +67,8 @@ export const useParseMatchData = (proData: boolean, totalMatchData: any, heroNam
             setFilteredData(o)
         } else if (data) {
             const tempObject: { [role: string]: NonProDataType[] } = {}
-            for (let role of displayedRoles) {
-                const roleFiltered = data.filter(((match: NonProDataType) => match.role === role || (combinedRoles.includes(role) && combinedRoles.includes(match.role))))
+            for (const role of displayedRoles) {
+                const roleFiltered = data.filter(((match) => match.role === role || (combinedRoles.includes(role) && combinedRoles.includes(match.role))))
                 tempObject[role] = roleFiltered
             }
             setFilteredData(tempObject)

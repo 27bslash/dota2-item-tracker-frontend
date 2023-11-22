@@ -38,7 +38,7 @@ const BigTalent: FC<BigTalentProps> = (props: BigTalentProps) => {
 export const countTalents = (heroData: any, matchData: any) => {
     const talentCount: any = {}
     // initialise object
-    for (let k in heroData['talents']) {
+    for (const k in heroData['talents']) {
         const talent = heroData['talents'][k]
         let lvl = 0
         if (talent['slot'] === 0 || talent['slot'] === 1) {
@@ -56,8 +56,8 @@ export const countTalents = (heroData: any, matchData: any) => {
         talentCount[String(talent['id'])] = { count: 0, slot: talent['slot'], total_picks: 0, level: lvl, key: talent['name_loc'] }
 
     }
-    for (let match of matchData) {
-        for (let ability of match['abilities']) {
+    for (const match of matchData) {
+        for (const ability of match['abilities']) {
             if (ability['type'] === 'talent') {
                 try {
                     const k = ability['id']
@@ -70,7 +70,7 @@ export const countTalents = (heroData: any, matchData: any) => {
             }
         }
     }
-    for (let k in talentCount) {
+    for (const k in talentCount) {
         const slot = talentCount[k]['slot']
         if (talentCount[k]['slot'] % 2 === 0) {
             const found = Object.keys(talentCount).find(key => {

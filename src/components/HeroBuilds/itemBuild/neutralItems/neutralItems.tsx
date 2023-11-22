@@ -1,4 +1,4 @@
-import Items from "../../../types/Item"
+import { Items } from "../../../types/Item";
 import { NonProDataType } from "../../build"
 import { ItemBuildImage } from "../itemBuild";
 import { Box, Typography } from '@mui/material';

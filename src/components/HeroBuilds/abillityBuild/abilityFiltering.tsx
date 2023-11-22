@@ -7,15 +7,15 @@ const abilityFilter = (data: NonProDataType[]) => {
     // console.log(aCount)
     const res = []
     for (let i = 0; i < 10; i++) {
-        const count: any = {}
-        for (let abilityArr of abilities) {
+        const count: { [key: string]: number } = {}
+        for (const abilityArr of abilities) {
             if (abilityArr[i]) {
                 count[abilityArr[i]] = (count[abilityArr[i]] || 0) + 1
             }
         }
         res.push(count)
     }
-    let second_occurance: { [key: string]: { count: number; level: (number)[] } } = {};
+    const second_occurance: { [key: string]: { count: number; level: (number)[] } } = {};
 
     for (const match of data) {
         const d: { [key: string]: { count: number; level: number } } = {};
@@ -96,7 +96,7 @@ export const testForSimilarBuilds = (abilityBuild: string, targetAbilityBuild: s
 
 
 export const genMostCommonBuilds = (aCount: { [key: string]: number; }) => {
-    let srt = Object.entries(aCount).sort((a: any, b: any) => b[1] - a[1]);
+    const srt = Object.entries(aCount).sort((a: any, b: any) => b[1] - a[1]);
     // console.log([...srt])
     groupSimilarBuilds(srt);
     let mostPickedBuild: any[]

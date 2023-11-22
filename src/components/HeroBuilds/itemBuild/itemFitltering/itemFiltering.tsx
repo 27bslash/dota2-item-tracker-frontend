@@ -1,5 +1,5 @@
 import { medianValue } from "../../../../utils/medianValue"
-import Items from "../../../types/Item"
+import { Items } from "../../../types/Item"
 import { NonProDataType } from "../../build"
 import filterComponents from "./componentFilter"
 import groupByTime from "./groupBytime"

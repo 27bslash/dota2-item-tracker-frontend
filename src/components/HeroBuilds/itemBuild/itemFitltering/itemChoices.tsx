@@ -1,4 +1,4 @@
-import Items from "../../../types/Item"
+import { Items } from "../../../types/Item"
 import { countItems } from "./itemFiltering"
 
 const timeBracket = (item: any) => {
