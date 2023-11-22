@@ -2,8 +2,8 @@ import { Button } from "@mui/material"
 import { SearchResultText } from "./searchResultText"
 import { DraftCounter } from "./draftCounter";
 import DotaMatch from "../../types/matchData";
-import { pickProps } from "../pickCounter";
 import { TableSearchResult, TableSearchResults } from "../../table/table_search/types/tableSearchResult.types";
+import { usePickCounterContext } from "../pickCounterContext";
 
 
 export const sortByMatches = (data: TableSearchResult) => {
@@ -12,21 +12,18 @@ export const sortByMatches = (data: TableSearchResult) => {
     return keys.slice(0, 5)
 }
 type SearchResultsTextProps = {
-    data: DotaMatch[]
     searchRes: TableSearchResults
-    updateMatchData: pickProps['updateMatchData']
-    reset: () => void;
-
 }
-export const SearchResultsText = ({ searchRes, data, updateMatchData, reset }: SearchResultsTextProps) => {
+export const SearchResultsText = ({ searchRes }: SearchResultsTextProps) => {
     const items = searchRes['items']
     const draft = searchRes['draft']
     const role = searchRes['role']
     const players = searchRes['player']
     const talents = searchRes['talents']
+    const { matchData, updateMatchData, reset } = usePickCounterContext()
     const handleClick = (matches: DotaMatch[], key: string, type?: string) => {
         const newMatchArr = matches.map((m) => m.id)
-        const filteredMatches = data.filter((match) => newMatchArr.includes(match.id))
+        const filteredMatches = matchData.filter((match) => newMatchArr.includes(match.id))
         updateMatchData(filteredMatches, searchRes)
     }
     let playerKeys: string[] = [], roleKeys: string[] = []

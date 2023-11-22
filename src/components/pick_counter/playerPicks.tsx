@@ -4,17 +4,15 @@ import { cleanDecimal } from "../../utils/cleanDecimal"
 import colourWins from "../../utils/colourWins"
 import DotaMatch from "../types/matchData"
 import { pickProps } from "./pickCounter"
+import { usePickCounterContext } from "./pickCounterContext"
 
 type PlayerPickProps = {
-    data: DotaMatch[]
-    updateMatchData: pickProps['updateMatchData']
-    reset: () => void
-    name: string,
     base: number
 }
-export const PlayerPicks = ({ data, updateMatchData, reset, name, base }: PlayerPickProps) => {
+export const PlayerPicks = ({ base }: PlayerPickProps) => {
     const heroCount: Record<string, Record<string, { picks: number; win: number }>> = {}
-    for (const match of data) {
+    const { nameParam, matchData, reset, updateMatchData } = usePickCounterContext()
+    for (const match of matchData) {
         if (heroCount[match['hero']] && heroCount[match['hero']][match['role']]) {
             heroCount[match['hero']][match['role']]['picks'] += 1
             if (match['win']) {
@@ -53,7 +51,7 @@ export const PlayerPicks = ({ data, updateMatchData, reset, name, base }: Player
     })
 
     let sortedData = Object.entries(heroCount)
-        .sort(([aKey, aValue], [bKey, bValue]) => {
+        .sort(([, aValue], [, bValue]) => {
             // Compare first by picks
             const aRole = Object.keys(aValue)[0]
             const bRole = Object.keys(bValue)[0]
@@ -68,18 +66,18 @@ export const PlayerPicks = ({ data, updateMatchData, reset, name, base }: Player
     const updateData = (hero?: string, role?: string) => {
         let filteredMatches
         if (hero && role) {
-            filteredMatches = data.filter((x: DotaMatch) => x['hero'] === hero && x['role'] === role)
+            filteredMatches = matchData.filter((x: DotaMatch) => x['hero'] === hero && x['role'] === role)
         } else if (hero) {
-            filteredMatches = data.filter((x: DotaMatch) => x['hero'] === hero)
+            filteredMatches = matchData.filter((x: DotaMatch) => x['hero'] === hero)
         } else {
-            filteredMatches = data.filter((x: DotaMatch) => x['role'] === role)
+            filteredMatches = matchData.filter((x: DotaMatch) => x['role'] === role)
         }
         updateMatchData(filteredMatches)
     }
     return (
         <div className="player-pick-counter">
             <div className="flex" style={{ width: '100%' }}>
-                <p className='bold-name' onClick={() => reset()}>{name} has played {base} times. He mostly plays: </p>
+                <p className='bold-name' onClick={() => reset()}>{nameParam} has played {base} times. He mostly plays: </p>
             </div>
             <div className="flex boxContainer">
                 {sortedData.map((x, i) => {

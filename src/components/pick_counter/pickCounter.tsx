@@ -10,6 +10,7 @@ import { RoleStrings } from '../home/home';
 import { SearchResultsText } from './tableSearchResults/tableSearchResults';
 import { HeroPicks } from './heroPicks';
 import { PlayerPicks } from './playerPicks';
+import { PickCounterContextProvider, usePickCounterContext } from './pickCounterContext';
 
 export interface pickProps {
     matchData: DotaMatch[],
@@ -28,7 +29,6 @@ const PickCounter = (props: pickProps) => {
     const name = props.nameParam
     const [searching, setSearching] = useState(false)
     const [searchResults, setSearchResults] = useState(props.searchRes)
-    console.log(props.totalPicks)
     useEffect(() => {
         if (props.searchRes) {
             setSearching(true)
@@ -51,29 +51,39 @@ const PickCounter = (props: pickProps) => {
         setSearching(false)
         props.updateRole('')
     }
+    const contextValues = {
+        matchData: props.matchData,
+        updateMatchData: props.updateMatchData,
+        type: props.type,
+        heroColor: props.heroColor,
+        role: props.role,
+        roleSearch: roleSearch,
+        reset: reset,
+        totalPicks: props.totalPicks,
+        nameParam: props.nameParam,
+    };
     return (
-        <>
+        <PickCounterContextProvider value={contextValues}>
             {!!props.matchData.length &&
                 <div className="pick-counter" style={{ color: 'white' }}>
                     {searching && searchResults ? (
-                        <SearchResultsText data={props.matchData} updateMatchData={props.updateMatchData} searchRes={searchResults} reset={reset} />
+                        <SearchResultsText searchRes={searchResults} />
                     ) : (
                         props.type === 'hero' && props.heroColor &&
                         <>
-                            <TotalPickCounter type={props.type} reset={reset} color={props.heroColor} updateMatchData={props.updateMatchData} role={props.role} totalPicks={props.totalPicks} name={props.nameParam} />
-                            <RoleCounter totalPicks={props.totalPicks} matchData={props.matchData} role={props.role} roleSearch={roleSearch}></RoleCounter>
+                            <TotalPickCounter />
+                            <RoleCounter />
                         </>
                     )}
                     {props.type === 'player' && !searching &&
                         <>
-                            <TotalPickCounter type={props.type} updateMatchData={props.updateMatchData}
-                                reset={reset} role={props.role} name={props.nameParam} data={props.matchData} />
+                            <TotalPickCounter />
                             {/* <RoleCounter totalPicks={props.totalPicks} matchData={props.matchData} role={props.role} roleSearch={roleSearch}></RoleCounter> */}
                         </>
                     }
                 </div>
             }
-        </>
+        </PickCounterContextProvider>
     )
 }
 export const BoldName = (props: { reset: () => void; color: string; name: string; }) => {
@@ -81,27 +91,17 @@ export const BoldName = (props: { reset: () => void; color: string; name: string
         <strong >{heroSwitcher(props.name).replace(/_/g, ' ')}</strong>
     </p>
 }
-
-type TotalPickCounterProps = {
-    type: string,
-    data?: DotaMatch[],
-    role: RoleStrings,
-    totalPicks?: PickStats,
-    name: string,
-    color?: string,
-    reset: () => void,
-    updateMatchData: pickProps['updateMatchData']
-}
-const TotalPickCounter = ({ role, type, totalPicks, data, name, color, reset, updateMatchData }: TotalPickCounterProps) => {
+const TotalPickCounter = () => {
+    const { role, type, totalPicks, matchData, nameParam, heroColor, reset, updateMatchData } = usePickCounterContext()
     const base = role && type === 'hero' ? totalPicks![role] : totalPicks
     return (
         <>
             {type === 'hero' ? (
-                color && base && (
-                    <HeroPicks role={role} name={name} base={base} color={color} reset={reset} />)
+                heroColor && base && (
+                    <HeroPicks base={base} />)
             ) : (
-                data && (
-                    <PlayerPicks name={name} reset={reset} data={data} base={data.length} updateMatchData={updateMatchData} />)
+                matchData && (
+                    <PlayerPicks base={matchData.length} />)
             )
             }
         </>
