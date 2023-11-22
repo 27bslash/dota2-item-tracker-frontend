@@ -67,8 +67,9 @@ const NavSearch = ({ heroList, playerList, filterHeroes, filteredByButton, highl
         <Box className='nav-search' bgcolor={'primary.main'}>
             <TextField
                 sx={{
-                    '& .MuiInput-underline:before': { borderBottomColor: 'primary.main' },
-                    '& .MuiInput-underline:after': { borderBottomColor: '#1976d2' },
+                    width: '100%',
+                    '& .MuiInput-underline:before': { borderBottomColor: 'primary.main', width: '17.5%' },
+                    '& .MuiInput-underline:after': { borderBottomColor: '#1976d2', width: '17.5%' },
                 }}
                 id="search"
                 placeholder='Search...'
