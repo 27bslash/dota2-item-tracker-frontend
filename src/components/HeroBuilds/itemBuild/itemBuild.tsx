@@ -1,8 +1,9 @@
 import { Grid, Typography } from '@mui/material';
-import TableItem from './../../table/tableItem';
+import TableItem from '../../table/tableItems/tableItem';
 import { cleanDecimal } from '../../../utils/cleanDecimal';
 import { NonProDataType } from '../build';
-import Items from '../../types/Item';
+import { Items } from '../../types/Item';
+import DotaMatch from '../../types/matchData';
 // type Item = {
 // 	[k: string]: { value: number, adjustedValue: number, time: number, disassemble?: boolean, dissassembledComponents?: string[], offset?: { left: number, top: number } }
 // }
@@ -50,10 +51,10 @@ const ItemBuild = (props: any) => {
 
             <Grid container  >
                 <Grid container >
-                    <GridRow data={props.data.map((o: any) => ({ 'core': o['core'] }))} dataLength={totalLen} itemData={props.itemData} ObjectKey={'core'} />
+                    <GridRow  data={props.data.map((o: any) => ({ 'core': o['core'] }))} dataLength={totalLen} itemData={props.itemData} ObjectKey={'core'} />
                 </Grid>
                 <Grid container >
-                    <GridRow data={props.data.map((o: any) => ({ 'situational': o['situational'] }))} dataLength={totalLen} itemData={props.itemData} ObjectKey={'situational'} />
+                    <GridRow  data={props.data.map((o: any) => ({ 'situational': o['situational'] }))} dataLength={totalLen} itemData={props.itemData} ObjectKey={'situational'} />
                 </Grid>
                 {/* {props.data.map((o: any) => ({ 'core': o['core'] })).map((buildObject: any, i: number) => {
 
@@ -73,7 +74,7 @@ const ItemBuild = (props: any) => {
     )
 }
 
-const GridRow = (props: { data: any, itemData: any, ObjectKey: 'core' | 'situational', dataLength: number[] }) => {
+const GridRow = (props: {  data: any,  itemData: Items, ObjectKey: 'core' | 'situational', dataLength: number[] }) => {
     // console.log(props.data)
     // 18 6
     // 18
@@ -203,7 +204,7 @@ const ItemBuilds = (props: { buildObject: any; timing: any; data: any; itemData:
         </>
     )
 }
-const ItemBuildCell = (props: { itemkey: any; item: any; data: any; itemData: any; }) => {
+const ItemBuildCell = (props: {  itemkey: any; item: any; data: any; itemData: any; }) => {
     const { itemkey, item, data, itemData } = props
     // itemkey.sort((a: any, b: any) => {
     //     return item[b]['time'] - item[a]['time']
@@ -236,8 +237,7 @@ export const ItemBuildImage = (props: { k: string, avgTime?: number, disassemble
         {props.avgTime &&
             <p style={{ margin: '0', color: 'white' }}>{props.avgTime}m {props.disassemble ? 'D' : ''}</p>
         }
-        <TableItem type='item' height='40px' width='55px' itemKey={props.k.replace(/__\d+/g, '')} totalMatchData={props.data}
-            items={props.itemData} role='' overlay={false} />
+        <TableItem type='item' height='40px' width='55px' itemKey={props.k.replace(/__\d+/g, '')} overlay={false} />
         {/* <p style={{ margin: '0', color: 'white' }}>{perc}%</p> */}
         <p style={{ margin: '0', color: 'white', textAlign: 'center' }}>{cleanDecimal(props.perc)}%</p>
         <p style={{ margin: 0, color: 'white' }}>{props.orText}</p>
@@ -256,8 +256,7 @@ const ItemComponents = (props: { components: string[][]; data: any[]; itemData: 
                                 {i % 2 === 0 &&
                                     <div className="disassemble-overlay"></div>
                                 }
-                                <TableItem height='20px' type='item' itemKey={component} totalMatchData={props.data}
-                                    items={props.itemData} role='' overlay={false} />
+                                <TableItem height='20px' type='item' itemKey={component} overlay={false} />
                             </div>
                         )
                     })

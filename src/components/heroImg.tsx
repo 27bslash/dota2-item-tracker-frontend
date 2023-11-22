@@ -4,7 +4,7 @@ const HeroImg = (props: any) => {
     const imgHost = 'https://ailhumfakp.cloudimg.io/v7/https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/heroes'
     const heroImg = `${imgHost}/${props.heroName}.png`
     return (
-        <HeroTooltip baseApiUrl={props.baseApiUrl} heroData={props.heroData} heroName={props.heroName} img={heroImg} >
+        <HeroTooltip  heroData={props.heroData} heroName={props.heroName} img={heroImg} >
             <img src={heroImg} alt="hero" height='71px' width='126px' />
         </HeroTooltip>
     )
