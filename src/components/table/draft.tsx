@@ -10,7 +10,7 @@ const Draft = (props: any) => {
         if (props.totalMatchData.length === 0) return;
         const matches = new Set()
         // const data = draftS.handleDraftSearch(props.totalMatchData, props.heroList, search, props.hero)
-        for (let match of props.totalMatchData) {
+        for (const match of props.totalMatchData) {
             const draf = draftS.draftChecker(match, props.hero, search, symbol)
             if (draf) {
                 const key = `${symbol || ''}${search}`

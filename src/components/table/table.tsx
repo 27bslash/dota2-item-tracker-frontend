@@ -9,25 +9,29 @@ import TimeAgo from 'javascript-time-ago'
 import en from 'javascript-time-ago/locale/en'
 import CustomTableBody from "./tablebody"
 import DotaMatch from "../types/matchData"
+import { PageHeroData } from "../types/heroData"
+import Hero from "../types/heroList"
+import Items from "../types/Item"
+import { RoleStrings } from "../home/home"
 interface TableProps {
     showStarter: boolean,
     pageNumber?: number,
-    heroList: any,
-    heroData: any,
-    itemData: any,
+    heroList: Hero[],
+    heroData: PageHeroData,
+    itemData: Items | undefined,
     nameParam: string,
     type: string,
     filteredData: DotaMatch[],
     count: number,
     updateMatchData: (data: DotaMatch[]) => void,
     totalMatchData: DotaMatch[],
-    role: string
+    role: RoleStrings
 }
 TimeAgo.addDefaultLocale(en)
 const CustomTable = (props: TableProps) => {
     const [page, setPage] = useState(props.pageNumber || 0);
     const [count, setCount] = useState(props.count)
-    const [orderBy, setOrderBy] = useState('unix_time')
+    const [orderBy, setOrderBy] = useState<keyof DotaMatch>('unix_time')
     const [sortDirection, setSortDirection] = useState('desc')
     const { filteredData, totalMatchData } = props
     useEffect(() => {
@@ -95,6 +99,7 @@ const CustomTable = (props: TableProps) => {
                                     onPageChange={handleChangePage}
                                     ActionsComponent={TablePaginationActions}
                                     showFirstButton
+
                                     showLastButton
                                 />
                             </TableRow>

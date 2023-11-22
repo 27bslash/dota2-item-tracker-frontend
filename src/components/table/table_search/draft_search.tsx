@@ -1,19 +1,22 @@
 import { matchSorter } from "match-sorter"
 import heroSwitcher from "../../../utils/heroSwitcher"
+import Hero from "../../types/heroList"
+import DotaMatch from "../../types/matchData"
 
 class DraftSearch {
-    heroSearch = (search: string, heroList: any[], hero: string) => {
-        let ret: any[] = []
+    heroSearch = (search: string, heroList: Hero[], hero: string) => {
+        let ret: string[] = []
         search = search.replace(' ', '_')
         const sorted = matchSorter([...heroList].filter((x) => x.name !== hero), search, { keys: [{ threshold: matchSorter.rankings.ACRONYM, key: 'name' }] }).reverse().map(x => x.name)
         ret = [...ret, ...sorted]
         return ret
     }
-    handleDraftSearch = (matchData: any, heroList: any, search: string, hero: string, i = 0) => {
+    handleDraftSearch = (matchData: DotaMatch[], heroList: Hero[], search: string, hero: string, i = 0) => {
         // const heroes = heroSearch(search, heroList)
-        const draftRes: any = new Set()
-        const matches: any = new Set()
-        const dict: { [item: string]: { index: number, matches: any[] } } = {}
+
+        // const draftRes: Set<string> = new Set()
+        const matches: Set<DotaMatch> = new Set()
+        const dict: { [item: string]: { index: number, matches: DotaMatch[] } } = {}
         const heroName = search.replace(/\+|-/g, '')
         const heroes = this.heroSearch(heroName, heroList, hero)
         // console.log('h', heroes)
@@ -26,7 +29,7 @@ class DraftSearch {
                 if (symbol) symbol = symbol[0]
                 const draf = this.draftChecker(match, hero, targetHero, symbol)
                 if (draf) {
-                    draftRes.add(`${symbol || ''}${targetHero}`)
+                    // draftRes.add(`${symbol || ''}${targetHero}`)
                     matches.add(match)
                     dict[`${symbol || ''}${targetHero}`] ? dict[`${symbol || ''}${targetHero}`]['matches'].push(match) : dict[`${symbol || ''}${targetHero}`] = { 'matches': [match], index: i }
 
@@ -38,7 +41,7 @@ class DraftSearch {
         }
     }
 
-    draftChecker = (match: any, hero: string, targetHero: string, symbol: string | null) => {
+    draftChecker = (match: DotaMatch, hero: string, targetHero: string, symbol: string | null) => {
         let rad = match['radiant_draft'].includes(targetHero)
         let dire = match['dire_draft'].includes(targetHero)
         if (!rad && !dire) {

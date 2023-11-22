@@ -1,35 +1,35 @@
+import Items from "../../types/Item"
+import DotaMatch from "../../types/matchData"
 
-const itemSearch = (item: string, data: any, itemData: any, role = '', i = 0) => {
+const itemSearch = (item: string, data: DotaMatch[], itemData: any, role = '', i = 0) => {
     if (!data || !itemData) {
         return {}
     }
-    data = data.filter((match: any) => match['items'])
-    const matches: any[] = []
+    data = data.filter((match) => match['items'])
+    const matches = []
     const noSymbl = item.replace('-', '')
     const symbolMatch = item.match(/^-/)
     let symbol = ''
     if (symbolMatch) symbol = '-'
     let searchRes = itemIdSearch(itemData, noSymbl)
-    const itemRes: any = new Set()
     const dict: {
         [item: string]: {
             index: number,
-            matches: any[],
+            matches: DotaMatch[],
         }
     } = {}
     if (role) {
-        data = data.filter((match: any) => match.role === role)
+        data = data.filter((match) => match.role === role)
     }
-    const allItems = data.map((match: any) => match['items'].map((item: { [key: string]: string }) => item.key)).flat()
-    data.forEach((match: any) => {
+    const allItems = data.map((match) => match['items'].map((item) => item.key)).flat()
+    data.forEach((match) => {
         const seenItems = new Set()
-        for (let item of match['items']) {
+        for (const item of match['items']) {
             if (seenItems.has(item.key)) {
                 continue
             }
             if (!symbol && (searchRes['names'].has(item.key) || searchRes['names'].has(`item_${item.key}`))) {
                 const name = itemData[item.key] ? itemData[item.key] : item.key
-                itemRes.add(name)
                 seenItems.add(item.key)
                 dict[`${symbol}${name}`] ? dict[`${symbol}${name}`]['matches'].push(match) : dict[`${symbol}${name}`] = { 'matches': [match], 'index': i }
                 // matches.push({ name: match })
@@ -45,8 +45,8 @@ const itemSearch = (item: string, data: any, itemData: any, role = '', i = 0) =>
         }
     })
     if (symbol === '-') {
-        for (let item of searchRes['names']) {
-            const filteredMatches = data.filter((match: any) => match['items'].map((x: any) => x.key).every((x: string) =>
+        for (const item of searchRes['names']) {
+            const filteredMatches = data.filter((match) => match['items'].map((x) => x.key).every((x: string) =>
                 allItems.includes(item) && item !== x
             ))
             if (filteredMatches.length) {
