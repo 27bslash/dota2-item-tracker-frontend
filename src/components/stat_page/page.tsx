@@ -68,7 +68,8 @@ const Page = ({ type, heroList, playerList }: pageProps) => {
     }, [filteredMatchData, totalMatches])
 
     const scrollGameIntoView = (idx: number) => {
-        const pageIdx = Math.ceil(idx / 10) - 1
+        let pageIdx = Math.ceil(idx / 10) - 1
+        pageIdx = pageIdx >= 0 ? pageIdx : 0
         setPageNumber(pageIdx)
         const elPageIdx = idx - (10 * (pageIdx))
         const tbodys = document.querySelectorAll('tbody')
