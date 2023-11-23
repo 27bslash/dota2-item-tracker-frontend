@@ -1,10 +1,10 @@
-import { NonProDataType } from "../build";
+import { NonProDataType } from "../../builds/build";
 
 
 export const mostUsedTalents = (MatchData: NonProDataType[]) => {
     const talents: any = []
-    for (let match of MatchData) {
-        for (let ability of match['abilities']) {
+    for (const match of MatchData) {
+        for (const ability of match['abilities']) {
             if (ability['type'] === 'talent') {
                 if (ability['level'] > 30) {
                     ability['level'] = 25

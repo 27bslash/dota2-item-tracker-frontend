@@ -1,10 +1,16 @@
-const groupByTime = (data: any, roleKey: string) => {
-    const itemObj: any = { 'core': [], 'situational': [] }
+import { RawItemBuild, RawItemBuildValues } from "../itemFitltering/itemFiltering"
+import { disassembledComponents } from './../itemComponents/disassembledComponents';
+
+export interface CoreItem extends RawItemBuildValues {
+    key?: string;
+}
+const groupByTime = (data: RawItemBuild[], roleKey: string) => {
+    const itemObj: { [key: string]: CoreItem[] } = { 'core': [], 'situational': [] }
     const res = [structuredClone(itemObj), structuredClone(itemObj), structuredClone(itemObj)]
     const seenItems = new Set<string>()
-    const filteredData = data.filter((x: any) => x[1]['adjustedValue'] > 10)
-    const filterItems = (data: any, roleKey: string, time: number, type: string) => {
-        const ret: any[] = []
+    const filteredData = data.filter((x: RawItemBuild) => x[1]['adjustedValue'] > 10)
+    const filterItems = (data: RawItemBuild[], roleKey: string, time: number, type: string) => {
+        const ret: CoreItem[] = []
         const supportRoles = ['Hard Support', 'Support', 'Roaming']
         let percForCore = time <= 1800 && !supportRoles.includes(roleKey) ? 60 : 40
         if (supportRoles.includes(roleKey) && time < 1800) {
@@ -12,17 +18,20 @@ const groupByTime = (data: any, roleKey: string) => {
         } else if (supportRoles.includes(roleKey)) {
             percForCore = 20
         }
-        Object.fromEntries([...data].filter((x: any) => {
+        Object.fromEntries([...data].filter((x) => {
             const coreStatement = x[1]['time'] < time && !seenItems.has(x[0]) && x[1]['adjustedValue'] > percForCore
+            const o: CoreItem[] = []
             if ((type === 'core' && coreStatement)) {
                 seenItems.add(x[0])
-                x[1]['key'] = x[0]
-                ret.push(x[1])
+                o[1] = x[1]
+                o[1]['key'] = x[0]
+                ret.push(o[1])
                 return x
             } else if (type === 'situational' && x[1]['time'] < time && !seenItems.has(x[0]) && x[1]['adjustedValue'] < percForCore && x[1]['adjustedValue'] > 10) {
                 seenItems.add(x[0])
-                x[1]['key'] = x[0]
-                ret.push(x[1])
+                o[1] = x[1]
+                o[1]['key'] = x[0]
+                ret.push(o[1])
                 return x
             }
             else {
@@ -50,10 +59,10 @@ const groupByTime = (data: any, roleKey: string) => {
         if (itemTime <= 60 && itemKey !== 'bottle') {
             continue
         }
-        // filter out any dissassembled compotents that are also a an item choice
-        if (item['dissassembledComponents'] && item['option']) {
-            item['dissassembledComponents'] = item['dissassembledComponents'].filter((x: any[]) =>
-                !item['option'].find((k: any) => k['choice'] === x[0])
+        // filter out any dissassembled components that are also a an item choice
+        if (item[1]['disassembledComponents'] && item[1]['option']) {
+            item[1]['disassembledComponents'] = item[1]['disassembledComponents'].filter((x) =>
+                !(item[1]['option']!['choice'] === x[0])
             )
         }
     }
@@ -91,8 +100,8 @@ const groupByTime = (data: any, roleKey: string) => {
     // }
     const choiceSet = new Set()
     for (const itemGroup of res) {
-        const keys: string[] = ['core', 'situational']
-        for (let k of keys) {
+        const keys = ['core', 'situational']
+        for (const k of keys) {
             // const sli = itemGroup[k].slice(0, 6)
             // console.log(sli)
             // let sliced = padArray(itemGroup[k].slice(7))
@@ -109,9 +118,10 @@ const groupByTime = (data: any, roleKey: string) => {
                     if (choiceSet.has(targetKey) || choiceSet.has(optionKey)) continue
                     // remove the option from the situational if core
                     const otherSet = k === 'core' ? 'situational' : 'core'
-                    const idx = itemGroup[k].findIndex((x: any) => x['key'] === optionKey)
-                    const situationalIdx = itemGroup[otherSet].findIndex((x: any) => x['key'] === optionKey)
-                    itemObject[optionKey] = { 'value': option['targetValue'], 'adjustedValue': option['targetValue'], time: option['time'] }
+                    const idx = itemGroup[k].findIndex((x: CoreItem) => x['key'] === optionKey)
+                    const situationalIdx = itemGroup[otherSet].findIndex((x: CoreItem) => x['key'] === optionKey)
+
+                    // itemObject[optionKey] = { 'value': option['targetValue'], 'adjustedValue': option['targetValue'], time: option['time'] }
                     if (idx !== -1) itemGroup[k].splice(idx, 1); itemGroup[otherSet].splice(situationalIdx, 1)
 
                     // } else if (itemObject['option'] && itemGroup[k].length > 6) {

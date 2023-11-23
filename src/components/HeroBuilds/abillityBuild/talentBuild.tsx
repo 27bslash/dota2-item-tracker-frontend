@@ -1,7 +1,7 @@
 import TalentImg from "../../table/talentImg"
 import TalentTooltip from "../../tooltip/talentTooltip"
 import Tip from "../../tooltip/tooltip"
-import { NonProDataType } from "../build"
+import { NonProDataType } from "../../builds/build"
 import { mostUsedTalents } from "./talentLevels"
 import { Box, Typography } from '@mui/material';
 
@@ -10,13 +10,13 @@ export const TalentBuild = (props: { matchData: NonProDataType[], heroData: any,
     const heroTalents = props.heroData[Object.keys(props.heroData)[0]]['talents']
     const visitedTalents: any = []
     const s = new Set()
-    for (let talent of mostUsedTals) {
+    for (const talent of mostUsedTals) {
         const t = []
         const talentKey = talent[0]
         if (!s.has(talentKey)) {
             s.add(talentKey)
             const newA = Array.from(s)
-            for (let _id of newA) {
+            for (const _id of newA) {
                 const f = mostUsedTals.filter((x: any) => _id === x[0])
                 t.push({ img: f[0][0], type: 'talent', ...f[0][1] })
             }

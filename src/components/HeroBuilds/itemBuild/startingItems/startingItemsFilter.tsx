@@ -1,4 +1,4 @@
-import { NonProDataType } from "../../build"
+import { NonProDataType } from "../../../builds/build"
 
 const countStartingItems = (data: NonProDataType[]) => {
     const wards = [

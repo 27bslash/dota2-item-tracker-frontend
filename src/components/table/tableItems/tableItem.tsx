@@ -52,8 +52,6 @@ const TableItem = (props: TItemProp) => {
             if (w) {
                 w.focus()
             }
-
-
         }
     }
     return (

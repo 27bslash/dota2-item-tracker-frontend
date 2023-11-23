@@ -12,6 +12,8 @@ interface TableContextType {
     role: RoleStrings
     heroData: PageHeroData,
     heroList: Hero[],
+    heroName: string,
+    playerList?: string[],
     showStarter: boolean
     updateMatchData: (data: DotaMatch[], searchValue?: TableSearchResults, types?: string[]) => void;
     filteredData: DotaMatch[];

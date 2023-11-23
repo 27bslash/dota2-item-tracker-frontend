@@ -1,30 +1,36 @@
 import { useEffect, useState } from "react"
-import { BuildProps, NonProDataType } from "../build"
+import { BuildProps, NonProDataType } from "../../builds/build"
 import { useFetchData } from "./fetchMatchDataHook"
-const calc_common_roles = (props: any, pickData?: any, threshold?: number) => {
-    const picks: BuildProps["picks"] = pickData || props.picks || props['picks']
+import PickStats from "../../types/pickStats"
+import { RoleStrings } from "../../home/home"
+const calc_common_roles = (props: any, pickData?: Record<string, { [key: string]: number }>, threshold?: number) => {
+    const picks: PickStats = pickData || props.picks || props['picks']
     threshold = threshold || 0.1
     const combinedRoles = ['Support', 'Roaming']
     let totalPicks = 0
-    for (let o of Object.entries(picks)) {
+    for (const o of Object.entries(picks)) {
         totalPicks += o[1]['picks']
     }
     totalPicks = totalPicks || props.picks.picks
     const roles: string[] = []
     const sorted = Object.entries(picks).filter((x) => typeof (x[1]) === 'object').sort((a, b) => b[1]['picks'] - a[1]['picks'])
     let combinedRole = null
-    for (let k of sorted) {
-        const role = k[0]
-        let totalRolePicks = picks[role].picks
-        if (!combinedRole && combinedRoles.includes(role)) {
-            const otherRole: string | undefined = combinedRoles.find((pos) => pos !== role && pos in picks)
-            const otherRolePicks = otherRole ? picks[otherRole].picks : 0
-            totalRolePicks = picks[role].picks + otherRolePicks
-            combinedRole = true
-        }
-        const perc = totalRolePicks / totalPicks
-        if (perc > threshold) {
-            roles.push(role)
+    for (const k of sorted) {
+        const role = k[0] as RoleStrings
+        if (role) {
+            let totalRolePicks = picks[role].picks
+            if (!combinedRole && combinedRoles.includes(role)) {
+                const otherRole = combinedRoles.find((pos) => pos !== role && pos in picks)
+                if (otherRole) {
+                    const otherRolePicks = otherRole ? picks[otherRole as RoleStrings].picks : 0
+                    totalRolePicks = picks[role].picks + otherRolePicks
+                    combinedRole = true
+                }
+            }
+            const perc = totalRolePicks / totalPicks
+            if (perc > threshold) {
+                roles.push(role)
+            }
         }
     }
     return roles
@@ -44,7 +50,7 @@ export const useParseMatchData = (proData: boolean, totalMatchData: any, heroNam
     useEffect(() => {
         if (proData && totalMatchData) {
             setData(totalMatchData)
-            const roleCount: BuildProps['picks'] = {}
+            const roleCount: { [key: string]: { [key: string]: number, } } = {}
             for (const match of totalMatchData) {
                 if (roleCount[match['role']]) {
                     roleCount[match['role']]['picks'] += 1

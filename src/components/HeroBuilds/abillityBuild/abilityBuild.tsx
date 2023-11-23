@@ -3,10 +3,11 @@ import { MatchDataAdj } from '../../stat_page/page';
 import { TalentBuild } from './talentBuild';
 import { useState } from 'react';
 import { AbilityImg } from '../../table/tableAbilities/abilityImg';
+import { AbilityBuildEntry } from '../../builds/buildCell';
 interface AbilityBuildProps extends MatchDataAdj {
     heroName: string,
     data: any,
-    abilityBuilds: { [key: string]: any }[],
+    abilityBuilds: AbilityBuildEntry[],
     heroData: any
 }
 const AbilityBuilds = (props: AbilityBuildProps) => {
@@ -16,7 +17,6 @@ const AbilityBuilds = (props: AbilityBuildProps) => {
     const [debug, setShowDebug] = useState(false)
 
     const DEBUG = false
-
     return (
         <Box justifyContent='space-between' padding={4} className='ability-builds flex'>
             {/* <div className='ability-build flex'>
@@ -42,9 +42,9 @@ const AbilityBuilds = (props: AbilityBuildProps) => {
                                     <Button sx={{ marginTop: debugMargin }} onClick={() => setShowDebug((prev) => !prev)}>debug</Button>
                                 }
                             </div>
-                            {DEBUG && debug &&
+                            {DEBUG && debug && abilityArr[2] &&
                                 <div className="debug-builds">
-                                    {abilityArr[2].map((debugAbArr: any[], k: number) => {
+                                    {abilityArr[2].map((debugAbArr, k: number) => {
                                         return (
                                             <div key={k} className="flex">
                                                 <AbilityBuild abilityArr={debugAbArr[0]} imageHost={imageHost} heroData={props.heroData} heroName={props.heroName} i={1}></AbilityBuild>
@@ -67,20 +67,29 @@ const AbilityBuilds = (props: AbilityBuildProps) => {
         </Box >
     )
 }
-const AbilityBuild = ({ abilityArr, imageHost, heroData, heroName, i }: { abilityArr: { [key: string]: any }, imageHost: string, heroData: any, heroName: string, i: number }) => {
+type AbilitBuildProps = {
+    abilityArr: string,
+    imageHost: string,
+    heroData: any,
+    heroName: string,
+    i: number
+}
+const AbilityBuild = ({ abilityArr, imageHost, heroData, heroName, i }: AbilitBuildProps) => {
     return (
-        abilityArr.split('__').map((ability: string, idx: number) => {
-            const link = `${imageHost}https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/abilities/${ability}.png`
-            const abilityObj = { [ability]: 0 }
-            return (
-                <div key={idx}>
-                    {i === 0 &&
-                        <Typography align='center' color={'white'}>{idx + 1}</Typography>
-                    }
-                    <AbilityImg link={link} imgWidth={55} ability={abilityObj} heroData={heroData} heroName={heroName} key={idx} />
-                </div>
-            )
-        })
+        <>
+            {abilityArr.split('__').map((ability: string, idx: number) => {
+                const link = `${imageHost}https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/abilities/${ability}.png`
+                const abilityObj = { [ability]: 0 }
+                return (
+                    <div key={idx}>
+                        {i === 0 &&
+                            <Typography align='center' color={'white'}>{idx + 1}</Typography>
+                        }
+                        <AbilityImg link={link} imgWidth={55} ability={abilityObj} heroData={heroData} heroName={heroName} key={idx} />
+                    </div>
+                )
+            })}
+        </>
     )
 }
 export default AbilityBuilds

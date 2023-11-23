@@ -21,6 +21,7 @@ interface BodyProps {
     data: DotaMatch[],
     updateMatchData: (data: DotaMatch[], searchValue?: TableSearchResults, types?: string[]) => void,
     heroList: Hero[],
+    playerList: string[],
     heroData: PageHeroData,
     itemData: Items | undefined,
     showStarter: boolean,
@@ -45,8 +46,8 @@ const CustomTableBody = (props: BodyProps) => {
                     const contextValues = {
                         row: row,
                         items: props.itemData, role: props.role,
-                        heroData: props.heroData,
-                        heroList: props.heroList, filteredData: props.data, totalMatchData: props.totalMatchData, updateMatchData: props.updateMatchData,
+                        heroData: props.heroData, heroName: props.nameParam,
+                        heroList: props.heroList, playerList: props.playerList, filteredData: props.data, totalMatchData: props.totalMatchData, updateMatchData: props.updateMatchData,
                         showStarter: props.showStarter,
                     }
                     const currentTime = Date.now()

@@ -1,5 +1,5 @@
 import { useReducer, useEffect } from "react";
-import { NonProDataType } from "../build";
+import { NonProDataType } from "../../builds/build";
 import abilityFilter from "../abillityBuild/abilityFiltering";
 import filterItems from "../itemBuild/itemFitltering/itemFiltering";
 import countStartingItems from "../itemBuild/startingItems/startingItemsFilter";
@@ -35,7 +35,7 @@ export const useHeroBuilds = (filteredData: { [role: string]: NonProDataType[] }
             for (const key in filteredData) {
                 const buildData = filteredData[key];
                 const itemBuild = filterItems(buildData, itemData, key);
-                const abilityBuilds = abilityFilter(buildData);
+                const abilityBuilds = abilityFilter(buildData) || [[]];
                 const startingItemBuilds = countStartingItems(buildData);
                 const neutralItems = mostUsedNeutrals(buildData, itemData)
                 const talentBuild = mostUsedTalents(buildData)

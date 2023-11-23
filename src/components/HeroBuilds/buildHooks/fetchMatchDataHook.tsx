@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { baseApiUrl } from "../../../App"
 import { fetchData, bulkRequest } from "../../../utils/fetchData"
-import { NonProDataType } from "../build"
+import { NonProDataType } from "../../builds/build"
 
 export const useFetchData = (heroName: string) => {
     const [nonProData, setNonProData] = useState<NonProDataType[]>()

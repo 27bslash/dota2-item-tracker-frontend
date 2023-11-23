@@ -1,5 +1,5 @@
 import { Items } from "../../../types/Item"
-import { countItems } from "./itemFiltering"
+import { RawItemBuild, countItems } from "./itemFiltering"
 
 const timeBracket = (item: any) => {
     if (item[1]['time'] < 700) {
@@ -82,11 +82,11 @@ const choice = (arr: any[], percentiles: any[], matchData: any, itemData: any) =
         //     }
         // }
     }
-    if (res.length) return res
+    if (res.length) return res[0]
     // console.log('riop')
 }
-export const addItemChoices = (percentiles: any[], matchData: any, itemData: any) => {
-    percentiles.forEach((arr: any[], i: number) => {
+export const addItemChoices = (percentiles: RawItemBuild[], matchData: any, itemData: any) => {
+    percentiles.forEach((arr, i: number) => {
         const res = choice(arr, percentiles, matchData, itemData)
         if (res) {
             percentiles[i][1]['option'] = res

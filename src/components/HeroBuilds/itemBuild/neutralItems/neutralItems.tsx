@@ -1,9 +1,7 @@
-import { Items } from "../../../types/Item";
-import { NonProDataType } from "../../build"
-import { ItemBuildImage } from "../itemBuild";
 import { Box, Typography } from '@mui/material';
+import { ItemBuildImage } from "../itemBuildCell/itemBuildImage";
 
-export const NeutralItems = (props: { neutralItems: any[], data: NonProDataType[], itemData: Items }) => {
+export const NeutralItems = (props: { neutralItems: any[] }) => {
     // const neutralItems = mostUsedNeutrals(props.data, props.itemData)
     const mapped = props.neutralItems.map((itemArr) => itemArr.length < 3 ? [itemArr] : [itemArr.slice(0, 2), itemArr.slice(2, 4)])
     const tierColours = ['white', '#99D98B', '#97a6e8', '#C783E8', '#F5DFA6']
@@ -23,7 +21,7 @@ export const NeutralItems = (props: { neutralItems: any[], data: NonProDataType[
                                     {tierArr.map((x, itemIndex) => {
                                         if (x.length) {
                                             return <div key={itemIndex} className={`test ${i}`}>
-                                                <NeutralItem key={i} idx={i} tierArr={x} data={props.data} itemData={props.itemData}></NeutralItem>
+                                                <NeutralItem key={i} idx={i} tierArr={x} ></NeutralItem>
                                             </div>
                                         }
                                     })}
@@ -44,7 +42,7 @@ export const NeutralItems = (props: { neutralItems: any[], data: NonProDataType[
         </>
     )
 }
-const NeutralItem = (props: { idx: number; tierArr: any[]; itemData: Items; data: NonProDataType[]; }) => {
+const NeutralItem = (props: { idx: number; tierArr: any[]; }) => {
     return (
         <Box>
             <Box padding={1} paddingLeft={1} paddingTop={0.5} paddingBottom={0} className="flex">
@@ -53,7 +51,7 @@ const NeutralItem = (props: { idx: number; tierArr: any[]; itemData: Items; data
                     const perc: number = neutralItem[1]['perc']
                     return (
                         <div key={i} className="neutral-item" >
-                            <ItemBuildImage k={key} itemData={props.itemData} perc={perc} data={props.data}></ItemBuildImage>
+                            <ItemBuildImage k={key} perc={perc}></ItemBuildImage>
                         </div>
                     )
                 })}

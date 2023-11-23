@@ -12,6 +12,7 @@ export interface Trend {
     Roaming: PickRoleStat;
     Safelane: PickRoleStat;
     Support: PickRoleStat;
+    '': PickRoleStat
     bans: number;
     hero: string;
     picks: number;
@@ -26,6 +27,7 @@ interface PickStats {
     Roaming: PickRoleStat;
     Safelane: PickRoleStat;
     Support: PickRoleStat;
+    '': PickRoleStat
     bans: number;
     hero: string;
     picks: number;

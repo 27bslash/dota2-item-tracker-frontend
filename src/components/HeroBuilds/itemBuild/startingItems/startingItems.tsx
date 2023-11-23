@@ -3,7 +3,6 @@ import TableItem from "../../../table/tableItems/tableItem"
 type StartingItemsProps = {
     startingItemData: [string, number][],
     data: any
-    itemData: any,
 }
 const StartingItems = (props: StartingItemsProps) => {
     return (

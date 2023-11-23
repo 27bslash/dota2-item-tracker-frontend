@@ -1,9 +1,10 @@
 /* eslint-disable no-prototype-builtins */
 import { medianValue } from "../../../utils/medianValue";
-import { NonProDataType } from "../build";
+import { NonProDataType } from "../../builds/build";
+import { AbilityBuildEntry } from "../../builds/buildCell";
 
-const abilityFilter = (data: NonProDataType[]) => {
-    const { abilities, aCount }: { abilities: any[]; aCount: { [key: string]: number } } = groupAbilities(data)
+const abilityFilter = (data: NonProDataType[]): false | [AbilityBuildEntry[], { [key: string]: number }] => {
+    const { abilities, aCount } = groupAbilities(data)
     // console.log(aCount)
     const res = []
     for (let i = 0; i < 10; i++) {
@@ -40,7 +41,7 @@ const abilityFilter = (data: NonProDataType[]) => {
             }
         }
     }
-    const medianLevelsForAbility: { [key: string]: number } = Object.keys(second_occurance).reduce((result: any, key) => {
+    const medianLevelsForAbility: { [key: string]: number } = Object.keys(second_occurance).reduce((result: { [key: string]: number }, key) => {
         const levels = second_occurance[key].level;
         const median = medianValue(levels);
         result[key] = median;
@@ -48,7 +49,7 @@ const abilityFilter = (data: NonProDataType[]) => {
     }, {});
     // {'antimage_mana_break': {'count': 103, 'level': [...]}, 'antimage_blink': {'count': 103, 'level': [...]}, 'antimage_counterspell': {'count': 98, 'level': [...]}, 'antimage_mana_void': {'count': 100, 'level': [...]}}
     if (!abilities.length) {
-        return [[]]
+        return false
     }
     // const abilityBuilds = genAbilityArr(res, ab, totalCount, max_abilities)
     const mostCommonBuilds = genMostCommonBuilds(aCount);
@@ -96,11 +97,11 @@ export const testForSimilarBuilds = (abilityBuild: string, targetAbilityBuild: s
 
 
 export const genMostCommonBuilds = (aCount: { [key: string]: number; }) => {
-    const srt = Object.entries(aCount).sort((a: any, b: any) => b[1] - a[1]);
+    const srt = Object.entries(aCount).sort((a, b) => b[1] - a[1]);
     // console.log([...srt])
-    groupSimilarBuilds(srt);
-    let mostPickedBuild: any[]
-    let mostCommonBuilds = srt.sort((a: any, b: any) => b[1] - a[1]).filter((build, i) => {
+    const sorted = groupSimilarBuilds(srt);
+    let mostPickedBuild: AbilityBuildEntry
+    let mostCommonBuilds = sorted.sort((a, b) => b[1] - a[1]).filter((build, i) => {
         if (i === 0) mostPickedBuild = build;
         const buildPerc = (build[1] / mostPickedBuild[1]) * 100;
         if (buildPerc > 35) {
@@ -150,7 +151,8 @@ const jackSort = (abilityString: string, testAbilityString: string) => {
         return true
     }
 }
-export const groupSimilarBuilds = (srt: [string, number, any?][]) => {
+
+export const groupSimilarBuilds = (srt: AbilityBuildEntry[]) => {
     for (const b of srt) {
         for (const [i, testBuild] of srt.entries()) {
             if (b[0] === testBuild[0]) {
@@ -160,7 +162,6 @@ export const groupSimilarBuilds = (srt: [string, number, any?][]) => {
             if (testForSimilarBuilds(b[0], testBuild[0], 1) && jackSort(b[0], testBuild[0])) {
                 b[1] += testBuild[1];
                 if (b[2]) {
-
                     b[2].push(testBuild)
                 } else {
                     b[2] = [testBuild]
@@ -175,7 +176,7 @@ export const groupSimilarBuilds = (srt: [string, number, any?][]) => {
 const groupAbilities = (data: NonProDataType[]) => {
     const abilities = []
     const aCount: { [key: string]: number } = {}
-    for (let match of data) {
+    for (const match of data) {
         if ('abilities' in match && match['abilities'].length > 9) {
             const abilityArray = match['abilities'].filter((ability) => ability.type !== 'talent').map((ability) => ability.img).slice(0, 9)
             abilities.push(abilityArray)
