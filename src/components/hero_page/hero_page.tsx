@@ -12,31 +12,33 @@ import { PageHeroData } from "../types/heroData"
 import Hero from "../types/heroList"
 import DotaMatch from "../types/matchData"
 import PickStats from "../types/pickStats"
+import { usePageContext } from "../stat_page/pageContext"
 
 export const HeroPageTopSection = (props: {
-    heroData: PageHeroData; nameParam: string; totalMatchData: DotaMatch[]; role: string; updatePageNumber: (idx: number) => void;
-    updateMatchData: (match: DotaMatch[]) => void; itemData?: Items; filteredData: DotaMatch[]; updateRole: (role: RoleStrings) => void; searchRes?: TableSearchResults
-    totalPicks?: PickStats, heroList: Hero[]
+    role: string; updatePageNumber: (idx: number) => void;
+    updateMatchData: (match: DotaMatch[]) => void; updateRole: (role: RoleStrings) => void
+    totalPicks?: PickStats;
 }) => {
-    const { heroData, nameParam, totalMatchData, filteredData, role, updateRole, updateMatchData, itemData, searchRes, totalPicks } = props
+    const { heroData, nameParam, totalMatchData, filteredData, itemData, searchRes, heroList } = usePageContext()
+    const { role, updateRole, updateMatchData, totalPicks } = props;
     return (
         <>
             <div className="flex" style={{ 'minHeight': '87px' }}>
                 <div className="hero-img-wrapper" style={{ width: '250px' }} >
-                    <HeroImg heroData={heroData} heroName={nameParam} />
+                    <HeroImg />
                     {!!totalMatchData.length &&
-                        <MostUsed matchData={totalMatchData} role={role} updateMatchData={updateMatchData} itemData={itemData}></MostUsed>
+                        <MostUsed role={role} ></MostUsed>
                     }
                 </div>
-                <BestGames matchData={filteredData} totalMatchData={totalMatchData} updatePageNumber={props.updatePageNumber} updateRole={updateRole}></BestGames>
+                <BestGames updatePageNumber={props.updatePageNumber} updateRole={updateRole}></BestGames>
                 {!!Object.keys(heroData).length && !!filteredData.length &&
-                    <BigTalent totalMatchData={totalMatchData} matchData={filteredData} heroData={heroData} heroName={nameParam} width='100px' margin='2% 0px 0px 230px' updateMatchData={updateMatchData} />
+                    <BigTalent width='100px' margin='2% 0px 0px 230px' updateMatchData={updateMatchData} />
                 }
 
             </div>
             <div style={{ 'minHeight': '45px', marginTop: '20px' }}>
                 {itemData && totalPicks &&
-                    < Build heroList={props.heroList} role={role} picks={totalPicks} searchRes={searchRes}
+                    < Build heroList={heroList} role={role} picks={totalPicks} searchRes={searchRes}
                         data={filteredData} heroData={heroData} heroName={nameParam} itemData={itemData} totalMatchData={totalMatchData} updateMatchData={updateMatchData} />
                 }
             </div>

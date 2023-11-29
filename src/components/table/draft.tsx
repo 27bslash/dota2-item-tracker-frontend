@@ -1,17 +1,19 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 /* eslint-disable no-undef */
+import { usePageContext } from "../stat_page/pageContext";
 import DraftSearch from "./table_search/draft_search";
 
 const Draft = (props: any) => {
-    const dr = props.draft.includes(props.hero)
+    const { totalMatchData, nameParam } = usePageContext()
+    const dr = props.draft.includes(nameParam)
     const draftS = new DraftSearch()
     const updateData = (search: string, symbol: string) => {
         const dict: any = {}
-        if (props.totalMatchData.length === 0) return;
+        if (totalMatchData.length === 0) return;
         const matches = new Set()
-        // const data = draftS.handleDraftSearch(props.totalMatchData, props.heroList, search, props.hero)
-        for (const match of props.totalMatchData) {
-            const draf = draftS.draftChecker(match, props.hero, search, symbol)
+        // const data = draftS.handleDraftSearch(totalMatchData, nameParamList, search, nameParam)
+        for (const match of totalMatchData) {
+            const draf = draftS.draftChecker(match, nameParam, search, symbol)
             if (draf) {
                 const key = `${symbol || ''}${search}`
                 dict[key] ? dict[key]['matches'].push(match) : dict[key] = { 'matches': [match] }
@@ -28,7 +30,7 @@ const Draft = (props: any) => {
                 searchPrefix = '+'
             }
             return (
-                x === props.hero ? (
+                x === nameParam ? (
                     <img key={i} alt={x} src={require(`../../images/minimap_icons/${x}.jpg`).default} className='icon-highlight' ></img>
                 ) : (
                     <img key={i} alt={x} src={require(`../../images/minimap_icons/${x}.jpg`).default} onClick={() => updateData(x, searchPrefix)}></img>

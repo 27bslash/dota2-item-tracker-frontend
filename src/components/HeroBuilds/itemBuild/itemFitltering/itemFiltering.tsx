@@ -17,7 +17,10 @@ export type RawItemBuildValues = {
     time: number,
     disassemble?: boolean,
     disassembledComponents?: string[][],
-    option?: ItemBuildOption
+    option?: ItemBuildOption,
+    longOption?: boolean
+    currMax?: number,
+    offset?: { [key: string]: number }
 }
 export type RawItemBuild = [string, RawItemBuildValues]
 

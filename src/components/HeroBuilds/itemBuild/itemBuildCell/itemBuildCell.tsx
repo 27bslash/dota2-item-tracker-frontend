@@ -1,8 +1,9 @@
 import Items from "../../../types/Item";
 import { ItemComponents } from "../itemComponents/itemComponents";
+import { CoreItem } from "../itemGroups/groupBytime";
 import { ItemBuildImage } from "./itemBuildImage";
 
-export const ItemBuildCell = (props: { itemkey: any; item: any; }) => {
+export const ItemBuildCell = (props: { itemkey: string; item: CoreItem; }) => {
     const { itemkey, item } = props
     // itemkey.sort((a: any, b: any) => {
     //     return item[b]['time'] - item[a]['time']
@@ -10,7 +11,7 @@ export const ItemBuildCell = (props: { itemkey: any; item: any; }) => {
     const perc = item['adjustedValue']
     const avgTime = (Math.floor(item['time'] / 60))
     const disassemble = item['disassemble']
-    const components = item['dissassembledComponents']
+    const components = item['disassembledComponents']
     const orText = item['option'] || item['longOption'] ? 'or' : ''
     return (
         <div className="img-cell" >

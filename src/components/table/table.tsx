@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 import { TableContainer, TableRow, Table, TableFooter, TablePagination, CircularProgress } from "@mui/material"
 import TablePaginationActions from "@mui/material/TablePagination/TablePaginationActions"
-import React, { useEffect, useState } from "react"
+import React, { useContext, useEffect, useState } from "react"
 import TableHeader from "./tableHeader"
 import TimeAgo from 'javascript-time-ago'
 
@@ -13,10 +13,12 @@ import { PageHeroData } from "../types/heroData"
 import Hero from "../types/heroList"
 import Items from "../types/Item"
 import { RoleStrings } from "../home/home"
+import { usePageContext } from "../stat_page/pageContext"
 interface TableProps {
     showStarter: boolean,
     pageNumber?: number,
     heroList: Hero[],
+    playerList: string[]
     heroData: PageHeroData,
     itemData: Items | undefined,
     nameParam: string,
@@ -34,6 +36,7 @@ const CustomTable = (props: TableProps) => {
     const [orderBy, setOrderBy] = useState<keyof DotaMatch>('unix_time')
     const [sortDirection, setSortDirection] = useState('desc')
     const { filteredData, totalMatchData } = props
+    const t = usePageContext()
     useEffect(() => {
         setCount(props.count)
         if (page * 10 > props.count) {
@@ -86,7 +89,7 @@ const CustomTable = (props: TableProps) => {
                             showStarter={props.showStarter}
                         />
                         <CustomTableBody data={sortTable()} heroData={props.heroData} type={props.type} page={page} nameParam={props.nameParam}
-                            totalMatchData={totalMatchData} heroList={props.heroList} itemData={props.itemData}
+                            totalMatchData={totalMatchData} heroList={props.heroList} playerList={props.playerList} itemData={props.itemData}
                             showStarter={props.showStarter} role={props.role} updateMatchData={props.updateMatchData}></CustomTableBody>
                         <TableFooter >
                             <TableRow>

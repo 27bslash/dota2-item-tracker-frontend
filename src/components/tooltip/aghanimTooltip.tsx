@@ -2,11 +2,14 @@
 import TooltipAttributes from "./tooltipAttributes"
 import CdMc from './cdmc';
 import Color from "color-thief-react";
+import { usePageContext } from "../stat_page/pageContext";
+import { HeroAbilities } from "../types/heroData";
 
 const AghanimTooltip = (props: any) => {
-    let abilities: any[] = []
-    if (props.heroData[props.heroName]) {
-        abilities = props.heroData[props.heroName]['abilities']
+    let abilities: Record<string, HeroAbilities> = {}
+    const { heroData, nameParam } = usePageContext()
+    if (heroData[nameParam]) {
+        abilities = heroData[nameParam]['abilities']
     }
     const aghanimAbility = extractAghanim(abilities, props.type)
     const aghText = aghanimAbility[`${props.type}_loc`] || aghanimAbility['desc_loc']
@@ -95,7 +98,7 @@ export default AghanimTooltip
 
 
 const extractAghanim = (result: { [x: string]: any }, s: string) => {
-    for (let ability in result) {
+    for (const ability in result) {
         if (result[ability][`ability_is_granted_by_${s}`]) {
             result[ability]['newAbility'] = true
             return result[ability]

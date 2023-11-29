@@ -7,17 +7,10 @@ import Items from "../types/Item"
 import Hero from "../types/heroList"
 import { TableSearchResults } from "./table_search/types/tableSearchResult.types"
 interface TableContextType {
-    row?: DotaMatch,
-    items: Items | undefined,
+    row: DotaMatch,
     role: RoleStrings
-    heroData: PageHeroData,
-    heroList: Hero[],
-    heroName: string,
-    playerList?: string[],
     showStarter: boolean
     updateMatchData: (data: DotaMatch[], searchValue?: TableSearchResults, types?: string[]) => void;
-    filteredData: DotaMatch[];
-    totalMatchData: DotaMatch[];
 }
 type tableContextProviderProps = {
     children: React.ReactNode

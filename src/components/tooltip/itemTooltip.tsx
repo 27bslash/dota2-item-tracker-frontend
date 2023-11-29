@@ -7,6 +7,7 @@ import TooltipLore from "./tooltipLore";
 import { PageHeroData } from "../types/heroData";
 import { Items, Item } from "../types/Item";
 import { useTableContext } from "../table/tableContext";
+import { usePageContext } from "../stat_page/pageContext";
 
 
 interface ItemTooltipProps {
@@ -17,10 +18,10 @@ interface ItemTooltipProps {
 }
 const ItemTooltip = (props: ItemTooltipProps) => {
     const [itemProperties, setItemProperties] = useState<Item>()
-    const { items, row, heroData } = useTableContext()
+    const { itemData } = usePageContext()
     useEffect(() => {
-        if (items) {
-            setItemProperties(items.items[props.itemKey])
+        if (itemData) {
+            setItemProperties(itemData.items[props.itemKey])
         }
     }, [])
     return (
@@ -49,7 +50,7 @@ const ItemTooltip = (props: ItemTooltipProps) => {
                             </div>
                         </div>
                     ) : (
-                        <AghanimTooltip heroName={row!.hero} heroData={heroData} type={props.type}></AghanimTooltip>
+                        <AghanimTooltip   type={props.type}></AghanimTooltip>
                     )
                     }
                 </>

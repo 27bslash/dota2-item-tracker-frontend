@@ -11,6 +11,8 @@ import Items from "../types/Item";
 import { PageHeroData } from "../types/heroData";
 import { TableSearchResults } from "../table/table_search/types/tableSearchResult.types";
 import PickStats from "../types/pickStats";
+import { usePageContext } from "../stat_page/pageContext";
+import { RoleStrings } from "../home/home";
 
 export interface BuildProps extends MatchDataAdj {
     data?: any,
@@ -41,9 +43,9 @@ export type NonProDataType = {
 const Build = (props: BuildProps) => {
     const [proData, setProData] = useState(false)
     const [open, setOpen] = useState(false)
-
-    const filteredData = useParseMatchData(proData, props.data, props.heroName, props)
-    const heroBuilds = useHeroBuilds(filteredData!, props.heroData, props.itemData)
+    const { filteredData, itemData, heroData, nameParam, heroList, totalMatchData } = usePageContext()
+    const fd = useParseMatchData(proData, totalMatchData, nameParam, props)
+    const heroBuilds = useHeroBuilds(fd!, heroData, itemData!)
     const [guideGuide, setGuideGuide] = useState(false)
 
     const baseButtonStyle = {
@@ -54,7 +56,7 @@ const Build = (props: BuildProps) => {
             color: 'white'
         }
     };
-    const disabledOpacity = !filteredData ? 0.3 : 1
+    const disabledOpacity = !fd ? 0.3 : 1
     const textShadow = {
         'textShadow': '1.5px 1.5px black',
     }
@@ -63,12 +65,12 @@ const Build = (props: BuildProps) => {
             <Box className="build-container" bgcolor={open ? 'secondary.dark' : 'inherit'} sx={{
                 position: 'relative'
             }}>
-                < Button variant='contained' color='primary' disabled={!filteredData} sx={{
+                < Button variant='contained' color='primary' disabled={!fd} sx={{
                     ...baseButtonStyle,
                     marginRight: '4px',
                     opacity: disabledOpacity
                 }} onClick={() => setOpen((prevstate) => !prevstate)} >Builds</Button>
-                {open && filteredData &&
+                {open && fd && heroBuilds &&
                     <>
                         <Button variant='contained' color='primary' onClick={() => setProData((prevstate) => !prevstate)}
                             sx={baseButtonStyle} >{!proData ? ' Pro data' : 'non pro'}</Button>
@@ -81,11 +83,12 @@ const Build = (props: BuildProps) => {
                                 </div>
                             </Tooltip>
                         }
-                        {Object.entries(heroBuilds).map((build: any, index: number) => {
-                            const role = build[0]
+                        {Object.entries(heroBuilds).map((build, index: number) => {
+                            const role = build[0] as RoleStrings
                             const buildData = heroBuilds[role]
                             return (
-                                <BuildCell totalMatchData={props.totalMatchData} heroList={props.heroList} key={index} data={filteredData[role]} updateMatchData={props.updateMatchData} buildData={buildData} role={role} heroName={props.heroName} itemData={props.itemData} dataLength={Object.entries(heroBuilds).length} heroData={props.heroData} />
+                                <BuildCell key={index} data={fd[role]} updateMatchData={props.updateMatchData} buildData={buildData} role={role}
+                                    dataLength={Object.entries(heroBuilds).length} />
                             )
                         })}
                     </>

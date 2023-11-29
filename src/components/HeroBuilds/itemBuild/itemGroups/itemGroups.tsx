@@ -2,10 +2,15 @@ import { Typography } from "@mui/material";
 import { ItemBuildCell } from "../itemBuildCell/itemBuildCell";
 import Items from "../../../types/Item";
 import { RawItemBuild } from "../itemFitltering/itemFiltering";
-
-export const ItemGroups = (props: { buildObject: any; timing: string; offset?: { left: number, top: number }, ObjectKey: 'core' | 'situational' }) => {
-    const { buildObject, offset, timing, ObjectKey } = props
-    const odf = buildObject[ObjectKey].flat().some((x: any) => {
+import { CoreItem } from "./groupBytime";
+type ItemGroupsProps = {
+    buildObject: Record<string, CoreItem[][]>,
+    timing: 'Early' | 'Mid' | 'Late',
+    ObjectKey: 'core' | 'situational',
+    offset?: { left: number, top: number }
+}
+export const ItemGroups = ({ buildObject, offset, timing, ObjectKey }: ItemGroupsProps) => {
+    const odf = buildObject[ObjectKey].flat().some((x) => {
         // const key = Object.keys(x)[0]
         return x['option']
     })
@@ -15,11 +20,11 @@ export const ItemGroups = (props: { buildObject: any; timing: string; offset?: {
     }
     const disassembleMargin = () => {
         let ret = 0
-        buildObject[ObjectKey][0].forEach((x: any) => {
+        buildObject[ObjectKey][0].forEach((x) => {
             // const key = Object.keys(x)[0]
-            if (x['dissassembledComponents']) {
+            if (x['disassembledComponents']) {
                 // console.log(x)
-                ret += x['dissassembledComponents'].length
+                ret += x['disassembledComponents'].length
             }
             // console.log(ret)
         })
@@ -33,15 +38,15 @@ export const ItemGroups = (props: { buildObject: any; timing: string; offset?: {
                 <>
                     <Typography variant={'h6'} className='build-header'>{`${timing} ${ObjectKey}`}</Typography>
                     <div className={`${ObjectKey} flex`} style={{ flexDirection: 'column', marginLeft: `${optionMargin()}px` }}>
-                        {buildObject[ObjectKey].map((itemGroup: any, i: number) => {
+                        {buildObject[ObjectKey].map((itemGroup, i: number) => {
                             const centerOffset = itemGroup.length % 2 === 0 || i === 0 ? 0 : -54
                             const leftOffset = offset ? offset.left + 'px' : '0px'
                             const underMarginLeft = i === 1 && disassembleMargin() ? disassembleMargin() * 27 : centerOffset
                             const style = !odf ? { marginLeft: underMarginLeft + 'px', justifyContent: 'center' } : { marginLeft: leftOffset }
                             return (
                                 <div key={i} className='flex' style={style}>
-                                    {itemGroup.map((group: any, j: number) => {
-                                        const itemkey = group['key']
+                                    {itemGroup.map((group, j: number) => {
+                                        const itemkey = group['key']!
                                         const itemOffset = group['offset'] || { top: '0px', left: '0px' }
                                         return (
                                             <div key={j} className="item-offset" style={{ marginTop: itemOffset['top'], marginLeft: itemOffset['left'] }}>

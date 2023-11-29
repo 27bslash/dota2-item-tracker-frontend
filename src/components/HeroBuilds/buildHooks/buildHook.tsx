@@ -1,4 +1,4 @@
-import { useReducer, useEffect } from "react";
+import { useReducer, useEffect, useState } from "react";
 import { NonProDataType } from "../../builds/build";
 import abilityFilter from "../abillityBuild/abilityFiltering";
 import filterItems from "../itemBuild/itemFitltering/itemFiltering";
@@ -7,16 +7,27 @@ import { mostUsedNeutrals } from "../itemBuild/neutralItems/mostUsedNeutrals";
 import { mostUsedTalents } from "../abillityBuild/talentLevels";
 import { Items } from "../../types/Item";
 import { PageHeroData } from "../../types/heroData";
-
+import { AbilityBuildEntry, Talents } from "../../builds/buildCell";
+import { CoreItem } from "../itemBuild/itemGroups/groupBytime";
+export type HeroBuild = {
+    item_builds: {
+        [key: string]: CoreItem[],
+    }[];
+    ability_builds: AbilityBuildEntry[] | never[];
+    ability_medians: {
+        [key: string]: number;
+    } | undefined;
+    starting_items: [string, number][];
+    neutral_items: [string, {
+        count: number;
+        tier: number;
+        perc: number;
+    }][][];
+    talents: Talents
+    ultimate_ability: string | undefined;
+}
 export const useHeroBuilds = (filteredData: { [role: string]: NonProDataType[] }, heroData: PageHeroData, itemData: Items) => {
-    const [heroBuilds, setHeroBuilds] = useReducer((states: any, updates: any) => {
-        switch (updates.type) {
-            case 'clear':
-                return ({})
-            default:
-                return ({ ...states, ...updates })
-        }
-    }, {})
+    const [heroBuilds, setHeroBuilds] = useState<Record<string, HeroBuild>>()
     const getUltimateAbility = () => {
         for (const k in heroData) {
             const abilities = heroData[k]['abilities']
@@ -31,7 +42,7 @@ export const useHeroBuilds = (filteredData: { [role: string]: NonProDataType[] }
     }
     useEffect(() => {
         const updateHeroBuilds = () => {
-            setHeroBuilds({ type: 'clear' })
+            const updatedBuilds: Record<string, HeroBuild> = {};
             for (const key in filteredData) {
                 const buildData = filteredData[key];
                 const itemBuild = filterItems(buildData, itemData, key);
@@ -44,8 +55,9 @@ export const useHeroBuilds = (filteredData: { [role: string]: NonProDataType[] }
                     'item_builds': itemBuild, 'ability_builds': abilityBuilds[0], 'ability_medians': abilityBuilds[1], 'starting_items': startingItemBuilds,
                     'neutral_items': neutralItems, 'talents': talentBuild, 'ultimate_ability': ultimate_ability
                 };
-                setHeroBuilds({ [key]: res })
+                updatedBuilds[key] = res;
             }
+            setHeroBuilds(updatedBuilds)
         };
         // Call the function to update hero builds
         if (filteredData) {
@@ -53,8 +65,7 @@ export const useHeroBuilds = (filteredData: { [role: string]: NonProDataType[] }
         }
 
     }, [filteredData]);
-    if (heroBuilds) {
-        // console.log(heroBuilds)
-        return heroBuilds;
-    }
+    // console.log(heroBuilds)
+    return heroBuilds;
+
 }

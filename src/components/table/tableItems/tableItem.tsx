@@ -11,8 +11,9 @@ import DotaMatch from "../../types/matchData";
 import { MatchDataAdj } from "../../stat_page/page";
 import { RoleStrings } from "../../home/home";
 import { exists } from "../../../utils/exists";
+import { usePageContext } from "../../stat_page/pageContext";
 type TItemProp = {
-    type: string,
+    type: 'item' | 'neutral' | 'shard' | 'scepter'
     height?: string,
     width?: string,
     starter?: boolean,
@@ -21,28 +22,27 @@ type TItemProp = {
     children?: React.ReactNode;
     time?: string,
     overlay: boolean
-    totalMatchData?: DotaMatch[]
-    items?: Items
     updateMatchData?: MatchDataAdj['updateMatchData']
     row?: DotaMatch,
     role?: RoleStrings
 }
 const TableItem = (props: TItemProp) => {
     const image_host = "https://ailhumfakp.cloudimg.io/v7/"
-
+    
     const link = `${image_host}https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/items/${props.itemKey}.png`
     // console.log(props.item)
-    const { updateMatchData, totalMatchData, items } = useTableContext()
+    const { updateSearchResults, itemData } = usePageContext()
     const updateTable = () => {
-        if (!totalMatchData) return
-        const data = itemSearch(props.itemKey, totalMatchData, items, props.role)
-        if (exists(data) && updateMatchData) {
-            const itemKey = Object.keys(data)[0];
-            updateMatchData(data[itemKey]['matches'], { 'items': data })
+        // updateMatchData(data[itemKey]['matches'], { 'items': data })
+        if (props.type === 'shard' || props.type === 'item' || props.type === 'scepter') {
+            updateSearchResults(props.itemKey, 'items', 'items')
+        } else {
+            updateSearchResults(props.itemKey, 'items', 'item_neutral')
         }
     }
+
     const handleClick = (event: any) => {
-        if (!event.ctrlKey && items) {
+        if (!event.ctrlKey && itemData) {
             updateTable()
         } else if (props.row && (event.ctrlKey || event.button === 1) && props.row.match_id) {
             event.preventDefault()

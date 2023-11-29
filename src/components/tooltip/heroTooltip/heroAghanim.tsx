@@ -1,19 +1,20 @@
+import { HeroStats, SpecialValues as SpecialValue } from "../../types/heroData"
 
-const HeroAghs = (props: any) => {
-    const agh = extractAghanim(props.heroData['abilities'], props.type)
+const HeroAghs = ({ type, heroStats }: { heroStats: HeroStats, type: string }) => {
+    const agh = extractAghanim(heroStats['abilities'], type)
     if (agh) {
-        const aghText = agh[`${props.type}_loc`] || agh['desc_loc']
-        const aghanimDescription = extract_hidden_values(aghText, agh['special_values'])
+        const aghText = agh[`${type}_loc`] || agh['desc_loc']
+        const aghanimDescription = extractHiddenValues(aghText, agh['special_values'])
         const link = `https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/abilities/${agh['name']}.png`
         return (
             <div className="hero-aghanim-upgrades">
                 {aghText &&
-                    <div className="hero-aghanim-wrapper" id={`hero-${props.type}`}>
+                    <div className="hero-aghanim-wrapper" id={`hero-${type}`}>
                         <div className="tooltip-aghanim-img" style={{ backgroundImage: `url(${link})`, position: 'relative' }}>
-                            <img className={`subicon`} id={`${props.type}-subicon`} alt=''></img>
+                            <img className={`subicon`} id={`${type}-subicon`} alt=''></img>
                         </div>
                         <p style={{ fontSize: '13px' }}>
-                            {aghanimDescription.split(/\s|,/).map((x: any, i: number) => {
+                            {aghanimDescription.split(/\s|,/).map((x, i: number) => {
                                 if (x.match(/\d+/g)) {
                                     return <span key={i} className='tooltip-text-highlight'>{x} </span>
                                 } else {
@@ -30,17 +31,16 @@ const HeroAghs = (props: any) => {
         return <></>
     }
 }
-const extract_hidden_values = (text: string, special_values: any) => {
-    let sp = text.replace("bonus_", "").split("%");
-    special_values.forEach((x: any) => {
+const extractHiddenValues = (text: string, specialValues: SpecialValue[]) => {
+    const sp = text.replace("bonus_", "").split("%");
+    specialValues.forEach((x) => {
         x["name"] = x["name"].replace("bonus_", "");
         if (sp.includes(x["name"])) {
-            let float = x["values_float"].map((el: any) => parseFloat(el)
-            ),
-                int = x["values_int"];
+            let float: number[] | string[] = x["values_float"],
+                int: number[] | string[] = x["values_int"];
             if (x["is_percentage"]) {
-                float = float.map((el: string) => (el += "%"));
-                if (int) int = int.map((el: string) => (el += "%"));
+                float = float.map((el: number | string) => (el += "%"));
+                if (int) int = int.map((el: number | string) => (el += "%"));
             }
             sp[sp.indexOf(x["name"])] = `${float || ""}${int || ""}`;
         }
@@ -48,7 +48,7 @@ const extract_hidden_values = (text: string, special_values: any) => {
     return sp.join("")
 }
 const extractAghanim = (result: { [x: string]: any }, s: string) => {
-    for (let ability in result) {
+    for (const ability in result) {
         if (result[ability][`ability_is_granted_by_${s}`]) {
             result[ability]['newAbility'] = true
             return result[ability]

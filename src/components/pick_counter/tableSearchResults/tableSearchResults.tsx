@@ -4,6 +4,7 @@ import { DraftCounter } from "./draftCounter";
 import DotaMatch from "../../types/matchData";
 import { TableSearchResult, TableSearchResults } from "../../table/table_search/types/tableSearchResult.types";
 import { usePickCounterContext } from "../pickCounterContext";
+import { usePageContext } from "../../stat_page/pageContext";
 
 
 export const sortByMatches = (data: TableSearchResult) => {
@@ -14,17 +15,20 @@ export const sortByMatches = (data: TableSearchResult) => {
 type SearchResultsTextProps = {
     searchRes: TableSearchResults
 }
-export const SearchResultsText = ({ searchRes }: SearchResultsTextProps) => {
+export const SearchResultsText = () => {
+    const { searchRes, updateSearchResults } = usePageContext()
+    const { matchData, updateMatchData, reset } = usePickCounterContext()
+    if (!searchRes) {
+        return <></>
+    }
     const items = searchRes['items']
     const draft = searchRes['draft']
     const role = searchRes['role']
     const players = searchRes['player']
     const talents = searchRes['talents']
-    const { matchData, updateMatchData, reset } = usePickCounterContext()
-    const handleClick = (matches: DotaMatch[], key: string, type?: string) => {
-        const newMatchArr = matches.map((m) => m.id)
-        const filteredMatches = matchData.filter((match) => newMatchArr.includes(match.id))
-        updateMatchData(filteredMatches, searchRes)
+    const handleClick = (filteredSearchResults: TableSearchResults, key: string, type?: string) => {
+        // updateMatchData(filteredMatches, searchRes)
+        updateSearchResults(filteredSearchResults)
     }
     let playerKeys: string[] = [], roleKeys: string[] = []
     if (players) {
@@ -39,7 +43,7 @@ export const SearchResultsText = ({ searchRes }: SearchResultsTextProps) => {
             {players && Object.keys(players).length > 0 &&
                 <>
                     {/* <SearchResultText data={players} handleClick={handleClick} filteredData={playerKeys} type={'player'} /> */}
-                    <DraftCounter handleClick={handleClick} draft={players} header='Players' subheader={[null, 'filtered players']} />
+                    <DraftCounter handleClick={handleClick} draft={players} header='Players' subheader={[null, 'filtered players']} type="draft" />
 
                 </>
             }

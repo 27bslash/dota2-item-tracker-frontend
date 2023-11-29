@@ -44,7 +44,7 @@ const roleSearch = (matchData: DotaMatch[], searchValue: string, i = 0) => {
     return dict
 }
 
-const search = (searchTerms: string[], matchData: DotaMatch[], itemData: Items, herolist: Hero[], playerList: string[], heroName: string) => {
+const search = (searchTerms: string[], matchData: DotaMatch[], itemData?: Items, herolist?: Hero[], playerList?: string[] | undefined, heroName?: string) => {
     const res: TableSearchResults = {
         items: {},
         draft: {},
@@ -52,14 +52,20 @@ const search = (searchTerms: string[], matchData: DotaMatch[], itemData: Items, 
         player: {}
     }
     searchTerms.forEach((term: string, i: number) => {
-        const itemSearchResults = itemSearch(term, matchData, itemData, undefined, i)
-        const draftSearchResults = new DraftSearch().handleDraftSearch(matchData, herolist, term, heroName, i)
+        if (itemData) {
+            const itemSearchResults = itemSearch(term, matchData, itemData, undefined, i)
+            res['items'] = { ...res['items'], ...itemSearchResults }
+        }
+        if (herolist && heroName) {
+            const draftSearchResults = new DraftSearch().handleDraftSearch(matchData, herolist, term, heroName, i)
+            res['draft'] = { ...res['draft'], ...draftSearchResults }
+        }
         const roleSearchResults = roleSearch(matchData, term, i)
-        const playerSearchResults = playerSearch(matchData, playerList, term, i)
-        res['items'] = { ...res['items'], ...itemSearchResults }
-        res['draft'] = { ...res['draft'], ...draftSearchResults }
+        if (playerList) {
+            const playerSearchResults = playerSearch(matchData, playerList, term, i)
+            res['player'] = { ...res['player'], ...playerSearchResults }
+        }
         res['role'] = { ...res['role'], ...roleSearchResults }
-        res['player'] = { ...res['player'], ...playerSearchResults }
     })
     return res
 }

@@ -1,13 +1,13 @@
 import { cleanDecimal } from "../../../utils/cleanDecimal"
 import colourWins from "../../../utils/colourWins"
 import heroSwitcher from "../../../utils/heroSwitcher"
-import { TableSearchResult } from "../../table/table_search/types/tableSearchResult.types"
+import { TableSearchResult, TableSearchResults } from "../../table/table_search/types/tableSearchResult.types"
 import DotaMatch from "../../types/matchData"
 
 type SearchResultTextProps = {
     filteredData: string[]
-    handleClick: (matches: DotaMatch[], key: string, type?: string) => void
-    type?: string,
+    handleClick: (matches: TableSearchResults, key: string, type?: string) => void
+    type: string,
     data: TableSearchResult
 }
 export const SearchResultText = ({ data, filteredData, handleClick, type }: SearchResultTextProps) => {
@@ -30,7 +30,7 @@ export const SearchResultText = ({ data, filteredData, handleClick, type }: Sear
                     end = ' and'
                 }
                 return (
-                    <span onClick={() => handleClick(matches, key, type)} style={{ marginRight: '5px', textTransform: 'capitalize' }}
+                    <span onClick={() => handleClick({ [type]: { [key]: data[key] } }, key, type)} style={{ marginRight: '5px', textTransform: 'capitalize' }}
                         className={`${type}-search-result table-search-result`} key={i}>{k}: ({matches.length}, <span style={{ color: colourWins(winRate) }}>{winRate}%</span>){end}</span>
                 )
             })

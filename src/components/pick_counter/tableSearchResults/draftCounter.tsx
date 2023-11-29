@@ -6,8 +6,8 @@ type DraftCounterProps = {
     draft: TableSearchResults['draft']
     header: string,
     subheader: (null | string)[] | string[][]
-    type?: string
-    handleClick: (matches: DotaMatch[], key: string, type?: string) => void
+    type: string
+    handleClick: (matches: TableSearchResults, key: string, type?: string) => void
 }
 export const DraftCounter = ({ draft, handleClick, header, subheader, type }: DraftCounterProps) => {
     const heroNames = Object.keys(draft)

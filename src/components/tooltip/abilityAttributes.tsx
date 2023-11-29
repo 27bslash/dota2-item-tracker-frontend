@@ -14,7 +14,7 @@ const dispellable = (dispel: number) => {
 
 export const damageType = (dmgType: number) => {
     let dmgTypestr = ''
-    const dmgColors: any = { 'physical': '#c91212', 'magical': '#428fc7', 'pure': '#FBDC98' }
+    const dmgColors: Record<string, string> = { 'physical': '#c91212', 'magical': '#428fc7', 'pure': '#FBDC98' }
     switch (dmgType) {
         case 1:
             dmgTypestr = 'physical';

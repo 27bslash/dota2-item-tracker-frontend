@@ -11,6 +11,7 @@ import { SearchResultsText } from './tableSearchResults/tableSearchResults';
 import { HeroPicks } from './heroPicks';
 import { PlayerPicks } from './playerPicks';
 import { PickCounterContextProvider, usePickCounterContext } from './pickCounterContext';
+import { usePageContext } from '../stat_page/pageContext';
 
 export interface pickProps {
     matchData: DotaMatch[],
@@ -23,16 +24,14 @@ export interface pickProps {
     totalPicks: PickStats,
     count: number
     heroColor: string,
-    searchRes?: TableSearchResults
 }
 const PickCounter = (props: pickProps) => {
     const name = props.nameParam
     const [searching, setSearching] = useState(false)
-    const [searchResults, setSearchResults] = useState(props.searchRes)
+    const { searchRes, updateSearchResults } = usePageContext()
     useEffect(() => {
-        if (props.searchRes) {
+        if (searchRes) {
             setSearching(true)
-            setSearchResults(props.searchRes)
         } else {
             setSearching(false)
         }
@@ -46,8 +45,7 @@ const PickCounter = (props: pickProps) => {
         }
     }
     const reset = () => {
-        props.updateMatchData(props.matchData)
-        setSearchResults(undefined)
+        updateSearchResults()
         setSearching(false)
         props.updateRole('')
     }
@@ -66,8 +64,8 @@ const PickCounter = (props: pickProps) => {
         <PickCounterContextProvider value={contextValues}>
             {!!props.matchData.length &&
                 <div className="pick-counter" style={{ color: 'white' }}>
-                    {searching && searchResults ? (
-                        <SearchResultsText searchRes={searchResults} />
+                    {searching ? (
+                        <SearchResultsText />
                     ) : (
                         props.type === 'hero' && props.heroColor &&
                         <>

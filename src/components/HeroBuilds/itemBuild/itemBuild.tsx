@@ -1,10 +1,13 @@
 import { Grid } from '@mui/material';
 import { GridRow } from './grid/gridRow';
+import { HeroBuild } from '../buildHooks/buildHook';
 // type Item = {
 // 	[k: string]: { value: number, adjustedValue: number, time: number, disassemble?: boolean, dissassembledComponents?: string[], offset?: { left: number, top: number } }
 // }
-type ItemBuildProps = ''
-const ItemBuild = (props: any) => {
+export type ItemBuildProps = {
+    data: HeroBuild['item_builds']
+}
+const ItemBuild = ({ data }: ItemBuildProps) => {
     // const data = useMemo(() => filterItems(props.data, props.itemData), [props.data])
     // console.log(data)
     // const dataKeys = data.flat().map((itemArr: any) => {
@@ -19,30 +22,25 @@ const ItemBuild = (props: any) => {
     //     return !dataKeys.includes(match[0])
     // })
     // console.log(filteredItems, dataKeys.length)
-    const totalLen = props.data.map((x: any) => {
+    const totalLen = data.map((x) => {
         const keys = ['core', 'situational']
         let currMax = 0
         for (const k of keys) {
-
-            if (x[k].map((y: any) => y).length > currMax) {
+            if (x[k].map((y) => y).length > currMax) {
                 currMax = x[k].length
-            } else {
-                x[k]['currMax'] = currMax
             }
         }
         return currMax
-        // return x['core'].map((y: any) => y)
-    }
-    )
+    })
     return (
         <>
 
             <Grid container  >
                 <Grid container >
-                    <GridRow data={props.data.map((o: any) => ({ 'core': o['core'] }))} dataLength={totalLen} ObjectKey={'core'} />
+                    <GridRow data={data.map((o) => ({ 'core': o['core'] }))} dataLength={totalLen} ObjectKey={'core'} />
                 </Grid>
                 <Grid container >
-                    <GridRow data={props.data.map((o: any) => ({ 'situational': o['situational'] }))} dataLength={totalLen} ObjectKey={'situational'} />
+                    <GridRow data={data.map((o) => ({ 'situational': o['situational'] }))} dataLength={totalLen} ObjectKey={'situational'} />
                 </Grid>
                 {/* {props.data.map((o: any) => ({ 'core': o['core'] })).map((buildObject: any, i: number) => {
 

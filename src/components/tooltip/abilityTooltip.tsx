@@ -7,28 +7,30 @@ import CdMc from './cdmc';
 import Color from 'color-thief-react';
 import { highlight_numbers } from './tooltipDescription';
 import AbilityAttributes from './abilityAttributes';
+import { usePageContext } from '../stat_page/pageContext';
 
 const AbilityTooltip = (props: any) => {
-    let id = props.ability.id
+    const id = props.ability.id
     const [open, setOpen] = useState(false)
     const [ability, setAbility] = useState<any>()
+    const { nameParam, heroData } = usePageContext()
     useEffect(() => {
-        if (props.heroData && Object.keys(props.heroData).length) {
-            if (props.heroData[props.heroName] && id && !ability) {
-                setAbility(props.heroData[props.heroName].abilities[+id])
+        if (heroData && Object.keys(heroData).length) {
+            if (heroData[nameParam] && id && !ability) {
+                setAbility(heroData[nameParam].abilities[+id])
             } else if (!ability) {
-                console.log(props.heroName, props.heroData)
-                const abilities = props.heroData[props.heroName].abilities
+                console.log(nameParam, heroData)
+                const abilities = heroData[nameParam].abilities
                 const k = Object.keys(props.ability)[0]
                 const a = Object.entries(abilities).find((x: any) => x[1].name === k)
                 if (a)
                     setAbility(a[1])
             }
         }
-    }, [open, props.heroData])
+    }, [open, heroData])
     // const fac = new FastAverageColor()
     // const options = { width: '55px', height: '55px' }
-    let image = new Image(55, 55)
+    const image = new Image(55, 55)
     image.src = props.img
     // console.log(image)
     // const averageColor = fac.getColor(image)

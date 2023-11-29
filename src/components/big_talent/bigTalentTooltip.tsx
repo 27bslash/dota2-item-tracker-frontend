@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import { Fragment } from 'react';
 import { cleanDecimal } from '../../utils/cleanDecimal';
+import { usePageContext } from '../stat_page/pageContext';
 
 const BigTalentTooltip = (props: any) => {
     const pairTalents = () => {
@@ -45,12 +46,13 @@ const TalentRow = (props: any) => {
     const k = Object.keys(props.talent)[0]
     const perc = props.talent[k]['count'] / props.talent[k].total_picks * 100 || 0
     const talentKey = props.talent[k]['key']
-    const filterByTalents = (matchData: any, talentName: string) => {
-        const filteredData = matchData.filter((match: any) => match['abilities'].map((ability: any) => ability['key']).includes(talentName))
-        props.updateMatchData(filteredData, { 'talents': { [talentKey]: { 'matches': filteredData } } })
+    const { totalMatchData } = usePageContext()
+    const filterByTalents = (talentName: string) => {
+        const filtered = totalMatchData.filter((match) => match['abilities'].map((ability) => ability['key']).includes(talentName))
+        props.updateMatchData(filtered, { 'talents': { [talentKey]: { 'matches': totalMatchData } } })
     }
     return (
-        <div className={props.side} onClick={() => filterByTalents(props.matchData, talentKey)}>
+        <div className={props.side} onClick={() => filterByTalents(talentKey)}>
             <p className='talent-text'>
                 {talentKey}
             </p>

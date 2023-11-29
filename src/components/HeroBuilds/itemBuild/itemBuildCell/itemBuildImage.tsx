@@ -1,15 +1,17 @@
 import { cleanDecimal } from "../../../../utils/cleanDecimal";
 import TableItem from "../../../table/tableItems/tableItem";
 
-
-export const ItemBuildImage = (props: { k: string, avgTime?: number, disassemble?: any; perc: string | number; orText?: string, }) => {
+type ItemBuildImageProps = {
+    k: string, avgTime?: number, disassemble?: boolean; perc: string | number; orText?: string
+}
+export const ItemBuildImage = ({ k, avgTime, disassemble, perc, orText }: ItemBuildImageProps) => {
     return < div className="item-build-img">
-        {props.avgTime &&
-            <p style={{ margin: '0', color: 'white' }}>{props.avgTime}m {props.disassemble ? 'D' : ''}</p>
+        {avgTime &&
+            <p style={{ margin: '0', color: 'white' }}>{avgTime}m {disassemble ? 'D' : ''}</p>
         }
-        <TableItem type='item' height='40px' width='55px' itemKey={props.k.replace(/__\d+/g, '')} overlay={false} />
+        <TableItem type='item' height='40px' width='55px' itemKey={k.replace(/__\d+/g, '')} overlay={false} />
         {/* <p style={{ margin: '0', color: 'white' }}>{perc}%</p> */}
-        <p style={{ margin: '0', color: 'white', textAlign: 'center' }}>{cleanDecimal(props.perc)}%</p>
-        <p style={{ margin: 0, color: 'white' }}>{props.orText}</p>
+        <p style={{ margin: '0', color: 'white', textAlign: 'center' }}>{cleanDecimal(perc)}%</p>
+        <p style={{ margin: 0, color: 'white' }}>{orText}</p>
     </div>;
 }

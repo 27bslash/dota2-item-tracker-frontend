@@ -1,16 +1,17 @@
 import { useEffect, useState } from "react";
 import itemSearch from "../table/table_search/item_search";
 import ArrowButton from '../ui_elements/arrowButton';
+import { usePageContext } from "../stat_page/pageContext";
 
 
 const MostUsed = (props: any) => {
     const [mostUsed, setMostUsed] = useState([])
     const [max, setMax] = useState(0)
-
+    const { totalMatchData, updateSearchResults } = usePageContext()
     useEffect(() => {
-        let data = props.matchData
+        let data = totalMatchData
         if (props.role) {
-            data = props.matchData.filter((match: any) => match.role === props.role)
+            data = totalMatchData.filter((match) => match.role === props.role)
         }
         const mostU = calculateMostUsed(data)
         setMostUsed(mostU)
@@ -18,13 +19,14 @@ const MostUsed = (props: any) => {
             // console.log(mostU)
             setMax(mostU[0][1])
         }
-    }, [props.matchData, props.role])
-    const handleClick = (item: any) => {
-        const itemResult = itemSearch(item, props.matchData, props.itemData)
-        if (itemResult) {
-            const itemKey = Object.keys(itemResult)[0];
-            props.updateMatchData(itemResult[itemKey]['matches'], { 'items': itemResult })
-        }
+    }, [totalMatchData, props.role])
+    const handleClick = (item: string) => {
+        // const itemResult = itemSearch(item, totalMatchData, props.itemData)
+        updateSearchResults(item, 'items', 'items')
+        // if (itemResult) {
+        //     const itemKey = Object.keys(itemResult)[0];
+        //     props.updateMatchData(itemResult[itemKey]['matches'], { 'items': itemResult })
+        // }
     }
     return (
         <>
@@ -56,9 +58,9 @@ const calculateMostUsed = (data: any[]) => {
     const consumables = ['tango', 'flask', 'ward_observer',
         'ward_sentry', 'smoke_of_deceit', 'enchanted_mango', 'clarity', 'tpscroll', 'dust', 'tome_of_knowledge']
     let itemCount: any = {}
-    for (let match of data) {
+    for (const match of data) {
         if (!match) continue
-        for (let item of match['final_items']) {
+        for (const item of match['final_items']) {
             if (!consumables.includes(item['key'])) {
                 itemCount[item['key']] = (itemCount[item['key']] + 1) || 1;
             }

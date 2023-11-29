@@ -12,7 +12,7 @@ export type HeroAbility = {
 
 type DotaMatch = {
     abilities: HeroAbility[];
-    account_id: null | number;
+    accountId: null | number;
     aghanims_shard: null |  SimpleItems[];
     additional_units?: SimpleItems[],
     assists: number;
@@ -31,7 +31,7 @@ type DotaMatch = {
     hero: string;
     hero_damage: number;
     id: number;
-    match_id?: number;
+    match_id: number;
     item_neutral: string;
     items: SimpleItems[];
     kills: number;
@@ -55,7 +55,7 @@ type DotaMatch = {
     xpm: number;
     xpm_ten: number;
 }
-type SimpleItems = {
+export type SimpleItems = {
     id: number;
     key: string;
     time: number | string;

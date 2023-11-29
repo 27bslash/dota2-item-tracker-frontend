@@ -70,14 +70,17 @@ export type HeroAbilities = {
     notes_loc: string[];
     scepter_loc: string;
     shard_loc: string;
-    special_values: {
-        bonuses: unknown[];
-        heading_loc: string;
-        is_percentage: boolean;
-        name: string;
-        values_float: number[];
-        values_scepter: number[];
-        values_shard: number[];
-    }[];
+    special_values: SpecialValues[];
+}
+export type SpecialValues = {
+    bonuses: unknown[];
+    heading_loc: string;
+    is_percentage: boolean;
+    name: string;
+    values_float: number[];
+    values_int: number[];
+    values_scepter: number[];
+    values_shard: number[];
+
 }
 export type PageHeroData = Record<string, HeroStats>

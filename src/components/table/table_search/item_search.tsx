@@ -78,7 +78,7 @@ const itemIdSearch = (itemsArr: { [x: string]: { [x: string]: any } }, search: s
     return { 'names': names, displayNames: displayNames }
 };
 const acronym = (search: string, item: any) => {
-    let displayNameAcronym = item['dname'].split(/\s|_|-/g).map((char: string) => char[0]).join('').toLowerCase()
+    const displayNameAcronym = item['dname'].split(/\s|_|-/g).map((char: string) => char[0]).join('').toLowerCase()
     if (displayNameAcronym === search.toLowerCase().replace(/\s/g, '')) {
         return true
     }

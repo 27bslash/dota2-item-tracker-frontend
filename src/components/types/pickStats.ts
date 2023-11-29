@@ -6,12 +6,12 @@ export interface PickRoleStat {
 }
 
 export interface Trend {
-    "Hard Support": PickRoleStat;
-    Midlane: PickRoleStat;
-    Offlane: PickRoleStat;
-    Roaming: PickRoleStat;
-    Safelane: PickRoleStat;
-    Support: PickRoleStat;
+    "Hard Support"?: PickRoleStat;
+    Midlane?: PickRoleStat;
+    Offlane?: PickRoleStat;
+    Roaming?: PickRoleStat;
+    Safelane?: PickRoleStat;
+    Support?: PickRoleStat;
     '': PickRoleStat
     bans: number;
     hero: string;

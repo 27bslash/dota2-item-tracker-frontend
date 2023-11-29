@@ -3,27 +3,11 @@ import { TableCell } from "@mui/material"
 import TableItem from './tableItem';
 import ArrowButton from '../../ui_elements/arrowButton';
 import Draft from "../draft";
-import DotaMatch, { HeroAbility } from "../../types/matchData";
-import React from 'react'
-import Items from "../../types/Item";
-import { PageHeroData } from "../../types/heroData";
-import Hero from "../../types/heroList";
+import { HeroAbility } from "../../types/matchData";
 import { Abilities } from "../tableAbilities/tableAbilities";
 import { PurchaseLog } from "./purchaseLog";
 import { TableStartingItems } from "./tableStartingItems";
 import { useTableContext } from "../tableContext";
-export interface TitemProps {
-    row: DotaMatch,
-    showStarter: boolean,
-    items: Items | undefined,
-    heroData: PageHeroData,
-    heroList: Hero[],
-    totalMatchData: DotaMatch[],
-    filteredData: DotaMatch[],
-    updateMatchData: (data: DotaMatch[]) => void,
-    children: React.ReactNode;
-    role: string
-}
 
 export const humanReadableTime = (time: number | string) => {
     if (typeof (time) === 'number' && time < 0) {
@@ -45,13 +29,12 @@ export const humanReadableTime = (time: number | string) => {
 }
 
 const TableItems = () => {
-    const { row, items, role, heroData, showStarter, updateMatchData, filteredData, totalMatchData, heroList } = useTableContext()
-    const tableRow = useTableContext()['row']!
+    const { row, role, showStarter, updateMatchData } = useTableContext()
     const image_host = "https://ailhumfakp.cloudimg.io/v7/"
     const consumables = ['tango', 'flask', 'ward_observer',
         'ward_sentry', 'smoke_of_deceit', 'enchanted_mango', 'clarity', 'tpscroll', 'dust', 'tome_of_knowledge']
     const visitedTalents: HeroAbility[][] = []
-    const talents = tableRow.abilities.filter((ability) => ability['type'] === 'talent')
+    const talents = row.abilities.filter((ability) => ability['type'] === 'talent')
     const s = new Set()
     for (const talent of talents) {
         const t: HeroAbility[] = []
@@ -66,33 +49,31 @@ const TableItems = () => {
         visitedTalents.push(t)
     }
     const width = '900'
-    const heroName = tableRow['hero']
     const tableItemProps = {
-        matchId: tableRow.id, overlay: true,
-        role: role, updateMatchData: updateMatchData,
-        filteredData: filteredData, totalMatchData: totalMatchData, items: items,
+        matchId: row.id, overlay: true,
+        role: role, updateMatchData: updateMatchData
     }
     return (
         <TableCell sx={{ padding: '6px 0px 6px 10px', maxWidth: `${width}px`, minWidth: `${width}px`, width: width + 'px', height: '200px', maxHeight: '200px' }}>
             <div className="items flex">
                 <PurchaseLog tableItemProps={tableItemProps} />
-                {tableRow.item_neutral && !showStarter &&
-                    <TableItem {...tableItemProps} itemKey={tableRow.item_neutral} type='neutral'></TableItem>
+                {row.item_neutral && !showStarter &&
+                    <TableItem {...tableItemProps} itemKey={row.item_neutral} type='neutral'></TableItem>
                 }
-                {tableRow.aghanims_shard && !showStarter &&
+                {row.aghanims_shard && !showStarter &&
                     <TableItem {...tableItemProps}
-                        time={humanReadableTime(tableRow.aghanims_shard[0]['time'])} itemKey='aghanims_shard' type='shard'>
+                        time={humanReadableTime(row.aghanims_shard[0]['time'])} itemKey='aghanims_shard' type='shard'>
                     </TableItem>
                     // time={humanReadableTime(row.aghanims_shard['time'])}
                 }
             </div>
-            {showStarter && tableRow.starting_items &&
-                <TableStartingItems row={tableRow} consumables={consumables} />
+            {showStarter && row.starting_items &&
+                <TableStartingItems row={row} consumables={consumables} />
             }
-            {tableRow.items &&
+            {row.items &&
                 <ArrowButton transition="collapse">
                     <div className="purchase-log">
-                        {tableRow.items.map((item, i: number) => {
+                        {row.items.map((item, i: number) => {
                             const time = humanReadableTime(item['time'])
                             if (!consumables.includes(item['key'])) {
                                 return (
@@ -107,14 +88,14 @@ const TableItems = () => {
                 </ArrowButton>
             }
 
-            <Abilities abilities={tableRow.abilities} heroName={heroName} visitedTalents={visitedTalents} heroData={heroData} imageHost={image_host} width={width} />
-            {tableRow.radiant_draft &&
+            <Abilities abilities={row.abilities} visitedTalents={visitedTalents} imageHost={image_host} width={width} />
+            {row.radiant_draft &&
                 <div className="draft">
                     <div className="radiant-draft">
-                        <Draft hero={tableRow.hero} heroList={heroList} totalMatchData={totalMatchData} updateMatchData={updateMatchData} draft={tableRow.radiant_draft}></Draft>
+                        <Draft updateMatchData={updateMatchData} draft={row.radiant_draft}></Draft>
                     </div>
                     <div className="dire-draft">
-                        <Draft hero={tableRow.hero} heroList={heroList} totalMatchData={totalMatchData} updateMatchData={updateMatchData} draft={tableRow.dire_draft}></Draft>
+                        <Draft updateMatchData={updateMatchData} draft={row.dire_draft}></Draft>
                     </div>
                 </div>
             }
