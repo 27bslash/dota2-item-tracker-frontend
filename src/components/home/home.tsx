@@ -1,4 +1,4 @@
-import { Grid, Typography } from '@mui/material';
+import { Grid } from '@mui/material';
 import { useEffect, useState } from 'react';
 import Nav from '../nav/nav';
 import ControlPanel from './control';
@@ -8,24 +8,11 @@ import { cleanDecimal } from '../../utils/cleanDecimal';
 import GridContainer from './heroGrid/gridContainer';
 import HeroCard from './heroGrid/heroCard';
 import Hero from '../types/heroList';
-import { PickStats } from './types/pickStats.types';
+import PickStats, { Trend } from '../types/pickStats';
+import { SortTitle } from './sortTitle';
+// import { PickStats } from './types/pickStats.types';
 
 
-const SortTitle = ({ role, sort }: { sort: string, role?: string }) => {
-    const displayRole = role ? role.replace(/_/, '') : ''
-    return (
-        sort !== 'winrate' ?
-            (
-                <Typography className='sort-title' variant="h3" gutterBottom>
-                    Most {displayRole} {sort}
-                </Typography>
-            ) : (
-                <Typography className='sort-title' variant="h3" gutterBottom>
-                    highest {displayRole} {sort}
-                </Typography>
-            )
-    )
-}
 type HomeProps = {
     heroList: Hero[],
     playerList: string[]
@@ -100,6 +87,57 @@ function Home({ heroList, playerList }: HomeProps) {
     document.body.style.background = theme.palette.background.default;
     theme.palette.primary.main = '#1d5455';
     theme.palette.secondary.main = '#486869';
+
+    const calcTrends = (heroName: string) => {
+        if (!winStats) return;
+
+        const heroPickData = winStats.filter((x) => x.hero === heroName.replace(/\s/g, '_'));
+        const currentTrend = heroPickData[0]['trends'][0]
+        const lastTrend = heroPickData[0]['trends'][heroPickData[0]['trends'].length - 1];
+        const { bans, winrate, picks, wins } = formatTrend(currentTrend);
+        const lastTrendStats = formatTrend(lastTrend);
+        const newBans = bans - lastTrendStats.bans;
+        const newWins = wins - lastTrendStats.wins
+        const newWinrate = +cleanDecimal(winrate - Math.abs(winrate - lastTrendStats.winrate))
+        const newPicks = picks - lastTrendStats.picks;
+        // console.log(newPicks)
+        return pickStats = {
+            picks: newPicks, wins: newWins, bans: newBans, winrate: newWinrate,
+        };
+
+        function formatTrend(currentTrend: Trend) {
+            let picks, wins;
+            if (roleFilter && currentTrend[roleFilter]) {
+                picks = currentTrend[roleFilter]!.picks || 0;
+                wins = currentTrend[roleFilter]!.wins || 0;
+            } else if (roleFilter) {
+                picks = 0
+                wins = 0
+            } else {
+                picks = currentTrend.picks || 0;
+                wins = currentTrend.wins || 0;
+            }
+            const currentBans = currentTrend['bans'] || 0;
+            const currentWinrate = picks ? +cleanDecimal(((wins / picks) * 100)) : 0;
+            return { bans: currentBans, winrate: currentWinrate, picks: picks, wins: wins };
+        }
+    }
+    const sortByTrend = () => {
+        if (!winStats) return null
+        const sorted = winStats.sort((a, b) => {
+            const trends = calcTrends(a.hero)!['picks'] || 0;
+            const otherTrends = calcTrends(b.hero)!['picks'] || 0;
+            return otherTrends - trends
+        }).filter((x) => {
+            if (roleFilter) {
+                return x[roleFilter] && x[roleFilter]['picks'] > 10
+            } else {
+                return x['picks'] > 10
+            }
+        })
+        sortHeroes(sorted.map((x) => x.hero), 'trends', roleFilter);
+
+    }
     return (
         <div className="home">
             <Nav filterHeroes={filterHeroes} filteredByButton={filteredByButton} heroList={heroList} playerList={playerList} highlightHero={highlightHero} />
@@ -116,13 +154,21 @@ function Home({ heroList, playerList }: HomeProps) {
                             const stats = winStats.filter((x) => x.hero === heroName.replace(/\s/g, '_'));
                             // const picks = roleFilter !== '' ? stats[0][`${roleFilter}_picks`] || stats[0]['picks'] || 0 : 0;
                             // const wins = roleFilter !== '' ? stats[0][`${roleFilter}_wins`] || stats[0]['picks'] || 0 : 0;
-                            const roleFilterKey = roleFilter !== '' ? `${roleFilter}_` : '';
-                            const picks = (stats[0][`${roleFilterKey}picks` as keyof PickStats] as number) || 0;
-                            const wins = (stats[0][`${roleFilterKey}wins` as keyof PickStats] as number) || 0;
+                            let picks = 0
+                            let wins = 0
+                            if (roleFilter && stats[0][roleFilter]) {
+                                picks = stats[0][roleFilter]['picks'] || 0
+                                wins = stats[0][roleFilter]['wins'] || 0
+                            } else if (!roleFilter) {
+                                picks = stats[0]['picks'] || 0
+                                wins = stats[0]['wins'] || 0
+                            }
+                            // const picks = (roleFilter ? stats[0][roleFilter]['picks'] : stats[0][`picks`] as number) || 0;
                             const { bans } = stats[0];
                             const winrate = picks ? +cleanDecimal(((wins / picks) * 100)) : 0;
+                            const trends = calcTrends(heroName)!
                             pickStats = {
-                                picks, wins, bans, winrate,
+                                picks, trend: trends['picks'], wins, bans, winrate,
                             };
                         }
                         return (
@@ -132,6 +178,7 @@ function Home({ heroList, playerList }: HomeProps) {
                                     idx={i}
                                     key={i}
                                     searching={searching}
+                                    sortByTrend={sortByTrend}
                                     heroName={heroName}
                                     stats={pickStats}
                                     role={roleFilter}

@@ -20,9 +20,9 @@ const ControlPanel = ({ sortHeroes, winStats }: PanelProps) => {
                     <RoleSelector sortHeroes={sortHeroes} winStats={winStats}></RoleSelector>
                     <Grid item>
                         <div className="flex" style={{ width: '100%', borderTop: '2px solid black' }}>
-                            <button onClick={() => sortHeroes(roleSort(winStats, `picks`), 'picks')} className="sort-button">PICKS</button>
-                            <button onClick={() => sortHeroes(roleSort(winStats, `winrate`), 'winrate')} className="sort-button">winrate</button>
-                            <button onClick={() => sortHeroes(roleSort(winStats, `bans`), 'bans')} className="sort-button">bans</button>
+                            <button onClick={() => sortHeroes(roleSort(winStats, `picks`, 'total'), 'picks')} className="sort-button">PICKS</button>
+                            <button onClick={() => sortHeroes(roleSort(winStats, `winrate`, 'total'), 'winrate')} className="sort-button">winrate</button>
+                            <button onClick={() => sortHeroes(roleSort(winStats, `bans`, 'total'), 'bans')} className="sort-button">bans</button>
                         </div>
                     </Grid>
                 </Grid>
@@ -31,14 +31,21 @@ const ControlPanel = ({ sortHeroes, winStats }: PanelProps) => {
     )
 
 }
-const roleSort = (stats: any[], field: any) => {
-    const filtered = stats.filter((item) => field !== 'winrate' ? item[field] > 0 : item['picks'] > 10);
+const roleSort = (stats: any[], field: string, type?: string) => {
+    const filtered = stats.filter((item) => {
+        if (type === 'total') return item[field] > 10
+        else if (item[field] && item[field]) {
+            return item[field]['picks'] > 10
+        }
+
+    });
     const sorted = [...filtered].sort((a, b) => {
+        if (type === 'total') return b[field] - a[field];
         if (field !== 'winrate') {
-            return b[field] - a[field]
+            return b[field]['picks'] - a[field]['picks']
         } else {
-            const winrate1 = a['picks'] ? ((a['wins'] / a['picks']) * 100) : 0
-            const winrate2 = b['picks'] ? ((b['wins'] / b['picks']) * 100) : 0
+            const winrate1 = a[field]['picks'] ? ((a[field]['wins'] / a[field]['picks']) * 100) : 0
+            const winrate2 = b[field]['picks'] ? ((b[field]['wins'] / b[field]['picks']) * 100) : 0
             return winrate2 - winrate1
         }
     })
@@ -56,7 +63,7 @@ const RoleSelector = ({ sortHeroes, winStats }: RS) => {
             {r2.map((x, i) => {
                 return (
                     <Grid key={i} item padding={0} sx={{ paddingLeft: '0px', paddingTop: '0px' }}>
-                        <button className='sort-button' onClick={() => sortHeroes(roleSort(winStats, `${x}_picks`), 'picks', x)}>{x}</button>
+                        <button className='sort-button' onClick={() => sortHeroes(roleSort(winStats, `${x}`, 'picks'), 'picks', x)}>{x}</button>
                     </Grid>
                 )
             })

@@ -594,7 +594,7 @@ label {
   color: white;
 }
 .win-stats {
-  width: 110px;
+  /* width: 110px; */
   font-size: 13.5px;
   text-overflow: ellipsis;
   text-align: center;
@@ -812,6 +812,10 @@ label {
 }
 .hero-grid {
   margin-left: 50px !important;
+}
+.trend:hover {
+  cursor: pointer;
+  opacity: 0.9;
 }
 /* .hero-cell {
   width: 100px;
