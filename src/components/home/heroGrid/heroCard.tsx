@@ -12,7 +12,7 @@ function HeroCard({ stats, heroName, role, searching, idx, highlight, sortByTren
     // console.log(heroName, heroName)
     // console.log(stats)
     const heroHighlight = idx === highlight && searching ? 'hero-highlight' : '';
-    const width = heroHighlight ? '130' : '145';
+    const width = heroHighlight ? '148' : '145';
     // const width = heroHighlight ? '113' : '110'
     const img = `https://ailhumfakp.cloudimg.io/v7/https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/heroes/${imgName}.png?v=5926546`;
     const heroname = heroName.replace(/\s/g, '_');
