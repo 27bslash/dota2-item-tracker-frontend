@@ -46,7 +46,7 @@ const CustomTableBody = (props: BodyProps) => {
                     const contextValues = {
                         row: row,
                         items: props.itemData, role: props.role,
-                        heroData: props.heroData, heroName: props.nameParam,
+                        heroData: props.heroData, heroName: row.hero,
                         heroList: props.heroList, playerList: props.playerList, filteredData: props.data, totalMatchData: props.totalMatchData, updateMatchData: props.updateMatchData,
                         showStarter: props.showStarter,
                     }

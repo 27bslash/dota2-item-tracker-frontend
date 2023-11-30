@@ -16,6 +16,7 @@ type TItemProp = {
     type: 'item' | 'neutral' | 'shard' | 'scepter'
     height?: string,
     width?: string,
+    heroName?: string,
     starter?: boolean,
     itemKey: string,
     itemId?: number | undefined,
@@ -28,7 +29,7 @@ type TItemProp = {
 }
 const TableItem = (props: TItemProp) => {
     const image_host = "https://ailhumfakp.cloudimg.io/v7/"
-    
+
     const link = `${image_host}https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/items/${props.itemKey}.png`
     // console.log(props.item)
     const { updateSearchResults, itemData } = usePageContext()
@@ -55,7 +56,7 @@ const TableItem = (props: TItemProp) => {
         }
     }
     return (
-        <Tip component={<ItemTooltip type={props.type} img={link} itemId={props.itemId} itemKey={props.itemKey} />}>
+        <Tip component={<ItemTooltip type={props.type} heroName={props.heroName} img={link} itemId={props.itemId} itemKey={props.itemKey} />}>
             {(props.type === 'item' || props.type === 'shard' || props.type === 'scepter') &&
                 <div className="item-cell" onClick={handleClick} >
                     <img className="item-img" height={props.height || '55px'} width={props.width || '100%'} alt={props.itemKey} src={link} loading="lazy"></img>

@@ -19,12 +19,12 @@ const AbilityTooltip = (props: any) => {
             if (heroData[nameParam] && id && !ability) {
                 setAbility(heroData[nameParam].abilities[+id])
             } else if (!ability) {
-                console.log(nameParam, heroData)
-                const abilities = heroData[nameParam].abilities
-                const k = Object.keys(props.ability)[0]
-                const a = Object.entries(abilities).find((x: any) => x[1].name === k)
-                if (a)
-                    setAbility(a[1])
+                const concattedAbililites = Object.values(heroData).map(hero => hero.abilities).flat()
+                for (const ab of concattedAbililites) {
+                    const abilityId = props.ability['id']
+                    const a = ab[abilityId]
+                    if (a) setAbility(a)
+                }
             }
         }
     }, [open, heroData])

@@ -50,7 +50,7 @@ const TableItems = () => {
     }
     const width = '900'
     const tableItemProps = {
-        matchId: row.id, overlay: true,
+        matchId: row.id, overlay: true, heroName: row.hero,
         role: role, updateMatchData: updateMatchData
     }
     return (

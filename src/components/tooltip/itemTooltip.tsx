@@ -15,6 +15,7 @@ interface ItemTooltipProps {
     itemKey: string,
     type: string,
     img: string,
+    heroName?: string,
 }
 const ItemTooltip = (props: ItemTooltipProps) => {
     const [itemProperties, setItemProperties] = useState<Item>()
@@ -50,7 +51,7 @@ const ItemTooltip = (props: ItemTooltipProps) => {
                             </div>
                         </div>
                     ) : (
-                        <AghanimTooltip   type={props.type}></AghanimTooltip>
+                        <AghanimTooltip heroName={props.heroName} type={props.type}></AghanimTooltip>
                     )
                     }
                 </>

@@ -8,8 +8,9 @@ import { HeroAbilities } from "../types/heroData";
 const AghanimTooltip = (props: any) => {
     let abilities: Record<string, HeroAbilities> = {}
     const { heroData, nameParam } = usePageContext()
-    if (heroData[nameParam]) {
-        abilities = heroData[nameParam]['abilities']
+    const heroName = props.heroName || nameParam
+    if (heroData[heroName]) {
+        abilities = heroData[heroName]['abilities']
     }
     const aghanimAbility = extractAghanim(abilities, props.type)
     const aghText = aghanimAbility[`${props.type}_loc`] || aghanimAbility['desc_loc']
