@@ -10,6 +10,7 @@ import HeroCard from './heroGrid/heroCard';
 import Hero from '../types/heroList';
 import PickStats, { Trend } from '../types/pickStats';
 import { SortTitle } from './sortTitle';
+import { SideBar } from './sideBar/sideBar';
 // import { PickStats } from './types/pickStats.types';
 
 
@@ -26,6 +27,7 @@ function Home({ heroList, playerList }: HomeProps) {
     const [searching, setSearching] = useState(false);
     const [highlight, setHighlight] = useState<number>();
     const [sort, setSearchVal] = useState('');
+    const [drawerOpen, setDrawerOpen] = useState(false);
     useEffect(() => {
         document.title = 'Dota2 Item Tracker';
         (async () => {
@@ -106,13 +108,11 @@ function Home({ heroList, playerList }: HomeProps) {
         };
 
         function formatTrend(currentTrend: Trend) {
-            let picks, wins;
+            let picks = 0
+            let wins = 0
             if (roleFilter && currentTrend[roleFilter]) {
                 picks = currentTrend[roleFilter]!.picks || 0;
                 wins = currentTrend[roleFilter]!.wins || 0;
-            } else if (roleFilter) {
-                picks = 0
-                wins = 0
             } else {
                 picks = currentTrend.picks || 0;
                 wins = currentTrend.wins || 0;
@@ -138,11 +138,22 @@ function Home({ heroList, playerList }: HomeProps) {
         sortHeroes(sorted.map((x) => x.hero), 'trends', roleFilter);
 
     }
+
+    const handleMouseMove = (event: React.MouseEvent) => {
+        const mouseX = event.clientX;
+
+        // Adjust the threshold based on your desired area
+        const threshold = window.innerWidth * 0.05;
+
+        setDrawerOpen(!drawerOpen && mouseX <= threshold);
+    };
     return (
-        <div className="home">
+        <div className="home" >
             <Nav filterHeroes={filterHeroes} filteredByButton={filteredByButton} heroList={heroList} playerList={playerList} highlightHero={highlightHero} />
             {filteredHeroes && winStats &&
-                <ControlPanel sortHeroes={sortHeroes} winStats={winStats} />
+                <div className="side-bar" onMouseLeave={() => setDrawerOpen(false)}>
+                    <SideBar open={drawerOpen} winStats={winStats} sortHeroes={sortHeroes} sortByTrend={sortByTrend} />
+                </div>
             }
             {sort && !searching
                 && <SortTitle role={roleFilter} sort={sort} />}
@@ -170,6 +181,9 @@ function Home({ heroList, playerList }: HomeProps) {
                             pickStats = {
                                 picks, trend: trends['picks'], wins, bans, winrate,
                             };
+                            // pickStats = {
+                            //     trend: 80, wins: 80, picks: 80, bans: 80, winrate: 80
+                            // }
                         }
                         return (
                             <Grid key={i} className={`grid-item-${className}`} item>

@@ -589,7 +589,10 @@ a:hover {
   display: flex;
   justify-content: center;
 }
-
+.sidebar-item:hover {
+  opacity: 0.7;
+  cursor: pointer;
+}
 label {
   color: white;
 }

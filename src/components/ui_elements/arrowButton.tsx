@@ -1,7 +1,7 @@
 import { faCaretDown, faCaretUp } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Collapse, Fade } from '@mui/material';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Fragment } from 'react';
 
 interface arrowProps {
     style?: any,
@@ -19,8 +19,8 @@ const ArrowButton = (props: arrowProps) => {
         }
     }, [open])
     return (
-        <>
-            <div className="arrow-button" style={props.style} onClick={() => setOpen(prev => !prev)} >
+        <div onMouseLeave={() => setOpen(false)}>
+            <div className="arrow-button" style={props.style} onClick={() => setOpen(prev => !prev)} onMouseEnter={() => setOpen(true)}>
                 <FontAwesomeIcon icon={icon} color='white' />
             </div >
             {props.transition === 'collapse' &&
@@ -33,7 +33,7 @@ const ArrowButton = (props: arrowProps) => {
                     {props.children}
                 </Fade>
             }
-        </>
+        </div>
     )
 }
 export default ArrowButton
