@@ -168,9 +168,9 @@ const Page = ({ type, heroList, playerList }: pageProps) => {
         return null;
     };
     const renderFilterByPatch = () => {
-        const oldPatch = totalMatchData.filter((x) => x.patch !== patch['patch'])
+        const oldPatchGameList = totalMatchData.filter((x) => patch['patch_timestamp'] > 0 && x.patch !== patch['patch'])
         return (
-            patch && totalMatchData.length !== oldPatch.length &&
+            oldPatchGameList.length &&
             <Typography variant='h5' color='white' align='center'
                 onClick={() => filterByPatch()}
             >
