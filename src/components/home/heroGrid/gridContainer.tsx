@@ -13,7 +13,7 @@ function GridContainer({ className, children, width }: GridContainerProps) {
                     {children}
                 </Grid>
             ) : (
-                <Grid className={`hero-grid ${className}`} container spacing={3} sx={{ width }}>
+                <Grid className={`hero-grid ${className}`} container spacing={3} sx={{ width, marginLeft: '85px !important', marginTop: '5px !important' }}>
                     {children}
                 </Grid>
             )

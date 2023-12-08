@@ -13,7 +13,6 @@ type SIdeBarProps = {
 export const SideBar = ({ sortByTrend, sortHeroes, winStats, open }: SIdeBarProps) => {
     const [role, setRole] = useState<RoleStrings>()
     const [sortType, setSortType] = useState<'picks' | 'winrate' | 'bans' | 'trends'>()
-    const [drawerOpen, setDrawerOpen] = useState(open)
     useEffect(() => {
         if (role || sortType) gSort()
     }, [role, sortType]);
