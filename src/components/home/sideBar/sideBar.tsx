@@ -65,6 +65,7 @@ export const SideBar = ({ sortByTrend, sortHeroes, winStats, open }: SIdeBarProp
                         },
                     }}
                     variant="persistent"
+                    // variant="permanent"
                     anchor="left"
                     open={true}
                 >
@@ -74,42 +75,31 @@ export const SideBar = ({ sortByTrend, sortHeroes, winStats, open }: SIdeBarProp
                             return (
                                 <ListItem className='sidebar-item' key={roleString} disablePadding onClick={() => setRole(roleString as RoleStrings)}
                                     sx={{ backgroundColor: highLight ? '#2d8680' : 'inherit' }} >
-                                    <ListItemIcon />
-                                    <ListItemText primary={roleString} />
+                                    {/* <ListItemIcon /> */}
+                                    <ListItemText disableTypography primary={roleString} sx={{ marginLeft: '40px' }} />
                                 </ListItem>
                             )
                         })}
-                        {/* <Divider color={'white'} /> */}
-
                     </Box>
-                    {/* <Box alignItems={"center"}>
-                            {[].map((text, index) => (
-                                <div key={text} className="test">
-                                    <ButtonGroup color="success" variant="contained" className="test" sx={{
-                                        width: '95px'
-                                    }}>
-                                        <Button>{text}</Button>
-                                    </ButtonGroup>
-                                </div>
-                            ))}
-                        </Box> */}
-                    <Divider color={'white'} />
+                    <Divider sx={{
+                        width: '90%',
+                        alignSelf: 'center',
+                        backgroundColor: '#2ec794',
+                        borderRadius: '50%'
+                    }} />
+
                     <List>
-                        <ListItem disablePadding className='sidebar-item'>
-                            <ListItemIcon />
-                            <ListItemText primary={'Picks'} onClick={() => setSortType('picks')} />
+                        <ListItem disablePadding className='sidebar-item' onClick={() => setSortType('picks')} >
+                            <ListItemText disableTypography primary={'Picks'} sx={{ marginLeft: '40px' }} />
                         </ListItem>
-                        <ListItem disablePadding className='sidebar-item'>
-                            <ListItemIcon />
-                            <ListItemText primary={'Winrate'} onClick={() => setSortType('winrate')} />
+                        <ListItem disablePadding className='sidebar-item' onClick={() => setSortType('winrate')}>
+                            <ListItemText disableTypography primary={'Winrate'} sx={{ marginLeft: '40px' }} />
                         </ListItem>
-                        <ListItem disablePadding className='sidebar-item'>
-                            <ListItemIcon />
-                            <ListItemText primary={'Trends'} onClick={() => setSortType('trends')} />
+                        <ListItem disablePadding className='sidebar-item' onClick={() => setSortType('trends')}>
+                            <ListItemText disableTypography primary={'Trends'} sx={{ marginLeft: '40px' }} />
                         </ListItem>
-                        <ListItem disablePadding className='sidebar-item'>
-                            <ListItemIcon />
-                            <ListItemText primary={'Bans'} onClick={() => setSortType('bans')} />
+                        <ListItem disablePadding className='sidebar-item' onClick={() => setSortType('bans')}>
+                            <ListItemText disableTypography primary={'Bans'} sx={{ marginLeft: '40px' }} />
                         </ListItem>
                     </List>
                 </Drawer >
