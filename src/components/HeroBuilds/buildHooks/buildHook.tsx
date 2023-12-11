@@ -55,6 +55,7 @@ export const useHeroBuilds = (filteredData: { [role: string]: NonProDataType[] }
                     'item_builds': itemBuild, 'ability_builds': abilityBuilds[0], 'ability_medians': abilityBuilds[1], 'starting_items': startingItemBuilds,
                     'neutral_items': neutralItems, 'talents': talentBuild, 'ultimate_ability': ultimate_ability
                 };
+                console.log(res)
                 updatedBuilds[key] = res;
             }
             setHeroBuilds(updatedBuilds)

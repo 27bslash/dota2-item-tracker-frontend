@@ -15,7 +15,7 @@ const calc_common_roles = (props: any, pickData?: Record<string, { [key: string]
     const roles: string[] = []
     const sorted = Object.entries(picks).filter((x) => typeof (x[1]) === 'object').sort((a, b) => b[1]['picks'] - a[1]['picks'])
     let combinedRole = null
-    for (const k of sorted) {
+    for (const [i, k] of sorted.entries()) {
         const role = k[0] as RoleStrings
         if (role) {
             let totalRolePicks = picks[role].picks
@@ -27,9 +27,13 @@ const calc_common_roles = (props: any, pickData?: Record<string, { [key: string]
                     combinedRole = true
                 }
             }
-            const perc = totalRolePicks / totalPicks
-            if (perc > threshold) {
+            if (i === 0) {
                 roles.push(role)
+            } else {
+                const perc = totalRolePicks / totalPicks
+                if (perc > threshold) {
+                    roles.push(role)
+                }
             }
         }
     }

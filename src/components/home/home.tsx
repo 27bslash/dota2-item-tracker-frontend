@@ -76,7 +76,7 @@ function Home({ heroList, playerList }: HomeProps) {
             setRoleFilter(role);
         }
     };
-    let className = '';
+    let className: '' | 'right' = '';
     let width = '1800px';
     if (searching) {
         className = 'right';
@@ -138,15 +138,6 @@ function Home({ heroList, playerList }: HomeProps) {
         sortHeroes(sorted.map((x) => x.hero), 'trends', roleFilter);
 
     }
-
-    const handleMouseMove = (event: React.MouseEvent) => {
-        const mouseX = event.clientX;
-
-        // Adjust the threshold based on your desired area
-        const threshold = window.innerWidth * 0.05;
-
-        setDrawerOpen(!drawerOpen && mouseX <= threshold);
-    };
     return (
         <div className="home" >
             <Nav filterHeroes={filterHeroes} filteredByButton={filteredByButton} heroList={heroList} playerList={playerList} highlightHero={highlightHero} />
@@ -186,7 +177,7 @@ function Home({ heroList, playerList }: HomeProps) {
                             // }
                         }
                         return (
-                            <Grid key={i} className={`grid-item-${className}`} item>
+                            <Grid key={i} className={`grid-item-${className}`} item sx={{ paddingTop: '10px !important' }}>
                                 <HeroCard
                                     highlight={highlight}
                                     idx={i}
