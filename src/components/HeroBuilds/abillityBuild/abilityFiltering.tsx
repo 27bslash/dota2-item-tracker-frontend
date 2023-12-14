@@ -53,7 +53,7 @@ const abilityFilter = (data: NonProDataType[]): false | [AbilityBuildEntry[], { 
     }
     // const abilityBuilds = genAbilityArr(res, ab, totalCount, max_abilities)
     const mostCommonBuilds = genMostCommonBuilds(aCount);
-    console.log(mostCommonBuilds)
+    console.log(mostCommonBuilds,aCount)
     return [mostCommonBuilds, medianLevelsForAbility]
 }
 export default abilityFilter
@@ -101,17 +101,14 @@ export const genMostCommonBuilds = (aCount: { [key: string]: number; }) => {
     // console.log([...srt])
     const sorted = groupSimilarBuilds(srt);
     let mostPickedBuild: AbilityBuildEntry
-    let mostCommonBuilds = sorted.sort((a, b) => b[1] - a[1]).filter((build, i) => {
+    const mostCommonBuilds = sorted.sort((a, b) => b[1] - a[1]).filter((build, i) => {
         if (i === 0) mostPickedBuild = build;
         const buildPerc = (build[1] / mostPickedBuild[1]) * 100;
         if (buildPerc > 35) {
             return true;
         }
     });
-    mostCommonBuilds = mostCommonBuilds.filter((abilityBuild, i) => {
-        if (i === 0) return true;
-        return !testForSimilarBuilds(abilityBuild[0], mostPickedBuild[0], 4);
-    });
+
     return mostCommonBuilds;
 }
 
