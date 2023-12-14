@@ -18,7 +18,7 @@ const RoleCounter = () => {
         const aKey = Object.keys(a)[0]
         const bKey = Object.keys(b)[0]
         return b[bKey]['picks'] - a[aKey]['picks'] || b[bKey]['winrate'] - a[aKey]['winrate']
-    })
+    }).filter((x) => Object.keys(x)[0] !== 'trends')
     if (role) {
         sorted = sorted.filter((x) => {
             return Object.keys(x)[0] === role
