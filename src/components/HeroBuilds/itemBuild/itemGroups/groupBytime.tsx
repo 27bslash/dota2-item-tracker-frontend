@@ -27,7 +27,7 @@ const groupByTime = (data: RawItemBuild[], roleKey: string) => {
                 o[1]['key'] = x[0]
                 ret.push(o[1])
                 return x
-            } else if (type === 'situational' && x[1]['time'] < time && !seenItems.has(x[0]) && x[1]['adjustedValue'] < percForCore && x[1]['adjustedValue'] > 10) {
+            } else if (type === 'situational' && x[1]['time'] < time && !seenItems.has(x[0]) && x[1]['adjustedValue'] < percForCore && x[1]['adjustedValue'] > 15) {
                 seenItems.add(x[0])
                 o[1] = x[1]
                 o[1]['key'] = x[0]
