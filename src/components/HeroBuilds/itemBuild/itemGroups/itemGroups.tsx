@@ -31,10 +31,9 @@ export const ItemGroups = ({ buildObject, offset, timing, ObjectKey }: ItemGroup
         return ret
     }
     // console.log(disassembleMargin())
-
     return (
         <>
-            {buildObject[ObjectKey] && buildObject[ObjectKey].length !== 0 &&
+            {buildObject[ObjectKey] && buildObject[ObjectKey][0].length !== 0 &&
                 <>
                     <Typography variant={'h6'} className='build-header'>{`${timing} ${ObjectKey}`}</Typography>
                     <div className={`${ObjectKey} flex`} style={{ flexDirection: 'column', marginLeft: `${optionMargin()}px` }}>
