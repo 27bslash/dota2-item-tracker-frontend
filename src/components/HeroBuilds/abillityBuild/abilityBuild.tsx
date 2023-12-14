@@ -16,7 +16,7 @@ const AbilityBuilds = ({ data, abilityBuilds }: AbilityBuildProps) => {
     // console.log(abilities)
     const [debug, setShowDebug] = useState(false)
     const { heroData, nameParam } = usePageContext()
-    const DEBUG = true
+    const DEBUG = process.env.NODE_ENV !== 'production'
     return (
         <Box justifyContent='space-between' padding={4} className='ability-builds flex'>
             {/* <div className='ability-build flex'>
