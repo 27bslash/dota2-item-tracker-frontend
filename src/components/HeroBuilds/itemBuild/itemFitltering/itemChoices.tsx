@@ -42,7 +42,7 @@ const choice = (arr: any[], percentiles: any[], matchData: any, itemData: any) =
     for (const targetArr of percentiles) {
         const targetKey = targetArr[0].replace(/__\d+/g, '')
         if (targetKey === key) continue
-        if (key === targetKey) {
+        if (key === targetKey || !itemData['items'][targetKey]) {
             continue
         }
         if (!componentChecker(itemData, key, targetKey)) {

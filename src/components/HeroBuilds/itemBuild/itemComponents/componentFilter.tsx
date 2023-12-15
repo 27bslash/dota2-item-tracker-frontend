@@ -80,7 +80,7 @@ export const recursive_remove = (item: RawItemBuild, itemdata: Items, components
 }
 export const allComponents = (itemKey: string, itemdata: Items): string[] => {
     const res: string[] = []
-    const components = 'components' in itemdata['items'][itemKey] ? itemdata['items'][itemKey]['components'] : undefined
+    const components = itemdata['items'][itemKey] && 'components' in itemdata['items'][itemKey] ? itemdata['items'][itemKey]['components'] : undefined
     if (!components) return res
     for (const component of components) {
         res.push(component)
@@ -106,7 +106,7 @@ export const filterComponents = (data: RawItemBuild[], itemData: Items) => {
     const keys = data.map((x) => x[0])
     // console.log([...keys])
     const removedComponents: string[] = []
-    const disassembleable = ['arcane_boots', 'echo_sabre', 'vanguard', 'mask_of_madness']
+    const disassembleable = ['echo_sabre', 'vanguard', 'mask_of_madness']
     for (let i = 0; i < data.length; i++) {
         const item = data[i]
         const itemKey: string = item[0]
