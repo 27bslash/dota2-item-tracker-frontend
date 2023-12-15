@@ -80,7 +80,7 @@ export const recursive_remove = (item: RawItemBuild, itemdata: Items, components
 }
 export const allComponents = (itemKey: string, itemdata: Items): string[] => {
     const res: string[] = []
-    const components = itemdata['items'][itemKey] && 'components' in itemdata['items'][itemKey] ? itemdata['items'][itemKey]['components'] : undefined
+    const components = 'components' in itemdata['items'][itemKey] ? itemdata['items'][itemKey]['components'] : undefined
     if (!components) return res
     for (const component of components) {
         res.push(component)

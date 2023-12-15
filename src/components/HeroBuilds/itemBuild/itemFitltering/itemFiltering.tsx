@@ -35,7 +35,7 @@ const humanToUnix = (time: string | number) => {
     return hours + mins + secs
 }
 
-export const countItems = (data: NonProDataType[]) => {
+export const countItems = (data: NonProDataType[], itemData: Items) => {
     const consumables = [
         "tango",
         "flask",
@@ -67,7 +67,7 @@ export const countItems = (data: NonProDataType[]) => {
     for (const match of data) {
         const dupeCounter: string[] = []
         for (const [i, item] of match['items'].entries()) {
-            if (consumables.includes(item['key'])) {
+            if (consumables.includes(item['key']) || !itemData['items'][item['key']]) {
                 continue
             }
             let key
@@ -176,7 +176,7 @@ export const bootsFilter = (data: RawItemBuild[]) => {
 
 const filterItems = (matchData: NonProDataType[], itemData: Items, roleKey: string) => {
     // const start = performance.now()
-    let itemBuild = countItems(matchData)
+    let itemBuild = countItems(matchData, itemData)
     // const end = performance.now()
     itemBuild = filterComponents(itemBuild, itemData)
     itemBuild = bootsFilter(itemBuild)
