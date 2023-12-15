@@ -1,7 +1,10 @@
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import colourWins from "../../utils/colourWins";
 import PickStats, { PickRoleStat } from "../types/pickStats";
 import { BoldName } from "./pickCounter";
 import { usePickCounterContext } from "./pickCounterContext";
+import { faArrowRight } from '@fortawesome/free-solid-svg-icons'
+
 type HeroPickProps = {
     base: PickStats | PickRoleStat,
 }
@@ -11,6 +14,7 @@ export const HeroPicks = ({ base }: HeroPickProps) => {
     return (
         role ? (
             <>
+                <FontAwesomeIcon color={heroColor} icon={faArrowRight} style={{ transform: 'rotate(-180deg)', alignSelf: 'center' }} />
                 <BoldName reset={reset} name={nameParam} color={heroColor} />
                 <p>was picked {base['picks']} times in {role} with a  <span style={{ color: colourWins(base['winrate']), marginRight: '5px' }}>
                     {base['winrate']}%

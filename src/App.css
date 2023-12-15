@@ -642,6 +642,7 @@ label {
 }
 .bold-name:hover {
     cursor: pointer;
+    opacity: 0.8;
 }
 .disassemble-overlay {
     /* background: url(./images/disassemble.png); */
