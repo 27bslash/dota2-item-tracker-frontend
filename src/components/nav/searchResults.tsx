@@ -109,11 +109,10 @@ const SearchResults = ({ sortedHeroes, sortedPlayers, updateValue, navigatePage,
     return (
         <>
             <Box className="suggestions" bgcolor='primary.main' sx={{ 'z-index': 99 }}>
-                {sortedHeroes.length > 0 &&
+                {sortedHeroes.length > 0 && sortedHeroes.length < 30 &&
                     <div className="suggestions-left">
                         <Typography align='center' color='#1ebdad' variant='h6' className='suggestion-header'>Heroes</Typography>
                         {sortedHeroes.map((value, i) => {
-
                             return (<SearchResult value={value} updateSearchIdx={updateSearchIdx} type='hero' idx={i} key={i} selectedIdx={idxRef.current} list={0} targetList={targetList} />)
                         })}
                     </div>
