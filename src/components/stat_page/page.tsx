@@ -142,10 +142,14 @@ const Page = ({ type, heroList, playerList }: pageProps) => {
         }
     }
     const filterByPatch = () => {
-        const patchFilteredData = filteredData.filter((match) => match['patch'] === patch['patch'])
-        setTotalMatchData(patchFilteredData)
-        setFilteredData(patchFilteredData)
-        setCount(totalMatchData.length)
+        const patchFilteredData = filteredData.filter((match) => {
+            return match['patch'] === patch['patch']
+        })
+        if (patchFilteredData.length > 0) {
+            setTotalMatchData(patchFilteredData)
+            setFilteredData(patchFilteredData)
+            setCount(totalMatchData.length)
+        }
     }
 
     const commonProps = {
@@ -170,7 +174,7 @@ const Page = ({ type, heroList, playerList }: pageProps) => {
     const renderFilterByPatch = () => {
         const oldPatchGameList = totalMatchData.filter((x) => patch['patch_timestamp'] > 0 && x.patch !== patch['patch'])
         return (
-            oldPatchGameList.length &&
+            oldPatchGameList.length && oldPatchGameList.length !== totalMatchData.length &&
             <Typography variant='h5' color='white' align='center'
                 onClick={() => filterByPatch()}
             >
