@@ -35,7 +35,7 @@ const ItemTooltip = (props: ItemTooltipProps) => {
                                 <img className="tooltip-img" alt={props.img} src={props.img} width='75px' style={{ marginRight: '10px' }}></img>
                                 <div className="item-tooltip-title">
                                     <h3>{itemProperties.dname}</h3>
-                                    {itemProperties.cost && itemProperties.cost > 0 &&
+                                    {!!itemProperties.cost && itemProperties.cost > 0 &&
                                         <div className="cost-wrapper">
                                             <img alt='gold' className="gold-img" src="https://steamcdn-a.akamaihd.net/apps/dota2/images/tooltips/gold.png" style={{ marginRight: '5px' }}></img>
                                             <h4>{itemProperties.cost}</h4>
