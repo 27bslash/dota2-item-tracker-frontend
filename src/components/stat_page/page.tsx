@@ -6,7 +6,7 @@ import { Typography } from '@mui/material';
 import TableSearch, { combineMatches } from '../table/table_search/table_search';
 import { useParams } from 'react-router';
 import heroSwitcher from '../../utils/heroSwitcher';
-import { useSearchParams } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import PickCounter from '../pick_counter/pickCounter';
 import DotaMatch from '../types/matchData';
 import { HeroPageTopSection } from '../hero_page/hero_page';
@@ -59,7 +59,7 @@ const Page = ({ type, heroList, playerList }: pageProps) => {
     }
 
     document.title = heroSwitcher(nameParam);
-    const { filteredMatchData, totalMatches, patch, itemData, totalPicks } = useFetchAllData(type)
+    const { filteredMatchData, totalMatches, patch: patch_obj, itemData, totalPicks } = useFetchAllData(type)
     useEffect(() => {
         if (filteredMatchData) {
             setFilteredData(params['patch'] ? filteredMatchData.filter((match) => match.patch === params['patch']) : filteredMatchData)
@@ -143,7 +143,7 @@ const Page = ({ type, heroList, playerList }: pageProps) => {
     }
     const filterByPatch = () => {
         const patchFilteredData = filteredData.filter((match) => {
-            return match['patch'] === patch['patch']
+            return match['patch'] === patch_obj['patch']
         })
         setTotalMatchData(patchFilteredData)
         setFilteredData(patchFilteredData)
@@ -171,14 +171,16 @@ const Page = ({ type, heroList, playerList }: pageProps) => {
         return null;
     };
     const renderFilterByPatch = () => {
-        const oldPatchGameList = totalMatchData.filter((x) => patch['patch_timestamp'] > 0 && x.patch !== patch['patch'])
+        const oldPatchGameList = totalMatchData.filter((x) => patch_obj['patch_timestamp'] > 0 && x.patch !== patch_obj['patch'])
         return (
             !!oldPatchGameList.length && oldPatchGameList.length !== totalMatchData.length &&
-            <Typography variant='h5' color='white' align='center'
-                onClick={() => filterByPatch()}
-            >
-                Filter matches by new patch
-            </Typography>
+            <Link to={`/${patch_obj['patch']}/hero/${nameParam}`}>
+                <Typography variant='h5' color='white' align='center'
+                    onClick={() => filterByPatch()}
+                >
+                    Filter Matches By {patch_obj['patch']}
+                </Typography>
+            </Link>
         )
     };
     const renderPageContent = () => {
