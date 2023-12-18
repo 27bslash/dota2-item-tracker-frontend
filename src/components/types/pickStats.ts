@@ -3,6 +3,9 @@ export interface PickRoleStat {
     picks: number;
     winrate: number;
     wins: number;
+    patch_picks: number;
+    patch_wins: number;
+    patch_losses: number;
 }
 
 export interface Trend {
@@ -15,9 +18,12 @@ export interface Trend {
     '': PickRoleStat
     bans: number;
     hero: string;
-    picks: number;
+    patch: string;
+    patch_picks: number;
+    patch_wins: number;
     winrate: number;
     wins: number;
+    picks: number;
 }
 
 interface PickStats {
@@ -30,6 +36,9 @@ interface PickStats {
     '': PickRoleStat
     bans: number;
     hero: string;
+    patch: string;
+    patch_picks: number;
+    patch_wins: number;
     picks: number;
     trends: Trend[];
     winrate: number;
