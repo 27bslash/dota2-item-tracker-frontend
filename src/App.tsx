@@ -33,18 +33,18 @@ function App() {
     return (
         <Box className="App" sx={{ padding: '8px' }}>
             <Routes>
-                <Route path='/' element={
+                <Route path='/:patch?' element={
                     <Home heroList={heroList} playerList={playerList} />
                     // <Palette options={options} updateOptions={updateOptions}></Palette>
                 }>
                     {/* home page */}
                 </Route>
-                <Route path='/hero/:name' element={
+                <Route path='/:patch?/hero/:name' element={
                     <Page heroList={heroList} playerList={playerList} type='hero'/>
                 }>
                     {/* hero pages */}
                 </Route>
-                <Route path='/player/:name' element={
+                <Route path='/:patch?/player/:name' element={
                     <Page heroList={heroList} playerList={playerList} type='player' />}>
                     {/* player pages */}
                 </Route>
