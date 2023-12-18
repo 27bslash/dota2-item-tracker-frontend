@@ -1,7 +1,7 @@
 /* eslint-disable no-prototype-builtins */
 import { medianValue } from "../../../utils/medianValue";
-import { NonProDataType } from "../builds/build";
 import { AbilityBuildEntry } from "../builds/buildCell";
+import { NonProDataType } from "../types";
 
 const abilityFilter = (data: NonProDataType[]): false | [AbilityBuildEntry[], { [key: string]: number }] => {
     const { abilities, aCount } = groupAbilities(data)

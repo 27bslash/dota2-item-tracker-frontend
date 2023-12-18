@@ -12,8 +12,8 @@ import { PageHeroData } from "../../types/heroData"
 import Hero from "../../types/heroList"
 import DotaMatch from "../../types/matchData"
 import { CoreItem } from "../itemBuild/itemGroups/groupBytime"
-import { NonProDataType } from "./build"
 import { HeroBuild } from "../buildHooks/buildHook"
+import { NonProDataType } from "../types"
 interface NeutralItem {
     count: number;
     tier: number;

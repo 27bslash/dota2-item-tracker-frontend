@@ -6,6 +6,7 @@ import { AbilityImg } from '../../table/tableAbilities/abilityImg';
 import { AbilityBuildEntry } from '../builds/buildCell';
 import { usePageContext } from '../../stat_page/pageContext';
 import { NonProDataType } from '../types';
+
 interface AbilityBuildProps extends MatchDataAdj {
     data: NonProDataType[],
     abilityBuilds: AbilityBuildEntry[],

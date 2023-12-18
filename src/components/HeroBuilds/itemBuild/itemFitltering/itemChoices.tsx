@@ -2,7 +2,7 @@ import { Items } from "../../../types/Item"
 import { NonProDataType } from "../../types"
 import { RawItemBuild, countItems } from "./itemFiltering"
 
-const timeBracket = (item: any) => {
+const timeBracket = (item: RawItemBuild) => {
     if (item[1]['time'] < 700) {
         return 'early'
     } else if (item[1]['time'] < 1800) {
