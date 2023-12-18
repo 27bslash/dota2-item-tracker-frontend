@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { BuildProps, NonProDataType } from "../../builds/build"
+import { BuildProps, NonProDataType } from "../builds/build"
 import { useFetchData } from "./fetchMatchDataHook"
 import PickStats from "../../types/pickStats"
 import { RoleStrings } from "../../home/home"

@@ -1,4 +1,4 @@
-import { NonProDataType } from "../../builds/build";
+import { NonProDataType } from "../builds/build";
 
 
 export const mostUsedTalents = (MatchData: NonProDataType[]) => {

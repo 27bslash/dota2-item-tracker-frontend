@@ -1,5 +1,5 @@
 import { useReducer, useEffect, useState } from "react";
-import { NonProDataType } from "../../builds/build";
+import { NonProDataType } from "../builds/build";
 import abilityFilter from "../abillityBuild/abilityFiltering";
 import filterItems from "../itemBuild/itemFitltering/itemFiltering";
 import countStartingItems from "../itemBuild/startingItems/startingItemsFilter";
@@ -7,7 +7,7 @@ import { mostUsedNeutrals } from "../itemBuild/neutralItems/mostUsedNeutrals";
 import { mostUsedTalents } from "../abillityBuild/talentLevels";
 import { Items } from "../../types/Item";
 import { PageHeroData } from "../../types/heroData";
-import { AbilityBuildEntry, Talents } from "../../builds/buildCell";
+import { AbilityBuildEntry, Talents } from "../builds/buildCell";
 import { CoreItem } from "../itemBuild/itemGroups/groupBytime";
 export type HeroBuild = {
     item_builds: {
@@ -50,10 +50,10 @@ export const useHeroBuilds = (filteredData: { [role: string]: NonProDataType[] }
                 const startingItemBuilds = countStartingItems(buildData);
                 const neutralItems = mostUsedNeutrals(buildData, itemData)
                 const talentBuild = mostUsedTalents(buildData)
-                const ultimate_ability = getUltimateAbility()
+                const ultimateAbility = getUltimateAbility()
                 const res = {
                     'item_builds': itemBuild, 'ability_builds': abilityBuilds[0], 'ability_medians': abilityBuilds[1], 'starting_items': startingItemBuilds,
-                    'neutral_items': neutralItems, 'talents': talentBuild, 'ultimate_ability': ultimate_ability
+                    'neutral_items': neutralItems, 'talents': talentBuild, 'ultimate_ability': ultimateAbility
                 };
                 console.log(res)
                 updatedBuilds[key] = res;

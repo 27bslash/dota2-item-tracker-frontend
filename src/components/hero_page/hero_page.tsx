@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import { baseApiUrl } from "../../App"
-import Build from "../builds/build"
+import Build from "../HeroBuilds/builds/build"
 import BestGames from "../best_games/bestGames"
 import BigTalent from "../big_talent/bigTalent"
 import HeroImg from "../heroImg"

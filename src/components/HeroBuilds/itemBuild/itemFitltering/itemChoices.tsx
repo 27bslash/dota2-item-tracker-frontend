@@ -1,4 +1,4 @@
-import { NonProDataType } from "../../../builds/build"
+import { NonProDataType } from "../../builds/build"
 import { Items } from "../../../types/Item"
 import { RawItemBuild, countItems } from "./itemFiltering"
 

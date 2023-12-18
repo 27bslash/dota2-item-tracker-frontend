@@ -1,18 +1,18 @@
 import { Box, Button, Tooltip, Typography } from "@mui/material";
-import GuideGuide from "../HeroBuilds/guideDownload";
-import { MatchDataAdj } from "../stat_page/page";
-import { useHeroBuilds } from "../HeroBuilds/buildHooks/buildHook";
-import { useParseMatchData } from "../HeroBuilds/buildHooks/parseMatchDataHook";
-import Hero from "../types/heroList";
-import DotaMatch from "../types/matchData";
+import GuideGuide from "../guideDownload";
+import { MatchDataAdj } from "../../stat_page/page";
+import { useHeroBuilds } from "../buildHooks/buildHook";
+import { useParseMatchData } from "../buildHooks/parseMatchDataHook";
+import Hero from "../../types/heroList";
+import DotaMatch from "../../types/matchData";
 import { BuildCell } from "./buildCell";
 import { useState } from "react";
-import Items from "../types/Item";
-import { PageHeroData } from "../types/heroData";
-import { TableSearchResults } from "../table/table_search/types/tableSearchResult.types";
-import PickStats from "../types/pickStats";
-import { usePageContext } from "../stat_page/pageContext";
-import { RoleStrings } from "../home/home";
+import Items from "../../types/Item";
+import { PageHeroData } from "../../types/heroData";
+import { TableSearchResults } from "../../table/table_search/types/tableSearchResult.types";
+import PickStats from "../../types/pickStats";
+import { usePageContext } from "../../stat_page/pageContext";
+import { RoleStrings } from "../../home/home";
 
 export interface BuildProps extends MatchDataAdj {
     data?: any,
@@ -38,7 +38,8 @@ export type NonProDataType = {
     starting_items: [{ id: string, key: string, time: number }],
     role: string,
     item_neutral?: string,
-    win?: number
+    win?: number,
+    patch:string,
 }
 const Build = (props: BuildProps) => {
     const [proData, setProData] = useState(false)
