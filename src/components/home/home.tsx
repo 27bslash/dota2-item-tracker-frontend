@@ -1,4 +1,4 @@
-import { Grid } from '@mui/material';
+import { Grid, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
 import Nav from '../nav/nav';
 import ControlPanel from './control';
@@ -11,6 +11,9 @@ import Hero from '../types/heroList';
 import PickStats, { Trend } from '../types/pickStats';
 import { SortTitle } from './sortTitle';
 import { SideBar } from './sideBar/sideBar';
+import { useParams } from 'react-router';
+import { Link } from 'react-router-dom';
+import { fetchData } from '../../utils/fetchData';
 // import { PickStats } from './types/pickStats.types';
 
 
@@ -28,21 +31,25 @@ function Home({ heroList, playerList }: HomeProps) {
     const [highlight, setHighlight] = useState<number>();
     const [sort, setSearchVal] = useState('');
     const [drawerOpen, setDrawerOpen] = useState(false);
+    const paramPatch = useParams()['patch']
+    const [patch, setPatch] = useState({ 'patch': '', 'patch_timestamp': 0 })
+    useEffect(() => {
+        (async () => {
+            const currentPatch = await fetchData(`${baseApiUrl}files/patch`)
+            setPatch(currentPatch)
+        })()
+    }, []);
     useEffect(() => {
         document.title = 'Dota2 Item Tracker';
         (async () => {
             const req = await fetch(`${baseApiUrl}/files/win-stats`);
             let json: PickStats[] = await req.json();
+            json.filter((doc) => paramPatch ? doc.patch === paramPatch : doc)
             json = json.sort((a, b) => a.hero.localeCompare(b.hero));
             setWinStats(json);
         })();
     }, []);
-    // const sortF = (a: any, b: any) => {
-    //     const n1 = a['name']
-    //     const n2 = b['name']
-    // console.log(n1, n2)
-    //     return n1.localeCompare(n2)
-    // }
+
     useEffect(() => {
         if (!heroList.length) {
             return;
@@ -141,6 +148,11 @@ function Home({ heroList, playerList }: HomeProps) {
     return (
         <div className="home" >
             <Nav filterHeroes={filterHeroes} filteredByButton={filteredByButton} heroList={heroList} playerList={playerList} highlightHero={highlightHero} />
+            {patch['patch'] && !paramPatch &&
+                <Link to={`/${patch['patch']}`}>
+                    <Typography variant='h4' color='white' align='center'>Filter By Patch {patch['patch']}</Typography>
+                </Link>
+            }
             {filteredHeroes && winStats &&
                 <div className="side-bar" onMouseLeave={() => setDrawerOpen(false)}>
                     <SideBar open={drawerOpen} winStats={winStats} sortHeroes={sortHeroes} sortByTrend={sortByTrend} />
@@ -164,6 +176,15 @@ function Home({ heroList, playerList }: HomeProps) {
                             } else if (!roleFilter) {
                                 picks = stats[0]['picks'] || 0
                                 wins = stats[0]['wins'] || 0
+                            }
+                            if (paramPatch) {
+                                if (roleFilter && stats[0][roleFilter]) {
+                                    picks = stats[0][roleFilter]['patch_picks'] || 0
+                                    wins = stats[0][roleFilter]['patch_wins'] || 0
+                                } else if (!roleFilter) {
+                                    picks = stats[0]['patch_picks'] || 0
+                                    wins = stats[0]['patch_wins'] || 0
+                                }
                             }
                             // const picks = (roleFilter ? stats[0][roleFilter]['picks'] : stats[0][`picks`] as number) || 0;
                             const { bans } = stats[0];

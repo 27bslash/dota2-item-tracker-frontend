@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import colourWins from "../../../utils/colourWins";
 import heroSwitcher from "../../../utils/heroSwitcher";
 import { Typography } from "@mui/material";
@@ -11,14 +11,16 @@ function HeroCard({ stats, heroName, role, searching, idx, highlight, sortByTren
     const imgName = heroSwitcher(heroName);
     // console.log(heroName, heroName)
     // console.log(stats)
+    const patchParam = useParams()
+    const patchString = patchParam['patch'] ? `/${patchParam['patch']}` : ''
     const heroHighlight = idx === highlight && searching ? 'hero-highlight' : '';
     const width = heroHighlight ? '148' : '145';
     // const width = heroHighlight ? '113' : '110'
     const img = `https://ailhumfakp.cloudimg.io/v7/https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/heroes/${imgName}.png?v=5926546`;
     const heroname = heroName.replace(/\s/g, '_');
-    let link = `/hero/${heroname}`;
-    if (role) {
-        link = `/hero/${heroname}?role=${role.replace('_', '')}`;
+    let link = `${patchString}/hero/${heroname}`;
+    if (role && stats['picks'] > 0) {
+        link = `${patchString}/hero/${heroname}?role=${role.replace('_', '')}`;
     }
     return (
         <div className={`hero-cell ${heroHighlight}`}>

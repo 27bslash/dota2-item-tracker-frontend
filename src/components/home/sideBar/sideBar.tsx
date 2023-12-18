@@ -4,6 +4,7 @@ import { RoleStrings } from "../home"
 import { theme } from "../../.."
 import PickStats, { PickRoleStat } from "../../types/pickStats"
 import ArrowButton from "../../ui_elements/arrowButton"
+import { useParams } from "react-router"
 type SIdeBarProps = {
     sortByTrend: () => void,
     sortHeroes: (list: string[], search: string, role?: RoleStrings) => void,
@@ -13,6 +14,7 @@ type SIdeBarProps = {
 export const SideBar = ({ sortByTrend, sortHeroes, winStats, open }: SIdeBarProps) => {
     const [role, setRole] = useState<RoleStrings>()
     const [sortType, setSortType] = useState<'picks' | 'winrate' | 'bans' | 'trends'>()
+    const paramPatch = useParams()
     useEffect(() => {
         if (role || sortType) gSort()
     }, [role, sortType]);
@@ -30,8 +32,9 @@ export const SideBar = ({ sortByTrend, sortHeroes, winStats, open }: SIdeBarProp
                 dd = item[role]
                 pickThreshold = 5
             }
+            const pickString = paramPatch ? 'patch_picks' : 'picks'
             if (sortType === 'picks' || sortType === 'winrate' || sortType === 'bans') {
-                return dd && dd['picks'] > pickThreshold
+                return dd && dd[pickString] > pickThreshold
             }
         });
         const sorted = [...filtered].sort((a, b) => {
@@ -39,9 +42,23 @@ export const SideBar = ({ sortByTrend, sortHeroes, winStats, open }: SIdeBarProp
                 if (sortType === 'bans') {
                     return b['bans'] - a['bans']
                 } else {
+                    if (paramPatch) {
+                        if (sortType === 'picks') {
+                            return b[role][`patch_picks`] - a[role]['patch_picks']
+                        } else if (sortType === 'winrate') {
+                            return b[role]['patch_wins'] / b[role][`patch_picks`] - a[role]['patch_wins'] / a[role][`patch_picks`]
+                        }
+                    }
                     return b[role][sortType] - a[role][sortType]
                 }
             } else {
+                if (paramPatch) {
+                    if (sortType === 'picks') {
+                        return b[`patch_picks`] - a['patch_picks']
+                    } else if (sortType === 'winrate') {
+                        return b['patch_wins'] / b[`patch_picks`] - a['patch_wins'] / a[`patch_picks`]
+                    }
+                }
                 return b[sortType] - a[sortType]
             }
         })
