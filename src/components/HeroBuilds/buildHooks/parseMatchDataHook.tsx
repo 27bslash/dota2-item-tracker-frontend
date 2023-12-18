@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react"
-import { BuildProps, NonProDataType } from "../builds/build"
 import { useFetchData } from "./fetchMatchDataHook"
 import PickStats from "../../types/pickStats"
 import { RoleStrings } from "../../home/home"
+import { NonProDataType } from "../types"
 const calc_common_roles = (props: any, pickData?: Record<string, { [key: string]: number }>, threshold?: number) => {
     const picks: PickStats = pickData || props.picks || props['picks']
     threshold = threshold || 0.1

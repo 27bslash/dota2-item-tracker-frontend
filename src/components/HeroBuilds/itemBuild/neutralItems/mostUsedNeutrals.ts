@@ -1,5 +1,5 @@
 import { Items } from "../../../types/Item";
-import { NonProDataType } from "../../builds/build";
+import { NonProDataType } from "../../types";
 
 export const mostUsedNeutrals = (matchData: NonProDataType[], itemData: Items) => {
     const tierCountArr: Record<string, { 'count': number, 'tier': number, 'perc': number }>[] = []

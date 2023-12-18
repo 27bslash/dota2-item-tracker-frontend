@@ -1,5 +1,5 @@
-import { NonProDataType } from "../../builds/build"
 import { Items } from "../../../types/Item"
+import { NonProDataType } from "../../types"
 import { RawItemBuild, countItems } from "./itemFiltering"
 
 const timeBracket = (item: any) => {

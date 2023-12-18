@@ -1,5 +1,4 @@
 import { useReducer, useEffect, useState } from "react";
-import { NonProDataType } from "../builds/build";
 import abilityFilter from "../abillityBuild/abilityFiltering";
 import filterItems from "../itemBuild/itemFitltering/itemFiltering";
 import countStartingItems from "../itemBuild/startingItems/startingItemsFilter";
@@ -9,6 +8,7 @@ import { Items } from "../../types/Item";
 import { PageHeroData } from "../../types/heroData";
 import { AbilityBuildEntry, Talents } from "../builds/buildCell";
 import { CoreItem } from "../itemBuild/itemGroups/groupBytime";
+import { NonProDataType } from "../types";
 export type HeroBuild = {
     item_builds: {
         [key: string]: CoreItem[],
