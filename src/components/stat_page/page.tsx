@@ -62,10 +62,10 @@ const Page = ({ type, heroList, playerList }: pageProps) => {
     const { filteredMatchData, totalMatches, patch, itemData, totalPicks } = useFetchAllData(type)
     useEffect(() => {
         if (filteredMatchData) {
-            setFilteredData(filteredMatchData)
+            setFilteredData(params['patch'] ? filteredMatchData.filter((match) => match.patch === params['patch']) : filteredMatchData)
         }
         if (totalMatches) {
-            setTotalMatchData(totalMatches)
+            setTotalMatchData(params['patch'] ? totalMatches.filter((match) => match.patch === params['patch']) : totalMatches)
             setCount(totalMatches.length)
         }
     }, [filteredMatchData, totalMatches])

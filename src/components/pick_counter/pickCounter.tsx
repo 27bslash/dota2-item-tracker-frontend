@@ -12,6 +12,7 @@ import { HeroPicks } from './heroPicks';
 import { PlayerPicks } from './playerPicks';
 import { PickCounterContextProvider, usePickCounterContext } from './pickCounterContext';
 import { usePageContext } from '../stat_page/pageContext';
+import { useParams } from 'react-router';
 
 export interface pickProps {
     matchData: DotaMatch[],
@@ -91,7 +92,7 @@ export const BoldName = (props: { reset: () => void; color: string; name: string
 }
 const TotalPickCounter = () => {
     const { role, type, totalPicks, matchData, nameParam, heroColor, reset, updateMatchData } = usePickCounterContext()
-    const base = role && type === 'hero' ? totalPicks![role] : totalPicks
+    const base = role && type === 'hero' ? totalPicks[role] : totalPicks
     return (
         <>
             {type === 'hero' ? (
