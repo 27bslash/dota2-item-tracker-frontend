@@ -1,16 +1,25 @@
+import React from "react";
 import CdMc from "./cdmc";
 
 const TooltipDescription = (props: any) => {
     const replacer = (str: string) => {
         return str === '.' ? `${str}<br></br>` : `${str}<br>`
     }
+    const itemPropertiesArr = props.itemProperties.hint[0].split('<h1>')
+    console.log(props.itemProperties)
     return (
         <div className="tooltip-description">
             {
-                props.itemProperties.description &&
-                props.itemProperties.description.map((x: string, i: number) => {
-                    const header = x.match(/.*(?=--)/)
-                    const text = header ? x.match(/(?=--).*/) : x.match(/.*/)
+                props.itemProperties.hint &&
+                itemPropertiesArr.map((x: string, i: number) => {
+                    // const header = x.match(/.*(?=--)/)
+                    const headers = x.match(/(.*?)<\/h1>/gm)
+                    let header = ''
+                    if (headers) {
+                        header = headers.map(match => match.replace(/<\/?h1>/g, ''))[0];
+                    }
+
+                    const text = header ? x.match(/<\/h1>.*/) : x.match(/.*/)
                     let highlightedText = ''
                     const active = x.match('Active:')
                     const passive = x.match('Passive:')
@@ -29,7 +38,7 @@ const TooltipDescription = (props: any) => {
                         // const activeDescText = highlight_numbers(activeTxt)
                     }
                     return (
-                        <div key={i}>
+                        <React.Fragment key={i}>
                             {active && highlightedText &&
                                 <div className="active">
                                     <div className="active-header">
@@ -73,7 +82,7 @@ const TooltipDescription = (props: any) => {
                                     <p className="description-text" dangerouslySetInnerHTML={{ __html: highlightedText }}></p>
                                 </div>
                             }
-                        </div>
+                        </React.Fragment>
                     )
                 })
 
