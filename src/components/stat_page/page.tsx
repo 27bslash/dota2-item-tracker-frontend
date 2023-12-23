@@ -25,8 +25,6 @@ import PageContextProvider from './pageContext';
 //  add chappie section ( probs not)
 //  fix search style
 //  lazyload images
-//  patch filter filters non pro games for builds
-//  change url params to reflect if patch filter is oun
 interface pageProps {
     type: string,
     heroList: Hero[],
@@ -52,7 +50,8 @@ const Page = ({ type, heroList, playerList }: pageProps) => {
     const role = (query.get('role') || '') as RoleStrings
     const [Role, setRole] = useState(role)
     const [count, setCount] = useState(0)
-    const nameParam = params['name'] ? heroSwitcher(params['name']) : ''
+    let nameParam = params['name'] ? heroSwitcher(params['name']) : ''
+    if (params['patch']) nameParam = params['name']!
     const heroColor = useHeroColor(type, nameParam)
     const updateStarter = () => {
         setShowStarter(prev => !prev)
