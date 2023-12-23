@@ -84,9 +84,9 @@ export const allComponents = (itemKey: string, itemdata: Items): string[] => {
     if (!components) return res
     for (const component of components) {
         res.push(component)
-        const componentStats = itemdata['items'][component]['components']
-        if (componentStats) {
-            for (const subComponent of componentStats) {
+        const componentStats = itemdata['items'][component]
+        if (componentStats && componentStats['components']) {
+            for (const subComponent of componentStats['components']) {
                 res.push(subComponent)
             }
         }

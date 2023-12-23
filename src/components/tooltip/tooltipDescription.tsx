@@ -5,8 +5,8 @@ const TooltipDescription = (props: any) => {
     const replacer = (str: string) => {
         return str === '.' ? `${str}<br></br>` : `${str}<br>`
     }
-    const itemPropertiesArr = props.itemProperties.hint[0].split('<h1>')
-    console.log(props.itemProperties)
+    const tooltipDecsription = props.itemProperties.hint
+    const itemPropertiesArr = tooltipDecsription ? tooltipDecsription[0].split('<h1>') : undefined
     return (
         <div className="tooltip-description">
             {
@@ -31,7 +31,7 @@ const TooltipDescription = (props: any) => {
                         // let toggleText = highlight_numbers(x.match(/.*<h1>Toggle:.*/g));
                         // let passiveText = highlight_numbers(x.match(/.*<h1>Passive:.*/g));
                         // let useText = highlight_numbers(x.match(/.*<h1>Use:.*/g));
-                        const preProcessedText = text[0].replace(/(\.|\d)(?=[A-Z])/g, replacer)
+                        const preProcessedText = text[0].replace(/(\.|\d)(?=[A-Z])/g, replacer).replace(/\n/g,'')
                         highlightedText = highlight_numbers(preProcessedText.replace('--', '').trim())
                         // const activeHeader = x.replace(/<h1>(.*)<\/h1>.*/g, "$1");
                         // const activeTxt = x.replace(/.*<\/h1>(.*)/g, "$1");
