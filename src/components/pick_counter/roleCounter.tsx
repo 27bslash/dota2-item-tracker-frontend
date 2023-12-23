@@ -39,9 +39,11 @@ const RoleCounter = () => {
                     const wins = value[winString]
                     const wr = cleanDecimal(wins / picks * 100)
                     const wrColor = colourWins(wr)
-                    return (
-                        <p onClick={() => roleSearch(matchData, key)} className='total-picks' key={i}> {key} ({picks}, <span style={{ color: wrColor }}>{wr}%</span>)</p>
-                    )
+                    if (picks) {
+                        return (
+                            <p onClick={() => roleSearch(matchData, key)} className='total-picks' key={i}> {key} ({picks}, <span style={{ color: wrColor }}>{wr}%</span>)</p>
+                        )
+                    }
                 })}
         </>
     )
