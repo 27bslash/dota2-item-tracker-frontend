@@ -173,13 +173,13 @@ const Page = ({ type, heroList, playerList }: pageProps) => {
         const oldPatchGameList = totalMatchData.filter((x) => patch_obj['patch_timestamp'] > 0 && x.patch !== patch_obj['patch'])
         return (
             !!oldPatchGameList.length && oldPatchGameList.length !== totalMatchData.length &&
-            <Link to={`/${patch_obj['patch']}/hero/${nameParam}`}>
-                <Typography variant='h5' color='white' align='center'
-                    onClick={() => filterByPatch()}
-                >
+            <Typography variant='h5' color='white' align='center'
+                onClick={() => filterByPatch()}
+            >
+                <Link to={`/${patch_obj['patch']}/hero/${nameParam}`}>
                     Filter Matches By {patch_obj['patch']}
-                </Typography>
-            </Link>
+                </Link>
+            </Typography>
         )
     };
     const renderPageContent = () => {
