@@ -11,33 +11,34 @@ const TooltipDescription = (props: any) => {
         <div className="tooltip-description">
             {
                 props.itemProperties.hint &&
-                itemPropertiesArr.map((x: string, i: number) => {
+                itemPropertiesArr.map((descLine: string, i: number) => {
                     // const header = x.match(/.*(?=--)/)
-                    const headers = x.match(/(.*?)<\/h1>/gm)
+                    const headers = descLine.match(/(.*?)<\/h1>/gm)
                     let header = ''
                     if (headers) {
                         header = headers.map(match => match.replace(/<\/?h1>/g, ''))[0];
                     }
 
-                    const text = header ? x.match(/<\/h1>.*/) : x.match(/.*/)
+                    const text = header ? descLine.match(/<\/h1>.*/) : descLine.match(/.*/)
                     let highlightedText = ''
-                    const active = x.match('Active:')
-                    const passive = x.match('Passive:')
-                    const use = x.match('Use:')
-                    const toggle = x.match('Toggle:')
+                    const active = descLine.match('Active:')
+                    const passive = descLine.match('Passive:')
+                    const use = descLine.match('Use:')
+                    const toggle = descLine.match('Toggle:')
 
                     if (text) {
                         // let activeText = highlight_numbers(x.match(/.*<h1>Active:.*/g));
                         // let toggleText = highlight_numbers(x.match(/.*<h1>Toggle:.*/g));
                         // let passiveText = highlight_numbers(x.match(/.*<h1>Passive:.*/g));
                         // let useText = highlight_numbers(x.match(/.*<h1>Use:.*/g));
-                        const preProcessedText = text[0].replace(/(\.|\d)(?=[A-Z])/g, replacer).replace(/\n/g,'')
+                        const preProcessedText = text[0].replace(/(\.|\d)(?=[A-Z])/g, replacer).replace(/\n/g, '')
                         highlightedText = highlight_numbers(preProcessedText.replace('--', '').trim())
                         // const activeHeader = x.replace(/<h1>(.*)<\/h1>.*/g, "$1");
                         // const activeTxt = x.replace(/.*<\/h1>(.*)/g, "$1");
                         // const activeDescText = highlight_numbers(activeTxt)
                     }
                     return (
+                        descLine &&
                         <React.Fragment key={i}>
                             {active && highlightedText &&
                                 <div className="active">
@@ -83,6 +84,7 @@ const TooltipDescription = (props: any) => {
                                 </div>
                             }
                         </React.Fragment>
+
                     )
                 })
 
