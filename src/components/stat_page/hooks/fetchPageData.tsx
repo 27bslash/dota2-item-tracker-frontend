@@ -43,7 +43,10 @@ export const useFetchAllData = (type: string) => {
         }
         const currentPatch = await fetchData(`${baseApiUrl}files/patch`)
         setPatch(currentPatch)
-        const itemData = await fetchData(`${baseApiUrl}files/items`)
+        localStorage.setItem('patch', currentPatch)
+        const currentItemDataVersion = localStorage.getItem('item_list_version')
+        const itemData = await fetchData(`${baseApiUrl}files/items?version=${currentItemDataVersion}`)
+        localStorage.setItem('item_list_version', itemData['version'])
         setItemData(itemData)
     }
     useEffect(() => {

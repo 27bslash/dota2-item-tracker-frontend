@@ -42,11 +42,12 @@ function Home({ heroList, playerList }: HomeProps) {
     useEffect(() => {
         document.title = 'Dota2 Item Tracker';
         (async () => {
-            const req = await fetch(`${baseApiUrl}/files/win-stats`);
-            let json: PickStats[] = await req.json();
-            json.filter((doc) => paramPatch ? doc.patch === paramPatch : doc)
-            json = json.sort((a, b) => a.hero.localeCompare(b.hero));
-            setWinStats(json);
+            const version = localStorage.getItem('winStatsVersion');
+            const req = await fetch(`${baseApiUrl}/files/win-stats?version=${version}`);
+            const json: { 'win_stats': PickStats[], 'version': number } = await req.json();
+            const pickStats = json['win_stats'].filter((doc) => paramPatch ? doc.patch === paramPatch : doc).sort((a, b) => a.hero.localeCompare(b.hero));
+            localStorage.setItem('winStatsVersion', String(json['version']));
+            setWinStats(pickStats);
         })();
     }, []);
 
