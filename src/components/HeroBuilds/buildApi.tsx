@@ -34,7 +34,8 @@ export const BuildApi = () => {
             const url = `${matchDataUrl}hero/${heroName}/react-test?skip=0&length=10`
             const matches = await fetchData(url)
             setTotalPicks(matches['picks'])
-            const itemResponse = await fetchData(`${baseApiUrl}files/items`)
+            const currentItemDataVersion = localStorage.getItem('item_list_version')
+            const itemResponse = await fetchData(`${baseApiUrl}files/items?version=${currentItemDataVersion}&time=${Date.now()}`)
             setItemData(itemResponse)
             const hData = await fetch(`${baseApiUrl}files/hero-data/${heroName}`)
             const hJson = await hData.json()

@@ -45,7 +45,7 @@ export const useFetchAllData = (type: string) => {
         setPatch(currentPatch)
         localStorage.setItem('patch', currentPatch)
         const currentItemDataVersion = localStorage.getItem('item_list_version')
-        const itemData = await fetchData(`${baseApiUrl}files/items?version=${currentItemDataVersion}`)
+        const itemData = await fetchData(`${baseApiUrl}files/items?version=${currentItemDataVersion}&time=${Date.now()}`)
         localStorage.setItem('item_list_version', itemData['version'])
         setItemData(itemData)
     }

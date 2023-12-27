@@ -43,8 +43,8 @@ function Home({ heroList, playerList }: HomeProps) {
         document.title = 'Dota2 Item Tracker';
         (async () => {
             const version = localStorage.getItem('winStatsVersion');
-            const req = await fetch(`${baseApiUrl}/files/win-stats?version=${version}`);
-            const json: { 'win_stats': PickStats[], 'version': number } = await req.json();
+            const url = `${baseApiUrl}/files/win-stats?version=${version}&time=${Date.now()}`
+            const json: { 'win_stats': PickStats[], 'version': number } = await fetchData(url);
             const pickStats = json['win_stats'].filter((doc) => paramPatch ? doc.patch === paramPatch : doc).sort((a, b) => a.hero.localeCompare(b.hero));
             localStorage.setItem('winStatsVersion', String(json['version']));
             setWinStats(pickStats);
@@ -162,7 +162,7 @@ function Home({ heroList, playerList }: HomeProps) {
             {sort && !searching
                 && <SortTitle role={roleFilter} sort={sort} />}
             <GridContainer className={className} width={width}>
-                {filteredHeroes && (
+                {filteredHeroes && winStats && (
                     filteredHeroes.map((heroName: string, i: number) => {
                         if (heroName === 'anti_mage') heroName = 'anti-mage';
                         if (winStats) {
