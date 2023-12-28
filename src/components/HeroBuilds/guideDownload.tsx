@@ -160,16 +160,17 @@ const GuideGuide = () => {
                 <p>Download Tampermonkey extension</p>
             </a>
             <h4>Step 2</h4>
-            <p className="copy-guide-code" onClick={() => navigator.clipboard.writeText(code)}>Copy this code
+            <a href="https://greasyfork.org/en/scripts/372234-steam-guide-subscribe-all" rel='noreferrer'
+                target='_blank'><p>download this tampermonkey script</p>
                 <FontAwesomeIcon style={{ marginLeft: '10px' }} className='copy-match-id' icon={faCopy} color='white' />
-            </p>
-            <h4>Step 3:</h4>
-            <p>Open tampermonkey extension
+            </a>
+            {/* <h4>Step 3:</h4> */}
+            {/* <p>Open tampermonkey extension
                 <br></br>Create new script
                 <br></br>Select all the text and replace it with your copied code.
                 <br></br>Save the script
-            </p>
-            <h4>Step 4:</h4>
+            </p> */}
+            <h4>Step 3:</h4>
             <a target='_blank' rel='noreferrer' href='https://steamcommunity.com/id/27bslash/myworkshopfiles/?section=guides'>
                 <p>Go to Steam Guide Page</p>
             </a>
