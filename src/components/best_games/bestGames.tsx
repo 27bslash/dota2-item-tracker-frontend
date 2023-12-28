@@ -14,6 +14,9 @@ type BestGamesProps = {
     updateRole: (role: RoleStrings) => void;
     updatePageNumber: (idx: number) => void
 }
+// TODO
+// best games relative to best stat of my data not opendota
+
 const BestGames = ({ updateRole, updatePageNumber }: BestGamesProps) => {
     const [bestgames, setBestgames] = useState<DotaMatch[]>([])
     const [benchmarkKeys, setbenchmarkKeys] = useState<BenchMarksKeys[]>()
@@ -21,14 +24,15 @@ const BestGames = ({ updateRole, updatePageNumber }: BestGamesProps) => {
     const { totalMatchData, filteredData } = usePageContext()
     useEffect(() => {
         if (totalMatchData.length) {
-            sumBenchmarks()
-            setLoading(false)
+            if (sumBenchmarks()) {
+                setLoading(false)
+            }
         }
     }, [filteredData, totalMatchData])
     const sumBenchmarks = () => {
         const bmarks = []
         for (const match of filteredData) {
-            if (!match['parsed'] || !match['benchmarks']) continue
+            if (!match['benchmarks']) continue
             let sum = 0
             const benchmarks = match['benchmarks']
             sum = Object.values(benchmarks).reduce((a, b) => {
@@ -51,6 +55,7 @@ const BestGames = ({ updateRole, updatePageNumber }: BestGamesProps) => {
                 return sortingArr.indexOf(a) - sortingArr.indexOf(b)
             }) as (BenchMarksKeys)[]
             setbenchmarkKeys(sortedBenchmarks)
+            return true
         }
     }
     return (

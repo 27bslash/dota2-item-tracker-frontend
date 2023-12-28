@@ -39,6 +39,8 @@ const BestGamesTableBody = (props: {
                                 const raw = match.benchmarks[k]['raw']
                                 if (typeof pct === 'number') {
                                     pct = (pct * 100)
+                                } else if (+pct < 1) {
+                                    pct = +pct * 100
                                 }
                                 let color = '#EC494B'
                                 if (+pct >= 80) color = '#5AA563'
