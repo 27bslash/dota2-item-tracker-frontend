@@ -162,7 +162,7 @@ function Home({ heroList, playerList }: HomeProps) {
             {sort && !searching
                 && <SortTitle role={roleFilter} sort={sort} />}
             <GridContainer className={className} width={width}>
-                {filteredHeroes && winStats && (
+                {filteredHeroes && (
                     filteredHeroes.map((heroName: string, i: number) => {
                         if (heroName === 'anti_mage') heroName = 'anti-mage';
                         if (winStats) {
