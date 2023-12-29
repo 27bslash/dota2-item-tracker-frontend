@@ -109,12 +109,12 @@ const BestGames = ({ updateRole, updatePageNumber }: BestGamesProps) => {
         }
         let sorted: [number, number][]
         if (sortKey) {
-            filteredData.sort((a, b) => +b['benchmarks'][sortKey]['raw'] - +a['benchmarks'][sortKey]['raw']);
+            const sortedByKey = [...filteredData].sort((a, b) => +b['benchmarks'][sortKey]['raw'] - +a['benchmarks'][sortKey]['raw']);
             if (sortDirection === 'desc') {
-                filteredData.reverse()
+                sortedByKey.reverse()
             }
             // console.log(s);
-            sorted = filteredData.map((match) => bmarks.find((m) => m[0] === match['id']) as [number, number])
+            sorted = sortedByKey.map((match) => bmarks.find((m) => m[0] === match['id']) as [number, number])
         } else {
             sorted = bmarks.sort((a, b) => {
                 return b[1] - a[1]
@@ -138,14 +138,17 @@ const BestGames = ({ updateRole, updatePageNumber }: BestGamesProps) => {
         loading ? (
             <img src={blurred} alt='blurred benchmarks' />
         ) : (
-            benchmarkKeys &&
-            <div className="best-games" style={{ 'width': '1200px', 'maxHeight': '150px', height: 'fit-content' }}>
-                <Table padding='none' sx={{ padding: '0px !important' }}>
-                    <BestGamesTableHeader benchmarkKeys={benchmarkKeys} sortByKey={sortByKey}></BestGamesTableHeader>
-                    <BestGamesTableBody updateRole={updateRole} updatePageNumber={updatePageNumber}
-                        benchmarkKeys={benchmarkKeys!} bestgames={bestgames}></BestGamesTableBody>
-                </Table>
-            </div>
+            <>
+                {benchmarkKeys &&
+                    <div className="best-games" style={{ 'width': '1200px', 'maxHeight': '150px', height: 'fit-content' }}>
+                        <Table padding='none' sx={{ padding: '0px !important' }}>
+                            <BestGamesTableHeader benchmarkKeys={benchmarkKeys} sortByKey={sortByKey}></BestGamesTableHeader>
+                            <BestGamesTableBody updateRole={updateRole} updatePageNumber={updatePageNumber}
+                                benchmarkKeys={benchmarkKeys!} bestgames={bestgames}></BestGamesTableBody>
+                        </Table>
+                    </div>
+                }
+            </>
         )
     )
 }
