@@ -46,7 +46,7 @@ const BestGames = ({ updateRole, updatePageNumber }: BestGamesProps) => {
                 console.log(match['benchmarks'], bKey, match['benchmarks'][bKey], match, match['benchmarks']['gold_per_min'])
                 return match['benchmarks'][bKey] ? +cleanDecimal(+match['benchmarks'][bKey]['raw']) : 1
             }
-            return 1
+            return 0
         }
         const calculateMaxValues = (key: string) => filteredData.reduce((max, match) => {
             const value = cleanVal(match, key as keyof DotaMatch)
@@ -70,7 +70,7 @@ const BestGames = ({ updateRole, updatePageNumber }: BestGamesProps) => {
     const sumBenchmarks = () => {
         const bmarks: [number, number][] = []
         for (const match of filteredData) {
-            if (!match['benchmarks']) continue
+            if (!match['benchmarks'] || !match['parsed']) continue
             let sum = 0
             const benchmarks = match['benchmarks']
             sum = Object.values(benchmarks).reduce((a, b) => {
