@@ -95,7 +95,7 @@ export const allComponents = (itemKey: string, itemdata: Items): string[] => {
 }
 export const filterComponents = (data: RawItemBuild[], itemData: Items) => {
     // data is in the form of [string, {value ,time}]
-    let toRemove: string[] = []
+    const toRemove = new Set<string>()
     // for (let k in itemData['items']) {
     //     if (!itemData['items'][k]['hint'] && itemData['items'][k]['cost'] && itemData['items'][k]['cost'] > 1000 && !k.includes('recipe')) {
     //         console.log(k, itemData['items'][k]['qual'])
@@ -107,6 +107,7 @@ export const filterComponents = (data: RawItemBuild[], itemData: Items) => {
     // console.log([...keys])
     const removedComponents: string[] = []
     const disassembleable = ['echo_sabre', 'vanguard', 'mask_of_madness']
+    // console.log(data)
     for (let i = 0; i < data.length; i++) {
         const item = data[i]
         const itemKey: string = item[0]
@@ -116,21 +117,23 @@ export const filterComponents = (data: RawItemBuild[], itemData: Items) => {
         if (!itemStats) {
             continue
         } else if (itemTime > 1000 && itemStats['cost']! < 500) {
-            toRemove.push(data[i][0])
+            toRemove.add(data[i][0])
             continue
         } else if (!itemStats['hint'] && ['common', 'component', 'secret_shop'].includes(itemStats['qual'])) {
-            toRemove.push(data[i][0])
+            // console.log(itemKey)
+            toRemove.add(data[i][0])
             continue
         }
         else if (itemTime > 1800 && itemStats['cost']! < 2000) {
-            toRemove.push(data[i][0])
+            toRemove.add(data[i][0])
             console.log('remove low cost item after 30 mins: ', data[i][0])
             continue
         }
+        if (toRemove.has(itemKey)) continue
         if (itemStats && itemStats['components']) {
             const components: string[] = itemStats['components']
-            toRemove = toRemove.concat(recursive_remove(item, itemData, components, data, keys, removedComponents))
-
+            const removedComps = recursive_remove(item, itemData, components, data, keys, removedComponents)
+            removedComps.forEach(c => toRemove.add(c))
             // disassemble components section
             if (components && item[1]['value'] > 10 && (disassembleable.includes(itemKey.replace(/__\d+/g, '')) || components.includes('kaya') || components.includes('sange'))) {
                 disassembledComponents(components, data, i, itemData, item, itemKey, keys)
@@ -139,9 +142,11 @@ export const filterComponents = (data: RawItemBuild[], itemData: Items) => {
         }
     }
     const seenItems: string[] = []
+    console.log('remove', toRemove)
     for (const item of toRemove) {
         if (seenItems.includes(item)) {
             // console.log(item)
+            continue
         }
         const filteredKeys = keys.filter((x) => {
             return x.replace(/__\d+/g, '') === item
