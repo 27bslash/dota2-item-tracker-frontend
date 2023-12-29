@@ -118,7 +118,7 @@ export const filterComponents = (data: RawItemBuild[], itemData: Items) => {
         } else if (itemTime > 1000 && itemStats['cost']! < 500) {
             toRemove.push(data[i][0])
             continue
-        } else if (itemTime > 1000 && !itemStats['hint'] && ['common', 'component', 'secret_shop'].includes(itemStats['qual'])) {
+        } else if (!itemStats['hint'] && ['common', 'component', 'secret_shop'].includes(itemStats['qual'])) {
             toRemove.push(data[i][0])
             continue
         }
@@ -129,7 +129,7 @@ export const filterComponents = (data: RawItemBuild[], itemData: Items) => {
         }
         if (itemStats && itemStats['components']) {
             const components: string[] = itemStats['components']
-            toRemove = recursive_remove(item, itemData, components, data, keys, removedComponents)
+            toRemove = toRemove.concat(recursive_remove(item, itemData, components, data, keys, removedComponents))
 
             // disassemble components section
             if (components && item[1]['value'] > 10 && (disassembleable.includes(itemKey.replace(/__\d+/g, '')) || components.includes('kaya') || components.includes('sange'))) {
