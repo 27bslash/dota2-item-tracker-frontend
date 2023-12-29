@@ -8,6 +8,7 @@ import { RoleStrings } from '../home/home';
 import { usePageContext } from '../stat_page/pageContext';
 import BestGamesTableHeader from './bestGamesTableHeader';
 import BestGamesTableBody from './bestGamesBody';
+import { cleanDecimal } from '../../utils/cleanDecimal';
 
 export type BenchMarksKeys = keyof BenchmarksData
 type BestGamesProps = {
@@ -22,15 +23,52 @@ const BestGames = ({ updateRole, updatePageNumber }: BestGamesProps) => {
     const [benchmarkKeys, setbenchmarkKeys] = useState<BenchMarksKeys[]>()
     const [loading, setLoading] = useState(true)
     const { totalMatchData, filteredData } = usePageContext()
+    const [sortKey, setSortKey] = useState<BenchMarksKeys>()
     useEffect(() => {
         if (totalMatchData.length) {
+            getBenchMarksFromData()
             if (sumBenchmarks()) {
                 setLoading(false)
             }
         }
-    }, [filteredData, totalMatchData])
+    }, [filteredData, totalMatchData, sortKey])
+    const sortByKey = (header: BenchMarksKeys) => {
+        setSortKey(header)
+    }
+    const getBenchMarksFromData = () => {
+        const benchmarkKeyArr = ['gpm', 'xpm', 'kills', 'last_hits', 'hero_damage',
+            'hero_healing_per_minute', 'tower_damage', 'stuns_per_minute', 'last_hits_ten'];
+        const cleanVal = (match: DotaMatch, key: keyof DotaMatch | BenchMarksKeys) => {
+            if (key in match) {
+                return +cleanDecimal(match[key as keyof DotaMatch] as number) / (['gpm', 'xpm', 'tower_damage', 'last_hits_ten'].includes(key) ? 1 : Math.floor(match['duration'] / 60));
+            } else if (match['benchmarks']) {
+                const bKey = key as BenchMarksKeys
+                console.log(match['benchmarks'], bKey, match['benchmarks'][bKey], match, match['benchmarks']['gold_per_min'])
+                return match['benchmarks'][bKey] ? +cleanDecimal(+match['benchmarks'][bKey]['raw']) : 1
+            }
+            return 1
+        }
+        const calculateMaxValues = (key: string) => filteredData.reduce((max, match) => {
+            const value = cleanVal(match, key as keyof DotaMatch)
+            return Math.max(max, value);
+        }, 0);
+
+        const maxValues = benchmarkKeyArr.map(calculateMaxValues);
+        const matchBenchmarkKeys = ['gold_per_min', 'xp_per_min', 'kills_per_min', 'last_hits_per_min',
+            'hero_damage_per_min', 'hero_healing_per_min', 'tower_damage', 'stuns_per_min', 'lhten'];
+        filteredData.forEach(match => {
+            benchmarkKeyArr.forEach((k, i) => {
+                const value = cleanVal(match, k as keyof DotaMatch)
+                if (maxValues[i] !== 0) {
+                    const pct = cleanDecimal((value / maxValues[i]) * 100);
+                    match['benchmarks'] = { ...match['benchmarks'], [matchBenchmarkKeys[i]]: { 'pct': pct, 'raw': String(value) } };
+                }
+            });
+
+        });
+    }
     const sumBenchmarks = () => {
-        const bmarks = []
+        const bmarks: [number, number][] = []
         for (const match of filteredData) {
             if (!match['benchmarks']) continue
             let sum = 0
@@ -41,10 +79,17 @@ const BestGames = ({ updateRole, updatePageNumber }: BestGamesProps) => {
             }, sum)
             bmarks.push([match['id'], sum])
         }
-        const sorted = bmarks.sort((a, b) => {
-            return b[1] - a[1]
-        }).slice(0, 2).map((x) => x[0])
-        const filtered = filteredData.filter((x) => sorted.includes(x['id']))
+        let sorted: [number, number][]
+        if (sortKey) {
+            const s = filteredData.sort((a, b) => +b['benchmarks'][sortKey]['raw'] - +a['benchmarks'][sortKey]['raw']);
+            // console.log(s);
+            sorted = filteredData.map((match) => bmarks.find((m) => m[0] === match['id']) as [number, number])
+        } else {
+            sorted = bmarks.sort((a, b) => {
+                return b[1] - a[1]
+            })
+        }
+        const filtered = filteredData.filter((x) => sorted.slice(0, 2).map((x) => x[0]).includes(x['id']))
         setBestgames(filtered)
 
         const sortingArr = ['gold_per_min', 'xp_per_min',
@@ -66,8 +111,9 @@ const BestGames = ({ updateRole, updatePageNumber }: BestGamesProps) => {
                 {benchmarkKeys &&
                     <div className="best-games" style={{ 'width': '1200px', 'maxHeight': '140px', height: 'fit-content' }}>
                         <table>
-                            <BestGamesTableHeader benchmarkKeys={benchmarkKeys}></BestGamesTableHeader>
-                            <BestGamesTableBody updateRole={updateRole} updatePageNumber={updatePageNumber} benchmarkKeys={benchmarkKeys!} bestgames={bestgames}></BestGamesTableBody>
+                            <BestGamesTableHeader benchmarkKeys={benchmarkKeys} sortByKey={sortByKey}></BestGamesTableHeader>
+                            <BestGamesTableBody updateRole={updateRole} updatePageNumber={updatePageNumber}
+                                benchmarkKeys={benchmarkKeys!} bestgames={bestgames}></BestGamesTableBody>
                         </table>
                     </div>
                 }

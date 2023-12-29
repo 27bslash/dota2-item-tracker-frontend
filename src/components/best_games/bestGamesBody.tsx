@@ -49,12 +49,10 @@ const BestGamesTableBody = (props: {
                                 else if (+pct >= 25) color = '#D89740'
                                 return (
                                     <td key={idx} className='benchmark-cell' style={{ textAlign: 'center', justifyContent: 'center' }}>
-                                        {pct &&
-                                            <>
-                                                <span className='benchmark-pct' style={{ color: color }}>{cleanDecimal(pct)}% </span>
-                                                <span className='benchmark-raw'>{cleanDecimal(raw)}</span>
-                                            </>
-                                        }
+                                        <>
+                                            <span className='benchmark-pct' style={{ color: color }}>{cleanDecimal(pct)}% </span>
+                                            <span className='benchmark-raw'>{cleanDecimal(raw)}</span>
+                                        </>
                                     </td>
                                 )
                             }

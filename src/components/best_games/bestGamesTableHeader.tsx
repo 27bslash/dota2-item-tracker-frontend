@@ -1,7 +1,7 @@
 import { theme } from "../.."
 import { BenchMarksKeys } from "./bestGames"
 
-const BestGamesTableHeader = (props: { benchmarkKeys: BenchMarksKeys[] }) => {
+const BestGamesTableHeader = (props: { benchmarkKeys: BenchMarksKeys[], sortByKey: (header: BenchMarksKeys) => void }) => {
     //'linear-gradient(340deg,rgb(54, 59, 61) 0%,rgb(58, 94, 116) 100%)'
     const gradString = `linear-gradient(340deg,${theme.palette.table.main} 0%,${theme.palette.primary.main} 100%)`
     return (
@@ -23,7 +23,7 @@ const BestGamesTableHeader = (props: { benchmarkKeys: BenchMarksKeys[] }) => {
                         header = "LH@10"
                     }
                     header = header.toUpperCase()
-                    return <th key={i}>{header}</th>
+                    return <th onClick={() => props.sortByKey(benchmarkKey)} key={i}>{header}</th>
                 })}
             </tr>
         </thead>
