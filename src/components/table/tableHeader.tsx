@@ -2,20 +2,23 @@ import { TableCell, TableHead, TableRow, TableSortLabel } from "@mui/material"
 import { useEffect, useState } from 'react';
 
 
-const OrderableCell = (props: any) => {
-
+export const OrderableCell = (props: any) => {
+    const [sortDirection, setSortDirection] = useState(props.sortDirection)
     return (
-        <TableCell align={props.align} sx={{ maxWidth: props.maxWidth }}>
-            <TableSortLabel sx={{ color: `${props.color} !important`, textTransform: 'uppercase', fontWeight: '600', ":hover": { opacity: `0.8 !important` }, maxWidth: props.maxWidth }}
-                direction={props.orderBy === props.sort ? props.order : 'desc'}
-                onClick={() => props.onRequestSort(props.sort)} hideSortIcon>
+        <TableCell size='small' align={props.align} sx={{ maxWidth: props.maxWidth, maxHeight: props.maxHeight, border: props.border, fontSize: props.fontSize }}>
+            <TableSortLabel sx={{ color: `${props.color} !important`, textTransform: 'uppercase', fontWeight: 'bold !important', ":hover": { opacity: `0.8 !important` }, maxWidth: props.maxWidth }}
+                direction={props.orderBy === props.sort ? props.order : 'asc'}
+                onClick={() => {
+                    props.onRequestSort(props.sort, sortDirection)
+                    return setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
+                }} hideSortIcon>
                 {props.label}
             </TableSortLabel>
         </TableCell>
     )
 }
 interface TableHeaderProps {
-    onRequestSort: (property: any) => void,
+    onRequestSort: (property: any, sortDirection: string) => void,
     orderBy: string,
     sortDirection: string,
     showStarter: boolean
@@ -24,20 +27,20 @@ interface TableHeaderProps {
 const TableHeader = (props: TableHeaderProps) => {
     const [header, setHeader] = useState<JSX.Element>()
     const commonProps = {
-        onRequestSort: props.onRequestSort, orderBy: props.orderBy, order: props.sortDirection
+        onRequestSort: props.onRequestSort, orderBy: props.orderBy
     }
     useEffect(() => {
         const head =
             <TableHead >
                 <TableRow >
-                    <OrderableCell label='' sort='win'{...commonProps} maxWidth='0px' />
+                    <OrderableCell label='' sort='win'{...commonProps} sortDirection='asc' maxWidth='0px' />
                     <TableCell padding="normal" sx={{ textAlign: "center", color: 'white', fontWeight: '600' }}>
                         <TableSortLabel hideSortIcon sx={{ color: 'white !important' }}>
                             ITEMS
                         </TableSortLabel>
                     </TableCell>
-                    <OrderableCell label='Played' sort='unix_time'{...commonProps} color='white' />
-                    <OrderableCell sx={{ minWidth: '30px' }} label='Player' sort='name'{...commonProps} color='white' />
+                    <OrderableCell label='Played' sort='unix_time'{...commonProps} sortDirection='desc' color='white' />
+                    <OrderableCell sx={{ minWidth: '30px' }} label='Player' sort='name'{...commonProps} sortDirection='asc' color='white' />
                     <TableCell sx={{ minWidth: '20px' }}>
                         {/* copy match -id */}
                     </TableCell>
@@ -48,39 +51,39 @@ const TableHeader = (props: TableHeaderProps) => {
                     </TableCell>
                     {!props.showStarter ? (
                         <>
-                            <OrderableCell label='LVL' sort='lvl'{...commonProps} color='white' />
-                            <OrderableCell label='K' sort='kills'{...commonProps} color='green' />
-                            <OrderableCell label='D' sort='deaths'{...commonProps} color='red' />
-                            <OrderableCell label='A' sort='assists'{...commonProps} color='gray' />
-                            <OrderableCell label='CS' sort='last_hits'{...commonProps} color='white' />
-                            <OrderableCell label='NET' color='gold' sort='gold'{...commonProps} />
-                            <OrderableCell label='GPM' align='right' sort='gpm'{...commonProps} color='gold' />
-                            <OrderableCell label='/XPM' align='left' sort='xpm'{...commonProps} color='gray' />
+                            <OrderableCell label='LVL' sort='lvl'{...commonProps} sortDirection='asc' color='white' />
+                            <OrderableCell label='K' sort='kills'{...commonProps} sortDirection='asc' color='green' />
+                            <OrderableCell label='D' sort='deaths'{...commonProps} sortDirection='desc' color='red' />
+                            <OrderableCell label='A' sort='assists'{...commonProps} sortDirection='asc' color='gray' />
+                            <OrderableCell label='CS' sort='last_hits'{...commonProps} sortDirection='asc' color='white' />
+                            <OrderableCell label='NET' color='gold' sort='gold'{...commonProps} sortDirection='asc' />
+                            <OrderableCell label='GPM' align='right' sort='gpm'{...commonProps} sortDirection='asc' color='gold' />
+                            <OrderableCell label='/XPM' align='left' sort='xpm'{...commonProps} sortDirection='asc' color='gray' />
                         </>
                     ) : (
                         <>
-                            <OrderableCell label='LVL' sort='lvl_at_ten'{...commonProps} color='white' />
-                            <OrderableCell label='K' sort='kills_ten'{...commonProps} color='green' />
-                            <OrderableCell label='D' sort='deaths_ten'{...commonProps} color='red' />
-                            <OrderableCell label='A' sort='assists'{...commonProps} color='gray' />
-                            <OrderableCell label='CS' sort='last_hits_ten'{...commonProps} color='white' />
-                            <OrderableCell label='LANE EFF' color='gold' sort='lane_efficiency' {...commonProps} maxWidth='40px' />
-                            <OrderableCell label='GPM' align='right' sort='gpm_ten'{...commonProps} color='gold' />
-                            <OrderableCell label='/XPM' sort='xpm_ten'{...commonProps} color='gray' />
+                            <OrderableCell label='LVL' sort='lvl_at_ten'{...commonProps} sortDirection='asc' color='white' />
+                            <OrderableCell label='K' sort='kills_ten'{...commonProps} sortDirection='asc' color='green' />
+                            <OrderableCell label='D' sort='deaths_ten'{...commonProps} sortDirection='desc' color='red' />
+                            <OrderableCell label='A' sort='assists'{...commonProps} sortDirection='asc' color='gray' />
+                            <OrderableCell label='CS' sort='last_hits_ten'{...commonProps} sortDirection='asc' color='white' />
+                            <OrderableCell label='LANE EFF' color='gold' sort='lane_efficiency' {...commonProps} sortDirection='asc' maxWidth='40px' />
+                            <OrderableCell label='GPM' align='right' sort='gpm_ten'{...commonProps} sortDirection='asc' color='gold' />
+                            <OrderableCell label='/XPM' sort='xpm_ten'{...commonProps} sortDirection='asc' color='gray' />
                         </>
                     )}
-                    <OrderableCell label='HD' sort='hero_damage'{...commonProps} color='white' />
+                    <OrderableCell label='HD' sort='hero_damage'{...commonProps} sortDirection='asc' color='white' />
 
-                    <OrderableCell label='TD' sort='tower_damage'{...commonProps} color='white' />
+                    <OrderableCell label='TD' sort='tower_damage'{...commonProps} sortDirection='asc' color='white' />
 
-                    <OrderableCell label='Length' sort='duration'{...commonProps} color='white' />
+                    <OrderableCell label='Length' sort='duration'{...commonProps} sortDirection='asc' color='white' />
 
-                    <OrderableCell label='MMR' sort='mmr'{...commonProps} color='white' />
+                    <OrderableCell label='MMR' sort='mmr'{...commonProps} sortDirection='asc' color='white' />
 
                 </TableRow>
             </TableHead >
         setHeader(head)
-    }, [])
+    }, [props.sortDirection])
 
     return (
         <>

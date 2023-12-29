@@ -9,6 +9,7 @@ import { usePageContext } from '../stat_page/pageContext';
 import BestGamesTableHeader from './bestGamesTableHeader';
 import BestGamesTableBody from './bestGamesBody';
 import { cleanDecimal } from '../../utils/cleanDecimal';
+import { Table } from '@mui/material';
 
 export type BenchMarksKeys = keyof BenchmarksData
 type BestGamesProps = {
@@ -24,6 +25,7 @@ const BestGames = ({ updateRole, updatePageNumber }: BestGamesProps) => {
     const [loading, setLoading] = useState(true)
     const { totalMatchData, filteredData } = usePageContext()
     const [sortKey, setSortKey] = useState<BenchMarksKeys>()
+    const [sortDirection, setSortDirection] = useState<string>()
     useEffect(() => {
         if (totalMatchData.length) {
             getBenchMarksFromData()
@@ -31,9 +33,12 @@ const BestGames = ({ updateRole, updatePageNumber }: BestGamesProps) => {
                 setLoading(false)
             }
         }
-    }, [filteredData, totalMatchData, sortKey])
-    const sortByKey = (header: BenchMarksKeys) => {
-        setSortKey(header)
+    }, [filteredData, totalMatchData, sortKey, sortDirection])
+    const sortByKey = (header: BenchMarksKeys, sortDir: string) => {
+        const isAsc = sortDir === 'asc';
+        const ern = isAsc ? 'desc' : 'asc'
+        setSortDirection(ern);
+        setSortKey(header);
     }
     const getBenchMarksFromData = () => {
         const benchmarkKeyArr = ['gpm', 'xpm', 'kills', 'last_hits', 'hero_damage',
@@ -43,7 +48,7 @@ const BestGames = ({ updateRole, updatePageNumber }: BestGamesProps) => {
                 return +cleanDecimal(match[key as keyof DotaMatch] as number) / (['gpm', 'xpm', 'tower_damage', 'last_hits_ten'].includes(key) ? 1 : Math.floor(match['duration'] / 60));
             } else if (match['benchmarks']) {
                 const bKey = key as BenchMarksKeys
-                console.log(match['benchmarks'], bKey, match['benchmarks'][bKey], match, match['benchmarks']['gold_per_min'])
+                // console.log(match['benchmarks'], bKey, match['benchmarks'][bKey], match, match['benchmarks']['gold_per_min'])
                 return match['benchmarks'][bKey] ? +cleanDecimal(+match['benchmarks'][bKey]['raw']) : 1
             }
             return 0
@@ -65,12 +70,35 @@ const BestGames = ({ updateRole, updatePageNumber }: BestGamesProps) => {
                 }
             });
 
+
         });
+        // console.log(maxValues);
+        //     const o = filteredData.filter((match) =>  Object.fromEntries(Object.entries(match['benchmarks']).filter(([key, value]) => +value['raw'] > 0)) as BenchmarksData
+        //     match['benchmarks'] = o+value['raw'] > 0)) as BenchmarksData
+        //         match['benchmarks'] = o
+        // };
+        // const safeKeys = new Set<string>();
+        // for (const match of filteredData) {
+        //     for (const k of matchBenchmarkKeys) {
+        //         const b = match['benchmarks']
+        //         if (b) {
+        //             for (const bk in b) {
+        //                 if (+b[bk as BenchMarksKeys]['raw'] > 0) {
+        //                     safeKeys.add(bk)
+        //                 }
+        //             }
+        //         }
+        //     }
+        // }
+        // for (const match of filteredData) {
+        //     const o = Object.fromEntries(Object.entries(match['benchmarks']).filter(([key]) => +safeKeys.has(key))) as BenchmarksData
+        //     match['benchmarks'] = o
+        // }
     }
     const sumBenchmarks = () => {
         const bmarks: [number, number][] = []
         for (const match of filteredData) {
-            if (!match['benchmarks'] || !match['parsed']) continue
+            if (!match['benchmarks']) continue
             let sum = 0
             const benchmarks = match['benchmarks']
             sum = Object.values(benchmarks).reduce((a, b) => {
@@ -81,7 +109,10 @@ const BestGames = ({ updateRole, updatePageNumber }: BestGamesProps) => {
         }
         let sorted: [number, number][]
         if (sortKey) {
-            const s = filteredData.sort((a, b) => +b['benchmarks'][sortKey]['raw'] - +a['benchmarks'][sortKey]['raw']);
+            filteredData.sort((a, b) => +b['benchmarks'][sortKey]['raw'] - +a['benchmarks'][sortKey]['raw']);
+            if (sortDirection === 'desc') {
+                filteredData.reverse()
+            }
             // console.log(s);
             sorted = filteredData.map((match) => bmarks.find((m) => m[0] === match['id']) as [number, number])
         } else {
@@ -107,17 +138,14 @@ const BestGames = ({ updateRole, updatePageNumber }: BestGamesProps) => {
         loading ? (
             <img src={blurred} alt='blurred benchmarks' />
         ) : (
-            <>
-                {benchmarkKeys &&
-                    <div className="best-games" style={{ 'width': '1200px', 'maxHeight': '140px', height: 'fit-content' }}>
-                        <table>
-                            <BestGamesTableHeader benchmarkKeys={benchmarkKeys} sortByKey={sortByKey}></BestGamesTableHeader>
-                            <BestGamesTableBody updateRole={updateRole} updatePageNumber={updatePageNumber}
-                                benchmarkKeys={benchmarkKeys!} bestgames={bestgames}></BestGamesTableBody>
-                        </table>
-                    </div>
-                }
-            </>
+            benchmarkKeys &&
+            <div className="best-games" style={{ 'width': '1200px', 'maxHeight': '150px', height: 'fit-content' }}>
+                <Table padding='none' sx={{ padding: '0px !important' }}>
+                    <BestGamesTableHeader benchmarkKeys={benchmarkKeys} sortByKey={sortByKey}></BestGamesTableHeader>
+                    <BestGamesTableBody updateRole={updateRole} updatePageNumber={updatePageNumber}
+                        benchmarkKeys={benchmarkKeys!} bestgames={bestgames}></BestGamesTableBody>
+                </Table>
+            </div>
         )
     )
 }

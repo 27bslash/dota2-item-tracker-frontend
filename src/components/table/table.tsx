@@ -57,7 +57,7 @@ const CustomTable = (props: TableProps) => {
         setPage(newPage);
     };
 
-    const handleRequestSort = (property: any) => {
+    const handleRequestSort = (property: keyof DotaMatch, sortDirection: string) => {
         const isAsc = sortDirection === 'asc';
         const ern = isAsc ? 'desc' : 'asc'
         setSortDirection(ern);

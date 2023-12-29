@@ -44,6 +44,10 @@ body {
         Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
     overflow-x: hidden;
 }
+.hover-text:hover {
+    opacity: 0.8;
+    cursor: pointer;
+}
 .top-layer {
     display: flex;
 }
