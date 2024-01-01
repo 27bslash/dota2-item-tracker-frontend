@@ -49,6 +49,21 @@ function Home({ heroList, playerList }: HomeProps) {
             localStorage.setItem('winStatsVersion', String(json['version']));
             setWinStats(pickStats);
         })();
+        //     const allStats = []
+        //     for (const heroObj of heroList) {
+        //         const heroName = heroObj.name
+        //         const version = localStorage.getItem('winStatsVersion');
+        //         const req = await fetch(`${baseApiUrl}/files/win-stats/${heroName}?version=${version}`);
+        //         const json: { 'win_stats': PickStats[] } = await req.json();
+        //         const pickStats = json['win_stats']
+        //         // localStorage.setItem('winStatsVersion', String(json['version']));
+        //         allStats.push(pickStats)
+        //     }
+        //     if (allStats.length) {
+        //         console.log(allStats)
+        //         setWinStats(allStats.flat().filter((doc) => paramPatch ? doc.patch === paramPatch : doc).sort((a, b) => a.hero.localeCompare(b.hero)));
+        //     }
+        // })();
     }, []);
 
     useEffect(() => {
@@ -146,14 +161,24 @@ function Home({ heroList, playerList }: HomeProps) {
         sortHeroes(sorted.map((x) => x.hero), 'trends', roleFilter);
 
     }
+    const nonPatchGames = () => {
+        return winStats?.find((doc) => doc['trends'][6]['patch'] != patch['patch'])
+    }
     return (
         <div className="home" >
             <Nav filterHeroes={filterHeroes} filteredByButton={filteredByButton} heroList={heroList} playerList={playerList} highlightHero={highlightHero} />
-            {patch['patch'] && !paramPatch &&
-                <Link to={`/${patch['patch']}`}>
-                    <Typography variant='h4' color='white' align='center'>Filter By Patch {patch['patch']}</Typography>
-                </Link>
-            }
+            {nonPatchGames() ? (
+                !paramPatch ? (
+                    <Typography variant='h4' color='white' align='center'>
+                        <Link to={`/${patch['patch']}`}>Filter By Patch {patch['patch']}</Link>
+                    </Typography>
+                ) : (
+                    <Typography variant='h4' color='white' align='center'>
+                        <Link to={`/`}>Show All Games</Link>
+                    </Typography>
+                )
+            ) : null}
+
             {filteredHeroes && winStats &&
                 <div className="side-bar" onMouseLeave={() => setDrawerOpen(false)}>
                     <SideBar open={drawerOpen} winStats={winStats} sortHeroes={sortHeroes} sortByTrend={sortByTrend} />
@@ -169,6 +194,7 @@ function Home({ heroList, playerList }: HomeProps) {
                             const stats = winStats.filter((x) => x.hero === heroName.replace(/\s/g, '_'));
                             // const picks = roleFilter !== '' ? stats[0][`${roleFilter}_picks`] || stats[0]['picks'] || 0 : 0;
                             // const wins = roleFilter !== '' ? stats[0][`${roleFilter}_wins`] || stats[0]['picks'] || 0 : 0;
+                            console.log(stats, heroName)
                             let picks = 0
                             let wins = 0
                             if (roleFilter && stats[0][roleFilter]) {
