@@ -23,7 +23,7 @@ const Draft = (props: any) => {
         props.updateMatchData(Array.from(matches), { 'draft': dict })
     }
     return (
-        props.draft.map((x: any, i: number) => {
+        props.draft.map((x: string, i: number) => {
             // src\assets\images
             let searchPrefix = '-'
             if (dr) {
@@ -31,9 +31,9 @@ const Draft = (props: any) => {
             }
             return (
                 x === nameParam ? (
-                    <img key={i} alt={x} src={require(`../../images/minimap_icons/${x}.jpg`).default} className='icon-highlight' ></img>
+                    <img key={i} alt={x} src={require(`../../images/minimap_icons/${x}.jpg`).default} className='draft-icon icon-highlight' ></img>
                 ) : (
-                    <img key={i} alt={x} src={require(`../../images/minimap_icons/${x}.jpg`).default} onClick={() => updateData(x, searchPrefix)}></img>
+                    <img key={i} alt={x} src={require(`../../images/minimap_icons/${x}.jpg`).default} className="draft-icon" onClick={() => updateData(x, searchPrefix)}></img>
                 )
 
             )

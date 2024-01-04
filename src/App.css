@@ -497,6 +497,11 @@ a:hover {
     text-shadow: 0 0 1px rgb(233, 255, 108), 0 0 3px gold;
     /* text-shadow:1px 1px 10px #fff, 1px 1px 10px rgb(255, 187, 0) */
 }
+.draft-icon:hover {
+    cursor: pointer;
+    filter: drop-shadow(white 1px 0 0px) drop-shadow(white -1px 0 0px)
+        drop-shadow(white 0 1px 0px) drop-shadow(white 0 -1px 0px);
+}
 .icon-highlight {
     /* background-color: rgba(0, 255, 255, 0.404); */
     filter: drop-shadow(rgb(0, 255, 255) 1px 0 0px)
@@ -707,6 +712,12 @@ label {
 }
 .item-cell {
     position: relative;
+}
+.table-cell-outline:hover {
+    cursor: pointer;
+    filter: drop-shadow(white 1px 0 0px) drop-shadow(white -1px 0 0px)
+        drop-shadow(white 0 1px 0px) drop-shadow(white 0 -1px 0px);
+    z-index: 99;
 }
 .neutral-cell {
     position: relative;

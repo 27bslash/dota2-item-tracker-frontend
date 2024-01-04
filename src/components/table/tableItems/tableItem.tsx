@@ -58,7 +58,7 @@ const TableItem = (props: TItemProp) => {
     return (
         <Tip component={<ItemTooltip type={props.type} heroName={props.heroName} img={link} itemId={props.itemId} itemKey={props.itemKey} />}>
             {(props.type === 'item' || props.type === 'shard' || props.type === 'scepter') &&
-                <div className="item-cell" onClick={handleClick} >
+                <div className="item-cell table-cell-outline" onClick={handleClick} >
                     <img className="item-img" height={props.height || '55px'} width={props.width || '100%'} alt={props.itemKey} src={link} loading="lazy"></img>
                     {!props.starter && props.overlay &&
                         < div className="overlay">{props.time}</div>
@@ -71,13 +71,13 @@ const TableItem = (props: TItemProp) => {
 
             {
                 props.type === 'neutral' &&
-                <div className="neutral-cell" onClick={updateTable}>
+                <div className="neutral-cell table-cell-outline" onClick={updateTable}>
                     <div className="circle">
                         <img id="neutral-item" className="item-img" height='55px' alt={props.itemKey} src={link} loading="lazy">
                         </img>
                     </div>
                 </div>
-            }
+            } 
         </Tip >
     )
 }
