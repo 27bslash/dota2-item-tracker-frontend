@@ -3,6 +3,8 @@ import { useFetchData } from "./fetchMatchDataHook"
 import PickStats from "../../types/pickStats"
 import { RoleStrings } from "../../home/home"
 import { NonProDataType } from "../types"
+import { TableSearchResults } from "../../table/table_search/types/tableSearchResult.types"
+
 const calc_common_roles = (props: any, pickData?: Record<string, { [key: string]: number }>, threshold?: number) => {
     const picks: PickStats = pickData || props.picks || props['picks']
     threshold = threshold || 0.1
@@ -39,7 +41,7 @@ const calc_common_roles = (props: any, pickData?: Record<string, { [key: string]
     }
     return roles
 }
-export const useParseMatchData = (proData: boolean, totalMatchData: any, heroName: string, props: any, threshold?: number) => {
+export const useParseMatchData = (proData: boolean, totalMatchData: any, heroName: string, props: any, searchRes?: TableSearchResults, threshold?: number) => {
     const nonProData = useFetchData(heroName)
     const [data, setData] = useState<NonProDataType[]>()
     const [filteredData, setFilteredData] = useState<{ [k: string]: NonProDataType[] }>()
@@ -77,12 +79,33 @@ export const useParseMatchData = (proData: boolean, totalMatchData: any, heroNam
             setFilteredData(o)
         } else if (data) {
             const tempObject: { [role: string]: NonProDataType[] } = {}
+            let searchResItemKeys: string[] = []
+            if (searchRes && searchRes['items']) {
+                searchResItemKeys = Object.keys(searchRes['items'])
+            }
             for (const role of displayedRoles) {
-                const roleFiltered = data.filter(((match) => match.role === role || (combinedRoles.includes(role) && combinedRoles.includes(match.role))))
+                const roleFiltered = data.filter(((match) =>
+                    match.role === role || (combinedRoles.includes(role) && combinedRoles.includes(match.role))
+                )).filter((match) => searchRes ? searchResItemKeys.some((k: string) => objectContainsString(match, k)) : true)
                 tempObject[role] = roleFiltered
             }
             setFilteredData(tempObject)
         }
-    }, [props.role, data])
+    }, [props.role, data, searchRes])
     return filteredData
+}
+function objectContainsString(obj: any, searchString: string) {
+    for (const key in obj) {
+        if (typeof obj[key] === 'object') {
+            // If the value is an object, recursively search within it
+            if (objectContainsString(obj[key], searchString)) {
+                return true;
+            }
+        } else if (typeof obj[key] === 'string' && obj[key].includes(searchString)) {
+            // If the value is a string and contains the search string
+            return true;
+        }
+    }
+    // If no match is found in the current object
+    return false;
 }

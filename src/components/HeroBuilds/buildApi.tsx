@@ -10,7 +10,7 @@ import { Items } from "../types/Item"
 
 
 const BuildDataJson = (props: any) => {
-    const filteredData = useParseMatchData(false, undefined, props.heroName, { 'picks': props.totalPicks }, 0.19)
+    const filteredData = useParseMatchData(false, undefined, props.heroName, { 'picks': props.totalPicks }, undefined, 0.19)
     const updatedBuildData = useHeroBuilds(filteredData!, props.heroData!, props.itemData!)
     return (
         exists(updatedBuildData) ? (

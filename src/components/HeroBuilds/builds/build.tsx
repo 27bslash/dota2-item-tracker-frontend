@@ -33,8 +33,8 @@ export interface BuildProps extends MatchDataAdj {
 const Build = (props: BuildProps) => {
     const [proData, setProData] = useState(false)
     const [open, setOpen] = useState(false)
-    const { filteredData, itemData, heroData, nameParam, heroList, totalMatchData } = usePageContext()
-    const fd = useParseMatchData(proData, totalMatchData, nameParam, props)
+    const { filteredData, itemData, heroData, nameParam, heroList, totalMatchData, searchRes } = usePageContext()
+    const fd = useParseMatchData(proData, totalMatchData, nameParam, props, searchRes)
     const heroBuilds = useHeroBuilds(fd!, heroData, itemData!)
     const [guideGuide, setGuideGuide] = useState(false)
 
