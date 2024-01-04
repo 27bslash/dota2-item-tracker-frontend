@@ -22,7 +22,7 @@ interface TableHeaderProps {
     orderBy: string,
     sortDirection: string,
     showStarter: boolean
-
+    type: string
 }
 const TableHeader = (props: TableHeaderProps) => {
     const [header, setHeader] = useState<JSX.Element>()
@@ -40,7 +40,11 @@ const TableHeader = (props: TableHeaderProps) => {
                         </TableSortLabel>
                     </TableCell>
                     <OrderableCell label='Played' sort='unix_time'{...commonProps} sortDirection='desc' color='white' />
-                    <OrderableCell sx={{ minWidth: '30px' }} label='Player' sort='name'{...commonProps} sortDirection='asc' color='white' />
+                    {props.type === 'hero' ? (
+                        <OrderableCell sx={{ minWidth: '30px' }} label='Player' sort='name'{...commonProps} sortDirection='desc' color='white' />
+                    ) : (
+                        <OrderableCell sx={{ minWidth: '30px' }} label='Hero' sort='hero'{...commonProps} sortDirection='desc' color='white' />
+                    )}
                     <TableCell sx={{ minWidth: '20px' }}>
                         {/* copy match -id */}
                     </TableCell>

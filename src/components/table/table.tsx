@@ -87,6 +87,7 @@ const CustomTable = (props: TableProps) => {
                             orderBy={orderBy}
                             onRequestSort={handleRequestSort}
                             showStarter={props.showStarter}
+                            type={props.type}
                         />
                         <CustomTableBody data={sortTable()} heroData={props.heroData} type={props.type} page={page} nameParam={props.nameParam}
                             totalMatchData={totalMatchData} heroList={props.heroList} playerList={props.playerList} itemData={props.itemData}
