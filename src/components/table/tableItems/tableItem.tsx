@@ -77,7 +77,7 @@ const TableItem = (props: TItemProp) => {
                         </img>
                     </div>
                 </div>
-            } 
+            }
         </Tip >
     )
 }

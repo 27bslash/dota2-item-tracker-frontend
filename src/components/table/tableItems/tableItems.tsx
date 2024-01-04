@@ -80,7 +80,8 @@ const TableItems = ({ heroName }: { heroName?: string }) => {
                                     <TableItem
                                         {...tableItemProps}
                                         key={i} time={time} itemKey={item.key} type='item'>
-                                    </TableItem>)
+                                    </TableItem>
+                                )
                             }
                         })
                         }

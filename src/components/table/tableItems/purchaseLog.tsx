@@ -14,14 +14,15 @@ type PurchaseLogProps = {
         overlay: boolean;
         role: RoleStrings;
         updateMatchData: (data: DotaMatch[]) => void;
+        heroName?: string
     }
 }
 export function PurchaseLog({ tableItemProps }: PurchaseLogProps) {
     const { showStarter, row } = useTableContext()
     return (<div className="purchases">
         {!showStarter ? <>
-            <FinalItems itemList={row.final_items}></FinalItems>
             <FinalItems bear={!!exists(row.additional_units)} itemList={row.additional_units || []}></FinalItems>
+            <FinalItems itemList={row.final_items} heroName={tableItemProps.heroName}></FinalItems>
         </> : row.starting_items && <div className="flex">
             {row.starting_items.map((item, i: number) => {
                 const time = humanReadableTime(item['time']);

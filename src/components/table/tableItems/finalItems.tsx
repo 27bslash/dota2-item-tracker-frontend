@@ -6,7 +6,7 @@ import { humanReadableTime } from "./tableItems";
 // row: TitemProps['row'], bear?: boolean; role: string; heroName: string; itemList: DotaMatch['items'];
 // updateMatchData: ((data: DotaMatch[], searchResults?: any) => void);
 // filteredData: DotaMatch[]; totalMatchData: DotaMatch[]; items: any; heroData: PageHeroData
-export const FinalItems = ({ bear, itemList }: { bear?: boolean, itemList: SimpleItems[] }) => {
+export const FinalItems = ({ bear, itemList, heroName }: { bear?: boolean, itemList: SimpleItems[], heroName?: string }) => {
     const { role, updateMatchData, } = useTableContext()
     return (
         <div className="flex">
@@ -20,7 +20,7 @@ export const FinalItems = ({ bear, itemList }: { bear?: boolean, itemList: Simpl
                 const time = humanReadableTime(item['time'])
                 if (item.key === 'ultimate_scepter') {
                     return <TableItem overlay={true} updateMatchData={updateMatchData} role={role}
-                        key={i} itemKey='ultimate_scepter' type='scepter'
+                        key={i} itemKey='ultimate_scepter' type='scepter' heroName={heroName}
                         time={time}>
                     </TableItem>
                 } else {
