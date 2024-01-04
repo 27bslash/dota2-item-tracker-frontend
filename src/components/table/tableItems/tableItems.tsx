@@ -28,7 +28,7 @@ export const humanReadableTime = (time: number | string) => {
     return minutes > 0 ? timeString : '0'
 }
 
-const TableItems = () => {
+const TableItems = ({ heroName }: { heroName?: string }) => {
     const { row, role, showStarter, updateMatchData } = useTableContext()
     const image_host = "https://ailhumfakp.cloudimg.io/v7/"
     const consumables = ['tango', 'flask', 'ward_observer',
@@ -92,10 +92,10 @@ const TableItems = () => {
             {row.radiant_draft &&
                 <div className="draft">
                     <div className="radiant-draft">
-                        <Draft updateMatchData={updateMatchData} draft={row.radiant_draft}></Draft>
+                        <Draft heroName={heroName} updateMatchData={updateMatchData} draft={row.radiant_draft}></Draft>
                     </div>
                     <div className="dire-draft">
-                        <Draft updateMatchData={updateMatchData} draft={row.dire_draft}></Draft>
+                        <Draft heroName={heroName} updateMatchData={updateMatchData} draft={row.dire_draft}></Draft>
                     </div>
                 </div>
             }

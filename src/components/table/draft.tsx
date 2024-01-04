@@ -30,7 +30,7 @@ const Draft = (props: any) => {
                 searchPrefix = '+'
             }
             return (
-                x === nameParam ? (
+                x === nameParam || x === props.heroName ? (
                     <img key={i} alt={x} src={require(`../../images/minimap_icons/${x}.jpg`).default} className='draft-icon icon-highlight' ></img>
                 ) : (
                     <img key={i} alt={x} src={require(`../../images/minimap_icons/${x}.jpg`).default} className="draft-icon" onClick={() => updateData(x, searchPrefix)}></img>

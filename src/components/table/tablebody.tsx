@@ -64,7 +64,7 @@ const CustomTableBody = (props: BodyProps) => {
                                     <TableCell sx={{ backgroundColor: 'red', padding: '4px' }}>
                                     </TableCell>
                                 )}
-                                <TableItems />
+                                <TableItems heroName={row.hero} />
                                 <TableCell sx={{ color: 'white', maxWidth: '100px', width: '100px' }}>
                                     {timeAgo.format(Date.now() - timeDelta)}
 
