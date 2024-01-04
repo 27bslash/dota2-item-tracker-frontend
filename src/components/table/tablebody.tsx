@@ -13,6 +13,7 @@ import Items from "../types/Item"
 import { TableContextProvider } from "./tableContext"
 import { RoleStrings } from "../home/home"
 import { TableSearchResults } from "./table_search/types/tableSearchResult.types"
+import { MouseEvent } from "react"
 interface BodyProps {
     nameParam: string,
     type: string,
@@ -30,14 +31,14 @@ interface BodyProps {
 const CustomTableBody = (props: BodyProps) => {
     const timeAgo = new TimeAgo('en-US')
     const slice = props.data.slice(props.page * 10, props.page * 10 + 10)
-    const handleClick = (event: any) => {
-        const PlayerName = event.target.innerText
+    const handleClick = (event: MouseEvent, type: string, key: string, value: string) => {
         if (!event.ctrlKey) {
-            props.updateMatchData(stringSearch(props.data, 'name', PlayerName))
+            props.updateMatchData(stringSearch(props.data, key, value))
         } else {
-            const url = `/player/${PlayerName}`
+            const url = `/${type}/${value}`
             window.open(url)
         }
+
     }
     return (
         <TableBody>
@@ -69,9 +70,13 @@ const CustomTableBody = (props: BodyProps) => {
 
                                 </TableCell>
                                 <TableCell sx={{ color: 'white', maxWidth: '100px', overflowWrap: 'anywhere', width: '100px' }}>
-                                    <p onClick={handleClick}>
-                                        {row.name}
-                                    </p>
+                                    {props.type == 'hero' ? (
+                                        <p className="hover-text" onClick={(e) => handleClick(e, 'player', 'name', row.name)}>
+                                            {row.name}
+                                        </p>
+                                    ) : (
+                                        <img key={i} onClick={(e) => handleClick(e, 'hero', 'hero', row.hero)} src={require(`../../images/minimap_icons/${row.hero}.jpg`).default} className='draft-icon' ></img>
+                                    )}
                                 </TableCell>
                                 <TableCell>
                                     <FontAwesomeIcon className='copy-match-id' icon={faCopy} color='white' onClick={() => navigator.clipboard.writeText(String(row.id))} />
@@ -81,7 +86,7 @@ const CustomTableBody = (props: BodyProps) => {
                                 </TableCell>
                                 <TableCell sx={{ color: 'white' }}>
                                     {/* {row.role} */}
-                                    <div className='svg-icon' id={row.role ? row.role.replace(' ', '-') : 'None'} onClick={() => props.updateMatchData(stringSearch(props.data, 'role', row.role))}>
+                                    <div className='svg-icon  table-cell-outline' id={row.role ? row.role.replace(' ', '-') : 'None'} onClick={() => props.updateMatchData(stringSearch(props.data, 'role', row.role))}>
 
                                     </div>
                                 </TableCell>
