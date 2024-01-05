@@ -27,6 +27,9 @@ class DraftSearch {
                 let symbol = null
                 symbol = search.match(/\+|-/g)
                 if (symbol) symbol = symbol[0]
+                if (!match['radiant_draft']) {
+                    continue
+                }
                 const draf = this.draftChecker(match, hero, targetHero, symbol)
                 if (draf) {
                     // draftRes.add(`${symbol || ''}${targetHero}`)
@@ -42,6 +45,7 @@ class DraftSearch {
     }
 
     draftChecker = (match: DotaMatch, hero: string, targetHero: string, symbol: string | null) => {
+        if (!match['radiant_draft']) return null
         let rad = match['radiant_draft'].includes(targetHero)
         let dire = match['dire_draft'].includes(targetHero)
         if (!rad && !dire) {
