@@ -5,25 +5,28 @@ import colourWins from "../../utils/colourWins"
 import DotaMatch from "../types/matchData"
 import { pickProps } from "./pickCounter"
 import { usePickCounterContext } from "./pickCounterContext"
+import { usePageContext } from "../stat_page/pageContext"
 
 type PlayerPickProps = {
-    base: number
+    matchKey: 'hero' | 'name'
 }
-export const PlayerPicks = ({ base }: PlayerPickProps) => {
+export const PlayerPicks = ({ matchKey }: PlayerPickProps) => {
     const heroCount: Record<string, Record<string, { picks: number; win: number }>> = {}
-    const { nameParam, matchData, reset, updateMatchData } = usePickCounterContext()
+    const { matchData } = usePickCounterContext()
+    const { updateSearchResults } = usePageContext()
+
     for (const match of matchData) {
-        if (heroCount[match['hero']] && heroCount[match['hero']][match['role']]) {
-            heroCount[match['hero']][match['role']]['picks'] += 1
+        if (heroCount[match[matchKey]] && heroCount[match[matchKey]][match['role']]) {
+            heroCount[match[matchKey]][match['role']]['picks'] += 1
             if (match['win']) {
-                heroCount[match['hero']][match['role']]['win'] += 1
+                heroCount[match[matchKey]][match['role']]['win'] += 1
             }
         } else {
             const o = { 'picks': 1, 'win': match['win'] }
-            if (heroCount[match['hero']]) {
-                heroCount[match['hero']][match['role']] = o
+            if (heroCount[match[matchKey]]) {
+                heroCount[match[matchKey]][match['role']] = o
             } else {
-                heroCount[match['hero']] = { [match['role']]: { 'picks': 1, 'win': match['win'] } }
+                heroCount[match[matchKey]] = { [match['role']]: { 'picks': 1, 'win': match['win'] } }
             }
         }
     }
@@ -62,45 +65,49 @@ export const PlayerPicks = ({ base }: PlayerPickProps) => {
             // If picks are equal, compare by wins
             return bValue[bRole].win - aValue[aRole].win;
         });
-    sortedData = sortedData.slice(0, 4)
-    const updateData = (hero?: string, role?: string) => {
+    sortedData = sortedData.filter(([, x]) => {
+        const xR = Object.keys(x)[0]
+        return x[xR]['picks'] > 1
+    })
+    sortedData = sortedData.slice(0, 8)
+    const updateData = (targetVal: string, searchKey?: string, key?: 'items' | 'item_neutral' | 'starting_items' | 'name' | 'role' | 'hero' | 'abilities', role?: string) => {
         let filteredMatches
-        if (hero && role) {
-            filteredMatches = matchData.filter((x: DotaMatch) => x['hero'] === hero && x['role'] === role)
-        } else if (hero) {
-            filteredMatches = matchData.filter((x: DotaMatch) => x['hero'] === hero)
+        if (targetVal && key) {
+            filteredMatches = matchData.filter((x: DotaMatch) => x[matchKey] === targetVal && x['role'] === key)
+        } else if (targetVal) {
+            filteredMatches = matchData.filter((x: DotaMatch) => x[matchKey] === targetVal)
         } else {
-            filteredMatches = matchData.filter((x: DotaMatch) => x['role'] === role)
+            filteredMatches = matchData.filter((x: DotaMatch) => x['role'] === key)
         }
-        updateMatchData(filteredMatches)
+        // const searchRes = { role: { index: 0, 'matches': filteredMatches } }
+        // updateMatchData(filteredMatches, searchRes)
+        updateSearchResults(targetVal, searchKey, key)
     }
     return (
-        <div className="player-pick-counter">
-            <div className="flex" style={{ width: '100%' }}>
-                <p className='bold-name' onClick={() => reset()}>{nameParam} has played {base} times. He mostly plays: </p>
-            </div>
-            <div className="flex boxContainer">
-                {sortedData.map((x, i) => {
-                    const roleKey = Object.keys(x[1])[0]
-                    return (
-                        <Box key={i} className="" bgcolor='primary.main' padding={1} margin={1} sx={{
-                            width: '100px', '&:hover': {
-                                cursor: 'pointer'
-                            }
-                        }} >
-                            <div className="flex" style={{ justifyContent: 'space-around' }}>
-                                <img src={require(`../../images/minimap_icons/${x[0]}.jpg`).default} alt={`${x[0]} minimap icon`} onClick={() => updateData(x[0])}></img>
-                                <div className="svg-icon" id={roleKey.replace(' ', '-')} onClick={() => updateData(undefined, roleKey)}></div>
-                            </div>
-                            <div className="flex" style={{ justifyContent: 'space-around' }} onClick={() => updateData(x[0], roleKey)}>
-                                <Typography>{x[1][roleKey]['picks']}</Typography>
-                                <Typography color={colourWins(x[1][roleKey]['win'] / x[1][roleKey]['picks'] * 100)}>
-                                    {cleanDecimal((x[1][roleKey]['win'] / x[1][roleKey]['picks'] * 100))}%</Typography>
-                            </div>
-                        </Box>
-                    )
-                })}
-            </div>
+
+        <div className="flex boxContainer">
+            {sortedData.map((x, i) => {
+                const roleKey = Object.keys(x[1])[0]
+                return (
+                    <Box key={i} className="" bgcolor='primary.main' padding={1} margin={1} sx={{
+                        width: '100px',
+                    }} >
+                        <div className="flex" style={{ justifyContent: 'space-around' }}>
+                            {matchKey === 'hero' ? (
+                                <img className='table-cell-outline' src={require(`../../images/minimap_icons/${x[0]}.jpg`).default} alt={`${x[0]} minimap icon`} onClick={() => updateData(x[0], 'hero', 'hero')}></img>
+                            ) : (
+                                <Typography className='hover-text' onClick={() => updateData(x[0], 'player', 'name')}>{x[0]}</Typography>
+                            )}
+                            <div className="svg-icon" id={roleKey.replace(' ', '-')} onClick={() => updateData(roleKey, 'role', 'role', roleKey)}></div>
+                        </div>
+                        <div className="flex" style={{ justifyContent: 'space-around' }}>
+                            <Typography>{x[1][roleKey]['picks']}</Typography>
+                            <Typography color={colourWins(x[1][roleKey]['win'] / x[1][roleKey]['picks'] * 100)}>
+                                {cleanDecimal((x[1][roleKey]['win'] / x[1][roleKey]['picks'] * 100))}%</Typography>
+                        </div>
+                    </Box>
+                )
+            })}
         </div>
     )
 }

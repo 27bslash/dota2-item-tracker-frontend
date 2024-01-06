@@ -200,7 +200,7 @@ const Page = ({ type, heroList, playerList }: pageProps) => {
                 <Nav playerList={playerList} heroList={heroList} />
                 {renderFilterByPatch()}
                 {renderHeroPageTopSection()}
-                <div className="flex" style={{ 'width': '100%', minHeight: '53px' }}>
+                <div style={{ 'width': '100%', minHeight: '53px' }}>
                     {totalPicks &&
                         <PickCounter
                             {...commonProps}

@@ -25,6 +25,7 @@ export const SearchResultsText = () => {
     const draft = searchRes['draft']
     const role = searchRes['role']
     const players = searchRes['player']
+    const heroes = searchRes['hero']
     const talents = searchRes['talents']
     const handleClick = (filteredSearchResults: TableSearchResults, key: string, type?: string) => {
         // updateMatchData(filteredMatches, searchRes)
@@ -45,6 +46,12 @@ export const SearchResultsText = () => {
                     {/* <SearchResultText data={players} handleClick={handleClick} filteredData={playerKeys} type={'player'} /> */}
                     <DraftCounter handleClick={handleClick} draft={players} header='Players' subheader={[null, 'filtered players']} type="draft" />
 
+                </>
+            }
+            {heroes && Object.keys(heroes).length > 0 &&
+                <>
+                    {/* <SearchResultText data={players} handleClick={handleClick} filteredData={playerKeys} type={'player'} /> */}
+                    <DraftCounter handleClick={handleClick} draft={heroes} header='Heroes' subheader={[null, 'filtered heroes']} type="draft" />
                 </>
             }
             {talents && Object.keys(talents).length > 0 &&

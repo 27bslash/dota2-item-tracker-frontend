@@ -70,8 +70,11 @@ const PickCounter = (props: pickProps) => {
                     ) : (
                         props.type === 'hero' && props.heroColor &&
                         <>
-                            <TotalPickCounter />
-                            <RoleCounter />
+                            <div className='flex'>
+                                <TotalPickCounter />
+                                <RoleCounter />
+                            </div>
+                            <PlayerPicks matchKey='name' />
                         </>
                     )}
                     {props.type === 'player' && !searching &&
@@ -100,7 +103,13 @@ const TotalPickCounter = () => {
                     <HeroPicks base={base} />)
             ) : (
                 matchData && (
-                    <PlayerPicks base={matchData.length} />)
+                    <>
+                        <div className="flex" style={{ width: '100%' }}>
+                            <p className='bold-name' onClick={() => reset()}>{nameParam} has played {matchData.length} times. He mostly plays: </p>
+                        </div>
+                        <PlayerPicks matchKey='hero' />
+                    </>
+                )
             )
             }
         </>

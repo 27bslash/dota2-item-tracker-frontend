@@ -143,6 +143,12 @@ thead .stats:hover {
     height: 26px;
     width: 26px;
 }
+.svg-icon:hover {
+    cursor: pointer;
+    filter: drop-shadow(white 1px 0 0px) drop-shadow(white -1px 0 0px)
+        drop-shadow(white 0 1px 0px) drop-shadow(white 0 -1px 0px);
+    z-index: 99;
+}
 #Midlane {
     background: url(./images/role_icons/Midlane.png);
     background-size: cover;
@@ -625,9 +631,7 @@ label {
 .picks {
     color: white;
 }
-.pick-counter {
-    display: flex;
-}
+
 .table-search-results {
     padding: 10px;
 }
