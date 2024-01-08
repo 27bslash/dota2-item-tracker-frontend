@@ -85,18 +85,19 @@ export const PlayerPicks = ({ matchKey }: PlayerPickProps) => {
     }
     return (
 
-        <div className="flex boxContainer">
+        <Box className="flex boxContainer" sx={{ marginLeft: '-7px' }}>
             {sortedData.map((x, i) => {
                 const roleKey = Object.keys(x[1])[0]
+                const cleanName = x[0].replace(/\(smurf.*/, '')
                 return (
-                    <Box key={i} className="" bgcolor='primary.main' padding={1} margin={1} sx={{
-                        width: '100px',
+                    <Box key={i} className="player-pick-cell" bgcolor='primary.main' padding={1} margin={1} sx={{
+                        minWidth: '100px', border: 'solid 2px black', borderRadius: '5px'
                     }} >
-                        <div className="flex" style={{ justifyContent: 'space-around' }}>
+                        <div className="flex" style={{ justifyContent: 'space-around', marginLeft: '-6px' }}>
                             {matchKey === 'hero' ? (
-                                <img className='table-cell-outline' src={require(`../../images/minimap_icons/${x[0]}.jpg`).default} alt={`${x[0]} minimap icon`} onClick={() => updateData(x[0], 'hero', 'hero')}></img>
+                                <img className='table-cell-outline' src={require(`../../images/minimap_icons/${cleanName}.jpg`).default} alt={`${cleanName} minimap icon`} onClick={() => updateData(cleanName, 'hero', 'hero')}></img>
                             ) : (
-                                <Typography className='hover-text' onClick={() => updateData(x[0], 'player', 'name')}>{x[0]}</Typography>
+                                <Typography className='hover-text' onClick={() => updateData(x[0], 'player', 'name')}>{cleanName}</Typography>
                             )}
                             <div className="svg-icon" id={roleKey.replace(' ', '-')} onClick={() => updateData(roleKey, 'role', 'role', roleKey)}></div>
                         </div>
@@ -108,6 +109,6 @@ export const PlayerPicks = ({ matchKey }: PlayerPickProps) => {
                     </Box>
                 )
             })}
-        </div>
+        </Box>
     )
 }
