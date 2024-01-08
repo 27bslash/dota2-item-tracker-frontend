@@ -53,7 +53,7 @@ const Build = (props: BuildProps) => {
     };
     const disabledOpacity = !buildsData ? 0.3 : 1
     return (
-        <Box sx={textShadow} color={'white'} className="build-wrapper">
+        <Box color={'white'} className="build-wrapper">
             <Box className="build-container" bgcolor={open ? 'secondary.dark' : 'inherit'} sx={{
                 position: 'relative'
             }}>
