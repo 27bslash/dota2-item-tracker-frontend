@@ -12,7 +12,7 @@ import { HeroPicks } from './heroPicks';
 import { PlayerPicks } from './playerPicks';
 import { PickCounterContextProvider, usePickCounterContext } from './pickCounterContext';
 import { usePageContext } from '../stat_page/pageContext';
-import { useParams } from 'react-router';
+import { Typography } from '@mui/material';
 
 export interface pickProps {
     matchData: DotaMatch[],
@@ -104,9 +104,7 @@ const TotalPickCounter = () => {
             ) : (
                 matchData && (
                     <>
-                        <div className="flex" style={{ width: '100%' }}>
-                            <p className='bold-name' onClick={() => reset()}>{nameParam} has played {matchData.length} times. He mostly plays: </p>
-                        </div>
+                        <Typography className='bold-name' onClick={() => reset()}>{nameParam} has played {matchData.length} times. He mostly plays: </Typography>
                         <PlayerPicks matchKey='hero' />
                     </>
                 )

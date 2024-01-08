@@ -197,32 +197,34 @@ const Page = ({ type, heroList, playerList }: pageProps) => {
         }
         return (
             <PageContextProvider value={contextValues}>
-                <Nav playerList={playerList} heroList={heroList} />
-                {renderFilterByPatch()}
-                {renderHeroPageTopSection()}
-                <div style={{ 'width': '100%', minHeight: '53px' }}>
-                    {totalPicks &&
-                        <PickCounter
-                            {...commonProps}
-                            heroColor={heroColor} matchData={totalMatchData}
-                            count={count} totalPicks={totalPicks} updateRole={updateRole} />}
+                <div className="stat-page">
+                    <Nav playerList={playerList} heroList={heroList} />
+                    {renderFilterByPatch()}
+                    {renderHeroPageTopSection()}
+                    <div style={{ 'width': '100%', minHeight: '53px' }}>
+                        {totalPicks &&
+                            <PickCounter
+                                {...commonProps}
+                                heroColor={heroColor} matchData={totalMatchData}
+                                count={count} totalPicks={totalPicks} updateRole={updateRole} />}
+                    </div>
+                    <div className="flex">
+                        <StarterToggle updateStarter={updateStarter} />
+                        {filteredData &&
+                            <TableSearch {...commonProps}
+                                disabled={filteredData.length === 0 || !itemData || !heroList}
+                                heroName={nameParam}
+                                itemData={itemData} />
+                        }
+                    </div>
+                    <CustomTable
+                        {...commonProps}
+                        count={count}
+                        pageNumber={pageNumber}
+                        heroList={heroList}
+                        playerList={playerList}
+                        showStarter={showStarter} />
                 </div>
-                <div className="flex">
-                    <StarterToggle updateStarter={updateStarter} />
-                    {filteredData &&
-                        <TableSearch {...commonProps}
-                            disabled={filteredData.length === 0 || !itemData || !heroList}
-                            heroName={nameParam}
-                            itemData={itemData} />
-                    }
-                </div>
-                <CustomTable
-                    {...commonProps}
-                    count={count}
-                    pageNumber={pageNumber}
-                    heroList={heroList}
-                    playerList={playerList}
-                    showStarter={showStarter} />
             </PageContextProvider>
         );
 
