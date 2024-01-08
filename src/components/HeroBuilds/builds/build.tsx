@@ -34,11 +34,16 @@ const Build = (props: BuildProps) => {
     const [proData, setProData] = useState(false)
     const [open, setOpen] = useState(false)
     const { filteredData, itemData, heroData, nameParam, heroList, totalMatchData, searchRes } = usePageContext()
-    const fd = useParseMatchData(proData, totalMatchData, nameParam, props, searchRes)
-    const heroBuilds = useHeroBuilds(fd!, heroData, itemData!)
+    const buildsData = useParseMatchData(proData, totalMatchData, nameParam, props, searchRes)
+    const heroBuilds = useHeroBuilds(buildsData!, heroData, itemData!)
     const [guideGuide, setGuideGuide] = useState(false)
 
+    const textShadow = {
+        'textShadow': '1.5px 1.5px black !important',
+    }
+
     const baseButtonStyle = {
+        'border': 'solid 2px black',
         '&:hover': {
             backgroundColor: 'secondary.main',
         }, '&.Mui-disabled': {
@@ -46,38 +51,47 @@ const Build = (props: BuildProps) => {
             color: 'white'
         }
     };
-    const disabledOpacity = !fd ? 0.3 : 1
-    const textShadow = {
-        'textShadow': '1.5px 1.5px black',
-    }
+    const disabledOpacity = !buildsData ? 0.3 : 1
     return (
         <Box sx={textShadow} color={'white'} className="build-wrapper">
             <Box className="build-container" bgcolor={open ? 'secondary.dark' : 'inherit'} sx={{
                 position: 'relative'
             }}>
-                < Button variant='contained' color='primary' disabled={!fd} sx={{
-                    ...baseButtonStyle,
-                    marginRight: '4px',
-                    opacity: disabledOpacity
-                }} onClick={() => setOpen((prevstate) => !prevstate)} >Builds</Button>
-                {open && fd && heroBuilds &&
+                {!open &&
+                    < Button variant='contained' color='primary' disabled={!buildsData} sx={{
+                        ...baseButtonStyle,
+                        marginRight: '4px',
+                        opacity: disabledOpacity
+                    }} onClick={() => setOpen((prevstate) => !prevstate)} >
+                        <Typography>builds</Typography>
+                    </Button>
+                }
+                {open && buildsData && heroBuilds &&
                     <>
-                        <Button variant='contained' color='primary' onClick={() => setProData((prevstate) => !prevstate)}
-                            sx={baseButtonStyle} >{!proData ? ' Pro data' : 'non pro'}</Button>
-                        <Button variant='contained' color={'success'}
-                            sx={{ marginLeft: '840px' }} onClick={() => setGuideGuide((prev) => !prev)}>get all guides</Button>
-                        {guideGuide &&
-                            <Tooltip title=''>
-                                <div className='download-guides-help-text' style={{ position: 'absolute', right: '16px', zIndex: 99 }} >
-                                    <GuideGuide />
-                                </div>
-                            </Tooltip>
-                        }
+                        <Box sx={{ display: 'flex' }} >
+                            <Button variant='contained' color='primary' onClick={() => setOpen((prevstate) => !prevstate)}
+                                sx={{
+                                    ...baseButtonStyle,
+                                    marginRight: '4px'
+                                }}
+                            ><Typography>builds</Typography></Button>
+                            <Button variant='contained' color='primary' onClick={() => setProData((prevstate) => !prevstate)}
+                                sx={baseButtonStyle} ><Typography>{!proData ? ' Pro data' : 'non pro'}</Typography></Button>
+                            <Button variant='contained' color={'success'}
+                                sx={{ marginLeft: 'auto', border: 'solid 2px black' }} onClick={() => setGuideGuide((prev) => !prev)}><Typography >get all guides</Typography></Button>
+                            {guideGuide &&
+                                <Tooltip title=''>
+                                    <div className='download-guides-help-text' style={{ position: 'absolute', right: '22px', top: '50px', zIndex: 99 }} >
+                                        <GuideGuide />
+                                    </div>
+                                </Tooltip>
+                            }
+                        </Box>
                         {Object.entries(heroBuilds).map((build, index: number) => {
                             const role = build[0] as RoleStrings
                             const buildData = heroBuilds[role]
                             return (
-                                <BuildCell key={index} data={fd[role]} updateMatchData={props.updateMatchData} buildData={buildData} role={role}
+                                <BuildCell key={index} data={buildsData[role]} updateMatchData={props.updateMatchData} buildData={buildData} role={role}
                                     dataLength={Object.entries(heroBuilds).length} />
                             )
                         })}
