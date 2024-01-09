@@ -97,7 +97,7 @@ export const PlayerPicks = ({ matchKey }: PlayerPickProps) => {
                             {matchKey === 'hero' ? (
                                 <img className='table-cell-outline' src={require(`../../images/minimap_icons/${cleanName}.jpg`).default} alt={`${cleanName} minimap icon`} onClick={() => updateData(cleanName, 'hero', 'hero')}></img>
                             ) : (
-                                <Typography className='hover-text' onClick={() => updateData(x[0], 'player', 'name')}>{cleanName}</Typography>
+                                <Typography style={{ marginRight: '10px' ,marginLeft: '5px' }} className='hover-text' onClick={() => updateData(x[0], 'player', 'name')}>{cleanName}</Typography>
                             )}
                             <div className="svg-icon" id={roleKey.replace(' ', '-')} onClick={() => updateData(roleKey, 'role', 'role', roleKey)}></div>
                         </div>
