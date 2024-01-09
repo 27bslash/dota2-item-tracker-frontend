@@ -8,6 +8,7 @@ import { PageHeroData } from "../types/heroData";
 import { Items, Item } from "../types/Item";
 import { useTableContext } from "../table/tableContext";
 import { usePageContext } from "../stat_page/pageContext";
+import { Typography } from "@mui/material";
 
 
 interface ItemTooltipProps {
@@ -25,6 +26,8 @@ const ItemTooltip = (props: ItemTooltipProps) => {
             setItemProperties(itemData.items[props.itemKey])
         }
     }, [])
+
+    const tierColours = ['white', '#99D98B', '#97a6e8', '#C783E8', '#F5DFA6']
     return (
         <>
             {itemProperties &&
@@ -40,6 +43,11 @@ const ItemTooltip = (props: ItemTooltipProps) => {
                                             <img alt='gold' className="gold-img" src="https://steamcdn-a.akamaihd.net/apps/dota2/images/tooltips/gold.png" style={{ marginRight: '5px' }}></img>
                                             <h4>{itemProperties.cost}</h4>
                                         </div>
+                                    }
+                                    {!!itemProperties['tier'] &&
+                                        <Typography fontWeight={600} color={tierColours[itemProperties['tier'] - 1]}>Tier {itemProperties['tier']}
+                                            <span style={{ color: 'gray', fontWeight: '400' }}> Neutral Item</span></Typography>
+
                                     }
                                 </div>
 

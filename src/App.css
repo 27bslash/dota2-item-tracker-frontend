@@ -396,7 +396,7 @@ a:hover {
 .best-games th {
     filter: drop-shadow(black 2px 0 0px) drop-shadow(black -1.5px 0 0px)
         drop-shadow(black 0 2px 0px) drop-shadow(black 0 -1.5px 0px);
-        border-bottom: solid 2px black;
+    border-bottom: solid 2px black;
 }
 .best-games table {
     border-spacing: 0;
@@ -1047,9 +1047,7 @@ label {
 #talent-tooltip img {
     border: solid 1px rgb(32, 31, 31);
 }
-.tooltip * {
-    text-shadow: 1.5px 1.5px black;
-}
+
 .tooltip-title,
 .item-tooltip-title h3 {
     font-family: 'Trajan Bold';
@@ -1061,6 +1059,9 @@ label {
     color: white;
     padding: 20px;
     background-color: rgba(255, 255, 255, 0.11);
+}
+.tooltip-line-one h3 {
+    filter: var(--shadow);
 }
 .aghanim-wrapper {
     text-align: start;
