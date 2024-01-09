@@ -21,7 +21,7 @@ export const recursive_remove = (item: RawItemBuild, itemdata: Items, components
         if (!dataComponent || component === 'blink' || component === 'boots' || component === 'travel_boots' || component === 'ultimate_scepter') {
             continue
         }
-        if (badQuals.includes(componentStats['qual']) && !componentStats['components']) {
+        if (badQuals.includes(componentStats['qual']!) && !componentStats['components']) {
             // console.log(component, dataComponent[1]['time'] / componentStats['cost']! * 300)
             if ((!componentStats['hint'] || !componentStats['attrib']!.length) && dataComponent[1]['time'] > 600) {
                 // console.log('qual remove: ', component, componentStats, data[idx])
@@ -37,7 +37,7 @@ export const recursive_remove = (item: RawItemBuild, itemdata: Items, components
             if (componentStats['components']) {
                 // return recursive_remove(itemdata, componentStats['components'], data, keys, removedComponents)
             }
-        } else if (badQuals.includes(componentStats['qual']) && componentStats['components']) {
+        } else if (badQuals.includes(componentStats['qual']!) && componentStats['components']) {
             if (!componentStats['hint'] && dataComponent[1]['time'] > 1500) {
                 removedComponents.push(componentKey)
                 continue
@@ -119,7 +119,7 @@ export const filterComponents = (data: RawItemBuild[], itemData: Items) => {
         } else if (itemTime > 1000 && itemStats['cost']! < 500) {
             toRemove.add(data[i][0])
             continue
-        } else if (!itemStats['hint'] && ['common', 'component', 'secret_shop'].includes(itemStats['qual'])) {
+        } else if (!itemStats['hint'] && ['common', 'component', 'secret_shop'].includes(itemStats['qual']!)) {
             // console.log(itemKey)
             toRemove.add(data[i][0])
             continue
