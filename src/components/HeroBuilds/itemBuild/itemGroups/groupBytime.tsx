@@ -9,11 +9,12 @@ const groupByTime = (data: RawItemBuild[], roleKey: string) => {
     const res = [structuredClone(itemObj), structuredClone(itemObj), structuredClone(itemObj)]
     const seenItems = new Set<string>()
     const filteredData = data.filter((x: RawItemBuild) => x[1]['adjustedValue'] > 10)
+
     const filterItems = (data: RawItemBuild[], roleKey: string, time: number, type: string) => {
         const ret: CoreItem[] = []
         const supportRoles = ['Hard Support', 'Support', 'Roaming']
-        let percForCore = time <= 1800 && !supportRoles.includes(roleKey) ? 60 : 40
-        if (supportRoles.includes(roleKey) && time < 1800) {
+        let percForCore = time <= 1000 && !supportRoles.includes(roleKey) ? 60 : time <= 1800 ? 50 : 40
+        if (supportRoles.includes(roleKey) && time <= 1800) {
             percForCore = 50
         } else if (supportRoles.includes(roleKey)) {
             percForCore = 20
@@ -122,7 +123,8 @@ const groupByTime = (data: RawItemBuild[], roleKey: string) => {
                     const situationalIdx = itemGroup[otherSet].findIndex((x: CoreItem) => x['key'] === optionKey)
 
                     // itemObject[optionKey] = { 'value': option['targetValue'], 'adjustedValue': option['targetValue'], time: option['time'] }
-                    if (idx !== -1) itemGroup[k].splice(idx, 1); itemGroup[otherSet].splice(situationalIdx, 1)
+                    if (idx !== -1) itemGroup[k].splice(idx, 1)
+                    if (situationalIdx !== -1) itemGroup[otherSet].splice(situationalIdx, 1)
 
                     // } else if (itemObject['option'] && itemGroup[k].length > 6) {
                     // 	const option = itemObject['option']

@@ -21,6 +21,7 @@ export type RawItemBuildValues = {
     longOption?: boolean
     currMax?: number,
     offset?: { [key: string]: number }
+    key?: string
 }
 export type RawItemBuild = [string, RawItemBuildValues]
 
