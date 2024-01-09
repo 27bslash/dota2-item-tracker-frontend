@@ -391,7 +391,12 @@ a:hover {
 .best-games {
     /* background-color: red; */
     color: white;
-    border: solid grey 1px;
+    border: solid black 3px;
+}
+.best-games th {
+    filter: drop-shadow(black 2px 0 0px) drop-shadow(black -1.5px 0 0px)
+        drop-shadow(black 0 2px 0px) drop-shadow(black 0 -1.5px 0px);
+        border-bottom: solid 2px black;
 }
 .best-games table {
     border-spacing: 0;
@@ -665,7 +670,7 @@ label {
 }
 .total-picks:hover {
     cursor: pointer;
-    filter: brightness(80%);
+    opacity: 0.8;
 }
 .bold-name {
     margin-right: 6px;

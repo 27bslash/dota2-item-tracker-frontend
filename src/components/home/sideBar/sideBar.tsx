@@ -78,6 +78,9 @@ export const SideBar = ({ sortByTrend, sortHeroes, winStats, open }: SIdeBarProp
                             boxSizing: 'border-box',
                             color: 'white',
                             backgroundColor: theme.palette.primary.main,
+                            borderRadius: '0px 5px 5px 0px',
+                            border:'solid 2px black'
+
                         },
                     }}
                     variant="persistent"
