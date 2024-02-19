@@ -1,20 +1,25 @@
-import { useEffect, useState } from "react"
-import { baseApiUrl } from "../../../App"
-import DotaMatch from "../../types/matchData"
-import { PageHeroData } from "../../types/heroData"
+import { useEffect, useState } from 'react'
+import { baseApiUrl } from '../../../App'
+import DotaMatch from '../../types/matchData'
+import { PageHeroData } from '../../types/heroData'
 
-export const useHeroData = (type: string, totalMatchData: DotaMatch[], role: string, nameParam: string) => {
-
+export const useHeroData = (
+    type: string,
+    totalMatchData: DotaMatch[],
+    role: string,
+    nameParam: string
+) => {
     const [heroData, setHeroData] = useState<PageHeroData>({})
     const [visited, setVisited] = useState<Set<string>>(new Set())
     const [total, setTotal] = useState<string[]>([])
 
     useEffect(() => {
-        (async () => {
+        const async_get = async () => {
             const sett: Set<string> = new Set()
-
             if (type !== 'player') {
-                const hData = await fetch(`${baseApiUrl}files/hero-data/${nameParam}`)
+                const hData = await fetch(
+                    `${baseApiUrl}files/hero-data/${nameParam}`
+                )
                 const hJson = await hData.json()
                 setHeroData({ [nameParam]: hJson })
             } else {
@@ -24,7 +29,7 @@ export const useHeroData = (type: string, totalMatchData: DotaMatch[], role: str
                 setVisited(sett)
             }
         }
-        )()
+        async_get()
     }, [totalMatchData])
     async function getHeroData(hero: string) {
         const hData = await fetch(`${baseApiUrl}files/hero-data/${hero}`)
