@@ -50,7 +50,6 @@ export const countItems = (data: NonProDataType[], itemData: Items) => {
         "tpscroll",
         "dust",
         "tome_of_knowledge",
-        "gem",
         'faerie_fire',
         'great_famango',
         'famango',
