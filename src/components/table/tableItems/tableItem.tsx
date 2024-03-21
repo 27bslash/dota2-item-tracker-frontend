@@ -1,41 +1,39 @@
 /* eslint-disable no-unused-vars */
-import { useNavigate } from "react-router";
-import ItemTooltip from "../../tooltip/itemTooltip"
-import itemSearch from '../table_search/item_search';
+import ItemTooltip from '../../tooltip/itemTooltip'
 import React from 'react'
-import Tip from "../../tooltip/tooltip";
-import { PageHeroData } from "../../types/heroData";
-import Items from "../../types/Item";
-import { useTableContext } from "../tableContext";
-import DotaMatch from "../../types/matchData";
-import { MatchDataAdj } from "../../stat_page/page";
-import { RoleStrings } from "../../home/home";
-import { exists } from "../../../utils/exists";
-import { usePageContext } from "../../stat_page/pageContext";
+import Tip from '../../tooltip/tooltip'
+import DotaMatch from '../../types/matchData'
+import { MatchDataAdj } from '../../stat_page/page'
+import { RoleStrings } from '../../home/home'
+import { usePageContext } from '../../stat_page/pageContext'
 type TItemProp = {
     type: 'item' | 'neutral' | 'shard' | 'scepter'
-    height?: string,
-    width?: string,
-    heroName?: string,
-    starter?: boolean,
-    itemKey: string,
-    itemId?: number | undefined,
-    children?: React.ReactNode;
-    time?: string,
+    height?: string
+    width?: string
+    heroName?: string
+    starter?: boolean
+    itemKey: string
+    itemId?: number | undefined
+    children?: React.ReactNode
+    time?: string
     overlay: boolean
     updateMatchData?: MatchDataAdj['updateMatchData']
-    row?: DotaMatch,
+    row?: DotaMatch
     role?: RoleStrings
 }
 const TableItem = (props: TItemProp) => {
-    const image_host = "https://ailhumfakp.cloudimg.io/v7/"
+    const image_host = 'https://ailhumfakp.cloudimg.io/v7/'
 
     const link = `${image_host}https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/items/${props.itemKey}.png`
     // console.log(props.item)
     const { updateSearchResults, itemData } = usePageContext()
     const updateTable = () => {
         // updateMatchData(data[itemKey]['matches'], { 'items': data })
-        if (props.type === 'shard' || props.type === 'item' || props.type === 'scepter') {
+        if (
+            props.type === 'shard' ||
+            props.type === 'item' ||
+            props.type === 'scepter'
+        ) {
             updateSearchResults(props.itemKey, 'items', 'items')
         } else {
             updateSearchResults(props.itemKey, 'items', 'item_neutral')
@@ -45,7 +43,11 @@ const TableItem = (props: TItemProp) => {
     const handleClick = (event: any) => {
         if (!event.ctrlKey && itemData) {
             updateTable()
-        } else if (props.row && (event.ctrlKey || event.button === 1) && props.row.match_id) {
+        } else if (
+            props.row &&
+            (event.ctrlKey || event.button === 1) &&
+            props.row.match_id
+        ) {
             event.preventDefault()
             // return <Link to={{ 'pathname': "https://example.zendesk.com/hc/en-us/articles/123456789-Privacy-Policies" }} target="_blank" />
             const url = `https://www.opendota.com/matches/${props.row.match_id}`
@@ -56,29 +58,62 @@ const TableItem = (props: TItemProp) => {
         }
     }
     return (
-        <Tip component={<ItemTooltip type={props.type} heroName={props.heroName} img={link} itemId={props.itemId} itemKey={props.itemKey} />}>
-            {(props.type === 'item' || props.type === 'shard' || props.type === 'scepter') &&
-                <div className="item-cell table-cell-outline" onClick={handleClick} >
-                    <img className="item-img" height={props.height || '55px'} width={props.width || '100%'} alt={props.itemKey} src={link} loading="lazy"></img>
-                    {!props.starter && props.overlay &&
-                        < div className="overlay">{props.time}</div>
-                    }
-                    {props.starter && props.overlay &&
-                        <div className="overlay" style={{ backgroundColor: 'inherit' }}></div>
-                    }
-                </div>
+        <Tip
+            component={
+                <ItemTooltip
+                    type={props.type}
+                    heroName={props.heroName}
+                    img={link}
+                    itemId={props.itemId}
+                    itemKey={props.itemKey}
+                />
             }
+        >
+            {(props.type === 'item' ||
+                props.type === 'shard' ||
+                props.type === 'scepter') && (
+                <div
+                    className="item-cell table-cell-outline"
+                    onClick={handleClick}
+                >
+                    <img
+                        className="item-img"
+                        height={props.height || '55px'}
+                        width={props.width || '100%'}
+                        alt={props.itemKey}
+                        src={link}
+                        loading="lazy"
+                    ></img>
+                    {!props.starter && props.overlay && (
+                        <div className="overlay">{props.time}</div>
+                    )}
+                    {props.starter && props.overlay && (
+                        <div
+                            className="overlay"
+                            style={{ backgroundColor: 'inherit' }}
+                        ></div>
+                    )}
+                </div>
+            )}
 
-            {
-                props.type === 'neutral' &&
-                <div className="neutral-cell table-cell-outline" onClick={updateTable}>
+            {props.type === 'neutral' && (
+                <div
+                    className="neutral-cell table-cell-outline"
+                    onClick={updateTable}
+                >
                     <div className="circle">
-                        <img id="neutral-item" className="item-img" height='55px' alt={props.itemKey} src={link} loading="lazy">
-                        </img>
+                        <img
+                            id="neutral-item"
+                            className="item-img"
+                            height="55px"
+                            alt={props.itemKey}
+                            src={link}
+                            loading="lazy"
+                        ></img>
                     </div>
                 </div>
-            }
-        </Tip >
+            )}
+        </Tip>
     )
 }
 export default TableItem
