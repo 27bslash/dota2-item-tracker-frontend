@@ -38,7 +38,7 @@ function HeroCard({
     return (
         <div
             className={`hero-cell ${heroHighlight}`}
-            style={{ height: '106px' }}
+            style={{ height: searching ? 'auto' : '106px' }}
         >
             <Link to={link}>
                 <img
