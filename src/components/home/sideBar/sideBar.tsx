@@ -1,30 +1,45 @@
-import { useEffect, useState } from "react"
-import { Box, Divider, Drawer, List, ListItem, ListItemIcon, ListItemText } from "@mui/material"
-import { RoleStrings } from "../home"
-import { theme } from "../../.."
-import PickStats, { PickRoleStat } from "../../types/pickStats"
-import ArrowButton from "../../ui_elements/arrowButton"
-import { useParams } from "react-router"
+import { useEffect, useState } from 'react'
+import {
+    Box,
+    Divider,
+    Drawer,
+    List,
+    ListItem,
+    ListItemIcon,
+    ListItemText,
+} from '@mui/material'
+import { RoleStrings } from '../home'
+import { theme } from '../../..'
+import PickStats, { PickRoleStat } from '../../types/pickStats'
+import ArrowButton from '../../ui_elements/arrowButton'
+import { useParams } from 'react-router'
 type SIdeBarProps = {
-    sortByTrend: () => void,
-    sortHeroes: (list: string[], search: string, role?: RoleStrings) => void,
-    winStats: PickStats[]
+    sortByTrend: () => void
+    sortHeroes: (list: string[], search: string, role?: RoleStrings) => void
+    winStats: PickStats[] | undefined
     open: boolean
 }
-export const SideBar = ({ sortByTrend, sortHeroes, winStats, open }: SIdeBarProps) => {
+export const SideBar = ({
+    sortByTrend,
+    sortHeroes,
+    winStats,
+    open,
+}: SIdeBarProps) => {
     const [role, setRole] = useState<RoleStrings>()
-    const [sortType, setSortType] = useState<'picks' | 'winrate' | 'bans' | 'trends'>()
+    const [sortType, setSortType] = useState<
+        'picks' | 'winrate' | 'bans' | 'trends'
+    >()
     const paramPatch = useParams()
     useEffect(() => {
-        if (role || sortType) gSort()
-    }, [role, sortType]);
+        if (winStats && (role || sortType)) gSort()
+    }, [role, sortType])
     const gSort = () => {
         // default sort is picks
         if (!sortType) return setSortType('picks')
         if (sortType === 'trends') {
             return sortByTrend()
         }
-        const filtered = winStats.filter((item) => {
+        const filtered = winStats!.filter((item) => {
             // return item.role === role
             let dd: PickStats | PickRoleStat = item
             let pickThreshold = 10
@@ -33,10 +48,14 @@ export const SideBar = ({ sortByTrend, sortHeroes, winStats, open }: SIdeBarProp
                 pickThreshold = 5
             }
             const pickString = paramPatch ? 'patch_picks' : 'picks'
-            if (sortType === 'picks' || sortType === 'winrate' || sortType === 'bans') {
+            if (
+                sortType === 'picks' ||
+                sortType === 'winrate' ||
+                sortType === 'bans'
+            ) {
                 return dd && dd[pickString] > pickThreshold
             }
-        });
+        })
         const sorted = [...filtered].sort((a, b) => {
             if (role) {
                 if (sortType === 'bans') {
@@ -44,9 +63,14 @@ export const SideBar = ({ sortByTrend, sortHeroes, winStats, open }: SIdeBarProp
                 } else {
                     if (paramPatch) {
                         if (sortType === 'picks') {
-                            return b[role][`patch_picks`] - a[role]['patch_picks']
+                            return (
+                                b[role][`patch_picks`] - a[role]['patch_picks']
+                            )
                         } else if (sortType === 'winrate') {
-                            return b[role]['patch_wins'] / b[role][`patch_picks`] - a[role]['patch_wins'] / a[role][`patch_picks`]
+                            return (
+                                b[role]['patch_wins'] / b[role][`patch_picks`] -
+                                a[role]['patch_wins'] / a[role][`patch_picks`]
+                            )
                         }
                     }
                     return b[role][sortType] - a[role][sortType]
@@ -56,18 +80,35 @@ export const SideBar = ({ sortByTrend, sortHeroes, winStats, open }: SIdeBarProp
                     if (sortType === 'picks') {
                         return b[`patch_picks`] - a['patch_picks']
                     } else if (sortType === 'winrate') {
-                        return b['patch_wins'] / b[`patch_picks`] - a['patch_wins'] / a[`patch_picks`]
+                        return (
+                            b['patch_wins'] / b[`patch_picks`] -
+                            a['patch_wins'] / a[`patch_picks`]
+                        )
                     }
                 }
                 return b[sortType] - a[sortType]
             }
         })
-        return sortHeroes(sorted.map((x) => x.hero), sortType, role)
+        return sortHeroes(
+            sorted.map((x) => x.hero),
+            sortType,
+            role
+        )
     }
     return (
-        <ArrowButton transition="fade" style={{ transform: "rotate(-90deg)", position: 'absolute', top: '17%', left: '-20px', backgroundColor: theme.palette.primary.main }}>
+        <ArrowButton
+            transition="fade"
+            transitionTime={10}
+            style={{
+                transform: 'rotate(-90deg)',
+                position: 'absolute',
+                top: '17%',
+                left: '-20px',
+                backgroundColor: theme.palette.primary.main,
+            }}
+        >
             {/* <Nav heroList={heroList} playerList={playerList}></Nav> */}
-            <Box sx={{ display: 'flex' }} >
+            <Box sx={{ display: 'flex' }}>
                 <Drawer
                     sx={{
                         width: 240,
@@ -79,8 +120,7 @@ export const SideBar = ({ sortByTrend, sortHeroes, winStats, open }: SIdeBarProp
                             color: 'white',
                             backgroundColor: theme.palette.primary.main,
                             borderRadius: '0px 5px 5px 0px',
-                            border:'solid 2px black'
-
+                            border: 'solid 2px black',
                         },
                     }}
                     variant="persistent"
@@ -89,40 +129,96 @@ export const SideBar = ({ sortByTrend, sortHeroes, winStats, open }: SIdeBarProp
                     open={true}
                 >
                     <Box alignItems={'center'}>
-                        {['Safelane', 'Midlane', 'Offlane', 'Roaming', 'Support', 'Hard Support'].map((roleString, index) => {
+                        {[
+                            'Safelane',
+                            'Midlane',
+                            'Offlane',
+                            'Roaming',
+                            'Support',
+                            'Hard Support',
+                        ].map((roleString, index) => {
                             const highLight = roleString === role
                             return (
-                                <ListItem className='sidebar-item' key={roleString} disablePadding onClick={() => setRole(roleString as RoleStrings)}
-                                    sx={{ backgroundColor: highLight ? '#2d8680' : 'inherit' }} >
+                                <ListItem
+                                    className="sidebar-item"
+                                    key={roleString}
+                                    disablePadding
+                                    onClick={() =>
+                                        setRole(roleString as RoleStrings)
+                                    }
+                                    sx={{
+                                        backgroundColor: highLight
+                                            ? '#2d8680'
+                                            : 'inherit',
+                                    }}
+                                >
                                     {/* <ListItemIcon /> */}
-                                    <ListItemText disableTypography primary={roleString} sx={{ marginLeft: '40px' }} />
+                                    <ListItemText
+                                        disableTypography
+                                        primary={roleString}
+                                        sx={{ marginLeft: '40px' }}
+                                    />
                                 </ListItem>
                             )
                         })}
                     </Box>
-                    <Divider sx={{
-                        width: '90%',
-                        alignSelf: 'center',
-                        backgroundColor: '#2ec794',
-                        borderRadius: '50%'
-                    }} />
+                    <Divider
+                        sx={{
+                            width: '90%',
+                            alignSelf: 'center',
+                            backgroundColor: '#2ec794',
+                            borderRadius: '50%',
+                        }}
+                    />
 
                     <List>
-                        <ListItem disablePadding className='sidebar-item' onClick={() => setSortType('picks')} >
-                            <ListItemText disableTypography primary={'Picks'} sx={{ marginLeft: '40px' }} />
+                        <ListItem
+                            disablePadding
+                            className="sidebar-item"
+                            onClick={() => setSortType('picks')}
+                        >
+                            <ListItemText
+                                disableTypography
+                                primary={'Picks'}
+                                sx={{ marginLeft: '40px' }}
+                            />
                         </ListItem>
-                        <ListItem disablePadding className='sidebar-item' onClick={() => setSortType('winrate')}>
-                            <ListItemText disableTypography primary={'Winrate'} sx={{ marginLeft: '40px' }} />
+                        <ListItem
+                            disablePadding
+                            className="sidebar-item"
+                            onClick={() => setSortType('winrate')}
+                        >
+                            <ListItemText
+                                disableTypography
+                                primary={'Winrate'}
+                                sx={{ marginLeft: '40px' }}
+                            />
                         </ListItem>
-                        <ListItem disablePadding className='sidebar-item' onClick={() => setSortType('trends')}>
-                            <ListItemText disableTypography primary={'Trends'} sx={{ marginLeft: '40px' }} />
+                        <ListItem
+                            disablePadding
+                            className="sidebar-item"
+                            onClick={() => setSortType('trends')}
+                        >
+                            <ListItemText
+                                disableTypography
+                                primary={'Trends'}
+                                sx={{ marginLeft: '40px' }}
+                            />
                         </ListItem>
-                        <ListItem disablePadding className='sidebar-item' onClick={() => setSortType('bans')}>
-                            <ListItemText disableTypography primary={'Bans'} sx={{ marginLeft: '40px' }} />
+                        <ListItem
+                            disablePadding
+                            className="sidebar-item"
+                            onClick={() => setSortType('bans')}
+                        >
+                            <ListItemText
+                                disableTypography
+                                primary={'Bans'}
+                                sx={{ marginLeft: '40px' }}
+                            />
                         </ListItem>
                     </List>
-                </Drawer >
-            </Box >
+                </Drawer>
+            </Box>
             {/* <Home heroList={heroList} playerList={playerList}></Home> */}
         </ArrowButton>
     )
@@ -132,7 +228,7 @@ const rSort = (stats: PickStats[], role: RoleStrings) => {
     const filtered = stats.filter((item) => {
         // return item.role === role
         return item[role] && item[role].picks > 5
-    });
+    })
     const sorted = [...filtered].sort((a, b) => {
         return b[role].picks - a[role].picks
     })

@@ -1,12 +1,13 @@
-import { faCaretDown, faCaretUp } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Collapse, Fade } from '@mui/material';
-import { useState, useEffect, Fragment } from 'react';
+import { faCaretDown, faCaretUp } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { Collapse, Fade } from '@mui/material'
+import { useState, useEffect, Fragment } from 'react'
 
 interface arrowProps {
-    style?: any,
-    transition: string,
-    children: any;
+    style?: any
+    transition: string
+    transitionTime?: number
+    children: any
 }
 const ArrowButton = (props: arrowProps) => {
     const [icon, setIcon] = useState(faCaretDown)
@@ -20,19 +21,22 @@ const ArrowButton = (props: arrowProps) => {
     }, [open])
     return (
         <div onMouseLeave={() => setOpen(false)}>
-            <div className="arrow-button" style={props.style} onClick={() => setOpen(prev => !prev)} onMouseEnter={() => setOpen(true)}>
-                <FontAwesomeIcon icon={icon} color='white' />
-            </div >
-            {props.transition === 'collapse' &&
-                <Collapse in={open}>
-                    {props.children}
-                </Collapse>
-            }
-            {props.transition === 'fade' &&
-                <Fade in={open} timeout={300}>
+            <div
+                className="arrow-button"
+                style={props.style}
+                onClick={() => setOpen((prev) => !prev)}
+                onMouseEnter={() => setOpen(true)}
+            >
+                <FontAwesomeIcon icon={icon} color="white" />
+            </div>
+            {props.transition === 'collapse' && (
+                <Collapse in={open}>{props.children}</Collapse>
+            )}
+            {props.transition === 'fade' && (
+                <Fade in={open} timeout={props.transitionTime || 300}>
                     {props.children}
                 </Fade>
-            }
+            )}
         </div>
     )
 }

@@ -208,19 +208,14 @@ function Home({ heroList, playerList }: HomeProps) {
                 )
             ) : null}
 
-            {filteredHeroes && winStats && (
-                <div
-                    className="side-bar"
-                    onMouseLeave={() => setDrawerOpen(false)}
-                >
-                    <SideBar
-                        open={drawerOpen}
-                        winStats={winStats}
-                        sortHeroes={sortHeroes}
-                        sortByTrend={sortByTrend}
-                    />
-                </div>
-            )}
+            <div className="side-bar" onMouseLeave={() => setDrawerOpen(false)}>
+                <SideBar
+                    open={drawerOpen}
+                    winStats={winStats || undefined}
+                    sortHeroes={sortHeroes}
+                    sortByTrend={sortByTrend}
+                />
+            </div>
             {sort && !searching && <SortTitle role={roleFilter} sort={sort} />}
             <GridContainer className={className} width={width}>
                 {filteredHeroes &&
@@ -232,7 +227,7 @@ function Home({ heroList, playerList }: HomeProps) {
                             )
                             // const picks = roleFilter !== '' ? stats[0][`${roleFilter}_picks`] || stats[0]['picks'] || 0 : 0;
                             // const wins = roleFilter !== '' ? stats[0][`${roleFilter}_wins`] || stats[0]['picks'] || 0 : 0;
-                            console.log(stats, heroName)
+                            // console.log(stats, heroName)
                             let picks = 0
                             let wins = 0
                             if (roleFilter && stats[0][roleFilter]) {
