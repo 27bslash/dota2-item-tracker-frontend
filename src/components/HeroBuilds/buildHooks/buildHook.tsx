@@ -1,4 +1,4 @@
-import { useReducer, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import abilityFilter from '../abillityBuild/abilityFiltering'
 import filterItems from '../itemBuild/itemFitltering/itemFiltering'
 import countStartingItems from '../itemBuild/startingItems/startingItemsFilter'
@@ -7,7 +7,7 @@ import { mostUsedTalents } from '../abillityBuild/talentLevels'
 import { Items } from '../../types/Item'
 import { PageHeroData } from '../../types/heroData'
 import { AbilityBuildEntry, Talents } from '../builds/buildCell'
-import { CoreItem } from '../itemBuild/itemGroups/groupBytime'
+import { CoreItem, GroupedCoreItems } from '../itemBuild/itemGroups/groupBytime'
 import { NonProDataType } from '../types'
 export type HeroBuild = {
     item_builds: {
@@ -54,6 +54,13 @@ export const useHeroBuilds = (
             for (const key in filteredData) {
                 const buildData = filteredData[key]
                 const itemBuild = filterItems(buildData, itemData, key)
+                const { cont, count } = itemBuildLengthChecker(itemBuild)
+                if (cont || count < 2) {
+                    console.log(
+                        `removed key: ${key} count: ${count} missing core sections: ${cont}`
+                    )
+                    continue
+                }
                 const abilityBuilds = abilityFilter(buildData) || [[]]
                 const startingItemBuilds = countStartingItems(buildData)
                 const neutralItems = mostUsedNeutrals(buildData, itemData)
@@ -80,4 +87,19 @@ export const useHeroBuilds = (
     }, [filteredData])
     // console.log(heroBuilds)
     return heroBuilds
+}
+const itemBuildLengthChecker = (itemBuild: GroupedCoreItems[]) => {
+    let count = 0
+    let cont = false
+    for (const entry of itemBuild) {
+        for (const key in entry) {
+            if (key !== 'core') continue
+            if (entry[key].length >= 2) count++
+            else if (entry[key].length) {
+                cont = true
+                break
+            }
+        }
+    }
+    return { cont, count }
 }

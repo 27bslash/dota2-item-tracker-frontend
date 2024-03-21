@@ -1,11 +1,15 @@
-import { useEffect, useState } from "react"
-import { useFetchData } from "./fetchMatchDataHook"
-import PickStats from "../../types/pickStats"
-import { RoleStrings } from "../../home/home"
-import { NonProDataType } from "../types"
-import { TableSearchResults } from "../../table/table_search/types/tableSearchResult.types"
+import { useEffect, useState } from 'react'
+import { useFetchData } from './fetchMatchDataHook'
+import PickStats from '../../types/pickStats'
+import { RoleStrings } from '../../home/home'
+import { NonProDataType } from '../types'
+import { TableSearchResults } from '../../table/table_search/types/tableSearchResult.types'
 
-const calc_common_roles = (props: any, pickData?: Record<string, { [key: string]: number }>, threshold?: number) => {
+const calc_common_roles = (
+    props: any,
+    pickData?: Record<string, { [key: string]: number }>,
+    threshold?: number
+) => {
     const picks: PickStats = pickData || props.picks || props['picks']
     threshold = threshold || 0.1
     const combinedRoles = ['Support', 'Roaming']
@@ -15,16 +19,22 @@ const calc_common_roles = (props: any, pickData?: Record<string, { [key: string]
     }
     totalPicks = totalPicks || props.picks.picks
     const roles: string[] = []
-    const sorted = Object.entries(picks).filter((x) => typeof (x[1]) === 'object').sort((a, b) => b[1]['picks'] - a[1]['picks'])
+    const sorted = Object.entries(picks)
+        .filter((x) => typeof x[1] === 'object')
+        .sort((a, b) => b[1]['picks'] - a[1]['picks'])
     let combinedRole = null
     for (const [i, k] of sorted.entries()) {
         const role = k[0] as RoleStrings
         if (role) {
             let totalRolePicks = picks[role].picks
             if (!combinedRole && combinedRoles.includes(role)) {
-                const otherRole = combinedRoles.find((pos) => pos !== role && pos in picks)
+                const otherRole = combinedRoles.find(
+                    (pos) => pos !== role && pos in picks
+                )
                 if (otherRole) {
-                    const otherRolePicks = otherRole ? picks[otherRole as RoleStrings].picks : 0
+                    const otherRolePicks = otherRole
+                        ? picks[otherRole as RoleStrings].picks
+                        : 0
                     totalRolePicks = picks[role].picks + otherRolePicks
                     combinedRole = true
                 }
@@ -33,7 +43,7 @@ const calc_common_roles = (props: any, pickData?: Record<string, { [key: string]
                 roles.push(role)
             } else {
                 const perc = totalRolePicks / totalPicks
-                if (perc > threshold) {
+                if (perc > threshold && totalRolePicks > 1) {
                     roles.push(role)
                 }
             }
@@ -41,10 +51,19 @@ const calc_common_roles = (props: any, pickData?: Record<string, { [key: string]
     }
     return roles
 }
-export const useParseMatchData = (proData: boolean, totalMatchData: any, heroName: string, props: any, searchRes?: TableSearchResults, threshold?: number) => {
+export const useParseMatchData = (
+    proData: boolean,
+    totalMatchData: any,
+    heroName: string,
+    props: any,
+    searchRes?: TableSearchResults,
+    threshold?: number
+) => {
     const nonProData = useFetchData(heroName)
     const [data, setData] = useState<NonProDataType[]>()
-    const [filteredData, setFilteredData] = useState<{ [k: string]: NonProDataType[] }>()
+    const [filteredData, setFilteredData] = useState<{
+        [k: string]: NonProDataType[]
+    }>()
     const [displayedRoles, setDisplayedRoles] = useState<string[]>([])
     useEffect(() => {
         if (props.picks) {
@@ -56,14 +75,15 @@ export const useParseMatchData = (proData: boolean, totalMatchData: any, heroNam
     useEffect(() => {
         if (proData && totalMatchData) {
             setData(totalMatchData)
-            const roleCount: { [key: string]: { [key: string]: number, } } = {}
+            const roleCount: { [key: string]: { [key: string]: number } } = {}
             for (const match of totalMatchData) {
                 if (roleCount[match['role']]) {
                     roleCount[match['role']]['picks'] += 1
                     roleCount[match['role']]['wins'] += 1
                 } else {
                     roleCount[match['role']] = {
-                        'picks': 1, 'wins': match['win']
+                        picks: 1,
+                        wins: match['win'],
                     }
                 }
             }
@@ -74,7 +94,7 @@ export const useParseMatchData = (proData: boolean, totalMatchData: any, heroNam
     }, [proData, nonProData, totalMatchData])
     useEffect(() => {
         if (props.role && data) {
-            const filtered = data.filter(((match) => match.role === props.role))
+            const filtered = data.filter((match) => match.role === props.role)
             const o = { [props.role]: filtered }
             setFilteredData(o)
         } else if (data) {
@@ -84,9 +104,20 @@ export const useParseMatchData = (proData: boolean, totalMatchData: any, heroNam
                 searchResItemKeys = Object.keys(searchRes['items'])
             }
             for (const role of displayedRoles) {
-                const roleFiltered = data.filter(((match) =>
-                    match.role === role || (combinedRoles.includes(role) && combinedRoles.includes(match.role))
-                )).filter((match) => searchRes ? searchResItemKeys.some((k: string) => objectContainsString(match, k)) : true)
+                const roleFiltered = data
+                    .filter(
+                        (match) =>
+                            match.role === role ||
+                            (combinedRoles.includes(role) &&
+                                combinedRoles.includes(match.role))
+                    )
+                    .filter((match) =>
+                        searchRes
+                            ? searchResItemKeys.some((k: string) =>
+                                  objectContainsString(match, k)
+                              )
+                            : true
+                    )
                 tempObject[role] = roleFiltered
             }
             setFilteredData(tempObject)
@@ -99,13 +130,16 @@ function objectContainsString(obj: any, searchString: string) {
         if (typeof obj[key] === 'object') {
             // If the value is an object, recursively search within it
             if (objectContainsString(obj[key], searchString)) {
-                return true;
+                return true
             }
-        } else if (typeof obj[key] === 'string' && obj[key].includes(searchString)) {
+        } else if (
+            typeof obj[key] === 'string' &&
+            obj[key].includes(searchString)
+        ) {
             // If the value is a string and contains the search string
-            return true;
+            return true
         }
     }
     // If no match is found in the current object
-    return false;
+    return false
 }
