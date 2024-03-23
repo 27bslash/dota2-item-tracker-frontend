@@ -90,16 +90,11 @@ export const useHeroBuilds = (
 }
 const itemBuildLengthChecker = (itemBuild: GroupedCoreItems[]) => {
     let count = 0
-    let cont = false
     for (const entry of itemBuild) {
         for (const key in entry) {
             if (key !== 'core') continue
             if (entry[key].length >= 2) count++
-            else if (entry[key].length) {
-                cont = true
-                break
-            }
         }
     }
-    return { cont, count }
+    return count
 }
