@@ -54,10 +54,10 @@ export const useHeroBuilds = (
             for (const key in filteredData) {
                 const buildData = filteredData[key]
                 const itemBuild = filterItems(buildData, itemData, key)
-                const { cont, count } = itemBuildLengthChecker(itemBuild)
-                if (cont || count < 2) {
+                const count = itemBuildLengthChecker(itemBuild)
+                if (count < 2) {
                     console.log(
-                        `removed key: ${key} count: ${count} missing core sections: ${cont}`
+                        `removed key: ${key} count: ${count}`
                     )
                     continue
                 }

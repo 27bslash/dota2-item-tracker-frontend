@@ -29,7 +29,7 @@ export const SideBar = ({
     const [sortType, setSortType] = useState<
         'picks' | 'winrate' | 'bans' | 'trends'
     >()
-    const paramPatch = useParams()
+    const paramPatch = useParams()['patch']
     useEffect(() => {
         if (winStats && (role || sortType)) gSort()
     }, [role, sortType])
@@ -95,6 +95,7 @@ export const SideBar = ({
             role
         )
     }
+    console.log('tyerst')
     return (
         <ArrowButton
             transition="fade"
