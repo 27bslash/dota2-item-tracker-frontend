@@ -39,6 +39,7 @@ export const useFilterHeroes = (
             undying: 'dirge',
             windranger: 'wind_runner',
             invoker: 'carl',
+            shadow_shaman: 'pollywog_priest',
         }
         if (value.length > 1) {
             const searchText = value.toLowerCase()
