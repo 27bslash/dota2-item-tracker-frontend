@@ -14,7 +14,9 @@ export const Facet = ({ variant, imgWidth }: FacetProps) => {
     const [facet, setFacet] = useState<FacetObj>()
     useEffect(() => {
         if (!variant || !heroData) return
-        const facets = heroData[nameParam]['facets']
+        const data = heroData[nameParam]
+        if (!data) return
+        const facets = data['facets']
         setFacet(facets[variant - 1])
     }, [])
     const icon = facet
