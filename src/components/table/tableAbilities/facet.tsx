@@ -13,7 +13,7 @@ export const Facet = ({ variant, imgWidth }: FacetProps) => {
     const { nameParam, heroData } = usePageContext()
     const [facet, setFacet] = useState<FacetObj>()
     useEffect(() => {
-        if (!variant) return
+        if (!variant || !heroData) return
         const facets = heroData[nameParam]['facets']
         setFacet(facets[variant - 1])
     }, [])
