@@ -36,7 +36,7 @@ const AghanimTooltip = (props: any) => {
                                 <TooltipAttributes aghanimAbility={aghanimAbility} type={props.type} itemProperties={aghanimAbility}></TooltipAttributes>
                             </div>
                             <div className="tooltip-description">
-                                {aghanimDescription.split(/\s|,/).map((x: any, i: number) => {
+                                {aghanimDescription.split(/\s|,/).map((x, i: number) => {
                                     if (x.match(/\d+/g)) {
                                         return <span key={i} className='tooltip-text-highlight'>{x} </span>
                                     } else {

@@ -75,6 +75,9 @@ export type HeroAbilities = {
     special_values: SpecialValues[]
 }
 export type FacetObj = {
+    ability: number
+    ability_loc: string
+    notes: string | null
     color: number
     description_loc: string
     gradient_id: number

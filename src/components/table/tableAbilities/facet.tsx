@@ -25,7 +25,15 @@ export const Facet = ({ variant, imgWidth }: FacetProps) => {
     return (
         <>
             {facet && (
-                <Tip component={<FacetTooltip img={icon} facet={facet} />}>
+                <Tip
+                    component={
+                        <FacetTooltip
+                            img={icon}
+                            facet={facet}
+                            heroStats={heroData[nameParam]}
+                        />
+                    }
+                >
                     <Box>
                         <img
                             className="table-img"
