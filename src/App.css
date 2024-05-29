@@ -802,6 +802,9 @@ label {
 .ability-img-wrapper .tooltip .tooltip-content .tooltip-description {
     margin-bottom: 10px;
 }
+.tooltip-description {
+    color: '#9ab0cd';
+}
 .empty-talent {
     background: url(./images/empty_talent.png);
     background-size: cover;
@@ -813,8 +816,8 @@ label {
     /* width: 55px;
   height: 55px;
   min-width: 20px; */
-
-    margin-top: -10%;
+    margin-bottom: 5%;
+    margin-top: -4%;
     position: relative;
     background: url(./images/empty_talent.png);
     background-size: cover;
