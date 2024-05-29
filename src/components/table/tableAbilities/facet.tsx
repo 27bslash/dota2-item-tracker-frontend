@@ -15,6 +15,7 @@ export const Facet = ({ variant, imgWidth }: FacetProps) => {
     useEffect(() => {
         if (!variant || !heroData || !nameParam) return
         const data = heroData[nameParam]
+        if (!data) return
         const facets = data['facets']
         setFacet(facets[variant - 1])
     }, [heroData, variant, nameParam])
