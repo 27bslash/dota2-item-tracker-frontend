@@ -51,7 +51,7 @@ export const Abilities = ({
                                     }
                                 >
                                     <TalentImg
-                                        width={imgWidth * 1.2}
+                                        width={imgWidth * 1.1}
                                         talents={visitedTalents}
                                         ability={ability}
                                     ></TalentImg>
