@@ -13,12 +13,11 @@ export const Facet = ({ variant, imgWidth }: FacetProps) => {
     const { nameParam, heroData } = usePageContext()
     const [facet, setFacet] = useState<FacetObj>()
     useEffect(() => {
-        if (!variant || !heroData) return
+        if (!variant || !heroData || nameParam) return
         const data = heroData[nameParam]
-        if (!data) return
         const facets = data['facets']
         setFacet(facets[variant - 1])
-    }, [])
+    }, [heroData, variant])
     const icon = facet
         ? `https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/icons/facets/${facet.icon}.png`
         : ''
