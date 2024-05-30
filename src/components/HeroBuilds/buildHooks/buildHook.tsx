@@ -9,6 +9,7 @@ import { PageHeroData } from '../../types/heroData'
 import { AbilityBuildEntry, Talents } from '../builds/buildCell'
 import { CoreItem, GroupedCoreItems } from '../itemBuild/itemGroups/groupBytime'
 import { NonProDataType } from '../types'
+import { facetFilter } from '../abillityBuild/facetFiltering'
 export type HeroBuild = {
     item_builds: {
         [key: string]: CoreItem[]
@@ -30,6 +31,9 @@ export type HeroBuild = {
     ][][]
     talents: Talents
     ultimate_ability: string | undefined
+    facet_builds: {
+        [key: string]: number
+    }[]
 }
 export const useHeroBuilds = (
     filteredData: { [role: string]: NonProDataType[] },
@@ -56,18 +60,18 @@ export const useHeroBuilds = (
                 const itemBuild = filterItems(buildData, itemData, key)
                 const count = itemBuildLengthChecker(itemBuild)
                 if (count < 2) {
-                    console.log(
-                        `removed key: ${key} count: ${count}`
-                    )
+                    console.log(`removed key: ${key} count: ${count}`)
                     continue
                 }
                 const abilityBuilds = abilityFilter(buildData) || [[]]
+                const facetBuilds = facetFilter(buildData)
                 const startingItemBuilds = countStartingItems(buildData)
                 const neutralItems = mostUsedNeutrals(buildData, itemData)
                 const talentBuild = mostUsedTalents(buildData)
                 const ultimateAbility = getUltimateAbility()
                 const res = {
                     item_builds: itemBuild,
+                    facet_builds: facetBuilds,
                     ability_builds: abilityBuilds[0],
                     ability_medians: abilityBuilds[1],
                     starting_items: startingItemBuilds,

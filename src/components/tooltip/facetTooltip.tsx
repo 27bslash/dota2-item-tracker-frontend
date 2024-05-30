@@ -11,7 +11,7 @@ type facetToolipProps = {
     facet: FacetObj
     heroStats: HeroStats
 }
-export const FacetTooltip = ({ img, facet, heroStats }: facetToolipProps) => {
+export const facetBackground = (facet: FacetObj) => {
     const gradientMap = [
         [
             'linear-gradient(to right, #9F3C3C, #4A2040)',
@@ -100,6 +100,13 @@ export const FacetTooltip = ({ img, facet, heroStats }: facetToolipProps) => {
             'invert(73%) sepia(23%) saturate(99%) hue-rotate(166deg) brightness(93%) contrast(94%)',
         ],
     ]
+    return {
+        background: gradientMap[facet.color][facet.gradient_id],
+        filter: filterMap[facet.color][facet.gradient_id],
+    }
+}
+export const FacetTooltip = ({ img, facet, heroStats }: facetToolipProps) => {
+    const { background, filter } = facetBackground(facet)
     return (
         <>
             {facet && (
@@ -111,8 +118,7 @@ export const FacetTooltip = ({ img, facet, heroStats }: facetToolipProps) => {
                     <div
                         className="bg"
                         style={{
-                            background:
-                                gradientMap[facet.color][facet.gradient_id],
+                            background: background,
                         }}
                     >
                         <div
@@ -123,9 +129,7 @@ export const FacetTooltip = ({ img, facet, heroStats }: facetToolipProps) => {
                                 height: '70px',
                                 width: '100%',
                                 position: 'absolute',
-                                filter: filterMap[facet.color][
-                                    facet.gradient_id
-                                ],
+                                filter: filter,
                             }}
                         ></div>
                         <div

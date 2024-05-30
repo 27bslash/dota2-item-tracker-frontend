@@ -1,51 +1,58 @@
-import { Typography } from "@mui/material"
-import { useState } from "react"
-import AbilityBuilds from "../abillityBuild/abilityBuild"
-import ItemBuild from "../itemBuild/itemBuild"
-import { NeutralItems } from "../itemBuild/neutralItems/neutralItems"
-import StartingItems from "../itemBuild/startingItems/startingItems"
-import { RoleStrings } from "../../home/home"
-import { MatchDataAdj } from "../../stat_page/page"
-import { TableContextProvider } from "../../table/tableContext"
-import Items from "../../types/Item"
-import { PageHeroData } from "../../types/heroData"
-import Hero from "../../types/heroList"
-import DotaMatch from "../../types/matchData"
-import { CoreItem } from "../itemBuild/itemGroups/groupBytime"
-import { HeroBuild } from "../buildHooks/buildHook"
-import { NonProDataType } from "../types"
+import { Typography } from '@mui/material'
+import { useState } from 'react'
+import AbilityBuilds from '../abillityBuild/abilityBuild'
+import ItemBuild from '../itemBuild/itemBuild'
+import { NeutralItems } from '../itemBuild/neutralItems/neutralItems'
+import StartingItems from '../itemBuild/startingItems/startingItems'
+import { RoleStrings } from '../../home/home'
+import { MatchDataAdj } from '../../stat_page/page'
+import { TableContextProvider } from '../../table/tableContext'
+import Items from '../../types/Item'
+import { PageHeroData } from '../../types/heroData'
+import Hero from '../../types/heroList'
+import DotaMatch from '../../types/matchData'
+import { CoreItem } from '../itemBuild/itemGroups/groupBytime'
+import { HeroBuild } from '../buildHooks/buildHook'
+import { NonProDataType } from '../types'
+import { FacetBuild } from '../facets/FacetBuild'
 interface NeutralItem {
-    count: number;
-    tier: number;
-    perc: number;
+    count: number
+    tier: number
+    perc: number
 }
 interface Talent {
-    level: number;
-    count: number;
-    slot: number;
-    id: number;
-    perc: number;
+    level: number
+    count: number
+    slot: number
+    id: number
+    perc: number
 }
 export type AbilityBuildEntry = [
     string,
     number,
     AbilityBuildEntry[]? // Recursive type
-];
-export type Talents = [string, Talent][];
+]
+export type Talents = [string, Talent][]
 
 type BuildCellProps = {
     dataLength: number
     // itemData: Items,
-    role: RoleStrings,
-    data: NonProDataType[],
-    buildData: HeroBuild,
+    role: RoleStrings
+    data: NonProDataType[]
+    buildData: HeroBuild
     // heroData: PageHeroData,
     updateMatchData: MatchDataAdj['updateMatchData']
     // heroName: string
     // heroList: Hero[]
     // totalMatchData?: DotaMatch[]
 }
-export const BuildCell = ({ dataLength, data, role, buildData, updateMatchData }: BuildCellProps) => {
+export const BuildCell = ({
+    dataLength,
+    data,
+    role,
+    buildData,
+    updateMatchData,
+}: BuildCellProps) => {
     const [open, setOpen] = useState(dataLength === 1)
     // maybe a hook for once
     const contextValues = {
@@ -61,7 +68,14 @@ export const BuildCell = ({ dataLength, data, role, buildData, updateMatchData }
     return (
         // <TableContextProvider value={contextValues} >
         <div className="buildData">
-            <Typography variant="h4" fontWeight='bold' padding={1.3} sx={{ '&:hover': { cursor: 'pointer', 'opacity': 0.7 } }} onClick={() => setOpen(prev => !prev)}>{role}
+            <Typography
+                variant="h4"
+                fontWeight="bold"
+                padding={1.3}
+                sx={{ '&:hover': { cursor: 'pointer', opacity: 0.7 } }}
+                onClick={() => setOpen((prev) => !prev)}
+            >
+                {role}
                 {/* <svg height="30" viewBox="0 0 24 24">
                     <path fill-rule="evenodd" clip-rule="evenodd" d="M18.442 18.141l2.167-1.25c.398-.23.898-.219 1.286.03l1.93 1.238a.373.373 0 01.005.63c-1.77 1.183-8 5.211-10.744 5.211-.926 0-7.725-2.034-7.725-2.034v-6.999h2.704c.881 0 1.741.265 2.46.755l1.635 1.117h3.671c.438 0 1.482 0 1.482 1.302 0 1.41-1.14 1.41-1.482 1.41h-5.395a.555.555 0 00-.565.543c0 .3.254.543.565.543h5.75s.82.004 1.473-.56c.414-.359.783-.944.783-1.936z" fill="#FFFFFF"></path>
                     <path fill-rule="evenodd" clip-rule="evenodd" d="M4.399 15.02c0-.583-.494-1.058-1.1-1.058h-2.2c-.606 0-1.099.475-1.099 1.059v6.998c0 .583.493 1.057 1.099 1.057h2.2c.606 0 1.1-.474 1.1-1.057v-6.998z" fill="url(#wrist_66_dark)" fill-opacity="0.7"></path>
@@ -77,15 +91,32 @@ export const BuildCell = ({ dataLength, data, role, buildData, updateMatchData }
                             </linearGradient>
                             </defs>
                         </svg> */}
-            </Typography >
-            {open &&
-                <div className="builds" >
-                    <StartingItems data={data} startingItemData={buildData['starting_items']} />
+            </Typography>
+            {open && (
+                <div className="builds">
+                    <div
+                        className="flex"
+                        style={{
+                            justifyContent: 'space-between',
+                        }}
+                    >
+                        <StartingItems
+                            data={data}
+                            startingItemData={buildData['starting_items']}
+                        />
+                        <FacetBuild
+                            data={buildData['facet_builds']}
+                        ></FacetBuild>
+                    </div>
                     <ItemBuild data={buildData['item_builds']} />
                     <NeutralItems neutralItems={buildData['neutral_items']} />
-                    <AbilityBuilds data={data} abilityBuilds={buildData['ability_builds']} updateMatchData={updateMatchData} />
+                    <AbilityBuilds
+                        data={data}
+                        abilityBuilds={buildData['ability_builds']}
+                        updateMatchData={updateMatchData}
+                    />
                 </div>
-            }
+            )}
         </div>
         // </TableContextProvider>
     )
