@@ -210,6 +210,13 @@ export const FacetTooltip = ({ img, facet, heroStats }: facetToolipProps) => {
                                                 facet.ability
                                             ]['name']
                                         }.png`}
+                                        onError={(e) => {
+                                            const target =
+                                                e.target as HTMLImageElement
+                                            target.onerror = null
+                                            target.src =
+                                                'https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/icons/innate_icon.png'
+                                        }}
                                     ></img>
                                     <Typography
                                         sx={{

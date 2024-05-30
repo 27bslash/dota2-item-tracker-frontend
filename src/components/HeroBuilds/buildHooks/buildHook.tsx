@@ -32,7 +32,9 @@ export type HeroBuild = {
     talents: Talents
     ultimate_ability: string | undefined
     facet_builds: {
-        [key: string]: number
+        key: number
+        count: number
+        perc: string
     }[]
 }
 export const useHeroBuilds = (

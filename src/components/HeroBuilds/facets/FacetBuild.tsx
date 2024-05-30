@@ -6,6 +6,7 @@ import { Box, Typography } from '@mui/material'
 import colourWins from './../../../utils/colourWins'
 import { grey } from '@mui/material/colors'
 import Tip from '../../tooltip/tooltip'
+import React from 'react'
 
 export const FacetBuild = (props: any) => {
     const { heroData, nameParam } = usePageContext()
@@ -22,7 +23,7 @@ export const FacetBuild = (props: any) => {
                     const { background, filter } = facetBackground(facet)
 
                     return (
-                        <>
+                        <React.Fragment key={i}>
                             <Tip
                                 placement={'left-end'}
                                 component={
@@ -48,6 +49,7 @@ export const FacetBuild = (props: any) => {
                                         style={{
                                             filter: 'drop-shadow(0px 3px 2px rgba(0, 0, 0, 0.3))',
                                         }}
+                                        
                                     ></img>
                                     <Box paddingLeft={2} paddingRight={2}>
                                         <div className="flex">
@@ -100,7 +102,7 @@ export const FacetBuild = (props: any) => {
                                 heroStats={heroData[nameParam]}
                             ></FacetTooltip> */}
                             </Tip>
-                        </>
+                        </React.Fragment>
                     )
                 })}
         </div>
