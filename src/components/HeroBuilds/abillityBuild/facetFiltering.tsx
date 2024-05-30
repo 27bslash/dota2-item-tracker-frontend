@@ -19,7 +19,7 @@ export const facetFilter = (buildData: NonProDataType[]) => {
         const o = {
             key: +k,
             count: facetCount[k],
-            perc: parseFloat((facetCount[k] / total).toFixed(2)) * 100,
+            perc: ((facetCount[k] / total) * 100).toFixed(2),
         }
         facets.push(o)
     }
