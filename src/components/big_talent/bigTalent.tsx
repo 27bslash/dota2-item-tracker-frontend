@@ -26,7 +26,7 @@ const BigTalent: FC<BigTalentProps> = (props: BigTalentProps) => {
                     <div className="talents" style={{ width: props.width, height: props.width, margin: props.margin }} onMouseEnter={() => setOpen(true)}>
                         {[...talents].reverse().map((x, i: number) => {
                             const v = x[1]
-                            const side = v['slot'] % 2 !== 0 ? 'l-talent' : 'r-talent'
+                            const side = v['slot'] % 2 === 0 ? 'l-talent' : 'r-talent'
                             if (v['count'] * 2 >= v['total_picks'] && v['count']) {
                                 return <div key={i} className={'lvl' + v['level'] + ' ' + side}></div>
                             }
