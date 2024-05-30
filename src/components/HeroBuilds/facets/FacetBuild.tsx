@@ -15,7 +15,7 @@ export const FacetBuild = (props: any) => {
         setFacets(heroData[nameParam]['facets'])
     }, [heroData, nameParam])
     return (
-        <div className="facets flex">
+        <div className={`facets ${props.data.length <= 2 ? 'flex' : ''}`}>
             {facets &&
                 props.data.map((x: any, i: number) => {
                     const facet = facets[x['key'] - 1]
@@ -23,7 +23,7 @@ export const FacetBuild = (props: any) => {
                     const { background, filter } = facetBackground(facet)
 
                     return (
-                        <React.Fragment key={i}>
+                        <div key={i}>
                             <Tip
                                 placement={'left-end'}
                                 component={
@@ -41,6 +41,7 @@ export const FacetBuild = (props: any) => {
                                         alignItems: 'center',
                                         height: 'fit-content',
                                         padding: '5px',
+                                        width: '300px',
                                     }}
                                 >
                                     <img
@@ -49,7 +50,6 @@ export const FacetBuild = (props: any) => {
                                         style={{
                                             filter: 'drop-shadow(0px 3px 2px rgba(0, 0, 0, 0.3))',
                                         }}
-                                        
                                     ></img>
                                     <Box paddingLeft={2} paddingRight={2}>
                                         <div className="flex">
@@ -102,7 +102,7 @@ export const FacetBuild = (props: any) => {
                                 heroStats={heroData[nameParam]}
                             ></FacetTooltip> */}
                             </Tip>
-                        </React.Fragment>
+                        </div>
                     )
                 })}
         </div>
