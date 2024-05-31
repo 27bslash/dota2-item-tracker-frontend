@@ -592,6 +592,7 @@ a:hover {
     border: 1px solid rgba(128, 128, 128, 0.863);
     color: white;
     font-size: 20px;
+    z-index: 4;
 }
 .arrow-button:hover {
     background-color: rgb(48, 146, 125) !important;
