@@ -152,10 +152,8 @@ export const FacetTooltip = ({ img, facet, heroStats }: facetToolipProps) => {
                                 }}
                             >
                                 <img
-                                    style={{
-                                        filter: 'drop-shadow(0px 3px 2px rgba(0, 0, 0, 0.3))',
-                                    }}
                                     className="tooltip-img"
+                                    id='facet-icon'
                                     alt={img}
                                     src={img}
                                     width="35px"

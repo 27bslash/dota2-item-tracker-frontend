@@ -37,6 +37,7 @@ export const Facet = ({ variant, imgWidth }: FacetProps) => {
                     <Box>
                         <img
                             className="table-img"
+                            id='facet-icon'
                             src={icon}
                             height={`${imgWidth}px`}
                         ></img>
