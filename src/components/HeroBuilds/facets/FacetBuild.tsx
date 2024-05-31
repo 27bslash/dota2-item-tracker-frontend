@@ -1,118 +1,46 @@
 import { useEffect, useState } from 'react'
 import { usePageContext } from '../../stat_page/pageContext'
 import { FacetObj } from '../../types/heroData'
-import { FacetTooltip, facetBackground } from '../../tooltip/facetTooltip'
-import { Box, Typography } from '@mui/material'
-import colourWins from './../../../utils/colourWins'
-import { grey } from '@mui/material/colors'
-import Tip from '../../tooltip/tooltip'
-import { cleanDecimal } from '../../../utils/cleanDecimal'
-
-export const FacetBuild = (props: any) => {
+import { FacetContent } from './facetContent'
+type FacetProps = {
+    data: {
+        key: number
+        count: number
+        perc: string
+    }[]
+}
+export const FacetBuild = ({ data }: FacetProps) => {
     const { heroData, nameParam } = usePageContext()
     const [facets, setFacets] = useState<FacetObj[]>()
-    const { updateSearchResults } = usePageContext()
     useEffect(() => {
         setFacets(heroData[nameParam]['facets'])
     }, [heroData, nameParam])
+    const sortedData = data.sort((a, b) => {
+        return b['count'] - a['count']
+    })
+    const maps = []
+    for (let i = 0; i < sortedData.length; i += 2) {
+        maps.push([sortedData[i], sortedData[i + 1]])
+    }
     return (
-        <div className={`facets ${props.data.length <= 2 ? 'flex' : ''}`}>
+        <div className={`facets ${data.length <= 2 ? 'flex' : ''}`}>
             {facets &&
-                props.data.map((x: any, i: number) => {
-                    const facet = facets[x['key'] - 1]
-                    const icon = `https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/icons/facets/${facet.icon}.png`
-                    const { background, filter } = facetBackground(facet)
-
+                maps.map((arr, i: number) => {
                     return (
                         <div
+                            className="facets-group"
+                            style={{ display: 'flex' }}
                             key={i}
-                            onClick={() =>
-                                updateSearchResults(
-                                    x['key'],
-                                    'facet',
-                                    'variant',
-                                    facet.title_loc
-                                )
-                            }
                         >
-                            <Tip
-                                placement={'left-end'}
-                                component={
-                                    <FacetTooltip
-                                        img={icon}
-                                        facet={facet}
-                                        heroStats={heroData[nameParam]}
-                                    />
-                                }
-                            >
-                                <div
-                                    style={{
-                                        background: background,
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        height: 'fit-content',
-                                        padding: '5px',
-                                        width: '300px',
-                                    }}
-                                >
-                                    <img
-                                        height={30}
-                                        src={icon}
-                                        style={{
-                                            filter: 'drop-shadow(0px 3px 2px rgba(0, 0, 0, 0.3))',
-                                        }}
-                                    ></img>
-                                    <Box paddingLeft={2} paddingRight={2}>
-                                        <div className="flex">
-                                            <Typography
-                                                color={grey['400']}
-                                                marginRight={1}
-                                                letterSpacing={1}
-                                            >
-                                                Picks:
-                                                <span
-                                                    style={{
-                                                        marginLeft: '5px',
-                                                        color: 'orange',
-                                                    }}
-                                                >
-                                                    {x['count']}
-                                                </span>
-                                            </Typography>
-                                            <Typography
-                                                color={grey['400']}
-                                                letterSpacing={1}
-                                            >
-                                                Pick Rate:
-                                                <span
-                                                    style={{
-                                                        marginLeft: '5px',
-                                                        color: colourWins(
-                                                            x['perc']
-                                                        ),
-                                                    }}
-                                                >
-                                                    {cleanDecimal(x['perc'])}%
-                                                </span>
-                                            </Typography>
-                                        </div>
-                                        <Typography
-                                            letterSpacing={1.3}
-                                            fontFamily="Reaver"
-                                            textTransform="uppercase"
-                                            fontWeight="bold"
-                                        >
-                                            {facet.title_loc}
-                                        </Typography>
-                                    </Box>
-                                </div>
-                                {/* <FacetTooltip
-                                key={i}
-                                img={icon}
-                                facet={facet}
-                                heroStats={heroData[nameParam]}
-                            ></FacetTooltip> */}
-                            </Tip>
+                            {arr.map((x, j) => {
+                                return (
+                                    <FacetContent
+                                        key={j}
+                                        facetStats={x}
+                                        facets={facets}
+                                    ></FacetContent>
+                                )
+                            })}
                         </div>
                     )
                 })}
