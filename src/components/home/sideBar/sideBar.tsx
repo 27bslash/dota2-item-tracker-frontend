@@ -32,7 +32,7 @@ export const SideBar = ({
     const paramPatch = useParams()['patch']
     useEffect(() => {
         if (winStats && (role || sortType)) gSort()
-    }, [role, sortType])
+    }, [role, sortType, paramPatch])
     const gSort = () => {
         // default sort is picks
         if (!sortType) return setSortType('picks')
@@ -95,7 +95,6 @@ export const SideBar = ({
             role
         )
     }
-    console.log('tyerst')
     return (
         <ArrowButton
             transition="fade"
@@ -145,7 +144,11 @@ export const SideBar = ({
                                     key={roleString}
                                     disablePadding
                                     onClick={() =>
-                                        setRole(roleString as RoleStrings)
+                                        setRole(
+                                            role === roleString
+                                                ? ''
+                                                : (roleString as RoleStrings)
+                                        )
                                     }
                                     sx={{
                                         backgroundColor: highLight
