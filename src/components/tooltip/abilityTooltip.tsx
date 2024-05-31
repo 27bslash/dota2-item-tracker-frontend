@@ -1,13 +1,13 @@
 /* eslint-disable no-unused-vars */
-import { useState } from 'react';
-import { useEffect } from 'react';
-import TooltipAttributes from './tooltipAttributes';
-import TooltipLore from './tooltipLore';
-import CdMc from './cdmc';
-import Color from 'color-thief-react';
-import { highlight_numbers } from './tooltipDescription';
-import AbilityAttributes from './abilityAttributes';
-import { usePageContext } from '../stat_page/pageContext';
+import { useState } from 'react'
+import { useEffect } from 'react'
+import TooltipAttributes from './tooltipAttributes'
+import TooltipLore from './tooltipLore'
+import CdMc from './cdmc'
+import Color from 'color-thief-react'
+import { highlight_numbers } from './tooltipDescription'
+import AbilityAttributes from './abilityAttributes'
+import { usePageContext } from '../stat_page/pageContext'
 
 const AbilityTooltip = (props: any) => {
     const id = props.ability.id
@@ -19,7 +19,9 @@ const AbilityTooltip = (props: any) => {
             if (heroData[nameParam] && id && !ability) {
                 setAbility(heroData[nameParam].abilities[+id])
             } else if (!ability) {
-                const concattedAbililites = Object.values(heroData).map(hero => hero.abilities).flat()
+                const concattedAbililites = Object.values(heroData)
+                    .map((hero) => hero.abilities)
+                    .flat()
                 for (const ab of concattedAbililites) {
                     const abilityId = props.ability['id']
                     const a = ab[abilityId]
@@ -38,35 +40,68 @@ const AbilityTooltip = (props: any) => {
 
     return (
         <>
-            {ability &&
+            {ability && (
                 <Color src={props.img} crossOrigin="anonymous" format="hex">
                     {({ data, loading, error }) => {
                         return (
-                            <div className="tooltip" id="ability-tooltip" style={{ background: `radial-gradient(circle at top left, ${data} 0%, #11171c 160px` }}>
-                                <div className="tooltip-line-one">
+                            <div
+                                className="tooltip"
+                                id="ability-tooltip"
+                                // style={{
+                                //     background: `radial-gradient(circle at top left, ${data} 0%, #11171c 160px`,
+                                // }}
+                            >
+                                <div
+                                    className="tooltip-line-one"
+                                    style={{
+                                        background: `linear-gradient(to right, ${data}, #11171c)`,
+                                    }}
+                                >
                                     <div className="tooltip-title">
-                                        <img className="tooltip-img" alt={props.img} src={props.img} width="55px"></img>
+                                        <img
+                                            className="tooltip-img"
+                                            alt={props.img}
+                                            src={props.img}
+                                            width="55px"
+                                        ></img>
                                         <h3>{ability.name_loc}</h3>
                                     </div>
                                 </div>
                                 <div className="tooltip-content">
                                     <AbilityAttributes ability={ability} />
-                                    {ability['desc_loc'] && ability['desc_loc'].length &&
-                                        <div className="tooltip-description" style={{ color: '#c9d1dd' }}>
-                                            <p dangerouslySetInnerHTML={{ __html: highlight_numbers(ability['desc_loc']) }}></p>
-                                        </div>
-                                    }
-                                    <TooltipAttributes itemProperties={ability}></TooltipAttributes>
-                                    <TooltipLore itemProperties={ability}></TooltipLore>
+                                    {ability['desc_loc'] &&
+                                        ability['desc_loc'].length && (
+                                            <div
+                                                className="tooltip-description"
+                                                style={{ color: '#c9d1dd' }}
+                                            >
+                                                <p
+                                                    dangerouslySetInnerHTML={{
+                                                        __html: highlight_numbers(
+                                                            ability['desc_loc']
+                                                        ),
+                                                    }}
+                                                ></p>
+                                            </div>
+                                        )}
+                                    <TooltipAttributes
+                                        itemProperties={ability}
+                                    ></TooltipAttributes>
+                                    <TooltipLore
+                                        itemProperties={ability}
+                                    ></TooltipLore>
                                 </div>
                                 <div className="tooltip-footer">
-                                    <CdMc mana_costs={ability.mana_costs} cooldowns={ability.cooldowns}></CdMc>
+                                    <CdMc
+                                        mana_costs={ability.mana_costs}
+                                        cooldowns={ability.cooldowns}
+                                    ></CdMc>
                                 </div>
-                            </div >
+                            </div>
                         )
                     }}
-                </Color >
-            }
+                </Color>
+            )}
         </>
     )
 }
