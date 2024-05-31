@@ -33,13 +33,15 @@ export const FacetBuild = ({ data }: FacetProps) => {
                             key={i}
                         >
                             {arr.map((x, j) => {
-                                return (
-                                    <FacetContent
-                                        key={j}
-                                        facetStats={x}
-                                        facets={facets}
-                                    ></FacetContent>
-                                )
+                                if (x) {
+                                    return (
+                                        <FacetContent
+                                            key={j}
+                                            facetStats={x}
+                                            facets={facets}
+                                        ></FacetContent>
+                                    )
+                                }
                             })}
                         </div>
                     )
