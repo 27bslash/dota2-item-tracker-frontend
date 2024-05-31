@@ -15,8 +15,7 @@ const BuildDataJson = (props: any) => {
         props.heroName,
         { picks: props.totalPicks },
         undefined,
-        0.19,
-        props.heroData
+        0.19
     )
     const updatedBuildData = useHeroBuilds(
         filteredData!,

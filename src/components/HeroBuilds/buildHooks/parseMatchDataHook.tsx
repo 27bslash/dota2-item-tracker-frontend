@@ -59,7 +59,6 @@ export const useParseMatchData = (
     props: any,
     searchRes?: TableSearchResults,
     threshold?: number,
-    heroData?: HeroStats
 ) => {
     const nonProData = useFetchData(heroName)
     const [data, setData] = useState<NonProDataType[]>()
