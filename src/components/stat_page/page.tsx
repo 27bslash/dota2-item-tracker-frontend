@@ -120,18 +120,41 @@ const Page = ({ type, heroList, playerList }: pageProps) => {
         | 'role'
         | 'hero'
         | 'abilities'
+        | 'variant'
 
     const updateSearchResults = (
-        searchObj?: TableSearchResults | string,
+        searchObj?: TableSearchResults | string | number,
         searchResKey?: string,
-        matchKey?: SearchResultKeyType
+        matchKey?: SearchResultKeyType,
+        resultKey?: string
     ) => {
+        let obj: TableSearchResults = {}
         if (!searchObj && !searchResKey) {
             setFilteredData(totalMatchData)
             setSearchResults(undefined)
             return
         }
         let newFilteredData: DotaMatch[] = []
+        if (
+            matchKey === 'variant' &&
+            searchResKey &&
+            resultKey &&
+            typeof searchObj === 'number'
+        ) {
+            console.log(matchKey, searchObj, searchResKey)
+            newFilteredData = totalMatchData.filter(
+                (x) => x[matchKey] === searchObj
+            )
+            obj = {
+                [searchResKey]: {
+                    [searchObj]: {
+                        index: 0,
+                        matches: newFilteredData,
+                        displayKey: resultKey,
+                    },
+                },
+            }
+        }
         if (typeof searchObj === 'string' && matchKey && searchResKey) {
             if (['name', 'role', 'hero', 'item_neutral'].includes(matchKey)) {
                 newFilteredData = totalMatchData.filter(
@@ -139,14 +162,20 @@ const Page = ({ type, heroList, playerList }: pageProps) => {
                 )
                 console.log(searchObj, newFilteredData, {
                     [matchKey]: {
-                        [searchObj]: { index: 0, matches: newFilteredData },
+                        [searchObj]: {
+                            index: 0,
+                            matches: newFilteredData,
+                        },
                     },
                 })
-                setSearchResults({
+                obj = {
                     [searchResKey]: {
-                        [searchObj]: { index: 0, matches: newFilteredData },
+                        [searchObj]: {
+                            index: 0,
+                            matches: newFilteredData,
+                        },
                     },
-                })
+                }
             } else if (matchKey === 'items' || matchKey === 'abilities') {
                 newFilteredData = totalMatchData.filter(
                     (x) =>
@@ -155,18 +184,22 @@ const Page = ({ type, heroList, playerList }: pageProps) => {
                             .map((item) => item['key'])
                             .includes(searchObj)
                 )
-                setSearchResults({
+                obj = {
                     [searchResKey]: {
-                        [searchObj]: { index: 0, matches: newFilteredData },
+                        [searchObj]: {
+                            index: 0,
+                            matches: newFilteredData,
+                        },
                     },
-                })
+                }
             }
         } else if (typeof searchObj === 'object' && !matchKey) {
             newFilteredData = totalMatchData.filter((x) =>
                 combineMatches(searchObj).flat().includes(x.id)
             )
-            setSearchResults(searchObj)
+            obj = searchObj
         }
+        setSearchResults(obj)
         setFilteredData(newFilteredData)
         setCount(newFilteredData.length)
     }
@@ -244,7 +277,11 @@ const Page = ({ type, heroList, playerList }: pageProps) => {
                     align="center"
                     onClick={() => filterByPatch()}
                 >
-                    <Link to={`/${patch_obj['patch']}/hero/${heroSwitcher(nameParam)}`}>
+                    <Link
+                        to={`/${patch_obj['patch']}/hero/${heroSwitcher(
+                            nameParam
+                        )}`}
+                    >
                         Filter Matches By {patch_obj['patch']}
                     </Link>
                 </Typography>

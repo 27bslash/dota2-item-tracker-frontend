@@ -15,7 +15,7 @@ type PageContextType = {
     playerList: string[]
     nameParam: string
     updateSearchResults: (
-        searchObj?: TableSearchResults | string,
+        searchObj?: TableSearchResults | string | number,
         searchResKey?: string,
         matchKey?:
             | 'items'
@@ -25,6 +25,8 @@ type PageContextType = {
             | 'role'
             | 'hero'
             | 'abilities'
+            | 'variant',
+        resultKey?: string
     ) => void
 }
 const PageContext = createContext<PageContextType | null>(null)

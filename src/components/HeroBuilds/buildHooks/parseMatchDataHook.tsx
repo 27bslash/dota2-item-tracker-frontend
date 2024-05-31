@@ -4,6 +4,7 @@ import PickStats from '../../types/pickStats'
 import { RoleStrings } from '../../home/home'
 import { NonProDataType } from '../types'
 import { TableSearchResults } from '../../table/table_search/types/tableSearchResult.types'
+import { HeroStats } from '../../types/heroData'
 
 const calc_common_roles = (
     props: any,
@@ -57,7 +58,8 @@ export const useParseMatchData = (
     heroName: string,
     props: any,
     searchRes?: TableSearchResults,
-    threshold?: number
+    threshold?: number,
+    heroData?: HeroStats
 ) => {
     const nonProData = useFetchData(heroName)
     const [data, setData] = useState<NonProDataType[]>()
@@ -100,8 +102,10 @@ export const useParseMatchData = (
         } else if (data) {
             const tempObject: { [role: string]: NonProDataType[] } = {}
             let searchResItemKeys: string[] = []
-            if (searchRes && searchRes['items']) {
-                searchResItemKeys = Object.keys(searchRes['items'])
+            if (searchRes) {
+                searchResItemKeys = Object.keys(searchRes)
+                    .map((x) => Object.keys(searchRes[x]))
+                    .flat()
             }
             for (const role of displayedRoles) {
                 const roleFiltered = data
@@ -113,9 +117,15 @@ export const useParseMatchData = (
                     )
                     .filter((match) =>
                         searchRes
-                            ? searchResItemKeys.some((k: string) =>
-                                  objectContainsString(match, k)
-                              )
+                            ? searchResItemKeys.some((k: string) => {
+                                  if (k.length > 1) {
+                                      return objectContainsString(match, k)
+                                  } else {
+                                      return match['variant']
+                                          ? match['variant'] === +k
+                                          : false
+                                  }
+                              })
                             : true
                     )
                 tempObject[role] = roleFiltered

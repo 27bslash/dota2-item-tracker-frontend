@@ -6,11 +6,12 @@ import { Box, Typography } from '@mui/material'
 import colourWins from './../../../utils/colourWins'
 import { grey } from '@mui/material/colors'
 import Tip from '../../tooltip/tooltip'
-import React from 'react'
+import { cleanDecimal } from '../../../utils/cleanDecimal'
 
 export const FacetBuild = (props: any) => {
     const { heroData, nameParam } = usePageContext()
     const [facets, setFacets] = useState<FacetObj[]>()
+    const { updateSearchResults } = usePageContext()
     useEffect(() => {
         setFacets(heroData[nameParam]['facets'])
     }, [heroData, nameParam])
@@ -23,7 +24,17 @@ export const FacetBuild = (props: any) => {
                     const { background, filter } = facetBackground(facet)
 
                     return (
-                        <div key={i}>
+                        <div
+                            key={i}
+                            onClick={() =>
+                                updateSearchResults(
+                                    x['key'],
+                                    'facet',
+                                    'variant',
+                                    facet.title_loc
+                                )
+                            }
+                        >
                             <Tip
                                 placement={'left-end'}
                                 component={
@@ -81,7 +92,7 @@ export const FacetBuild = (props: any) => {
                                                         ),
                                                     }}
                                                 >
-                                                    {x['perc']}%
+                                                    {cleanDecimal(x['perc'])}%
                                                 </span>
                                             </Typography>
                                         </div>

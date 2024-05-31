@@ -12,6 +12,8 @@ type FacetProps = {
 export const Facet = ({ variant, imgWidth }: FacetProps) => {
     const { nameParam, heroData } = usePageContext()
     const [facet, setFacet] = useState<FacetObj>()
+    const { updateSearchResults } = usePageContext()
+
     useEffect(() => {
         if (!variant || !heroData || !nameParam) return
         const data = heroData[nameParam]
@@ -34,10 +36,19 @@ export const Facet = ({ variant, imgWidth }: FacetProps) => {
                         />
                     }
                 >
-                    <Box>
+                    <Box
+                        onClick={() =>
+                            updateSearchResults(
+                                variant,
+                                'facet',
+                                'variant',
+                                facet.title_loc
+                            )
+                        }
+                    >
                         <img
                             className="table-img"
-                            id='facet-icon'
+                            id="facet-icon"
                             src={icon}
                             height={`${imgWidth}px`}
                         ></img>
