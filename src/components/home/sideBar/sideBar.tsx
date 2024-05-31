@@ -19,6 +19,8 @@ type SIdeBarProps = {
     winStats: PickStats[] | undefined
     open: boolean
 }
+type sortTypes = 'picks' | 'winrate' | 'bans' | 'trends' | undefined
+
 export const SideBar = ({
     sortByTrend,
     sortHeroes,
@@ -26,9 +28,7 @@ export const SideBar = ({
     open,
 }: SIdeBarProps) => {
     const [role, setRole] = useState<RoleStrings>()
-    const [sortType, setSortType] = useState<
-        'picks' | 'winrate' | 'bans' | 'trends'
-    >()
+    const [sortType, setSortType] = useState<sortTypes>()
     const paramPatch = useParams()['patch']
     useEffect(() => {
         if (winStats && (role || sortType)) gSort()
@@ -179,7 +179,11 @@ export const SideBar = ({
                         <ListItem
                             disablePadding
                             className="sidebar-item"
-                            onClick={() => setSortType('picks')}
+                            onClick={() =>
+                                setSortType(
+                                    sortType === 'picks' ? undefined : 'picks'
+                                )
+                            }
                         >
                             <ListItemText
                                 disableTypography
@@ -190,7 +194,13 @@ export const SideBar = ({
                         <ListItem
                             disablePadding
                             className="sidebar-item"
-                            onClick={() => setSortType('winrate')}
+                            onClick={() =>
+                                setSortType(
+                                    sortType === 'winrate'
+                                        ? undefined
+                                        : 'winrate'
+                                )
+                            }
                         >
                             <ListItemText
                                 disableTypography
@@ -201,7 +211,11 @@ export const SideBar = ({
                         <ListItem
                             disablePadding
                             className="sidebar-item"
-                            onClick={() => setSortType('trends')}
+                            onClick={() =>
+                                setSortType(
+                                    sortType === 'trends' ? undefined : 'trends'
+                                )
+                            }
                         >
                             <ListItemText
                                 disableTypography
@@ -212,7 +226,11 @@ export const SideBar = ({
                         <ListItem
                             disablePadding
                             className="sidebar-item"
-                            onClick={() => setSortType('bans')}
+                            onClick={() =>
+                                setSortType(
+                                    sortType === 'bans' ? undefined : 'bans'
+                                )
+                            }
                         >
                             <ListItemText
                                 disableTypography
