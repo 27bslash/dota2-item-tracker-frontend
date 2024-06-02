@@ -73,7 +73,12 @@ export const FacetContent = ({ facets, facetStats }: FacetContentProps) => {
 function facetPicks(x: { key: number; count: number; perc: string }) {
     return (
         <div className="flex">
-            <Typography color={grey['400']} marginRight={1} letterSpacing={1}>
+            <Typography
+                color={grey['400']}
+                marginRight={1}
+                letterSpacing={1}
+                fontSize={'0.9rem'}
+            >
                 Picks:
                 <span
                     style={{
@@ -84,7 +89,11 @@ function facetPicks(x: { key: number; count: number; perc: string }) {
                     {x['count']}
                 </span>
             </Typography>
-            <Typography color={grey['400']} letterSpacing={1}>
+            <Typography
+                color={grey['400']}
+                letterSpacing={1}
+                fontSize={'0.9rem'}
+            >
                 Pick Rate:
                 <span
                     style={{
