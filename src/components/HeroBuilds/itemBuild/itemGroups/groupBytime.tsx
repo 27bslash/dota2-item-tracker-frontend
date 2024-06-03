@@ -37,7 +37,7 @@ const groupByTime = (data: RawItemBuild[], roleKey: string) => {
         } else if (supportRoles.includes(roleKey)) {
             percForCore = 20
         }
-        [...data].filter((entry) => {
+        data.filter((entry) => {
             const key = entry[0]
             const value = entry[1]
             if (value['time'] >= time || seenItems.has(key)) return false
@@ -49,7 +49,9 @@ const groupByTime = (data: RawItemBuild[], roleKey: string) => {
                 type !== 'core' &&
                 adjustedValue < percForCore &&
                 adjustedValue > 15
-
+            if (isSituationalCondition && key === 'javelin') {
+                return false
+            }
             if (isCoreCondition || isSituationalCondition) {
                 seenItems.add(key)
                 const coreItem: CoreItem = {
