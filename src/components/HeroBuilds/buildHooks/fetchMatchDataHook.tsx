@@ -13,17 +13,16 @@ export const useFetchData = (heroName: string) => {
             const docLength = await fetchData(countDocsUrl)
             let merged: NonProDataType[] = []
             let data = []
-            const matchDataUrl =
-                'https://0f2ezc19w3.execute-api.eu-west-2.amazonaws.com/dev/'
+
             if (docLength > 50) {
                 data = await bulkRequest(
-                    `${matchDataUrl}hero/${heroName}/item_build`,
+                    `${baseApiUrl}hero/${heroName}/item_build`,
                     docLength
                 )
                 merged = data.flat()
             } else {
                 data = await fetchData(
-                    `${matchDataUrl}hero/${heroName}/item_build`
+                    `${baseApiUrl}hero/${heroName}/item_build`
                 )
                 merged = data.flat()
             }

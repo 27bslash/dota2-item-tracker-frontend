@@ -36,9 +36,7 @@ export const BuildApi = () => {
     const [heroData, setHeroData] = useState<any>({})
     useEffect(() => {
         const fData = async () => {
-            const matchDataUrl =
-                'https://0f2ezc19w3.execute-api.eu-west-2.amazonaws.com/dev/'
-            const url = `${matchDataUrl}hero/${heroName}/react-test?skip=0&length=10`
+            const url = `${baseApiUrl}hero/${heroName}/react-test?skip=0&length=10`
             const matches = await fetchData(url)
             setTotalPicks(matches['picks'])
             const currentItemDataVersion =

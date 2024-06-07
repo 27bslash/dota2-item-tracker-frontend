@@ -11,7 +11,7 @@ interface heroList {
     id: number
 }
 export const baseApiUrl =
-    'https://wqr6qu33nndj37c5uoogrmgsyq0mkbes.lambda-url.eu-west-2.on.aws/'
+    'https://2x76hyghfd2tc2mdx2t4owwp5m0itmkb.lambda-url.eu-west-2.on.aws/'
 // export const baseApiUrl ='http://127.0.0.1:5000/'
 
 function App() {
