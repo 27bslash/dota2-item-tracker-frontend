@@ -50,6 +50,7 @@ const groupByTime = (data: RawItemBuild[], roleKey: string) => {
                 adjustedValue < percForCore &&
                 adjustedValue > 15
             if (isSituationalCondition && key === 'javelin') {
+                // stupid hard coded javelin removal bullshit
                 return false
             }
             if (isCoreCondition || isSituationalCondition) {

@@ -20,7 +20,8 @@ const BuildDataJson = (props: any) => {
     const updatedBuildData = useHeroBuilds(
         filteredData!,
         props.heroData!,
-        props.itemData!
+        props.itemData!,
+        true
     )
     return exists(updatedBuildData) ? (
         <div className="data">{JSON.stringify(updatedBuildData)}</div>

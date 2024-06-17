@@ -40,7 +40,8 @@ export type HeroBuild = {
 export const useHeroBuilds = (
     filteredData: { [role: string]: NonProDataType[] },
     heroData: PageHeroData,
-    itemData: Items
+    itemData: Items,
+    api: boolean
 ) => {
     const [heroBuilds, setHeroBuilds] = useState<Record<string, HeroBuild>>()
     const getUltimateAbility = () => {
@@ -58,7 +59,16 @@ export const useHeroBuilds = (
         const updateHeroBuilds = () => {
             const updatedBuilds: Record<string, HeroBuild> = {}
             for (const key in filteredData) {
-                const buildData = filteredData[key]
+                let buildData = filteredData[key]
+                const facetBuilds = facetFilter(buildData)
+                if (api) {
+                    const facetSort = facetBuilds.sort(
+                        (a, b) => +b['perc'] - +a['perc']
+                        )
+                    buildData = buildData.filter(
+                        (match) => match.variant === facetSort[0]['key']
+                    )
+                }
                 const itemBuild = filterItems(buildData, itemData, key)
                 const count = itemBuildLengthChecker(itemBuild)
                 if (count < 2) {
@@ -66,7 +76,6 @@ export const useHeroBuilds = (
                     continue
                 }
                 const abilityBuilds = abilityFilter(buildData) || [[]]
-                const facetBuilds = facetFilter(buildData)
                 const startingItemBuilds = countStartingItems(buildData)
                 const neutralItems = mostUsedNeutrals(buildData, itemData)
                 const talentBuild = mostUsedTalents(buildData)

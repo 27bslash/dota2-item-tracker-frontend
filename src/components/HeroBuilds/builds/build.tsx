@@ -49,7 +49,7 @@ const Build = (props: BuildProps) => {
         props,
         searchRes
     )
-    const heroBuilds = useHeroBuilds(buildsData!, heroData, itemData!)
+    const heroBuilds = useHeroBuilds(buildsData!, heroData, itemData!, false)
     const [guideGuide, setGuideGuide] = useState(false)
 
     const textShadow = {
