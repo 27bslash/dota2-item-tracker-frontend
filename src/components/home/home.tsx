@@ -13,7 +13,7 @@ import { SortTitle } from './sortTitle'
 import { SideBar } from './sideBar/sideBar'
 import { useParams } from 'react-router'
 import { Link } from 'react-router-dom'
-import { fetchData } from '../../utils/fetchData'
+import { bulkRequest, fetchData } from '../../utils/fetchData'
 // import { PickStats } from './types/pickStats.types';
 
 type HomeProps = {
@@ -39,6 +39,7 @@ function Home({ heroList, playerList }: HomeProps) {
     const [drawerOpen, setDrawerOpen] = useState(false)
     const paramPatch = useParams()['patch']
     const [patch, setPatch] = useState({ patch: '', patch_timestamp: 0 })
+
     useEffect(() => {
         const async_get = async () => {
             const currentPatch = await fetchData(`${baseApiUrl}files/patch`)
@@ -49,10 +50,16 @@ function Home({ heroList, playerList }: HomeProps) {
     useEffect(() => {
         document.title = 'Dota2 Item Tracker'
         const async_get = async () => {
+            if (!heroList.length) return
             const version = localStorage.getItem('winStatsVersion')
-            const url = `${baseApiUrl}/files/win-stats?version=${version}&time=${Date.now()}`
-            const json: { win_stats: PickStats[]; version: number } =
-                await fetchData(url)
+            let url = `${baseApiUrl}files/win-stats?version=${version}&time=${Date.now()}&length=124&skip=0`
+            const jsdon = await fetchData(url)
+            if (+version! === jsdon['version']) {
+                url = `${baseApiUrl}files/win-stats?version=${version}`
+            }
+            const data = await bulkRequest(url, heroList.length - 1)
+            const m = data.map((x) => x['win_stats'])
+            const json = { win_stats: m.flat(), version: jsdon['version'] }
             const pickStats = json['win_stats']
                 .filter((doc) => (paramPatch ? doc.patch === paramPatch : doc))
                 .sort((a, b) => a.hero.localeCompare(b.hero))
@@ -60,7 +67,7 @@ function Home({ heroList, playerList }: HomeProps) {
             setWinStats(pickStats)
         }
         async_get()
-    }, [])
+    }, [heroList, paramPatch])
 
     useEffect(() => {
         if (!heroList.length) {

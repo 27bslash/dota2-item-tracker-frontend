@@ -1,9 +1,11 @@
 export const fetchData = async (url: string) => {
-    let response = await fetch(url);
+    const newUrl = url.replace(/(\?.*?)\?(.*)/gm, '$1&$2')
+
+    let response = await fetch(newUrl)
     if (response.status === 304) {
-        response = await fetch(url.replace(/&time=\d*/, ''))
+        response = await fetch(newUrl.replace(/&time=\d*/, ''))
     }
-    return await response.json();
+    return await response.json()
 }
 export const bulkRequest = async (baseUrl: string, docLength: number) => {
     const urlList = []
@@ -18,6 +20,6 @@ export const bulkRequest = async (baseUrl: string, docLength: number) => {
         urlList.map((innerPromiseArray) => {
             return fetchData(innerPromiseArray)
         })
-    );
+    )
     return data
 }
