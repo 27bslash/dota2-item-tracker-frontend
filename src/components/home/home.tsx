@@ -54,7 +54,7 @@ function Home({ heroList, playerList }: HomeProps) {
             const version = localStorage.getItem('winStatsVersion')
             let url = `${baseApiUrl}files/win-stats?version=${version}&time=${Date.now()}`
             const jsdon = await fetchData(url)
-            if (+version! === jsdon['version']) {
+            if (version! === jsdon['version']) {
                 url = `${baseApiUrl}files/win-stats?version=${version}`
             }
             const data = await bulkRequest(url, heroList.length - 1)

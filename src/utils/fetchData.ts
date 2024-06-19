@@ -1,11 +1,11 @@
 export const fetchData = async (url: string) => {
     const newUrl = url.replace(/(\?.*?)\?(.*)/gm, '$1&$2')
-
     let response = await fetch(newUrl)
+    if (response.status === 200) return await response.json()
     if (response.status === 304) {
         response = await fetch(newUrl.replace(/&time=\d*/, ''))
+        return await response.json()
     }
-    return await response.json()
 }
 export const bulkRequest = async (baseUrl: string, docLength: number) => {
     const urlList = []
