@@ -52,7 +52,7 @@ function Home({ heroList, playerList }: HomeProps) {
         const async_get = async () => {
             if (!heroList.length) return
             const version = localStorage.getItem('winStatsVersion')
-            let url = `${baseApiUrl}files/win-stats?version=${version}&time=${Date.now()}&length=124&skip=0`
+            let url = `${baseApiUrl}files/win-stats?version=${version}&time=${Date.now()}`
             const jsdon = await fetchData(url)
             if (+version! === jsdon['version']) {
                 url = `${baseApiUrl}files/win-stats?version=${version}`
