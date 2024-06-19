@@ -7,11 +7,16 @@ export const fetchData = async (url: string) => {
         return await response.json()
     }
 }
-export const bulkRequest = async (baseUrl: string, docLength: number) => {
+export const bulkRequest = async (
+    baseUrl: string,
+    docLength: number,
+    start: number
+) => {
     const urlList = []
-    const chunk = Math.ceil(docLength / 6)
-    let skip = 0
-    for (let i = 0; i < +docLength; i += chunk) {
+    let chunk = Math.ceil((docLength - start) / 6)
+    if (chunk < 10) chunk = Math.ceil((docLength - start) / 3)
+    let skip = start
+    for (let i = 0; i < +docLength - start; i += chunk) {
         const url = `${baseUrl}?skip=${skip}&length=${chunk}`
         urlList.push(url)
         skip += chunk

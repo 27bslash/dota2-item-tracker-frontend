@@ -17,7 +17,8 @@ export const useFetchData = (heroName: string) => {
             if (docLength > 50) {
                 data = await bulkRequest(
                     `${baseApiUrl}hero/${heroName}/item_build`,
-                    docLength
+                    docLength,
+                    0
                 )
                 merged = data.flat()
             } else {

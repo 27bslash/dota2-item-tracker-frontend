@@ -24,32 +24,33 @@ export const useFetchAllData = (type: string) => {
             url = `${baseApiUrl}${type}/${nameParam}/react-test?role=${role}&skip=0&length=10`
         }
         const countDocsUrl = `${baseApiUrl}hero/${nameParam}/count_docs?collection=heroes`
-        const matches = await fetchData(url)
+        const matches: { data: DotaMatch[]; picks: PickStats } =
+            await fetchData(url)
         setfilteredMatchData(matches['data'])
         const docLength = await fetchData(countDocsUrl)
         setTotalPicks(matches['picks'])
         let allMatches
-        if (docLength > 15 && type === 'hero') {
+        if (docLength > 35 && type === 'hero') {
             // const worker = new Worker('./fetchData.ts')
             allMatches = await bulkRequest(
                 `${baseApiUrl}${type}/${nameParam}/react-test`,
-                docLength
+                docLength,
+                10
             )
-            const merged = allMatches
+            // matches.concat(
+            let merged = allMatches
                 .map((x: { [x: string]: DotaMatch[] }) => x['data'])
                 .flat()
+            merged = matches['data'].concat(merged)
             setTotalMatches(merged.filter((x) => x))
         } else if (docLength <= 10 && type === 'hero') {
-            setTotalMatches(
-                matches['data'].filter((x: DotaMatch | undefined) => x)
-            )
+            setTotalMatches(matches['data'].filter((x) => x))
         } else {
             allMatches = await fetchData(
-                `${baseApiUrl}${type}/${nameParam}/react-test`
+                `${baseApiUrl}${type}/${nameParam}/react-test?skip=10&length=${docLength}`
             )
-            setTotalMatches(
-                allMatches['data'].filter((x: DotaMatch | undefined) => x)
-            )
+            const merged = matches['data'].concat(allMatches['data'])
+            setTotalMatches(merged.filter((x) => x))
         }
         const currentPatch = await fetchData(`${baseApiUrl}files/patch`)
         setPatch(currentPatch)
