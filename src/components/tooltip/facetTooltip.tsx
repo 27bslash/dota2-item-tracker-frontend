@@ -2,9 +2,15 @@ import Color from 'color-thief-react'
 import { useState, useEffect } from 'react'
 import { usePageContext } from '../stat_page/pageContext'
 import { highlight_numbers } from './tooltipDescription'
-import { FacetObj, HeroStats, PageHeroData } from '../types/heroData'
+import {
+    FacetObj,
+    HeroAbilities,
+    HeroStats,
+    PageHeroData,
+} from '../types/heroData'
 import { Box, Typography } from '@mui/material'
 import { AbilityImg } from '../table/tableAbilities/abilityImg'
+import TooltipAttributes from './tooltipAttributes'
 
 type facetToolipProps = {
     img: string
@@ -106,6 +112,10 @@ export const facetBackground = (facet: FacetObj) => {
     }
 }
 export const FacetTooltip = ({ img, facet, heroStats }: facetToolipProps) => {
+    const [ability, setAbility] = useState<HeroAbilities>()
+    useEffect(() => {
+        setAbility(heroStats['abilities'][facet['ability']])
+    }, [])
     const { background, filter } = facetBackground(facet)
     return (
         <>
@@ -153,7 +163,7 @@ export const FacetTooltip = ({ img, facet, heroStats }: facetToolipProps) => {
                             >
                                 <img
                                     className="tooltip-img"
-                                    id='facet-icon'
+                                    id="facet-icon"
                                     alt={img}
                                     src={img}
                                     width="35px"
@@ -179,6 +189,7 @@ export const FacetTooltip = ({ img, facet, heroStats }: facetToolipProps) => {
                         style={{ backgroundColor: '#181f24' }}
                     >
                         {facet['description_loc'] &&
+                            facet.ability_loc != facet['description_loc'] &&
                             facet['description_loc'].length && (
                                 <div className="tooltip-description">
                                     <p
@@ -235,6 +246,7 @@ export const FacetTooltip = ({ img, facet, heroStats }: facetToolipProps) => {
                                 <div
                                     style={{
                                         letterSpacing: '1px',
+                                        marginBottom: '15px',
                                     }}
                                     dangerouslySetInnerHTML={{
                                         __html: highlight_numbers(
@@ -254,6 +266,12 @@ export const FacetTooltip = ({ img, facet, heroStats }: facetToolipProps) => {
                                     __html: highlight_numbers(facet['notes']),
                                 }}
                             ></div>
+                        )}
+                        {ability && (
+                            <TooltipAttributes
+                                itemProperties={ability}
+                                type="facet"
+                            ></TooltipAttributes>
                         )}
                     </div>
                 </div>

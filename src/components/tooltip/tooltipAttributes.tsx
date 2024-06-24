@@ -43,14 +43,21 @@ const TooltipAttributes = (props: any) => {
                 <>
                     {props.itemProperties.special_values.map(
                         (x: any, i: number) => {
+                            const ob =
+                                props.type === 'facet' ? x['facet_bonus'] : x
                             const heading = x.heading_loc
                             const percentage = x.is_percentage
+                            const values =
+                                props.type === 'facet'
+                                    ? ob.values
+                                    : ob.values_float
                             let value
-                            const zeroCheck = x.values_float.join() !== '0'
+                            console.log(heading, values)
+                            const zeroCheck = values.some((x: any) => x != 0)
                             if (percentage) {
-                                value = x.values_float.join('% / ') + '%'
+                                value = values.join('% / ') + '%'
                             } else {
-                                value = x.values_float.join(' / ')
+                                value = values.join(' / ')
                             }
                             if (
                                 heading.toLowerCase().includes('damage') &&
