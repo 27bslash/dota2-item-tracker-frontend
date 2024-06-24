@@ -52,7 +52,6 @@ const TooltipAttributes = (props: any) => {
                                     ? ob.values
                                     : ob.values_float
                             let value
-                            console.log(heading, values)
                             const zeroCheck = values.some((x: any) => x != 0)
                             if (percentage) {
                                 value = values.join('% / ') + '%'

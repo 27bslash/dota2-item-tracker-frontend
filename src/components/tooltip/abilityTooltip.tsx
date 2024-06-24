@@ -8,6 +8,7 @@ import Color from 'color-thief-react'
 import { highlight_numbers } from './tooltipDescription'
 import AbilityAttributes from './abilityAttributes'
 import { usePageContext } from '../stat_page/pageContext'
+import { HeroAbilities, SpecialValues } from '../types/heroData'
 
 const AbilityTooltip = (props: any) => {
     const id = props.ability.id
@@ -69,21 +70,9 @@ const AbilityTooltip = (props: any) => {
                                 </div>
                                 <div className="tooltip-content">
                                     <AbilityAttributes ability={ability} />
-                                    {ability['desc_loc'] &&
-                                        ability['desc_loc'].length && (
-                                            <div
-                                                className="tooltip-description"
-                                                style={{ color: '#c9d1dd' }}
-                                            >
-                                                <p
-                                                    dangerouslySetInnerHTML={{
-                                                        __html: highlight_numbers(
-                                                            ability['desc_loc']
-                                                        ),
-                                                    }}
-                                                ></p>
-                                            </div>
-                                        )}
+                                    <AbilityDescription
+                                        ability={ability}
+                                    ></AbilityDescription>
                                     <TooltipAttributes
                                         itemProperties={ability}
                                     ></TooltipAttributes>
@@ -105,5 +94,49 @@ const AbilityTooltip = (props: any) => {
         </>
     )
 }
-
+type p = {
+    ability: HeroAbilities
+}
+const AbilityDescription = ({ ability }: p) => {
+    return (
+        <>
+            {ability['desc_loc'] && ability['desc_loc'].length && (
+                <div
+                    className="tooltip-description"
+                    style={{ color: '#c9d1dd' }}
+                >
+                    <p
+                        dangerouslySetInnerHTML={{
+                            __html: highlight_numbers(
+                                extractHiddenValues(
+                                    ability['desc_loc'],
+                                    ability['special_values']
+                                )
+                            ),
+                        }}
+                    ></p>
+                </div>
+            )}
+        </>
+    )
+}
+export const extractHiddenValues = (
+    text: string,
+    specialValues: SpecialValues[]
+) => {
+    const sp = text.replace('bonus_', '').split('%')
+    specialValues.forEach((x) => {
+        x['name'] = x['name'].replace('bonus_', '')
+        if (sp.includes(x['name'])) {
+            let float: number[] | string[] = x['values_float'],
+                int: number[] | string[] = x['values_int']
+            if (x['is_percentage']) {
+                float = float.map((el: number | string) => (el += '%'))
+                if (int) int = int.map((el: number | string) => (el += '%'))
+            }
+            sp[sp.indexOf(x['name'])] = `${float || ''}${int || ''}`
+        }
+    })
+    return sp.join('')
+}
 export default AbilityTooltip
