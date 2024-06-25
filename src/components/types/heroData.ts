@@ -84,6 +84,7 @@ export type FacetObj = {
     icon: string
     name: string
     title_loc: string
+    filter: string
 }
 export type FacetBonus = {
     name: string

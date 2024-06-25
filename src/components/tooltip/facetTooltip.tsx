@@ -55,60 +55,9 @@ export const facetBackground = (facet: FacetObj) => {
             'linear-gradient(to right, #ADB6BE, #4E5557)',
         ],
     ]
-    const filterMap = [
-        [
-            'invert(15%) sepia(99%) saturate(100%) hue-rotate(287deg) brightness(99%) contrast(100%)',
-            'invert(14%) sepia(99%) saturate(100%) hue-rotate(321deg) brightness(99%) contrast(100%)',
-            'invert(22%) sepia(100%) saturate(100%) hue-rotate(319deg) brightness(98%) contrast(100%)',
-            'invert(24%) sepia(100%) saturate(100%) hue-rotate(324deg) brightness(96%) contrast(100%)',
-            'invert(42%) sepia(100%) saturate(100%) hue-rotate(0deg) brightness(93%) contrast(99%)',
-        ],
-        [
-            'invert(24%) sepia(100%) saturate(100%) hue-rotate(0deg) brightness(96%) contrast(100%)',
-            'invert(19%) sepia(94%) saturate(99%) hue-rotate(0deg) brightness(93%) contrast(100%)',
-            'invert(18%) sepia(99%) saturate(99%) hue-rotate(0deg) brightness(99%) contrast(100%)',
-            'invert(54%) sepia(99%) saturate(100%) hue-rotate(0deg) brightness(97%) contrast(100%)',
-            'invert(53%) sepia(100%) saturate(100%) hue-rotate(0deg) brightness(98%) contrast(100%)',
-            'invert(67%) sepia(91%) saturate(100%) hue-rotate(12deg) brightness(94%) contrast(95%)',
-            'invert(67%) sepia(64%) saturate(99%) hue-rotate(0deg) brightness(92%) contrast(97%)',
-        ],
-        [
-            'invert(21%) sepia(100%) saturate(100%) hue-rotate(100deg) brightness(94%) contrast(100%)',
-            'invert(22%) sepia(92%) saturate(100%) hue-rotate(135deg) brightness(82%) contrast(100%)',
-            'invert(15%) sepia(100%) saturate(100%) hue-rotate(75deg) brightness(91%) contrast(100%)',
-            'invert(22%) sepia(90%) saturate(100%) hue-rotate(25deg) brightness(92%) contrast(100%)',
-            'invert(57%) sepia(100%) saturate(100%) hue-rotate(32deg) brightness(93%) contrast(100%)',
-            'invert(61%) sepia(100%) saturate(100%) hue-rotate(114deg) brightness(93%) contrast(99%)',
-            'invert(38%) sepia(100%) saturate(100%) hue-rotate(88deg) brightness(97%) contrast(100%)',
-            'invert(53%) sepia(100%) saturate(100%) hue-rotate(26deg) brightness(92%) contrast(99%)',
-            'invert(62%) sepia(65%) saturate(99%) hue-rotate(44deg) brightness(94%) contrast(89%)',
-        ],
-        [
-            'invert(18%) sepia(100%) saturate(100%) hue-rotate(183deg) brightness(100%) contrast(100%)',
-            'invert(32%) sepia(100%) saturate(100%) hue-rotate(137deg) brightness(79%) contrast(100%)',
-            'invert(37%) sepia(68%) saturate(99%) hue-rotate(126deg) brightness(78%) contrast(100%)',
-            'invert(44%) sepia(100%) saturate(100%) hue-rotate(190deg) brightness(95%) contrast(99%)',
-            'invert(39%) sepia(100%) saturate(99%) hue-rotate(167deg) brightness(99%) contrast(100%)',
-            'invert(59%) sepia(100%) saturate(100%) hue-rotate(145deg) brightness(89%) contrast(99%)',
-            'invert(64%) sepia(61%) saturate(99%) hue-rotate(139deg) brightness(94%) contrast(96%)',
-        ],
-        [
-            'invert(14%) sepia(99%) saturate(100%) hue-rotate(202deg) brightness(96%) contrast(99%)',
-            'invert(12%) sepia(100%) saturate(100%) hue-rotate(214deg) brightness(99%) contrast(100%)',
-            'invert(54%) sepia(76%) saturate(100%) hue-rotate(243deg) brightness(85%) contrast(95%)',
-            'invert(48%) sepia(100%) saturate(100%) hue-rotate(296deg) brightness(91%) contrast(100%)',
-            'invert(33%) sepia(100%) saturate(100%) hue-rotate(207deg) brightness(99%) contrast(100%)',
-        ],
-        [
-            'invert(35%) sepia(24%) saturate(99%) hue-rotate(164deg) brightness(92%) contrast(92%)',
-            'invert(44%) sepia(23%) saturate(99%) hue-rotate(181deg) brightness(91%) contrast(95%)',
-            'invert(64%) sepia(44%) saturate(99%) hue-rotate(151deg) brightness(92%) contrast(95%)',
-            'invert(73%) sepia(23%) saturate(99%) hue-rotate(166deg) brightness(93%) contrast(94%)',
-        ],
-    ]
     return {
         background: gradientMap[facet.color][facet.gradient_id],
-        filter: filterMap[facet.color][facet.gradient_id],
+        filter: facet.filter,
     }
 }
 export const FacetTooltip = ({ img, facet, heroStats }: facetToolipProps) => {
