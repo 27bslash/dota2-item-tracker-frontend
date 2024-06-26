@@ -1,10 +1,21 @@
-export const fetchData = async (url: string) => {
+export const fetchData = async (url: string, retries = 2, delay = 1000) => {
     const newUrl = url.replace(/(\?.*?)\?(.*)/gm, '$1&$2')
-    let response = await fetch(newUrl)
-    if (response.status === 200) return await response.json()
-    if (response.status === 304) {
-        response = await fetch(newUrl.replace(/&time=\d*/, ''))
-        return await response.json()
+    for (let i = 0; i < retries; i++) {
+        let response = await fetch(newUrl)
+        if (response.status === 200) return await response.json()
+        if (response.status === 304) {
+            response = await fetch(newUrl.replace(/&time=\d*/, ''))
+            return await response.json()
+        } else if (response.status === 429) {
+            const retryAfter = response.headers.get('retry-after')
+            const waitTime = retryAfter
+                ? parseInt(retryAfter, 10) * 1000
+                : delay * (i + 1)
+            console.log(
+                `Rate limited. ${url} Retrying in ${waitTime / 1000} seconds...`
+            )
+            await new Promise((res) => setTimeout(res, waitTime))
+        }
     }
 }
 export const bulkRequest = async (
