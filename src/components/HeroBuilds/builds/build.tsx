@@ -13,6 +13,7 @@ import { TableSearchResults } from '../../table/table_search/types/tableSearchRe
 import PickStats from '../../types/pickStats'
 import { usePageContext } from '../../stat_page/pageContext'
 import { RoleStrings } from '../../home/home'
+import useShortBuilds from '../buildHooks/shortBuildHook'
 
 export interface BuildProps extends MatchDataAdj {
     data?: any
@@ -42,6 +43,7 @@ const Build = (props: BuildProps) => {
         totalMatchData,
         searchRes,
     } = usePageContext()
+    const shortBuild = useShortBuilds()
     const buildsData = useParseMatchData(
         proData,
         totalMatchData,
@@ -49,7 +51,13 @@ const Build = (props: BuildProps) => {
         props,
         searchRes
     )
-    const heroBuilds = useHeroBuilds(buildsData!, heroData, itemData!, false)
+    const heroBuilds = useHeroBuilds(
+        buildsData!,
+        heroData,
+        itemData!,
+        false,
+        shortBuild
+    )
     const [guideGuide, setGuideGuide] = useState(false)
 
     const textShadow = {
@@ -66,7 +74,7 @@ const Build = (props: BuildProps) => {
             color: 'white',
         },
     }
-    const disabledOpacity = !buildsData ? 0.3 : 1
+    const disabledOpacity = !heroBuilds ? 0.3 : 1
     return (
         <Box color={'white'} className="build-wrapper">
             <Box
@@ -80,7 +88,7 @@ const Build = (props: BuildProps) => {
                     <Button
                         variant="contained"
                         color="primary"
-                        disabled={!buildsData}
+                        disabled={!heroBuilds}
                         sx={{
                             ...baseButtonStyle,
                             marginRight: '4px',
@@ -91,7 +99,7 @@ const Build = (props: BuildProps) => {
                         <Typography>builds</Typography>
                     </Button>
                 )}
-                {open && buildsData && heroBuilds && (
+                {open && heroBuilds && (
                     <>
                         <Box sx={{ display: 'flex' }}>
                             <Button
@@ -153,7 +161,11 @@ const Build = (props: BuildProps) => {
                                 return (
                                     <BuildCell
                                         key={index}
-                                        data={buildsData[role]}
+                                        data={
+                                            buildsData
+                                                ? buildsData![role]
+                                                : undefined
+                                        }
                                         updateMatchData={props.updateMatchData}
                                         buildData={buildData}
                                         role={role}

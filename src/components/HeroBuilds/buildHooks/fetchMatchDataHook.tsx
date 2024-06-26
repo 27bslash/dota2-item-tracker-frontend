@@ -13,7 +13,6 @@ export const useFetchData = (heroName: string) => {
             const docLength = await fetchData(countDocsUrl)
             let merged: NonProDataType[] = []
             let data = []
-
             if (docLength > 50) {
                 data = await bulkRequest(
                     `${baseApiUrl}hero/${heroName}/item_build`,

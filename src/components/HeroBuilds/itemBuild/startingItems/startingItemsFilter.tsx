@@ -1,6 +1,10 @@
+import { UnparsedBuilds } from '../../buildHooks/shortBuildHook'
 import { NonProDataType } from '../../types'
 
-const countStartingItems = (data: NonProDataType[]) => {
+const countStartingItems = (
+    data: NonProDataType[],
+    shortBuild?: UnparsedBuilds
+) => {
     const wards: string[] = []
 
     const comboCount: { [key: string]: number } = {}
@@ -12,10 +16,8 @@ const countStartingItems = (data: NonProDataType[]) => {
             .map((x: { key: string }) => x.key)
             .sort()
             .join('__')
-        if (key.includes('tango')) {
-            // console.log('key', key)
-            comboCount[key] = comboCount[key] + 1 || 1
-        }
+        // console.log('key', key)
+        comboCount[key] = comboCount[key] + 1 || 1
     }
     if (!Object.keys(comboCount).length) {
         const test = data.map((match) => {

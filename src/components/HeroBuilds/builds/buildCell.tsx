@@ -20,7 +20,7 @@ interface NeutralItem {
     tier: number
     perc: number
 }
-interface Talent {
+export interface Talent {
     level: number
     count: number
     slot: number
@@ -38,7 +38,7 @@ type BuildCellProps = {
     dataLength: number
     // itemData: Items,
     role: RoleStrings
-    data: NonProDataType[]
+    data?: NonProDataType[]
     buildData: HeroBuild
     // heroData: PageHeroData,
     updateMatchData: MatchDataAdj['updateMatchData']
@@ -102,7 +102,7 @@ export const BuildCell = ({
                     >
                         <StartingItems
                             data={data}
-                            startingItemData={buildData['starting_items']}
+                            startingItemData={buildData}
                         />
                         <FacetBuild
                             data={buildData['facet_builds']}
@@ -112,7 +112,7 @@ export const BuildCell = ({
                     <NeutralItems neutralItems={buildData['neutral_items']} />
                     <AbilityBuilds
                         data={data}
-                        abilityBuilds={buildData['ability_builds']}
+                        abilityBuilds={buildData}
                         updateMatchData={updateMatchData}
                     />
                 </div>

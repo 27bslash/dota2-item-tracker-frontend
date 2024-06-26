@@ -1,63 +1,30 @@
 /* eslint-disable no-prototype-builtins */
-import { medianValue } from "../../../utils/medianValue";
-import { AbilityBuildEntry } from "../builds/buildCell";
-import { NonProDataType } from "../types";
+import { UnparsedBuilds } from '../buildHooks/shortBuildHook'
+import { AbilityBuildEntry } from '../builds/buildCell'
+import { NonProDataType } from '../types'
 
-const abilityFilter = (data: NonProDataType[]): false | [AbilityBuildEntry[], { [key: string]: number }] => {
-    const { abilities, aCount } = groupAbilities(data)
-    // console.log(aCount)
-    const res = []
-    for (let i = 0; i < 10; i++) {
-        const count: { [key: string]: number } = {}
-        for (const abilityArr of abilities) {
-            if (abilityArr[i]) {
-                count[abilityArr[i]] = (count[abilityArr[i]] || 0) + 1
-            }
-        }
-        res.push(count)
-    }
-    const second_occurance: { [key: string]: { count: number; level: (number)[] } } = {};
+const abilityFilter = (
+    data?: NonProDataType[],
+    shortBuild?: UnparsedBuilds
+): false | [AbilityBuildEntry[]] => {
+    let aCount = shortBuild
+        ? shortBuild['abilities']['a_count']
+        : groupAbilities(data!)['aCount']
 
-    for (const match of data) {
-        const d: { [key: string]: { count: number; level: number } } = {};
-        for (const ability of match["abilities"]) {
-            if (ability["type"] !== "ability") {
-                continue;
-            }
-            const img = ability["img"];
-            if (d.hasOwnProperty(img)) {
-                d[img] = { count: d[img].count + 1, level: ability["level"] };
-            } else {
-                d[img] = { count: 1, level: ability["level"] };
-            }
-
-            if (d[img].count === 2) {
-                if (second_occurance.hasOwnProperty(img)) {
-                    second_occurance[img].count++;
-                    second_occurance[img].level.push(ability["level"]);
-                } else {
-                    second_occurance[img] = { count: 1, level: [ability["level"]] };
-                }
-            }
-        }
-    }
-    const medianLevelsForAbility: { [key: string]: number } = Object.keys(second_occurance).reduce((result: { [key: string]: number }, key) => {
-        const levels = second_occurance[key].level;
-        const median = medianValue(levels);
-        result[key] = median;
-        return result;
-    }, {});
     // {'antimage_mana_break': {'count': 103, 'level': [...]}, 'antimage_blink': {'count': 103, 'level': [...]}, 'antimage_counterspell': {'count': 98, 'level': [...]}, 'antimage_mana_void': {'count': 100, 'level': [...]}}
-    if (!abilities.length) {
+    if (!aCount) {
         return false
     }
     // const abilityBuilds = genAbilityArr(res, ab, totalCount, max_abilities)
-    const mostCommonBuilds = genMostCommonBuilds(aCount);
-    console.log(mostCommonBuilds,aCount)
-    return [mostCommonBuilds, medianLevelsForAbility]
+    const mostCommonBuilds = genMostCommonBuilds(aCount)
+    return [mostCommonBuilds]
 }
 export default abilityFilter
-export const testForSimilarBuilds = (abilityBuild: string, targetAbilityBuild: string, threshold: number) => {
+export const testForSimilarBuilds = (
+    abilityBuild: string,
+    targetAbilityBuild: string,
+    threshold: number
+) => {
     const split = abilityBuild.split('__')
     const mostPickedSplit = targetAbilityBuild.split('__')
     let difference = 0
@@ -76,13 +43,21 @@ export const testForSimilarBuilds = (abilityBuild: string, targetAbilityBuild: s
             // console.log('last equal')
             // continue
         }
-        if (split[i] === mostPickedSplit[i + 1] && split[i + 1] === mostPickedSplit[i] && lastSwap === 0) {
+        if (
+            split[i] === mostPickedSplit[i + 1] &&
+            split[i + 1] === mostPickedSplit[i] &&
+            lastSwap === 0
+        ) {
             // console.log('swapsises')
             lastSwap = i
             difference -= 1
             continue
         }
-        if (split[6] === mostPickedSplit[6] && split[2] === mostPickedSplit[2] && sl === sl2) {
+        if (
+            split[6] === mostPickedSplit[6] &&
+            split[2] === mostPickedSplit[2] &&
+            sl === sl2
+        ) {
             // console.log('max ability')
             break
         }
@@ -92,24 +67,24 @@ export const testForSimilarBuilds = (abilityBuild: string, targetAbilityBuild: s
         }
     }
     return difference < threshold
-
 }
 
-
-export const genMostCommonBuilds = (aCount: { [key: string]: number; }) => {
-    const srt = Object.entries(aCount).sort((a, b) => b[1] - a[1]);
+export const genMostCommonBuilds = (aCount: { [key: string]: number }) => {
+    const srt = Object.entries(aCount).sort((a, b) => b[1] - a[1])
     // console.log([...srt])
-    const sorted = groupSimilarBuilds(srt);
+    const sorted = groupSimilarBuilds(srt)
     let mostPickedBuild: AbilityBuildEntry
-    const mostCommonBuilds = sorted.sort((a, b) => b[1] - a[1]).filter((build, i) => {
-        if (i === 0) mostPickedBuild = build;
-        const buildPerc = (build[1] / mostPickedBuild[1]) * 100;
-        if (buildPerc > 35) {
-            return true;
-        }
-    });
+    const mostCommonBuilds = sorted
+        .sort((a, b) => b[1] - a[1])
+        .filter((build, i) => {
+            if (i === 0) mostPickedBuild = build
+            const buildPerc = (build[1] / mostPickedBuild[1]) * 100
+            if (buildPerc > 35) {
+                return true
+            }
+        })
 
-    return mostCommonBuilds;
+    return mostCommonBuilds
 }
 
 const jackSort = (abilityString: string, testAbilityString: string) => {
@@ -125,13 +100,13 @@ const jackSort = (abilityString: string, testAbilityString: string) => {
         }
     }
     const sumval = (testAbilityArr: string[]) => {
-        let total = 0;
+        let total = 0
         for (const ability of testAbilityArr) {
-            const valueIndex = abilityValues.findIndex((ab) => ab === ability);
-            const convertedVal = Math.pow(10, valueIndex);
-            total += convertedVal;
+            const valueIndex = abilityValues.findIndex((ab) => ab === ability)
+            const convertedVal = Math.pow(10, valueIndex)
+            total += convertedVal
         }
-        return total;
+        return total
     }
     // get sum of ability numbers
     const testTotal = String(sumval(testAbilityArr))
@@ -153,17 +128,20 @@ export const groupSimilarBuilds = (srt: AbilityBuildEntry[]) => {
     for (const b of srt) {
         for (const [i, testBuild] of srt.entries()) {
             if (b[0] === testBuild[0]) {
-                continue;
+                continue
             }
             if (b[1] < testBuild[1]) continue
-            if (testForSimilarBuilds(b[0], testBuild[0], 1) && jackSort(b[0], testBuild[0])) {
-                b[1] += testBuild[1];
+            if (
+                testForSimilarBuilds(b[0], testBuild[0], 1) &&
+                jackSort(b[0], testBuild[0])
+            ) {
+                b[1] += testBuild[1]
                 if (b[2]) {
                     b[2].push(testBuild)
                 } else {
                     b[2] = [testBuild]
                 }
-                srt.splice(i, 1);
+                srt.splice(i, 1)
             }
         }
     }
@@ -175,15 +153,19 @@ const groupAbilities = (data: NonProDataType[]) => {
     const aCount: { [key: string]: number } = {}
     for (const match of data) {
         if ('abilities' in match && match['abilities'].length > 9) {
-            const abilityArray = match['abilities'].filter((ability) => ability.type !== 'talent').map((ability) => ability.img).slice(0, 9)
+            const abilityArray = match['abilities']
+                .filter((ability) => ability.type !== 'talent')
+                .map((ability) => ability.img)
+                .slice(0, 9)
             abilities.push(abilityArray)
             // console.log(match)
-            const key = match['abilities'].filter((ability) => ability.type !== 'talent').slice(0, 9).map((ability) => ability.img).join('__')
-            aCount[key] = (aCount[key] + 1) || 1
+            const key = match['abilities']
+                .filter((ability) => ability.type !== 'talent')
+                .slice(0, 9)
+                .map((ability) => ability.img)
+                .join('__')
+            aCount[key] = aCount[key] + 1 || 1
         }
     }
     return { abilities, aCount }
 }
-
-
-

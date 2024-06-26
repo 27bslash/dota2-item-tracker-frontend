@@ -1,18 +1,22 @@
-import { Box, Button, Typography } from '@mui/material';
-import { MatchDataAdj } from '../../stat_page/page';
-import { TalentBuild } from './talentBuild';
-import { useState } from 'react';
-import { AbilityImg } from '../../table/tableAbilities/abilityImg';
-import { AbilityBuildEntry } from '../builds/buildCell';
-import { usePageContext } from '../../stat_page/pageContext';
-import { NonProDataType } from '../types';
+import { Box, Button, Typography } from '@mui/material'
+import { MatchDataAdj } from '../../stat_page/page'
+import { TalentBuild } from './talentBuild'
+import { useState } from 'react'
+import { AbilityImg } from '../../table/tableAbilities/abilityImg'
+import { AbilityBuildEntry, Talent } from '../builds/buildCell'
+import { usePageContext } from '../../stat_page/pageContext'
+import { NonProDataType } from '../types'
 
 interface AbilityBuildProps extends MatchDataAdj {
-    data: NonProDataType[],
-    abilityBuilds: AbilityBuildEntry[],
+    abilityBuilds: {
+        ability_builds: AbilityBuildEntry[]
+        talents: [string, Talent][]
+        length?: number
+    }
+    data?: NonProDataType[]
 }
-const AbilityBuilds = ({ data, abilityBuilds }: AbilityBuildProps) => {
-    const imageHost = "https://ailhumfakp.cloudimg.io/v7/"
+const AbilityBuilds = ({ abilityBuilds, data }: AbilityBuildProps) => {
+    const imageHost = 'https://ailhumfakp.cloudimg.io/v7/'
     // const secAbilities = abilityFilter(data, fistAB)
     // console.log(abilities)
     const [debug, setShowDebug] = useState(false)
@@ -20,7 +24,11 @@ const AbilityBuilds = ({ data, abilityBuilds }: AbilityBuildProps) => {
     const DEBUG = process.env.NODE_ENV !== 'production'
 
     return (
-        <Box justifyContent='space-between' padding={4} className='ability-builds flex'>
+        <Box
+            justifyContent="space-between"
+            padding={4}
+            className="ability-builds flex"
+        >
             {/* <div className='ability-build flex'>
                 {abilities[1].map((ability: {}, i: number) => {
                     const key = Object.keys(ability)[0]
@@ -31,49 +39,121 @@ const AbilityBuilds = ({ data, abilityBuilds }: AbilityBuildProps) => {
                 <BigTalent matchData={data} heroName={nameParam} heroData={heroData} width='65px' margin='-5px 0px 0px 0px' />
             </div> */}
             <div className="ability-build">
-                <Typography color='white' align='center' alignItems={'center'} variant='h4'>Abilities</Typography>
-                {abilityBuilds.map((abilityArr, i) => {
+                <Typography
+                    color="white"
+                    align="center"
+                    alignItems={'center'}
+                    variant="h4"
+                >
+                    Abilities
+                </Typography>
+                {abilityBuilds['ability_builds'].map((abilityArr, i) => {
                     const debugMargin = i === 0 ? '20px' : '0px'
                     return (
-                        <div style={{ alignItems: 'center', paddingBottom: '5px' }} key={i}>
-                            <div className="ability-build flex" style={{ alignItems: 'center' }}>
-                                <AbilityBuild abilityArr={abilityArr[0]} imageHost={imageHost} heroData={heroData} heroName={nameParam} i={i}></AbilityBuild>
+                        <div
+                            style={{
+                                alignItems: 'center',
+                                paddingBottom: '5px',
+                            }}
+                            key={i}
+                        >
+                            <div
+                                className="ability-build flex"
+                                style={{ alignItems: 'center' }}
+                            >
+                                <AbilityBuild
+                                    abilityArr={abilityArr[0]}
+                                    imageHost={imageHost}
+                                    heroData={heroData}
+                                    heroName={nameParam}
+                                    i={i}
+                                ></AbilityBuild>
                                 {/* <BigTalent matchData={data} heroName={nameParam} heroData={heroData} width='65px' margin='-5px 0px 0px 0px' updateMatchData={updateMatchData} />  */}
-                                <Typography style={{ marginTop: debugMargin, color: 'white', marginLeft: '6px' }}>{DEBUG ? abilityArr[1] : ''} {(abilityArr[1] / data.length * 100).toFixed(2)}%</Typography>
-                                {DEBUG &&
-                                    <Button sx={{ marginTop: debugMargin }} onClick={() => setShowDebug((prev) => !prev)}>debug</Button>
-                                }
+                                <Typography
+                                    style={{
+                                        marginTop: debugMargin,
+                                        color: 'white',
+                                        marginLeft: '6px',
+                                    }}
+                                >
+                                    {DEBUG ? abilityArr[1] : ''}{' '}
+                                    {(
+                                        (abilityArr[1] /
+                                            (data
+                                                ? data.length
+                                                : abilityBuilds['length']!)) *
+                                        100
+                                    ).toFixed(2)}
+                                    %
+                                </Typography>
+                                {DEBUG && (
+                                    <Button
+                                        sx={{ marginTop: debugMargin }}
+                                        onClick={() =>
+                                            setShowDebug((prev) => !prev)
+                                        }
+                                    >
+                                        debug
+                                    </Button>
+                                )}
                             </div>
-                            {DEBUG && debug && abilityArr[2] &&
+                            {DEBUG && debug && abilityArr[2] && (
                                 <div className="debug-builds">
-                                    {abilityArr[2].map((debugAbArr, k: number) => {
-                                        return (
-                                            <div key={k} className="flex">
-                                                <AbilityBuild abilityArr={debugAbArr[0]} imageHost={imageHost} heroData={heroData} heroName={nameParam} i={1}></AbilityBuild>
-                                                <Typography style={{ color: 'white', marginLeft: '6px' }}>{debugAbArr[1]} {(debugAbArr[1] / abilityArr[1] * 100).toFixed(2)}%</Typography>
-                                            </div>
-                                        )
-                                    })}
-
+                                    {abilityArr[2].map(
+                                        (debugAbArr, k: number) => {
+                                            return (
+                                                <div key={k} className="flex">
+                                                    <AbilityBuild
+                                                        abilityArr={
+                                                            debugAbArr[0]
+                                                        }
+                                                        imageHost={imageHost}
+                                                        heroData={heroData}
+                                                        heroName={nameParam}
+                                                        i={1}
+                                                    ></AbilityBuild>
+                                                    <Typography
+                                                        style={{
+                                                            color: 'white',
+                                                            marginLeft: '6px',
+                                                        }}
+                                                    >
+                                                        {debugAbArr[1]}{' '}
+                                                        {(
+                                                            (debugAbArr[1] /
+                                                                abilityArr[1]) *
+                                                            100
+                                                        ).toFixed(2)}
+                                                        %
+                                                    </Typography>
+                                                </div>
+                                            )
+                                        }
+                                    )}
                                 </div>
-                            }
+                            )}
                         </div>
                     )
-                })
-                }
+                })}
             </div>
             <div className="talent-build">
-                <Typography variant='h4' color='white' align='center'>Talents</Typography>
-                <TalentBuild matchData={data} heroData={heroData} numbered={true}></TalentBuild>
+                <Typography variant="h4" color="white" align="center">
+                    Talents
+                </Typography>
+                <TalentBuild
+                    data={abilityBuilds['talents']}
+                    heroData={heroData}
+                    numbered={true}
+                ></TalentBuild>
             </div>
-        </Box >
+        </Box>
     )
 }
 type AbilitBuildProps = {
-    abilityArr: string,
-    imageHost: string,
-    heroData: any,
-    heroName: string,
+    abilityArr: string
+    imageHost: string
+    heroData: any
+    heroName: string
     i: number
 }
 const AbilityBuild = ({ abilityArr, imageHost, i }: AbilitBuildProps) => {
@@ -84,10 +164,17 @@ const AbilityBuild = ({ abilityArr, imageHost, i }: AbilitBuildProps) => {
                 const abilityObj = { [ability]: 0 }
                 return (
                     <div key={idx}>
-                        {i === 0 &&
-                            <Typography align='center' color={'white'}>{idx + 1}</Typography>
-                        }
-                        <AbilityImg link={link} imgWidth={55} ability={abilityObj} key={idx} />
+                        {i === 0 && (
+                            <Typography align="center" color={'white'}>
+                                {idx + 1}
+                            </Typography>
+                        )}
+                        <AbilityImg
+                            link={link}
+                            imgWidth={55}
+                            ability={abilityObj}
+                            key={idx}
+                        />
                     </div>
                 )
             })}
