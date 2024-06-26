@@ -17,12 +17,12 @@ import useShortBuilds from '../buildHooks/shortBuildHook'
 
 export interface BuildProps extends MatchDataAdj {
     data?: any
-    itemData: Items
+    itemData?: Items
     heroName: string
     heroData: PageHeroData
     role: string
     searchRes?: TableSearchResults
-    picks: PickStats
+    picks?: PickStats
     heroList: Hero[]
     totalMatchData?: DotaMatch[]
 }
