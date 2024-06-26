@@ -13,7 +13,7 @@ import { TableSearchResults } from '../../table/table_search/types/tableSearchRe
 import PickStats from '../../types/pickStats'
 import { usePageContext } from '../../stat_page/pageContext'
 import { RoleStrings } from '../../home/home'
-import useShortBuilds from '../buildHooks/shortBuildHook'
+import { UnparsedBuilds } from '../buildHooks/shortBuildHook'
 
 export interface BuildProps extends MatchDataAdj {
     data?: any
@@ -25,6 +25,7 @@ export interface BuildProps extends MatchDataAdj {
     picks?: PickStats
     heroList: Hero[]
     totalMatchData?: DotaMatch[]
+    shortBuilds: { [key: string]: UnparsedBuilds }
 }
 // heroData: heroData, nameParam: nameParam,
 // totalMatchData: totalMatchData, filteredData: filteredData,
@@ -43,7 +44,6 @@ const Build = (props: BuildProps) => {
         totalMatchData,
         searchRes,
     } = usePageContext()
-    const shortBuild = useShortBuilds()
     const buildsData = useParseMatchData(
         proData,
         totalMatchData,
@@ -56,7 +56,7 @@ const Build = (props: BuildProps) => {
         heroData,
         itemData!,
         false,
-        shortBuild
+        props.shortBuilds
     )
     const [guideGuide, setGuideGuide] = useState(false)
 

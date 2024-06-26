@@ -13,6 +13,7 @@ import Hero from '../types/heroList'
 import DotaMatch from '../types/matchData'
 import PickStats from '../types/pickStats'
 import { usePageContext } from '../stat_page/pageContext'
+import { UnparsedBuilds } from '../HeroBuilds/buildHooks/shortBuildHook'
 
 export const HeroPageTopSection = (props: {
     role: string
@@ -20,6 +21,7 @@ export const HeroPageTopSection = (props: {
     updateMatchData: (match: DotaMatch[]) => void
     updateRole: (role: RoleStrings) => void
     totalPicks?: PickStats
+    shortBuilds?: { [key: string]: UnparsedBuilds }
 }) => {
     const {
         heroData,
@@ -30,7 +32,7 @@ export const HeroPageTopSection = (props: {
         searchRes,
         heroList,
     } = usePageContext()
-    const { role, updateRole, updateMatchData, totalPicks } = props
+    const { role, updateRole, updateMatchData, totalPicks, shortBuilds } = props
     return (
         <>
             <div className="flex" style={{ minHeight: '87px' }}>
@@ -53,8 +55,9 @@ export const HeroPageTopSection = (props: {
                 )}
             </div>
             <div style={{ minHeight: '45px', marginTop: '20px' }}>
-                {itemData && (
+                {itemData && shortBuilds && (
                     <Build
+                        shortBuilds={shortBuilds}
                         heroList={heroList}
                         role={role}
                         picks={totalPicks}

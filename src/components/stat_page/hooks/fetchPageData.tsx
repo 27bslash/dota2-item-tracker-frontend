@@ -7,12 +7,17 @@ import heroSwitcher from '../../../utils/heroSwitcher'
 import DotaMatch from '../../types/matchData'
 import PickStats from '../../types/pickStats'
 import { Items } from '../../types/Item'
+import { UnparsedBuilds } from '../../HeroBuilds/buildHooks/shortBuildHook'
 
 export const useFetchAllData = (type: string) => {
     const [filteredMatchData, setfilteredMatchData] = useState<DotaMatch[]>()
     const [totalMatches, setTotalMatches] = useState<DotaMatch[]>()
     const [itemData, setItemData] = useState<Items>()
     const [totalPicks, setTotalPicks] = useState<PickStats>()
+    const [shortBuilds, setShortBuilds] = useState<{
+        [key: string]: UnparsedBuilds
+    }>()
+
     const params = useParams()
     const [query] = useSearchParams()
     const role = query.get('role') || ''
@@ -30,6 +35,10 @@ export const useFetchAllData = (type: string) => {
         const docLength = await fetchData(countDocsUrl)
         setTotalPicks(matches['picks'])
         let allMatches
+        const shortBuild = await fetchData(
+            `${baseApiUrl}hero/${nameParam}/item_build?short=True`
+        )
+        setShortBuilds(shortBuild[0])
         if (docLength > 35 && type === 'hero') {
             // const worker = new Worker('./fetchData.ts')
             allMatches = await bulkRequest(
@@ -65,5 +74,12 @@ export const useFetchAllData = (type: string) => {
     useEffect(() => {
         getData()
     }, [])
-    return { filteredMatchData, totalMatches, patch, itemData, totalPicks }
+    return {
+        filteredMatchData,
+        totalMatches,
+        patch,
+        itemData,
+        totalPicks,
+        shortBuilds,
+    }
 }

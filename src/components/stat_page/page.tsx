@@ -66,6 +66,7 @@ const Page = ({ type, heroList, playerList }: pageProps) => {
         patch: patch_obj,
         itemData,
         totalPicks,
+        shortBuilds,
     } = useFetchAllData(type)
     useEffect(() => {
         if (filteredMatchData) {
@@ -248,6 +249,7 @@ const Page = ({ type, heroList, playerList }: pageProps) => {
         type: type,
         heroList: heroList,
         playerList: playerList,
+        shortBuilds: shortBuilds,
     }
     const renderHeroPageTopSection = () => {
         if (type === 'hero') {
