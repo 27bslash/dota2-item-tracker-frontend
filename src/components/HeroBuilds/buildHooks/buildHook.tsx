@@ -55,11 +55,14 @@ export const useHeroBuilds = (
             const updatedBuilds: Record<string, HeroBuild> = {}
             const ultimateAbility = getUltimateAbility()
             if (shortBuild && !filteredData) {
-                for (const role in shortBuild) {
-                    let buildData = shortBuild[role]
+                const srted = Object.entries(shortBuild).sort(
+                    (a, b) => b[1]['length'] - a[1]['length']
+                )
+                for (const role of srted) {
+                    let buildData = shortBuild[role[0]]
                     const itemBuild = filterItems(
                         itemData,
-                        role,
+                        role[0],
                         undefined,
                         buildData
                     )
@@ -88,7 +91,7 @@ export const useHeroBuilds = (
                         length: buildData['length'],
                     }
                     console.log(res)
-                    updatedBuilds[role] = res
+                    updatedBuilds[role[0]] = res
                 }
             } else {
                 for (const key in filteredData) {
