@@ -96,6 +96,7 @@ function Home({ heroList, playerList }: HomeProps) {
         }
     }
     const sortHeroes = (list: string[], search: string, role?: RoleStrings) => {
+        console.log(list, role)
         setFilteredHeroes(list)
         setfilteredByButton(list)
         setSearchVal(search)
@@ -166,17 +167,28 @@ function Home({ heroList, playerList }: HomeProps) {
             }
         }
     }
-    const sortByTrend = () => {
+    const sortByTrend = (role: RoleStrings | undefined) => {
         if (!winStats) return null
         const sorted = winStats
             .sort((a, b) => {
-                const trends = calcTrends(a.hero)!['picks'] || 0
-                const otherTrends = calcTrends(b.hero)!['picks'] || 0
+                const patchStr = paramPatch ? 'patch_' : ''
+                const aObj =
+                    role && a[role] ? a[role][`${patchStr}picks`] : a.picks
+                const bObj =
+                    role && b[role] ? b[role][`${patchStr}picks`] : b.picks
+                const trends =
+                    a.bans <= 3000
+                        ? calcTrends(a.hero)!['picks'] + aObj || 0
+                        : aObj
+                const otherTrends =
+                    b.bans <= 3000
+                        ? calcTrends(b.hero)!['picks'] + bObj || 0
+                        : bObj
                 return otherTrends - trends
             })
             .filter((x) => {
-                if (roleFilter) {
-                    return x[roleFilter] && x[roleFilter]['picks'] > 10
+                if (role) {
+                    return x[role] && x[role]['picks'] > 10
                 } else {
                     return x['picks'] > 10
                 }
@@ -184,7 +196,7 @@ function Home({ heroList, playerList }: HomeProps) {
         sortHeroes(
             sorted.map((x) => x.hero),
             'trends',
-            roleFilter
+            role
         )
     }
     const nonPatchGames = () => {

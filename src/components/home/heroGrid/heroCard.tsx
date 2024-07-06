@@ -2,6 +2,7 @@ import { Link, useParams } from 'react-router-dom'
 import colourWins from '../../../utils/colourWins'
 import heroSwitcher from '../../../utils/heroSwitcher'
 import { Typography } from '@mui/material'
+import { RoleStrings } from '../home'
 
 interface HeroCardProps {
     heroName: string
@@ -10,7 +11,7 @@ interface HeroCardProps {
     highlight?: number
     idx: number
     stats: { [key: string]: number }
-    sortByTrend: () => void
+    sortByTrend: (role?: RoleStrings) => void
 }
 function HeroCard({
     stats,

@@ -14,7 +14,7 @@ import PickStats, { PickRoleStat } from '../../types/pickStats'
 import ArrowButton from '../../ui_elements/arrowButton'
 import { useParams } from 'react-router'
 type SIdeBarProps = {
-    sortByTrend: () => void
+    sortByTrend: (role: RoleStrings | undefined) => void
     sortHeroes: (list: string[], search: string, role?: RoleStrings) => void
     winStats: PickStats[] | undefined
     open: boolean
@@ -35,9 +35,10 @@ export const SideBar = ({
     }, [role, sortType, paramPatch])
     const gSort = () => {
         // default sort is picks
-        if (!sortType) return setSortType('picks')
+        if (!sortType) return setSortType('trends')
         if (sortType === 'trends') {
-            return sortByTrend()
+            console.log('trends')
+            return sortByTrend(role)
         }
         const filtered = winStats!.filter((item) => {
             // return item.role === role
@@ -177,6 +178,12 @@ export const SideBar = ({
 
                     <List>
                         <ListItem
+                            sx={{
+                                backgroundColor:
+                                    sortType === 'picks'
+                                        ? '#2d8680'
+                                        : 'inherit',
+                            }}
                             disablePadding
                             className="sidebar-item"
                             onClick={() =>
@@ -192,6 +199,12 @@ export const SideBar = ({
                             />
                         </ListItem>
                         <ListItem
+                            sx={{
+                                backgroundColor:
+                                    sortType === 'winrate'
+                                        ? '#2d8680'
+                                        : 'inherit',
+                            }}
                             disablePadding
                             className="sidebar-item"
                             onClick={() =>
@@ -209,6 +222,12 @@ export const SideBar = ({
                             />
                         </ListItem>
                         <ListItem
+                            sx={{
+                                backgroundColor:
+                                    sortType === 'trends'
+                                        ? '#2d8680'
+                                        : 'inherit',
+                            }}
                             disablePadding
                             className="sidebar-item"
                             onClick={() =>
@@ -224,6 +243,10 @@ export const SideBar = ({
                             />
                         </ListItem>
                         <ListItem
+                            sx={{
+                                backgroundColor:
+                                    sortType === 'bans' ? '#2d8680' : 'inherit',
+                            }}
                             disablePadding
                             className="sidebar-item"
                             onClick={() =>
