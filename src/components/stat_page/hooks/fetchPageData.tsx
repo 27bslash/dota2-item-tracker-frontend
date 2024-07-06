@@ -24,10 +24,9 @@ export const useFetchAllData = (type: string) => {
     const nameParam = params['name'] ? heroSwitcher(params['name']) : ''
     const [patch, setPatch] = useState({ patch: '', patch_timestamp: 0 })
     const getData = async () => {
+        let merged
         let url = `${baseApiUrl}${type}/${nameParam}/react-test?skip=0&length=10`
-        if (role) {
-            url = `${baseApiUrl}${type}/${nameParam}/react-test?role=${role}&skip=0&length=10`
-        }
+
         const countDocsUrl = `${baseApiUrl}hero/${nameParam}/count_docs?collection=heroes`
         const matches: { data: DotaMatch[]; picks: PickStats } =
             await fetchData(url)
@@ -46,21 +45,19 @@ export const useFetchAllData = (type: string) => {
                 docLength,
                 10
             )
-            // matches.concat(
-            let merged = allMatches
+            merged = allMatches
                 .map((x: { [x: string]: DotaMatch[] }) => x['data'])
                 .flat()
             merged = matches['data'].concat(merged)
-            setTotalMatches(merged.filter((x) => x))
         } else if (docLength <= 10 && type === 'hero') {
-            setTotalMatches(matches['data'].filter((x) => x))
+            merged = matches['data']
         } else {
             allMatches = await fetchData(
                 `${baseApiUrl}${type}/${nameParam}/react-test?skip=10&length=${docLength}`
             )
-            const merged = matches['data'].concat(allMatches['data'])
-            setTotalMatches(merged.filter((x) => x))
+            merged = matches['data'].concat(allMatches['data'])
         }
+        setTotalMatches(merged)
         const currentPatch = await fetchData(`${baseApiUrl}files/patch`)
         setPatch(currentPatch)
         localStorage.setItem('patch', currentPatch)
