@@ -214,15 +214,19 @@ function Home({ heroList, playerList }: HomeProps) {
                     </Typography>
                 )
             ) : null}
-
-            <div className="side-bar" onMouseLeave={() => setDrawerOpen(false)}>
-                <SideBar
-                    open={drawerOpen}
-                    winStats={winStats || undefined}
-                    sortHeroes={sortHeroes}
-                    sortByTrend={sortByTrend}
-                />
-            </div>
+            {winStats && (
+                <div
+                    className="side-bar"
+                    onMouseLeave={() => setDrawerOpen(false)}
+                >
+                    <SideBar
+                        open={drawerOpen}
+                        winStats={winStats}
+                        sortHeroes={sortHeroes}
+                        sortByTrend={sortByTrend}
+                    />
+                </div>
+            )}
             {sort && !searching && <SortTitle role={roleFilter} sort={sort} />}
             <GridContainer className={className} width={width}>
                 {filteredHeroes &&
