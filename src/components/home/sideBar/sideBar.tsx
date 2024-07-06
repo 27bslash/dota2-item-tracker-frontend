@@ -180,6 +180,27 @@ export const SideBar = ({
                         <ListItem
                             sx={{
                                 backgroundColor:
+                                    sortType === 'trends'
+                                        ? '#2d8680'
+                                        : 'inherit',
+                            }}
+                            disablePadding
+                            className="sidebar-item"
+                            onClick={() =>
+                                setSortType(
+                                    sortType === 'trends' ? undefined : 'trends'
+                                )
+                            }
+                        >
+                            <ListItemText
+                                disableTypography
+                                primary={'Trends'}
+                                sx={{ marginLeft: '40px' }}
+                            />
+                        </ListItem>
+                        <ListItem
+                            sx={{
+                                backgroundColor:
                                     sortType === 'picks'
                                         ? '#2d8680'
                                         : 'inherit',
@@ -221,27 +242,7 @@ export const SideBar = ({
                                 sx={{ marginLeft: '40px' }}
                             />
                         </ListItem>
-                        <ListItem
-                            sx={{
-                                backgroundColor:
-                                    sortType === 'trends'
-                                        ? '#2d8680'
-                                        : 'inherit',
-                            }}
-                            disablePadding
-                            className="sidebar-item"
-                            onClick={() =>
-                                setSortType(
-                                    sortType === 'trends' ? undefined : 'trends'
-                                )
-                            }
-                        >
-                            <ListItemText
-                                disableTypography
-                                primary={'Trends'}
-                                sx={{ marginLeft: '40px' }}
-                            />
-                        </ListItem>
+
                         <ListItem
                             sx={{
                                 backgroundColor:
