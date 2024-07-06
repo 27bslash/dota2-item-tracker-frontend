@@ -46,7 +46,7 @@ export const SideBar = ({
             let pickThreshold = 10
             if (role) {
                 dd = item[role]
-                pickThreshold = 5
+                pickThreshold = 10
             }
             const pickString = paramPatch ? 'patch_picks' : 'picks'
             if (
