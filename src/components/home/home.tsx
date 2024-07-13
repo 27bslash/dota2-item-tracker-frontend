@@ -28,6 +28,7 @@ export type RoleStrings =
     | 'Offlane'
     | 'Midlane'
     | 'Safelane'
+
 function Home({ heroList, playerList }: HomeProps) {
     const [winStats, setWinStats] = useState<PickStats[]>()
     const [filteredHeroes, setFilteredHeroes] = useState<string[]>()
@@ -96,7 +97,6 @@ function Home({ heroList, playerList }: HomeProps) {
         }
     }
     const sortHeroes = (list: string[], search: string, role?: RoleStrings) => {
-        console.log(list, role)
         setFilteredHeroes(list)
         setfilteredByButton(list)
         setSearchVal(search)
@@ -120,7 +120,7 @@ function Home({ heroList, playerList }: HomeProps) {
     theme.palette.primary.main = '#1d5455'
     theme.palette.secondary.main = '#486869'
 
-    const calcTrends = (heroName: string) => {
+    const calcTrends = (heroName: string, role?: RoleStrings) => {
         if (!winStats) return
 
         const heroPickData = winStats.filter(
@@ -129,8 +129,8 @@ function Home({ heroList, playerList }: HomeProps) {
         const currentTrend = heroPickData[0]['trends'][0]
         const lastTrend =
             heroPickData[0]['trends'][heroPickData[0]['trends'].length - 1]
-        const { bans, winrate, picks, wins } = formatTrend(currentTrend)
-        const lastTrendStats = formatTrend(lastTrend)
+        const { bans, winrate, picks, wins } = formatTrend(currentTrend, role)
+        const lastTrendStats = formatTrend(lastTrend, role)
         const newBans = bans - lastTrendStats.bans
         const newWins = wins - lastTrendStats.wins
         const newWinrate = +cleanDecimal(
@@ -145,12 +145,12 @@ function Home({ heroList, playerList }: HomeProps) {
             winrate: newWinrate,
         })
 
-        function formatTrend(currentTrend: Trend) {
+        function formatTrend(currentTrend: Trend, role?: RoleStrings) {
             let picks = 0
             let wins = 0
-            if (roleFilter && currentTrend[roleFilter]) {
-                picks = currentTrend[roleFilter]!.picks || 0
-                wins = currentTrend[roleFilter]!.wins || 0
+            if (role && currentTrend[role]) {
+                picks = currentTrend[role]!.picks || 0
+                wins = currentTrend[role]!.wins || 0
             } else {
                 picks = currentTrend.picks || 0
                 wins = currentTrend.wins || 0
@@ -178,11 +178,11 @@ function Home({ heroList, playerList }: HomeProps) {
                     role && b[role] ? b[role][`${patchStr}picks`] : b.picks
                 const trends =
                     a.bans <= 3000
-                        ? calcTrends(a.hero)!['picks'] + aObj || 0
+                        ? calcTrends(a.hero, role)!['picks'] + aObj || 0
                         : aObj
                 const otherTrends =
                     b.bans <= 3000
-                        ? calcTrends(b.hero)!['picks'] + bObj || 0
+                        ? calcTrends(b.hero, role)!['picks'] + bObj || 0
                         : bObj
                 return otherTrends - trends
             })
