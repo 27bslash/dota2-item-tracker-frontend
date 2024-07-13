@@ -276,7 +276,7 @@ function Home({ heroList, playerList }: HomeProps) {
                             const winrate = picks
                                 ? +cleanDecimal((wins / picks) * 100)
                                 : 0
-                            const trends = calcTrends(heroName)!
+                            const trends = calcTrends(heroName, roleFilter)!
                             pickStats = {
                                 picks,
                                 trend: trends['picks'],

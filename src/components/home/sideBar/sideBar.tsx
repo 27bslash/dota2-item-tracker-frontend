@@ -37,7 +37,6 @@ export const SideBar = ({
         // default sort is picks
         if (!sortType) return setSortType('trends')
         if (sortType === 'trends') {
-            console.log('trends')
             return sortByTrend(role)
         }
         const filtered = winStats!.filter((item) => {
