@@ -149,7 +149,7 @@ export const filterComponents = (data: RawItemBuild[], itemData: Items) => {
     const keys = data.map((x) => x[0])
     // console.log([...keys])
     const removedComponents: string[] = []
-    const disassembleable = ['echo_sabre', 'vanguard', 'mask_of_madness']
+    const disassembleable = ['echo_sabre',  'mask_of_madness']
     // console.log(data)
     for (let i = 0; i < data.length; i++) {
         const item = data[i]
