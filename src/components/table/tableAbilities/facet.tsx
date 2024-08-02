@@ -19,7 +19,15 @@ export const Facet = ({ variant, imgWidth }: FacetProps) => {
         const data = heroData[nameParam]
         if (!data) return
         const facets = data['facets']
-        setFacet(facets[variant - 1])
+        let decrement = 1
+        for (const f of facets) {
+            if (!facets[variant - decrement]) {
+                decrement += 1
+                continue
+            }
+            setFacet(facets[variant - decrement])
+            break
+        }
     }, [heroData, variant, nameParam])
     const icon = facet
         ? `https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/icons/facets/${facet.icon}.png`
