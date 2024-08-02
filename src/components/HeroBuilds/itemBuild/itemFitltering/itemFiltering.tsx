@@ -236,7 +236,7 @@ const filterItems = (
           ]) as RawItemBuild[])
     // const end = performance.now()
     itemBuild = filterComponents(itemBuild, itemData)
-    itemBuild = bootsFilter(itemBuild)
+    // itemBuild = bootsFilter(itemBuild)
     if (!shortBuild) itemBuild = addItemChoices(itemBuild, matchData!, itemData)
     const groupedItems = groupByTime(itemBuild, roleKey)
     // console.log('filterCompoentns:', performance.now() - start, 'ms')
