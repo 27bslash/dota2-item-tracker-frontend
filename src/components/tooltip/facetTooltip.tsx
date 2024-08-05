@@ -206,7 +206,7 @@ export const FacetTooltip = ({ img, facet, heroStats }: facetToolipProps) => {
                                 ></div>
                             </>
                         )}
-                        {facet.notes && facet.notes.length && (
+                        {facet.notes && !!facet.notes.length && (
                             <div
                                 style={{
                                     backgroundColor: '#253844',
