@@ -127,8 +127,14 @@ function Home({ heroList, playerList }: HomeProps) {
             (x) => x.hero === heroName.replace(/\s/g, '_')
         )
         const currentTrend = heroPickData[0]['trends'][0]
+        let viableTrends = heroPickData[0]['trends']
+        if (paramPatch) {
+            viableTrends = viableTrends.filter(
+                (x) => x.patch === currentTrend.patch
+            )
+        }
         const lastTrend =
-            heroPickData[0]['trends'][heroPickData[0]['trends'].length - 1]
+            heroPickData[0]['trends'][viableTrends.length - 1]
         const { bans, winrate, picks, wins } = formatTrend(currentTrend, role)
         const lastTrendStats = formatTrend(lastTrend, role)
         const newBans = bans - lastTrendStats.bans
@@ -173,9 +179,9 @@ function Home({ heroList, playerList }: HomeProps) {
             .sort((a, b) => {
                 const patchStr = paramPatch ? 'patch_' : ''
                 const aObj =
-                    role && a[role] ? a[role][`${patchStr}picks`] : a.picks
+                    role && a[role] ? a[role][`${patchStr}picks`] : a[`${patchStr}picks`]
                 const bObj =
-                    role && b[role] ? b[role][`${patchStr}picks`] : b.picks
+                    role && b[role] ? b[role][`${patchStr}picks`] : b[`${patchStr}picks`]
                 const trends =
                     a.bans <= 3000
                         ? calcTrends(a.hero, role)!['picks'] + aObj || 0
