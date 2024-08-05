@@ -13,7 +13,16 @@ type FacetContentProps = {
 
 export const FacetContent = ({ facets, facetStats }: FacetContentProps) => {
     const { updateSearchResults, heroData, nameParam } = usePageContext()
-    const facet = facets[facetStats['key'] - 1]
+    let decrement = 1
+    let facet: any
+    for (const f of facets) {
+        if (!facets[facetStats['key'] - decrement]) {
+            decrement += 1
+            continue
+        }
+        facet = facets[facetStats['key'] - decrement]
+        break
+    }
     const icon = `https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/icons/facets/${facet.icon}.png`
     const { background, filter } = facetBackground(facet)
     return (
