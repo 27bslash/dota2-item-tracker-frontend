@@ -89,6 +89,7 @@ export const FacetTooltip = ({ img, facet, heroStats }: facetToolipProps) => {
                                 width: '100%',
                                 position: 'absolute',
                                 filter: filter,
+                                opacity: 0.2,
                             }}
                         ></div>
                         <div
