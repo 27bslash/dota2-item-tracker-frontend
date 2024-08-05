@@ -96,7 +96,7 @@ export const useHeroBuilds = (
             } else {
                 for (const key in filteredData) {
                     let buildData = filteredData[key]
-                    const facetBuilds = facetFilter(buildData)
+                    const facetBuilds = facetFilter(buildData, heroData)
                     if (api) {
                         const facetSort = facetBuilds.sort(
                             (a, b) => +b['perc'] - +a['perc']

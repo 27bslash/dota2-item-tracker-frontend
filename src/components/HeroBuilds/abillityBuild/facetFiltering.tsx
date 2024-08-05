@@ -1,16 +1,28 @@
+import { PageHeroData } from '../../types/heroData'
 import { NonProDataType } from '../types'
 
-export const facetFilter = (buildData: NonProDataType[]) => {
+export const facetFilter = (
+    buildData: NonProDataType[],
+    heroData: PageHeroData
+) => {
     const facetCount: { [key: string]: number } = {}
     let total = 0
-    for (const match of buildData) {
+    const heroFacets = heroData[Object.keys(heroData)[0]]['facets']
+    const findFacet = (match: NonProDataType) => {
         if (match['variant']) {
-            total += 1
-            if (match['variant'] in facetCount) {
-                facetCount[String(match['variant'])] += 1
-            } else {
-                facetCount[String(match['variant'])] = 1
-            }
+            if (!heroFacets[match['variant'] - 1]) return heroFacets.length
+            return match['variant']
+        }
+        return 0
+    }
+
+    for (const match of buildData) {
+        total += 1
+        const facetIdx = findFacet(match)
+        if (facetIdx in facetCount) {
+            facetCount[facetIdx] += 1
+        } else {
+            facetCount[facetIdx] = 1
         }
     }
     // [{key: 1, count: 42, perc: 95}]
