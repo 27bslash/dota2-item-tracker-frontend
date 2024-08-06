@@ -145,7 +145,12 @@ export const FacetTooltip = ({ img, facet, heroStats }: facetToolipProps) => {
                                     <p
                                         dangerouslySetInnerHTML={{
                                             __html: highlight_numbers(
-                                                facet['description_loc']
+                                                facet[
+                                                    'description_loc'
+                                                ].replace(
+                                                    '{s:facet_ability_name}',
+                                                    `<span class='tooltip-text-highlight'>${facet.title_loc}</span>`
+                                                )
                                             ),
                                         }}
                                     ></p>
