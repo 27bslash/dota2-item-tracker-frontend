@@ -7,20 +7,43 @@ import { useEffect, useState } from 'react'
 import { baseApiUrl } from '../../App'
 import { exists } from './../../utils/exists'
 import { Items } from '../types/Item'
+import { PageHeroData } from '../types/heroData'
 
-const BuildDataJson = (props: any) => {
+const BuildDataJson = ({
+    heroName,
+    totalPicks,
+    heroData,
+    itemData,
+    patchObj,
+}: {
+    heroName: string
+    totalPicks: any
+    patchObj: { [x: string]: string }
+    heroData: PageHeroData
+    itemData: Items
+}) => {
     const filteredData = useParseMatchData(
         false,
         undefined,
-        props.heroName,
-        { picks: props.totalPicks },
+        heroName,
+        { picks: totalPicks },
         undefined,
         0.19
     )
+
+    for (const k in filteredData) {
+        filteredData[k] = filteredData[k].filter(
+            (x) => x.patch === patchObj['patch']
+        )
+    }
+    // filteredData!.forEach((element) => {
+    //     console.log(patch)
+    //     return filteredData!.element.filter((x) => x.patch === patch)
+    // })
     const updatedBuildData = useHeroBuilds(
         filteredData!,
-        props.heroData!,
-        props.itemData!,
+        heroData!,
+        itemData!,
         true
     )
     return exists(updatedBuildData) ? (
@@ -35,6 +58,7 @@ export const BuildApi = () => {
     const [totalPicks, setTotalPicks] = useState<any>()
     const [itemData, setItemData] = useState<Items>()
     const [heroData, setHeroData] = useState<any>({})
+    const [patch, setPatch] = useState<{ [key: string]: string }>()
     useEffect(() => {
         const fData = async () => {
             const url = `${baseApiUrl}hero/${heroName}/react-test?skip=0&length=10`
@@ -49,6 +73,8 @@ export const BuildApi = () => {
             const hData = await fetch(
                 `${baseApiUrl}files/hero-data/${heroName}`
             )
+            const currentPatch = await fetchData(`${baseApiUrl}files/patch`)
+            setPatch(currentPatch)
             const hJson = await hData.json()
             setHeroData({ [heroName]: hJson })
             if (matches && itemData) {
@@ -60,12 +86,14 @@ export const BuildApi = () => {
     return (
         totalPicks &&
         heroName &&
+        patch &&
         itemData && (
             <BuildDataJson
                 itemData={itemData}
                 heroData={heroData}
                 totalPicks={totalPicks}
                 heroName={heroName}
+                patchObj={patch}
             ></BuildDataJson>
         )
     )
