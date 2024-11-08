@@ -33,9 +33,10 @@ const Draft = (props: any) => {
             searchPrefix = '+'
         }
         return x === nameParam || x === props.heroName ? (
-            <DraftImage highlight={true} heroName={x}></DraftImage>
+            <DraftImage key={i} highlight={true} heroName={x}></DraftImage>
         ) : (
             <DraftImage
+                key={i}
                 heroName={x}
                 highlight={false}
                 onClick={() => updateData(x, searchPrefix)}
