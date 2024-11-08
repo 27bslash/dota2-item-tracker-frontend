@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 /* eslint-disable no-undef */
 import { usePageContext } from '../stat_page/pageContext'
+import DraftImage from './draftImg'
 import DraftSearch from './table_search/draft_search'
 
 const Draft = (props: any) => {
@@ -27,46 +28,18 @@ const Draft = (props: any) => {
     }
     return props.draft.map((x: string, i: number) => {
         // src\assets\images
-        let searchPrefix = '-'
+        let searchPrefix: '+' | '-' = '-'
         if (dr) {
             searchPrefix = '+'
         }
         return x === nameParam || x === props.heroName ? (
-            <img
-                key={i}
-                onError={(e) => {
-                    try {
-                        const target = e.target as HTMLImageElement
-                        target.onerror = null
-                        target.src = '/images/minimap_icons/error.jpg'
-                    } catch (error) {
-                        console.error('Image loading error:', error)
-                    }
-                }}
-                alt={x}
-                src={`/images/minimap_icons/${x}.jpg`}
-                className="draft-icon icon-highlight"
-            ></img>
+            <DraftImage highlight={true} heroName={x}></DraftImage>
         ) : (
-            <img
-                key={i}
-                onError={(e) => {
-                    try {
-                        const target = e.target as HTMLImageElement
-                        target.onerror = null
-                        target.src = '/images/minimap_icons/error.jpg'
-                    } catch (error) {
-                        console.error('Image loading error:', error)
-                    }
-                }}
-                alt={x}
-                src={`/images/minimap_icons/${x}.jpg`}
-                height={32}
-                width={32}
-                // src={require(`../../images/minimap_icons/${x}.jpg`).default}
-                className="draft-icon"
+            <DraftImage
+                heroName={x}
+                highlight={false}
                 onClick={() => updateData(x, searchPrefix)}
-            ></img>
+            ></DraftImage>
         )
     })
 }

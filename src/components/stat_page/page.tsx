@@ -45,13 +45,12 @@ const Page = ({ type, heroList, playerList }: pageProps) => {
     const [filteredData, setFilteredData] = useState<DotaMatch[]>([])
     const [totalMatchData, setTotalMatchData] = useState<DotaMatch[]>([])
     const [showStarter, setShowStarter] = useState(false)
-    const [pageNumber, setPageNumber] = useState(0)
-    const [searchRes, setSearchRes] = useState<TableSearchResults | string>()
     const [searchResults, setSearchResults] = useState<TableSearchResults>()
     const params = useParams()
     const [query] = useSearchParams()
     const role = (query.get('role') || '') as RoleStrings
     const [Role, setRole] = useState(role)
+    const [pageNumber, setPageNumber] = useState(0)
     const [count, setCount] = useState(0)
     const nameParam = params['name'] ? heroSwitcher(params['name']) : ''
     const heroColor = useHeroColor(type, nameParam)
@@ -296,7 +295,7 @@ const Page = ({ type, heroList, playerList }: pageProps) => {
             filteredData: filteredData,
             totalMatchData: totalMatchData,
             searchRes: searchResults,
-            updateSearchResults: updateSearchResults,
+            updateSearchResults,
             nameParam: nameParam,
             itemData: itemData,
             heroData: heroData,
