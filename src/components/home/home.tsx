@@ -259,7 +259,7 @@ function Home({ heroList, playerList }: HomeProps) {
                             const stats = winStats.filter(
                                 (x) => x.hero === heroName.replace(/\s/g, '_')
                             )
-                            if (!stats) {
+                            if (!stats.length) {
                                 pickStats = {
                                     picks: 0,
                                     trend: 0,
@@ -271,7 +271,7 @@ function Home({ heroList, playerList }: HomeProps) {
                             // const picks = roleFilter !== '' ? stats[0][`${roleFilter}_picks`] || stats[0]['picks'] || 0 : 0;
                             // const wins = roleFilter !== '' ? stats[0][`${roleFilter}_wins`] || stats[0]['picks'] || 0 : 0;
                             // console.log(stats, heroName)
-                            if (!pickStats) {
+                            else {
                                 let picks = 0
                                 let wins = 0
                                 if (roleFilter && stats[0][roleFilter]) {
