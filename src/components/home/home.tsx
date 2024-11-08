@@ -259,45 +259,60 @@ function Home({ heroList, playerList }: HomeProps) {
                             const stats = winStats.filter(
                                 (x) => x.hero === heroName.replace(/\s/g, '_')
                             )
+                            if (!stats) {
+                                pickStats = {
+                                    picks: 0,
+                                    trend: 0,
+                                    wins: 0,
+                                    bans: 0,
+                                    winrate: 0,
+                                }
+                            }
                             // const picks = roleFilter !== '' ? stats[0][`${roleFilter}_picks`] || stats[0]['picks'] || 0 : 0;
                             // const wins = roleFilter !== '' ? stats[0][`${roleFilter}_wins`] || stats[0]['picks'] || 0 : 0;
                             // console.log(stats, heroName)
-                            let picks = 0
-                            let wins = 0
-                            if (roleFilter && stats[0][roleFilter]) {
-                                picks = stats[0][roleFilter]['picks'] || 0
-                                wins = stats[0][roleFilter]['wins'] || 0
-                            } else if (!roleFilter) {
-                                picks = stats[0]['picks'] || 0
-                                wins = stats[0]['wins'] || 0
-                            }
-                            if (paramPatch) {
+                            if (!pickStats) {
+                                let picks = 0
+                                let wins = 0
                                 if (roleFilter && stats[0][roleFilter]) {
-                                    picks =
-                                        stats[0][roleFilter]['patch_picks'] || 0
-                                    wins =
-                                        stats[0][roleFilter]['patch_wins'] || 0
+                                    picks = stats[0][roleFilter]['picks'] || 0
+                                    wins = stats[0][roleFilter]['wins'] || 0
                                 } else if (!roleFilter) {
-                                    picks = stats[0]['patch_picks'] || 0
-                                    wins = stats[0]['patch_wins'] || 0
+                                    picks = stats[0]['picks'] || 0
+                                    wins = stats[0]['wins'] || 0
                                 }
+                                if (paramPatch) {
+                                    if (roleFilter && stats[0][roleFilter]) {
+                                        picks =
+                                            stats[0][roleFilter][
+                                                'patch_picks'
+                                            ] || 0
+                                        wins =
+                                            stats[0][roleFilter][
+                                                'patch_wins'
+                                            ] || 0
+                                    } else if (!roleFilter) {
+                                        picks = stats[0]['patch_picks'] || 0
+                                        wins = stats[0]['patch_wins'] || 0
+                                    }
+                                }
+                                // const picks = (roleFilter ? stats[0][roleFilter]['picks'] : stats[0][`picks`] as number) || 0;
+                                const { bans } = stats[0]
+                                const winrate = picks
+                                    ? +cleanDecimal((wins / picks) * 100)
+                                    : 0
+                                const trends = calcTrends(heroName, roleFilter)!
+                                pickStats = {
+                                    picks,
+                                    trend: trends['picks'],
+                                    wins,
+                                    bans,
+                                    winrate,
+                                }
+                                // pickStats = {
+                                //     trend: 80, wins: 80, picks: 80, bans: 80, winrate: 80
+                                // }
                             }
-                            // const picks = (roleFilter ? stats[0][roleFilter]['picks'] : stats[0][`picks`] as number) || 0;
-                            const { bans } = stats[0]
-                            const winrate = picks
-                                ? +cleanDecimal((wins / picks) * 100)
-                                : 0
-                            const trends = calcTrends(heroName, roleFilter)!
-                            pickStats = {
-                                picks,
-                                trend: trends['picks'],
-                                wins,
-                                bans,
-                                winrate,
-                            }
-                            // pickStats = {
-                            //     trend: 80, wins: 80, picks: 80, bans: 80, winrate: 80
-                            // }
                         }
                         return (
                             <Grid
