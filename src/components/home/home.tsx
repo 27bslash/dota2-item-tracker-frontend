@@ -58,7 +58,7 @@ function Home({ heroList, playerList }: HomeProps) {
             if (version! === jsdon['version']) {
                 url = `${baseApiUrl}files/win-stats?version=${version}`
             }
-            const data = await bulkRequest(url, heroList.length, 0)
+            const data = await bulkRequest(url, heroList.length + 1, 0)
             const m = data.map((x) => x['win_stats'])
             const json = { win_stats: m.flat(), version: jsdon['version'] }
             const pickStats = json['win_stats']
@@ -260,10 +260,6 @@ function Home({ heroList, playerList }: HomeProps) {
                                 (x) => x.hero === heroName.replace(/\s/g, '_')
                             )
                             if (!stats.length) {
-                                console.log(
-                                    heroName,
-                                    winStats.map((x) => x.hero)
-                                )
                                 pickStats = {
                                     picks: 0,
                                     trend: 0,
