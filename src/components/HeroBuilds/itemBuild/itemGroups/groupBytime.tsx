@@ -23,15 +23,18 @@ const groupByTime = (data: RawItemBuild[], roleKey: string) => {
     const filteredData = data.filter(
         (x: RawItemBuild) => x[1]['adjustedValue'] > 10
     )
+    const earlyPercForCore = 50
+    const midPercForCore = 50
+    const latePercForCore = 40
     const groupByPercUsed = (time: number, type: string) => {
         const ret: CoreItem[] = []
         const supportRoles = ['Hard Support', 'Support', 'Roaming']
         let percForCore =
             time <= 1000 && !supportRoles.includes(roleKey)
-                ? 60
+                ? earlyPercForCore
                 : time <= 1800
-                ? 50
-                : 40
+                ? midPercForCore
+                : latePercForCore
         if (supportRoles.includes(roleKey) && time <= 1800) {
             percForCore = 35
         } else if (supportRoles.includes(roleKey)) {
