@@ -164,9 +164,16 @@ export const filterComponents = (data: RawItemBuild[], itemData: Items) => {
             continue
         } else if (
             !itemStats['hint'] &&
+            itemTime > 1000 &&
             ['common', 'component', 'secret_shop'].includes(itemStats['qual']!)
         ) {
             // console.log(itemKey)
+            toRemove.add(data[i][0])
+            continue
+        } else if (
+            !itemStats['hint'] &&
+            ['component', 'secret_shop'].includes(itemStats['qual']!)
+        ) {
             toRemove.add(data[i][0])
             continue
         } else if (itemTime > 1800 && itemStats['cost']! < 2000) {
