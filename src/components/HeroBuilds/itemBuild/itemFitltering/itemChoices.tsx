@@ -16,6 +16,9 @@ const componentChecker = (itemData: Items, arr: string, targetItem: string) => {
     const targetComponents = itemData['items'][targetItem]['components']
     if (!components) return
     for (const component of components) {
+        if (!itemData['items'][component]) {
+            return false
+        }
         const componentCost = itemData['items'][component]['cost']
         if (
             componentCost &&
