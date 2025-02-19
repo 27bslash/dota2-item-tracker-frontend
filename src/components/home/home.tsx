@@ -238,6 +238,17 @@ function Home({ heroList, playerList }: HomeProps) {
                 )
             ) : null}
             {winStats && (
+                <Typography
+                    color={'darkgrey'}
+                    marginRight={15}
+                    textAlign={'right'}
+                    className="test"
+                >
+                    Total Games:
+                    {winStats.reduce((acc, curr) => (acc += curr.picks), 0)}
+                </Typography>
+            )}
+            {winStats && (
                 <div
                     className="side-bar"
                     onMouseLeave={() => setDrawerOpen(false)}

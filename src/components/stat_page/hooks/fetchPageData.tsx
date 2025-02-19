@@ -61,12 +61,19 @@ export const useFetchAllData = (type: string) => {
         const currentPatch = await fetchData(`${baseApiUrl}files/patch`)
         setPatch(currentPatch)
         localStorage.setItem('patch', currentPatch)
-        const currentItemDataVersion = localStorage.getItem('item_list_version')
-        const itemData = await fetchData(
-            `${baseApiUrl}files/items?version=${currentItemDataVersion}&time=${Date.now()}`
+
+        const itemDataVersion = localStorage.getItem('item_list_version')
+        let itemUrl = `${baseApiUrl}files/items?version=${itemDataVersion}&time=${Date.now()}`
+        const jsdon = await fetchData(url)
+        if (itemDataVersion! === jsdon['version']) {
+            itemUrl = `${baseApiUrl}files/items?version=${itemDataVersion}`
+        }
+        const itemDataJson = await fetchData(itemUrl)
+        localStorage.setItem(
+            'item_list_version',
+            String(itemDataJson['version'])
         )
-        localStorage.setItem('item_list_version', itemData['version'])
-        setItemData(itemData)
+        setItemData(itemDataJson)
     }
     useEffect(() => {
         getData()
