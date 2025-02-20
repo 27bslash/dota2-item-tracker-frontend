@@ -9,7 +9,7 @@ import {
     ListItemText,
 } from '@mui/material'
 import { RoleStrings } from '../home'
-import { theme } from '../../..'
+import { theme } from "../../../main";
 import PickStats, { PickRoleStat } from '../../types/pickStats'
 import ArrowButton from '../../ui_elements/arrowButton'
 import { useParams } from 'react-router'

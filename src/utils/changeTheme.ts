@@ -1,4 +1,4 @@
-import { theme } from ".."
+import { theme } from "../main";
 
 export const generateColorPalette = (sourceColor: string[], heroName?: string, options?: any) => {
     // Generate a Material-UI color palette based on the source color

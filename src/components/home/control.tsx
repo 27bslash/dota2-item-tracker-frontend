@@ -1,6 +1,6 @@
 import { Grid } from "@mui/material";
 import ArrowButton from "../ui_elements/arrowButton"
-import { theme } from "../..";
+import { theme } from "../../main";
 import { PickStats } from "./types/pickStats.types";
 import Hero from "../types/heroList";
 import { RoleStrings } from "./home";

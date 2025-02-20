@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react'
 import Nav from '../nav/nav'
 import ControlPanel from './control'
 import { baseApiUrl } from '../../App'
-import { theme } from '../..'
+import { theme } from "../../main";
 import { cleanDecimal } from '../../utils/cleanDecimal'
 import GridContainer from './heroGrid/gridContainer'
 import HeroCard from './heroGrid/heroCard'

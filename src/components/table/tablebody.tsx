@@ -5,7 +5,7 @@ import TimeAgo from 'javascript-time-ago'
 import TableItems from './tableItems/tableItems'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import stringSearch from './table_search/string_search'
-import { theme } from '../..'
+import { theme } from "../../main";
 import DotaMatch from '../types/matchData'
 import Hero from '../types/heroList'
 import { PageHeroData } from '../types/heroData'

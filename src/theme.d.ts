@@ -1,4 +1,3 @@
-import { ThemeOptions } from "@mui/material/styles";
 import "@mui/material";
 declare module '@mui/material/styles' {
 
