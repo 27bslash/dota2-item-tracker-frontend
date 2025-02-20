@@ -21,7 +21,7 @@ export const FacetBuild = ({ data }: FacetProps) => {
     })
     const mappedData = sortedData.map((x) => {
         if (!facets) return x
-        if (facets[x['key'] - 1]) {
+        if (!facets[x['key'] - 1]['Deprecated']) {
             x.title = facets[x['key'] - 1].title_loc.toLowerCase()
             return x
         }
