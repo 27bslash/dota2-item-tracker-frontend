@@ -109,7 +109,7 @@ const Page = ({ type, heroList, playerList }: pageProps) => {
     }
   }, [totalMatchData, Role]);
 
-  const heroData = useHeroData(type, totalMatchData, Role, nameParam);
+  const heroData = useHeroData(type, totalMatchData, nameParam);
   type SearchResultKeyType =
     | "items"
     | "item_neutral"
