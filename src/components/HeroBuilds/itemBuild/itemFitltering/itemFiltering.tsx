@@ -37,8 +37,12 @@ const humanToUnix = (time: string | number) => {
     return hours + mins + secs
 }
 
-export const countItems = (data: NonProDataType[], itemData: Items) => {
-    const consumables = [
+export const countItems = (
+    data: NonProDataType[],
+    itemData: Items,
+    filterConsumables?: string
+) => {
+    const consumables: string[] = [
         'tango',
         'flask',
         'branches',
@@ -68,12 +72,13 @@ export const countItems = (data: NonProDataType[], itemData: Items) => {
     for (const match of data) {
         const dupeCounter: string[] = []
         for (const [i, item] of match['items'].entries()) {
+            if (item['key'] == 'tpscroll') continue
             if (
-                consumables.includes(item['key']) ||
-                !itemData['items'][item['key']]
-            ) {
+                filterConsumables === 'consumables' &&
+                consumables.includes(item['key'])
+            )
                 continue
-            }
+            if (!itemData['items'][item['key']]) continue
             let key
             if (
                 dupeCounter.includes(item['key']) &&
@@ -221,11 +226,12 @@ const filterItems = (
     itemData: Items,
     roleKey: string,
     matchData?: NonProDataType[],
-    shortBuild?: UnparsedBuilds
+    shortBuild?: UnparsedBuilds,
+    filterConsumables?: string
 ) => {
     // const start = performance.now()
     let itemBuild = !shortBuild
-        ? countItems(matchData!, itemData)
+        ? countItems(matchData!, itemData, filterConsumables)
         : (shortBuild['items'].map((x) => [
               x['key'],
               {
@@ -235,6 +241,7 @@ const filterItems = (
               },
           ]) as RawItemBuild[])
     // const end = performance.now()
+    // console.log(itemBuild)
     itemBuild = filterComponents(itemBuild, itemData)
     // itemBuild = bootsFilter(itemBuild)
     if (!shortBuild) itemBuild = addItemChoices(itemBuild, matchData!, itemData)

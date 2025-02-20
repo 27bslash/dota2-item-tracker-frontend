@@ -27,20 +27,15 @@ export interface BuildProps extends MatchDataAdj {
     totalMatchData?: DotaMatch[]
     shortBuilds: { [key: string]: UnparsedBuilds }
 }
-// heroData: heroData, nameParam: nameParam,
-// totalMatchData: totalMatchData, filteredData: filteredData,
-// itemData: itemData, role: Role, updateMatchData: updateMatchData,
-// type: type, heroList: heroList, playerList: playerList
 
 const Build = (props: BuildProps) => {
     const [proData, setProData] = useState(false)
     const [open, setOpen] = useState(false)
+    const [filterType, setFilterType] = useState<string | undefined>()
     const {
-        filteredData,
         itemData,
         heroData,
         nameParam,
-        heroList,
         totalMatchData,
         searchRes,
     } = usePageContext()
@@ -56,7 +51,8 @@ const Build = (props: BuildProps) => {
         heroData,
         itemData!,
         false,
-        props.shortBuilds
+        props.shortBuilds,
+        filterType
     )
     const [guideGuide, setGuideGuide] = useState(false)
 
@@ -170,6 +166,7 @@ const Build = (props: BuildProps) => {
                                         dataLength={
                                             Object.entries(heroBuilds).length
                                         }
+                                        setFilterType={setFilterType}
                                     />
                                 )
                             }

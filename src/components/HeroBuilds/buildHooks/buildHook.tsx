@@ -36,9 +36,14 @@ export const useHeroBuilds = (
     heroData: PageHeroData,
     itemData: Items,
     api: boolean,
-    shortBuild?: { [key: string]: UnparsedBuilds }
+    shortBuild?: { [key: string]: UnparsedBuilds },
+    filterConsumables?: string
 ) => {
     const [heroBuilds, setHeroBuilds] = useState<Record<string, HeroBuild>>()
+    // const [filterComponents, setFilterComponents] = useState(false)
+    // const [filterBoots, setFilterBoots] = useState(false)
+    // const [filterPerc, setFilterPerc] = useState(1)
+
     const getUltimateAbility = () => {
         for (const k in heroData) {
             const abilities = heroData[k]['abilities']
@@ -105,7 +110,13 @@ export const useHeroBuilds = (
                             (match) => match.variant === facetSort[0]['key']
                         )
                     }
-                    const itemBuild = filterItems(itemData, key, buildData)
+                    const itemBuild = filterItems(
+                        itemData,
+                        key,
+                        buildData,
+                        undefined,
+                        filterConsumables
+                    )
                     const count = itemBuildLengthChecker(itemBuild)
                     if (count < 2) {
                         console.log(`removed key: ${key} count: ${count}`)
@@ -134,7 +145,13 @@ export const useHeroBuilds = (
         if (filteredData || shortBuild) {
             updateHeroBuilds()
         }
-    }, [filteredData, shortBuild])
+    }, [
+        filteredData,
+        shortBuild,
+        filterBoots,
+        filterComponents,
+        filterConsumables,
+    ])
     // console.log(heroBuilds)
     return heroBuilds
 }
