@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import itemSearch from "../table/table_search/item_search";
 import ArrowButton from '../ui_elements/arrowButton';
 import { usePageContext } from "../stat_page/pageContext";
 

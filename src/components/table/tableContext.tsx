@@ -1,10 +1,7 @@
 import { createContext, useContext } from "react"
 import DotaMatch from "../types/matchData"
 import { RoleStrings } from "../home/home"
-import { PageHeroData } from "../types/heroData"
-import { MatchDataAdj } from "../stat_page/page"
-import Items from "../types/Item"
-import Hero from "../types/heroList"
+
 import { TableSearchResults } from "./table_search/types/tableSearchResult.types"
 interface TableContextType {
     row: DotaMatch,

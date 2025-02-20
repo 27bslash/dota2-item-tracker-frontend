@@ -1,7 +1,6 @@
 import { Typography } from '@mui/material'
 import TableItem from '../../../table/tableItems/tableItem'
 import { HeroBuild } from '../../buildHooks/buildHook'
-import { UnparsedBuilds } from '../../buildHooks/shortBuildHook'
 type StartingItemsProps = {
     startingItemData: HeroBuild
     data?: any

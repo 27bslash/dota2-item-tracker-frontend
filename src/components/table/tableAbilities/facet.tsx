@@ -20,7 +20,7 @@ export const Facet = ({ variant, imgWidth }: FacetProps) => {
     if (!data) return;
     const facets = data["facets"];
     let decrement = 1;
-    for (const f of facets) {
+    while (decrement <= facets.length) {
       if (!facets[variant - decrement]) {
         decrement += 1;
         continue;

@@ -1,7 +1,6 @@
 import { Grid, Typography } from '@mui/material'
 import { useEffect, useState } from 'react'
 import Nav from '../nav/nav'
-import ControlPanel from './control'
 import { baseApiUrl } from '../../App'
 import { theme } from "../../main";
 import { cleanDecimal } from '../../utils/cleanDecimal'
@@ -102,7 +101,6 @@ function Home({ heroList, playerList }: HomeProps) {
         setSearchVal(search)
         setRoleFilter('')
         if (role) {
-            const roleF = `${role}`
             setRoleFilter(role)
         }
     }
@@ -237,6 +235,7 @@ function Home({ heroList, playerList }: HomeProps) {
                     </Typography>
                 )
             ) : null}
+            {/* total games */}
             {winStats && (
                 <Typography
                     color={'darkgrey'}

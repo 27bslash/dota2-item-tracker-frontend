@@ -1,7 +1,6 @@
 import { Button } from '@mui/material'
 import { SearchResultText } from './searchResultText'
 import { DraftCounter } from './draftCounter'
-import DotaMatch from '../../types/matchData'
 import {
     TableSearchResult,
     TableSearchResults,
@@ -16,12 +15,10 @@ export const sortByMatches = (data: TableSearchResult) => {
     const keys = sorted.map((item) => item[0])
     return keys.slice(0, 5)
 }
-type SearchResultsTextProps = {
-    searchRes: TableSearchResults
-}
+
 export const SearchResultsText = () => {
     const { searchRes, updateSearchResults } = usePageContext()
-    const { matchData, updateMatchData, reset } = usePickCounterContext()
+    const { reset } = usePickCounterContext()
     if (!searchRes) {
         return <></>
     }
@@ -34,17 +31,12 @@ export const SearchResultsText = () => {
     const talents = searchRes['talents']
     const handleClick = (
         filteredSearchResults: TableSearchResults,
-        key: string,
-        type?: string
+
     ) => {
         // updateMatchData(filteredMatches, searchRes)
         updateSearchResults(filteredSearchResults)
     }
-    let playerKeys: string[] = [],
-        roleKeys: string[] = []
-    if (players) {
-        playerKeys = sortByMatches(players)
-    }
+    let roleKeys: string[] = []
     if (role) {
         roleKeys = sortByMatches(role)
     }

@@ -12,7 +12,6 @@ import { HeroAbilities, SpecialValues } from "../types/heroData";
 
 const AbilityTooltip = (props: any) => {
   const id = props.ability.id;
-  const [open, setOpen] = useState(false);
   const [ability, setAbility] = useState<any>();
   const { nameParam, heroData } = usePageContext();
   useEffect(() => {
@@ -30,7 +29,7 @@ const AbilityTooltip = (props: any) => {
         }
       }
     }
-  }, [open, heroData]);
+  }, [heroData]);
   // const fac = new FastAverageColor()
   // const options = { width: '55px', height: '55px' }
   const image = new Image(55, 55);
@@ -43,7 +42,7 @@ const AbilityTooltip = (props: any) => {
     <>
       {ability && (
         <Color src={props.img} crossOrigin="anonymous" format="hex">
-          {({ data, loading, error }) => {
+          {({ data }) => {
             return (
               <div
                 className="tooltip"

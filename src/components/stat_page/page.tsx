@@ -203,7 +203,6 @@ const Page = ({ type, heroList, playerList }: pageProps) => {
   const updateMatchData = (
     data: DotaMatch[],
     searchValue?: TableSearchResults,
-    types?: string[]
   ) => {
     // setMatchData(data)
     if (!data.length) return;

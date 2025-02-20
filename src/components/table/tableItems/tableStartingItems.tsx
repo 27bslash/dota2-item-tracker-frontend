@@ -1,5 +1,3 @@
-import { RoleStrings } from "../../home/home";
-import Items from "../../types/Item";
 import DotaMatch from "../../types/matchData";
 import TableItem from "./tableItem";
 import { humanReadableTime } from "./tableItems";

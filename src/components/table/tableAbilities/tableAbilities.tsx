@@ -1,6 +1,6 @@
 import TalentTooltip from '../../tooltip/talentTooltip'
 import Tip from '../../tooltip/tooltip'
-import DotaMatch, { HeroAbility } from '../../types/matchData'
+import  { HeroAbility } from '../../types/matchData'
 import TalentImg from '../talentImg'
 import { AbilityImg } from './abilityImg'
 import { Facet } from './facet'

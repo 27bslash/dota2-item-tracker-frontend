@@ -5,7 +5,6 @@ import {
     TableSearchResult,
     TableSearchResults,
 } from '../../table/table_search/types/tableSearchResult.types'
-import DotaMatch from '../../types/matchData'
 
 type SearchResultTextProps = {
     filteredData: string[]
@@ -26,10 +25,7 @@ export const SearchResultText = ({
     return (
         <>
             {filteredData.map((key: string, i: number) => {
-                let matchKey = 'matches'
-                if ('totalFilteredMatches' in data[key]) {
-                    matchKey = 'totalFilteredMatches'
-                }
+             
                 const matches = data[key]['matches']
                 const totalWins = matches.filter(
                     (match) => match.win === 1

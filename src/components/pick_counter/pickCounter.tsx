@@ -35,7 +35,6 @@ export interface pickProps {
   heroColor: string;
 }
 const PickCounter = (props: pickProps) => {
-  const name = props.nameParam;
   const [searching, setSearching] = useState(false);
   const { searchRes, updateSearchResults } = usePageContext();
   useEffect(() => {
@@ -128,7 +127,6 @@ const TotalPickCounter = () => {
     nameParam,
     heroColor,
     reset,
-    updateMatchData,
   } = usePickCounterContext();
   const base = role && type === "hero" ? totalPicks[role] : totalPicks;
   return (

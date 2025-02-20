@@ -1,5 +1,4 @@
 import { TableSearchResults } from "../../table/table_search/types/tableSearchResult.types"
-import DotaMatch from "../../types/matchData"
 import { SearchResultText } from "./searchResultText"
 import { sortByMatches } from "./tableSearchResults"
 type DraftCounterProps = {
@@ -10,7 +9,6 @@ type DraftCounterProps = {
     handleClick: (matches: TableSearchResults, key: string, type?: string) => void
 }
 export const DraftCounter = ({ draft, handleClick, header, subheader, type }: DraftCounterProps) => {
-    const heroNames = Object.keys(draft)
     const keys = sortByMatches(draft)
     const draftArray = (symbol: string) => {
         const arr = []

@@ -2,7 +2,6 @@ import {
     RawItemBuild,
     RawItemBuildValues,
 } from '../itemFitltering/itemFiltering'
-import { disassembledComponents } from './../itemComponents/disassembledComponents'
 import groupByItemChoices from './groupByItemChoices'
 import { groupDisassembledComponents } from './groupDisassembled'
 

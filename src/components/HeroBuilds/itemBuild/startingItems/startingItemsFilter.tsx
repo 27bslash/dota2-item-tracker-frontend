@@ -1,11 +1,8 @@
-import { UnparsedBuilds } from '../../buildHooks/shortBuildHook'
 import { NonProDataType } from '../../types'
 
 const countStartingItems = (
     data: NonProDataType[],
-    shortBuild?: UnparsedBuilds
 ) => {
-    const wards: string[] = []
 
     const comboCount: { [key: string]: number } = {}
     for (const match of data) {

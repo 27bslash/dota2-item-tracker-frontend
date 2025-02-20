@@ -3,7 +3,7 @@ import HeroAttributes from "./heroAttributes";
 import HeroAghs from "./heroAghanim";
 import Color from "color-thief-react";
 import heroSwitcher from "../../../utils/heroSwitcher";
-import { HeroStats, PageHeroData } from "../../types/heroData";
+import { HeroStats } from "../../types/heroData";
 import { usePageContext } from "../../stat_page/pageContext";
 
 interface HeroTooltipProps {

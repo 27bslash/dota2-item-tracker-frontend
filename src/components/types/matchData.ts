@@ -1,4 +1,3 @@
-import Items from './Item'
 import BenchmarksData from './benchmarks'
 
 export type HeroAbility = {

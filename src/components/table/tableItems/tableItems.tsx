@@ -8,7 +8,6 @@ import { Abilities } from '../tableAbilities/tableAbilities'
 import { PurchaseLog } from './purchaseLog'
 import { TableStartingItems } from './tableStartingItems'
 import { useTableContext } from '../tableContext'
-import { Facet } from '../tableAbilities/facet'
 
 export const humanReadableTime = (time: number | string) => {
     if (typeof time === 'number' && time < 0) {

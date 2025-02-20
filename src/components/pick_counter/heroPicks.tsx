@@ -11,7 +11,7 @@ type HeroPickProps = {
     base: PickStats | PickRoleStat,
 }
 export const HeroPicks = ({ base }: HeroPickProps) => {
-    const { role, nameParam, heroColor, reset, updateMatchData } = usePickCounterContext()
+    const { role, nameParam, heroColor, reset } = usePickCounterContext()
     const params = useParams()
     const picks = params['patch'] ? base['patch_picks'] : base['picks']
     const wins = params['patch'] ? base['patch_wins'] : base['wins']

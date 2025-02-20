@@ -5,7 +5,6 @@ import {
     Drawer,
     List,
     ListItem,
-    ListItemIcon,
     ListItemText,
 } from '@mui/material'
 import { RoleStrings } from '../home'
@@ -25,7 +24,7 @@ export const SideBar = ({
     sortByTrend,
     sortHeroes,
     winStats,
-    open,
+
 }: SIdeBarProps) => {
     const [role, setRole] = useState<RoleStrings>()
     const [sortType, setSortType] = useState<sortTypes>()
@@ -136,7 +135,7 @@ export const SideBar = ({
                             'Roaming',
                             'Support',
                             'Hard Support',
-                        ].map((roleString, index) => {
+                        ].map((roleString) => {
                             const highLight = roleString === role
                             return (
                                 <ListItem
@@ -268,15 +267,15 @@ export const SideBar = ({
         </ArrowButton>
     )
 }
-const rSort = (stats: PickStats[], role: RoleStrings) => {
-    // default sort is picks
-    const filtered = stats.filter((item) => {
-        // return item.role === role
-        return item[role] && item[role].picks > 5
-    })
-    const sorted = [...filtered].sort((a, b) => {
-        return b[role].picks - a[role].picks
-    })
-    console.log(sorted.map((x) => x.hero))
-    return sorted.map((x) => x.hero)
-}
+// const rSort = (stats: PickStats[], role: RoleStrings) => {
+//     // default sort is picks
+//     const filtered = stats.filter((item) => {
+//         // return item.role === role
+//         return item[role] && item[role].picks > 5
+//     })
+//     const sorted = [...filtered].sort((a, b) => {
+//         return b[role].picks - a[role].picks
+//     })
+//     console.log(sorted.map((x) => x.hero))
+//     return sorted.map((x) => x.hero)
+// }

@@ -4,9 +4,7 @@ import AghanimTooltip from "./aghanimTooltip";
 import TooltipAttributes from "./tooltipAttributes";
 import TooltipDescription from "./tooltipDescription";
 import TooltipLore from "./tooltipLore";
-import { PageHeroData } from "../types/heroData";
-import { Items, Item } from "../types/Item";
-import { useTableContext } from "../table/tableContext";
+
 import { usePageContext } from "../stat_page/pageContext";
 import { Typography } from "@mui/material";
 

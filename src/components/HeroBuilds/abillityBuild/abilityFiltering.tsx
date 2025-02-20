@@ -7,7 +7,7 @@ const abilityFilter = (
     data?: NonProDataType[],
     shortBuild?: UnparsedBuilds
 ): false | [AbilityBuildEntry[]] => {
-    let aCount = shortBuild
+    const aCount = shortBuild
         ? shortBuild['abilities']['a_count']
         : groupAbilities(data!)['aCount']
 

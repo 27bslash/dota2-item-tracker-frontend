@@ -4,7 +4,6 @@ import PickStats from '../../types/pickStats'
 import { RoleStrings } from '../../home/home'
 import { NonProDataType } from '../types'
 import { TableSearchResults } from '../../table/table_search/types/tableSearchResult.types'
-import { HeroStats } from '../../types/heroData'
 
 const calc_common_roles = (
     props: any,

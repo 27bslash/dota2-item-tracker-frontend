@@ -4,7 +4,6 @@ import DotaMatch from '../types/matchData'
 import Items from '../types/Item'
 import { PageHeroData } from '../types/heroData'
 import Hero from '../types/heroList'
-import { RoleStrings } from '../home/home'
 type PageContextType = {
     searchRes: TableSearchResults | undefined
     filteredData: DotaMatch[]

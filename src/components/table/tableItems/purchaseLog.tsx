@@ -1,7 +1,5 @@
 import { exists } from '../../../utils/exists'
 import { RoleStrings } from '../../home/home'
-import Items from '../../types/Item'
-import { PageHeroData } from '../../types/heroData'
 import DotaMatch from '../../types/matchData'
 import { useTableContext } from '../tableContext'
 import { FinalItems } from './finalItems'

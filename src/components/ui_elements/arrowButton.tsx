@@ -1,7 +1,7 @@
 import { faCaretDown, faCaretUp } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Collapse, Fade } from '@mui/material'
-import { useState, useEffect, Fragment } from 'react'
+import { useState, useEffect } from 'react'
 
 interface arrowProps {
     style?: any

@@ -1,15 +1,11 @@
 /* eslint-disable no-unused-vars */
-import { baseApiUrl } from '../../App'
 import Build from '../HeroBuilds/builds/build'
 import BestGames from '../best_games/bestGames'
 import BigTalent from '../big_talent/bigTalent'
 import HeroImg from '../heroImg'
 import { RoleStrings } from '../home/home'
 import MostUsed from '../most_used/mostUsed'
-import { TableSearchResults } from '../table/table_search/types/tableSearchResult.types'
-import { Items } from '../types/Item'
-import { PageHeroData } from '../types/heroData'
-import Hero from '../types/heroList'
+
 import DotaMatch from '../types/matchData'
 import PickStats from '../types/pickStats'
 import { usePageContext } from '../stat_page/pageContext'

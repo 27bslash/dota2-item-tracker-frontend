@@ -9,12 +9,11 @@ import {
 import { mostUsedTalents } from '../abillityBuild/talentLevels'
 import { Items } from '../../types/Item'
 import { PageHeroData } from '../../types/heroData'
-import { AbilityBuildEntry, Talent, Talents } from '../builds/buildCell'
+import { AbilityBuildEntry,  Talents } from '../builds/buildCell'
 import { CoreItem, GroupedCoreItems } from '../itemBuild/itemGroups/groupBytime'
 import { NonProDataType } from '../types'
 import { facetFilter } from '../abillityBuild/facetFiltering'
 import { UnparsedBuilds } from './shortBuildHook'
-import { TalentBuild } from './../abillityBuild/talentBuild'
 export type HeroBuild = {
     item_builds: {
         [key: string]: CoreItem[]
@@ -28,6 +27,7 @@ export type HeroBuild = {
         key: number
         count: number
         perc: string
+        title:string
     }[]
     length?: number
 }
@@ -59,7 +59,7 @@ export const useHeroBuilds = (
                     (a, b) => b[1]['length'] - a[1]['length']
                 )
                 for (const role of srted) {
-                    let buildData = shortBuild[role[0]]
+                    const buildData = shortBuild[role[0]]
                     const itemBuild = filterItems(
                         itemData,
                         role[0],

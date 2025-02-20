@@ -24,7 +24,7 @@ const AghanimTooltip = (props: any) => {
 
     return (
         <Color src={img} crossOrigin="anonymous" format="hex">
-            {({ data, loading, error }) => {
+            {({ data }) => {
                 return (
                     <div
                         className="tooltip"

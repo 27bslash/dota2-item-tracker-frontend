@@ -1,7 +1,6 @@
 import { TextField } from '@mui/material';
 import { FormEvent, SetStateAction, useEffect, useState } from 'react';
 import Items from '../../types/Item';
-import search from './search';
 import { MatchDataAdj } from '../../stat_page/page';
 import Hero from '../../types/heroList';
 import { TableSearchResults } from './types/tableSearchResult.types';

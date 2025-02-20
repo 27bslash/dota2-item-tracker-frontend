@@ -1,4 +1,3 @@
-import Items from "../../types/Item";
 import DotaMatch from "../../types/matchData";
 
 const itemSearch = (
@@ -17,7 +16,7 @@ const itemSearch = (
   const symbolMatch = item.match(/^-/);
   let symbol = "";
   if (symbolMatch) symbol = "-";
-  let searchRes = itemIdSearch(itemData, noSymbl);
+  const searchRes = itemIdSearch(itemData, noSymbl);
   const dict: {
     [item: string]: {
       index: number;
@@ -86,7 +85,7 @@ const itemIdSearch = (
 ) => {
   const names: Set<string> = new Set();
   const displayNames: Set<string> = new Set();
-  for (let key of Object.keys(itemsArr["items"])) {
+  for (const key of Object.keys(itemsArr["items"])) {
     const item = itemsArr["items"][key];
     if (key.includes("recipe")) continue;
     if (!("dname" in item)) {

@@ -1,15 +1,11 @@
-import Color from "color-thief-react";
 import { useState, useEffect } from "react";
-import { usePageContext } from "../stat_page/pageContext";
 import { highlight_numbers } from "./tooltipDescription";
 import {
   FacetObj,
   HeroAbilities,
   HeroStats,
-  PageHeroData,
 } from "../types/heroData";
 import { Box, Typography } from "@mui/material";
-import { AbilityImg } from "../table/tableAbilities/abilityImg";
 import TooltipAttributes from "./tooltipAttributes";
 import { extractHiddenValues } from "./abilityTooltip";
 

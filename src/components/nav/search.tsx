@@ -2,7 +2,6 @@
 /* eslint-disable no-prototype-builtins */
 import TextField from '@mui/material/TextField';
 import { useState, useEffect, useRef } from 'react';
-import { matchSorter } from 'match-sorter'
 import SearchResults from './searchResults';
 import { Box } from '@mui/material';
 import Hero from '../types/heroList';

@@ -60,9 +60,7 @@ const Build = (props: BuildProps) => {
     )
     const [guideGuide, setGuideGuide] = useState(false)
 
-    const textShadow = {
-        textShadow: '1.5px 1.5px black !important',
-    }
+
 
     const baseButtonStyle = {
         border: 'solid 2px black',

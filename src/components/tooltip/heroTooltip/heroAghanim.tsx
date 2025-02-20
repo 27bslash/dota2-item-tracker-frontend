@@ -1,4 +1,4 @@
-import { HeroStats, SpecialValues as SpecialValue } from '../../types/heroData'
+import { HeroStats } from '../../types/heroData'
 import { extractHiddenValues } from '../abilityTooltip'
 
 const HeroAghs = ({

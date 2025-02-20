@@ -2,8 +2,6 @@
 import { Box, Typography } from '@mui/material'
 import { cleanDecimal } from '../../utils/cleanDecimal'
 import colourWins from '../../utils/colourWins'
-import DotaMatch from '../types/matchData'
-import { pickProps } from './pickCounter'
 import { usePickCounterContext } from './pickCounterContext'
 import { usePageContext } from '../stat_page/pageContext'
 import DraftImage from '../table/draftImg'
@@ -91,22 +89,8 @@ export const PlayerPicks = ({ matchKey }: PlayerPickProps) => {
             | 'role'
             | 'hero'
             | 'abilities',
-        role?: string
+
     ) => {
-        let filteredMatches
-        if (targetVal && key) {
-            filteredMatches = matchData.filter(
-                (x: DotaMatch) => x[matchKey] === targetVal && x['role'] === key
-            )
-        } else if (targetVal) {
-            filteredMatches = matchData.filter(
-                (x: DotaMatch) => x[matchKey] === targetVal
-            )
-        } else {
-            filteredMatches = matchData.filter(
-                (x: DotaMatch) => x['role'] === key
-            )
-        }
         // const searchRes = { role: { index: 0, 'matches': filteredMatches } }
         // updateMatchData(filteredMatches, searchRes)
         updateSearchResults(targetVal, searchKey, key)
@@ -162,7 +146,7 @@ export const PlayerPicks = ({ matchKey }: PlayerPickProps) => {
                                 className="svg-icon"
                                 id={roleKey.replace(' ', '-')}
                                 onClick={() =>
-                                    updateData(roleKey, 'role', 'role', roleKey)
+                                    updateData(roleKey, 'role', 'role')
                                 }
                             ></div>
                         </div>

@@ -1,4 +1,3 @@
-import { count } from "console"
 import { combineMatches } from "../../table/table_search/table_search"
 import { TableSearchResults } from "../../table/table_search/types/tableSearchResult.types"
 import DotaMatch from "../../types/matchData"
@@ -6,7 +5,7 @@ import { useState } from "react"
 
 export const useUpdateSearchResults = (searchObj?: TableSearchResults | string, searchResKey?: string, matchKey?: 'items' | 'item_neutral' | 'starting_items' | 'name' | 'role' | 'hero' | 'abilities') => {
     const [filteredData, setFilteredData] = useState<DotaMatch[]>([])
-    const [totalMatchData, setTotalMatchData] = useState<DotaMatch[]>([])
+    const [totalMatchData] = useState<DotaMatch[]>([])
     const [searchResults, setSearchResults] = useState<TableSearchResults>()
     const [count, setCount] = useState<number>()
 
