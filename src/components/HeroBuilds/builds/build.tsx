@@ -14,6 +14,7 @@ import PickStats from '../../types/pickStats'
 import { usePageContext } from '../../stat_page/pageContext'
 import { RoleStrings } from '../../home/home'
 import { UnparsedBuilds } from '../buildHooks/shortBuildHook'
+import { theme } from '../../../main'
 
 export interface BuildProps extends MatchDataAdj {
     data?: any
@@ -59,15 +60,15 @@ const Build = (props: BuildProps) => {
 
 
     const baseButtonStyle = {
-        border: 'solid 2px black',
-        '&:hover': {
-            backgroundColor: 'secondary.main',
-        },
-        '&.Mui-disabled': {
-            backgroundColor: 'secondary.main',
-            color: 'white',
-        },
-    }
+      border: "solid 2px black",
+      "&:hover": {
+        backgroundColor: theme.palette.secondary.main,
+      },
+      "&.Mui-disabled": {
+        backgroundColor: theme.palette.secondary.main,
+        color: "white",
+      },
+    };
     const disabledOpacity = !heroBuilds ? 0.3 : 1
     return (
         <Box color={'white'} className="build-wrapper">
