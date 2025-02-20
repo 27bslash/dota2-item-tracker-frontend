@@ -85,6 +85,7 @@ export type FacetObj = {
     name: string
     title_loc: string
     filter: string
+    Deprecated?: boolean,
 }
 export type FacetBonus = {
     name: string
