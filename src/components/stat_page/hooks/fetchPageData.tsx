@@ -26,7 +26,8 @@ export const useFetchAllData = (type: string) => {
     const getData = async () => {
         let merged
         let url = `${baseApiUrl}${type}/${nameParam}/react-test?skip=0&length=10`
-
+        if (role)
+            url = `${baseApiUrl}${type}/${nameParam}/react-test?skip=0&length=10&role=${role}`
         const countDocsUrl = `${baseApiUrl}hero/${nameParam}/count_docs?collection=heroes`
         const matches: { data: DotaMatch[]; picks: PickStats } =
             await fetchData(url)

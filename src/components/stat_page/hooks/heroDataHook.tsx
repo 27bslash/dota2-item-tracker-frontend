@@ -6,7 +6,6 @@ import { PageHeroData } from '../../types/heroData'
 export const useHeroData = (
     type: string,
     totalMatchData: DotaMatch[],
-    role: string,
     nameParam: string
 ) => {
     const [heroData, setHeroData] = useState<PageHeroData>({})

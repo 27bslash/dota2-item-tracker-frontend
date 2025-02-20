@@ -16,6 +16,7 @@ export type UnparsedBuilds = {
         key: number
         count: number
         perc: string
+        title:string
     }[]
     length: number
 }

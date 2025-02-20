@@ -1,10 +1,8 @@
 import TalentImg from '../../table/talentImg'
 import TalentTooltip from '../../tooltip/talentTooltip'
 import Tip from '../../tooltip/tooltip'
-import { mostUsedTalents } from './talentLevels'
 import { Box, Typography } from '@mui/material'
 import { usePageContext } from '../../stat_page/pageContext'
-import { NonProDataType } from '../types'
 import { Talent } from '../builds/buildCell'
 
 export const TalentBuild = (props: {

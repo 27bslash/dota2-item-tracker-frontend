@@ -22,14 +22,14 @@ function processItemGroup(itemGroup: any, type: string, choiceSet: Set<string>) 
 
         if (choiceSet.has(targetKey) || choiceSet.has(optionKey)) continue;
 
-        removeDuplicateItems(itemGroup, type, targetKey, optionKey, otherType);
+        removeDuplicateItems(itemGroup, type,  optionKey, otherType);
 
         choiceSet.add(targetKey);
         choiceSet.add(optionKey);
     }
 }
 
-function removeDuplicateItems(itemGroup: any, type: string, targetKey: string, optionKey: string, otherType: string) {
+function removeDuplicateItems(itemGroup: any, type: string,  optionKey: string, otherType: string) {
     const idx = itemGroup[type].findIndex((x: CoreItem) => x['key'] === optionKey);
     const situationalIdx = itemGroup[otherType].findIndex((x: CoreItem) => x['key'] === optionKey);
 

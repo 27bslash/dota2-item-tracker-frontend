@@ -1,12 +1,11 @@
-/* eslint-disable no-unused-vars */
 import { useEffect, useState } from "react";
 import AghanimTooltip from "./aghanimTooltip";
 import TooltipAttributes from "./tooltipAttributes";
 import TooltipDescription from "./tooltipDescription";
 import TooltipLore from "./tooltipLore";
-
 import { usePageContext } from "../stat_page/pageContext";
 import { Typography } from "@mui/material";
+import { Item } from "../types/Item";
 
 interface ItemTooltipProps {
   itemId?: number;

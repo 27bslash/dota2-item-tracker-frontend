@@ -82,7 +82,7 @@ export const useHeroBuilds = (
                     const talents = Object.entries(buildData['talents'])
                     const res = {
                         item_builds: itemBuild,
-                        facet_builds: buildData['facets'],
+                        facet_builds: buildData.facets,
                         ability_builds: abilityBuilds[0],
                         starting_items: startingItemBuilds,
                         neutral_items: neutralItems,

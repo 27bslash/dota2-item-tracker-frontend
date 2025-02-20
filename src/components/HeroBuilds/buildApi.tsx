@@ -33,13 +33,10 @@ const BuildDataJson = ({
 
     for (const k in filteredData) {
         filteredData[k] = filteredData[k].filter(
-            (x) => x.patch === patchObj['patch']
+            (heroBuildObj) => heroBuildObj.patch === patchObj['patch']
         )
     }
-    // filteredData!.forEach((element) => {
-    //     console.log(patch)
-    //     return filteredData!.element.filter((x) => x.patch === patch)
-    // })
+
     const updatedBuildData = useHeroBuilds(
         filteredData!,
         heroData!,
