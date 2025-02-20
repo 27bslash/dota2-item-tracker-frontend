@@ -52,6 +52,7 @@ const Page = ({ type, heroList, playerList }: pageProps) => {
     const [Role, setRole] = useState(role)
     const [pageNumber, setPageNumber] = useState(0)
     const [count, setCount] = useState(0)
+    const [filteringByPatch, setFilteringByPatch] = useState(false)
     const nameParam = params['name'] ? heroSwitcher(params['name']) : ''
     const heroColor = useHeroColor(type, nameParam)
     const updateStarter = () => {
@@ -228,15 +229,21 @@ const Page = ({ type, heroList, playerList }: pageProps) => {
             setFilteredData([...filteredData].filter((x) => x.role === role))
         }
     }
-    const filterByPatch = () => {
-        const patchFilteredData = filteredData.filter((match) => {
-            return match['patch'] === patch_obj['patch']
-        })
-        setTotalMatchData(patchFilteredData)
-        setFilteredData(patchFilteredData)
-        setCount(totalMatchData.length)
-    }
-
+    useEffect(() => {
+        if (!totalMatches) return
+        if (filteringByPatch) {
+            const patchFilteredData = filteredData.filter((match) => {
+                return match['patch'] === patch_obj['patch']
+            })
+            setTotalMatchData(patchFilteredData)
+            setFilteredData(patchFilteredData)
+            setCount(totalMatchData.length)
+        } else {
+            setTotalMatchData(totalMatches)
+            setFilteredData(totalMatches)
+            setCount(totalMatches.length)
+        }
+    }, [filteringByPatch])
     const commonProps = {
         heroData: heroData,
         nameParam: nameParam,
@@ -264,27 +271,33 @@ const Page = ({ type, heroList, playerList }: pageProps) => {
         return null
     }
     const renderFilterByPatch = () => {
-        const oldPatchGameList = totalMatchData.filter(
-            (x) =>
+        if (!totalMatches) return null
+        const oldPatchGameList = totalMatches.filter(
+            (match) =>
                 patch_obj['patch_timestamp'] > 0 &&
-                x.patch !== patch_obj['patch']
+                match.patch !== patch_obj['patch']
         )
         return (
             !!oldPatchGameList.length &&
             oldPatchGameList.length !== totalMatchData.length && (
-                <Typography
-                    variant="h5"
-                    color="white"
-                    align="center"
-                    onClick={() => filterByPatch()}
-                >
-                    <Link
-                        to={`/${patch_obj['patch']}/hero/${heroSwitcher(
-                            nameParam
-                        )}`}
-                    >
-                        Filter Matches By {patch_obj['patch']}
-                    </Link>
+                <Typography variant="h5" color="white" align="center">
+                    {!params['patch'] ? (
+                        <Link
+                            onClick={() => setFilteringByPatch(true)}
+                            to={`/${patch_obj['patch']}/hero/${heroSwitcher(
+                                nameParam
+                            )}`}
+                        >
+                            Filter Matches By {patch_obj['patch']}
+                        </Link>
+                    ) : (
+                        <Link
+                            onClick={() => setFilteringByPatch(false)}
+                            to={`/hero/${heroSwitcher(nameParam)}`}
+                        >
+                            Show All Games
+                        </Link>
+                    )}
                 </Typography>
             )
         )
