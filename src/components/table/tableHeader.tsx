@@ -1,5 +1,5 @@
 import { TableCell, TableHead, TableRow, TableSortLabel } from "@mui/material"
-import { useEffect, useState } from 'react';
+import { JSX, useEffect, useState } from 'react';
 
 
 export const OrderableCell = (props: any) => {
