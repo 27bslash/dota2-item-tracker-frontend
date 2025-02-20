@@ -148,8 +148,8 @@ export const useHeroBuilds = (
     }, [
         filteredData,
         shortBuild,
-        filterBoots,
-        filterComponents,
+        // filterBoots,
+        // filterComponents,
         filterConsumables,
     ])
     // console.log(heroBuilds)
