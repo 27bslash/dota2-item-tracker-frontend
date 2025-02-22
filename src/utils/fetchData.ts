@@ -68,7 +68,10 @@ export const updateEtag = (
   newLastModified: string
 ) => {
   const etagCache = JSON.parse(localStorage.getItem("etagCache") || "[]");
-
+  if (!newEtag || !newLastModified) {
+    console.warn(`no new etag or last modified for some reason for ${url}`);
+    return;
+  }
   const index = etagCache.findIndex(
     (entry: { url: string }) => entry.url === url
   );

@@ -41,12 +41,13 @@ export const useHeroData = (
     const hJson = await hData.json();
     const o = heroData;
     o[hero] = hJson["heroData"];
-
-    updateEtag(
-      `files/hero-data/${hero}`,
-      hData.headers.get("ETag")!,
-      hData.headers.get("Last-Modified")!
-    );
+    if (hData.headers.get("ETag") && hData.headers.get("ETag") !== null) {
+      updateEtag(
+        `files/hero-data/${hero}`,
+        hData.headers.get("ETag") as string,
+        hData.headers.get("Last-Modified") as string
+      );
+    }
 
     setHeroData(o);
   }
