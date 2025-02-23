@@ -10,9 +10,11 @@ interface heroList {
     name: string
     id: number
 }
-export const baseApiUrl =
-    'https://2x76hyghfd2tc2mdx2t4owwp5m0itmkb.lambda-url.eu-west-2.on.aws/'
+// export const baseApiUrl =
+//   "https://2x76hyghfd2tc2mdx2t4owwp5m0itmkb.lambda-url.eu-west-2.on.aws/";
 // export const baseApiUrl ='http://127.0.0.1:5000/'
+export const baseApiUrl =
+  "https://7fy1yb51r6.execute-api.eu-west-2.amazonaws.com/dev/";
 
 function App() {
     const [heroList, setHeroList] = useState<heroList[]>([])
