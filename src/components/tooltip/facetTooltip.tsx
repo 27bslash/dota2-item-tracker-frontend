@@ -1,10 +1,6 @@
 import { useState, useEffect } from "react";
 import { highlight_numbers } from "./tooltipDescription";
-import {
-  FacetObj,
-  HeroAbilities,
-  HeroStats,
-} from "../types/heroData";
+import { FacetObj, HeroAbilities, HeroStats } from "../types/heroData";
 import { Box, Typography } from "@mui/material";
 import TooltipAttributes from "./tooltipAttributes";
 import { extractHiddenValues } from "./abilityTooltip";
@@ -57,11 +53,16 @@ export const facetBackground = (facet: FacetObj) => {
     filter: facet.filter,
   };
 };
+type facetAbilityObj = {
+  ability: HeroAbilities;
+  innateAbility: boolean;
+};
 export const FacetTooltip = ({ img, facet, heroStats }: facetToolipProps) => {
-  const [ability, setAbility] = useState<HeroAbilities>();
+  const [facetAbilityObj, setFacetAbilityObj] = useState<facetAbilityObj>();
 
   useEffect(() => {
     // clean facets
+    let abilitySet = false;
     for (const [i, f] of heroStats.facets.entries()) {
       if (
         f.Deprecated ||
@@ -80,9 +81,24 @@ export const FacetTooltip = ({ img, facet, heroStats }: facetToolipProps) => {
             true
           );
           f.ability_loc = s;
-          setAbility(heroStats.abilities[key]);
+          setFacetAbilityObj({
+            innateAbility: false,
+            ability: heroStats.abilities[key],
+          });
+          abilitySet = true;
         }
       }
+    }
+    if (!abilitySet) {
+      const idx = heroStats.facets.findIndex(
+        (x) => x.title_loc === facet.title_loc
+      );
+      //   heroStats.facet_abilities[idx].abilities[0]
+      const innatefacetAbility = heroStats.facet_abilities[idx].abilities[0];
+      setFacetAbilityObj({
+        innateAbility: true,
+        ability: innatefacetAbility,
+      });
     }
   }, [facet, heroStats]);
   if (!facet || facet.Deprecated) return null;
@@ -160,7 +176,7 @@ export const FacetTooltip = ({ img, facet, heroStats }: facetToolipProps) => {
             className="tooltip-content"
             style={{ backgroundColor: "#181f24" }}
           >
-            {!facet.ability_loc &&
+            {!facetAbilityObj &&
               facet["description_loc"] &&
               facet.ability_loc != facet["description_loc"] &&
               facet["description_loc"].length && (
@@ -177,7 +193,7 @@ export const FacetTooltip = ({ img, facet, heroStats }: facetToolipProps) => {
                   ></p>
                 </div>
               )}
-            {facet.ability_loc && ability && (
+            {facet.ability_loc && facetAbilityObj && (
               <>
                 <Box
                   display={"flex"}
@@ -190,7 +206,11 @@ export const FacetTooltip = ({ img, facet, heroStats }: facetToolipProps) => {
                 >
                   <img
                     height="30px"
-                    src={`https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/abilities/${ability["name"]}.png`}
+                    src={
+                      !facetAbilityObj["innateAbility"]
+                        ? `https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/abilities/${facetAbilityObj.ability.name}.png`
+                        : `https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/icons/facets/${facet.icon}.png`
+                    }
                     onError={(e) => {
                       const target = e.target as HTMLImageElement;
                       target.onerror = null;
@@ -207,7 +227,9 @@ export const FacetTooltip = ({ img, facet, heroStats }: facetToolipProps) => {
                       fontFamily: "reaver, serif",
                     }}
                   >
-                    {ability["name_loc"]}
+                    {!facetAbilityObj["innateAbility"]
+                      ? facetAbilityObj["ability"]["name_loc"]
+                      : "Passive effect"}
                   </Typography>
                 </Box>
                 <div
@@ -221,6 +243,17 @@ export const FacetTooltip = ({ img, facet, heroStats }: facetToolipProps) => {
                 ></div>
               </>
             )}
+            {facet.ability_loc && !facetAbilityObj && (
+              <div
+                style={{
+                  letterSpacing: "1px",
+                  marginBottom: "15px",
+                }}
+                dangerouslySetInnerHTML={{
+                  __html: highlight_numbers(facet["ability_loc"]),
+                }}
+              ></div>
+            )}
             {facet.notes && !!facet.notes.length && (
               <div
                 style={{
@@ -232,10 +265,10 @@ export const FacetTooltip = ({ img, facet, heroStats }: facetToolipProps) => {
                 }}
               ></div>
             )}
-            {ability && (
+            {facetAbilityObj && facetAbilityObj["ability"] && (
               <TooltipAttributes
-                itemProperties={ability}
-                type="facet"
+                itemProperties={facetAbilityObj["ability"]}
+                type={!facetAbilityObj["innateAbility"] ? "facet" : "ability"}
               ></TooltipAttributes>
             )}
           </div>

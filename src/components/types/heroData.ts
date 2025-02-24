@@ -11,7 +11,7 @@ export type HeroStats = {
   damage_max: number;
   damage_min: number;
   facets: FacetObj[];
-  facet_abilities: HeroAbilities | [];
+  facet_abilities: { abilities: HeroAbilities[] | [] }[];
   health_regen: number;
   hero: string;
   hype_loc: string;
