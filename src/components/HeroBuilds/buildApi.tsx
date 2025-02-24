@@ -73,7 +73,7 @@ export const BuildApi = () => {
             const currentPatch = await fetchData(`${baseApiUrl}files/patch`)
             setPatch(currentPatch)
             const hJson = await hData.json()
-            setHeroData({ [heroName]: hJson })
+            setHeroData({ [heroName]: hJson.heroData })
             if (matches && itemData) {
                 console.log(matches, itemData)
             }
