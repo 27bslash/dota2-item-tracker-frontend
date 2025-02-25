@@ -40,7 +40,7 @@ export async function fetchItems(url: string) {
   try {
     const response = await fetch(`${baseApiUrl}${url}`, { headers });
     if (response.status === 304) {
-      console.log("No update needed, using cached data");
+      console.log(`No update needed, for ${url} using cached data`);
       return null;
     }
 

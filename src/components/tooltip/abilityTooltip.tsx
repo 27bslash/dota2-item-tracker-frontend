@@ -52,6 +52,17 @@ const AbilityTooltip = (props: any) => {
                 // }}
               >
                 <div
+                  style={{
+                    backgroundImage:
+                      'url("https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/icons/facets/ripple_texture.png")',
+                    backgroundSize: "cover",
+                    height: "95px",
+                    width: "100%",
+                    position: "absolute",
+                    opacity: 0.2,
+                  }}
+                ></div>
+                <div
                   className="tooltip-line-one"
                   style={{
                     background: `linear-gradient(to right, ${data}, #11171c)`,
@@ -118,6 +129,7 @@ export const extractHiddenValues = (
   facet?: boolean
 ) => {
   const sp = text.replace("bonus_", "").split("%");
+  console.log(sp);
   specialValues.forEach((x) => {
     x["name"] = x["name"].replace("bonus_", "");
     if (sp.includes(x["name"])) {
@@ -133,9 +145,11 @@ export const extractHiddenValues = (
           int: number[] | string[] = x["values_int"];
         if (x["is_percentage"]) {
           float = float.map((el: number | string) => (el += "%"));
-          if (int) int = int.map((el: number | string) => (el += "%"));
-          sp[sp.indexOf(x["name"])] = `${float || ""}${int || ""}`;
+          if (int) {
+            int = int.map((el: number | string) => (el += "%"));
+          }
         }
+        sp[sp.indexOf(x["name"])] = `${float || ""}${int || ""}`;
       }
     }
   });
