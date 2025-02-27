@@ -37,7 +37,7 @@ export const useHeroBuilds = (
     itemData: Items,
     api: boolean,
     shortBuild?: { [key: string]: UnparsedBuilds },
-    filterConsumables?: string
+    filter?: string
 ) => {
     const [heroBuilds, setHeroBuilds] = useState<Record<string, HeroBuild>>()
     // const [filterComponents, setFilterComponents] = useState(false)
@@ -109,13 +109,14 @@ export const useHeroBuilds = (
                         buildData = buildData.filter(
                             (match) => match.variant === facetSort[0]['key']
                         )
+                        filter = "consumables"
                     }
                     const itemBuild = filterItems(
                         itemData,
                         key,
                         buildData,
                         undefined,
-                        filterConsumables
+                        filter
                     )
                     const count = itemBuildLengthChecker(itemBuild)
                     if (count < 2) {
@@ -150,7 +151,7 @@ export const useHeroBuilds = (
         shortBuild,
         // filterBoots,
         // filterComponents,
-        filterConsumables,
+        filter,
     ])
     // console.log(heroBuilds)
     return heroBuilds
