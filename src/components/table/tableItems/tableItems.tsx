@@ -123,13 +123,11 @@ const TableItems = ({ heroName }: { heroName?: string }) => {
           </div>
         </ArrowButton>
       )}
-      <>
-        <Abilities
-          visitedTalents={visitedTalents}
-          imageHost={image_host}
-          width={width}
-        />
-      </>
+      <Abilities
+        visitedTalents={visitedTalents}
+        imageHost={image_host}
+        width={width}
+      />
       {row.radiant_draft && (
         <div className="draft">
           <div className="radiant-draft">
