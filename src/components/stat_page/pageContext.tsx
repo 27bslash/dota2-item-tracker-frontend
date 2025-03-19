@@ -25,7 +25,8 @@ type PageContextType = {
             | 'hero'
             | 'abilities'
             | 'variant',
-        resultKey?: string
+        resultKey?: string,
+        hero?:string
     ) => void
 }
 const PageContext = createContext<PageContextType | null>(null)

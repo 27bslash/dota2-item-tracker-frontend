@@ -124,7 +124,8 @@ const Page = ({ type, heroList, playerList }: pageProps) => {
     searchObj?: TableSearchResults | string | number,
     searchResKey?: string,
     matchKey?: SearchResultKeyType,
-    resultKey?: string
+    resultKey?: string,
+    hero?: string
   ) => {
     let obj: TableSearchResults = {};
     if (!searchObj && !searchResKey) {
@@ -140,7 +141,13 @@ const Page = ({ type, heroList, playerList }: pageProps) => {
       typeof searchObj === "number"
     ) {
       console.log(matchKey, searchObj, searchResKey);
-      newFilteredData = totalMatchData.filter((x) => x[matchKey] === searchObj);
+      newFilteredData = totalMatchData.filter((x) => {
+        if (hero) {
+          return x[matchKey] === searchObj && x.hero === hero;
+        } else {
+          return x[matchKey] === searchObj;
+        }
+      });
       obj = {
         [searchResKey]: {
           [searchObj]: {
@@ -202,7 +209,7 @@ const Page = ({ type, heroList, playerList }: pageProps) => {
   // }, [searchRes]);
   const updateMatchData = (
     data: DotaMatch[],
-    searchValue?: TableSearchResults,
+    searchValue?: TableSearchResults
   ) => {
     // setMatchData(data)
     if (!data.length) return;

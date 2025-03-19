@@ -6,17 +6,17 @@ import { FacetTooltip } from "../../tooltip/facetTooltip";
 import Tip from "../../tooltip/tooltip";
 
 type FacetProps = {
+  hero: string;
   variant?: number;
   imgWidth: number;
 };
-export const Facet = ({ variant, imgWidth }: FacetProps) => {
-  const { nameParam, heroData } = usePageContext();
+export const Facet = ({ hero, variant, imgWidth }: FacetProps) => {
+  const { heroData, updateSearchResults } = usePageContext();
   const [facet, setFacet] = useState<FacetObj>();
-  const { updateSearchResults } = usePageContext();
 
   useEffect(() => {
-    if (!variant || !heroData || !nameParam) return;
-    const data = heroData[nameParam];
+    if (!variant || !heroData || !hero) return;
+    const data = heroData[hero];
     if (!data) return;
     const facets = data["facets"];
     let decrement = 1;
@@ -26,9 +26,16 @@ export const Facet = ({ variant, imgWidth }: FacetProps) => {
         continue;
       }
       setFacet(facets[variant - decrement]);
+      //   console.log(
+      //     "facet choice",
+      //     facets[variant - decrement],
+      //     variant,
+      //     decrement,
+      //     heroData[nameParam].facets
+      //   );
       break;
     }
-  }, [heroData, variant, nameParam]);
+  }, [heroData, variant, hero]);
   const icon =
     facet && !facet.Deprecated
       ? `https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/icons/facets/${facet.icon}.png`
@@ -38,16 +45,18 @@ export const Facet = ({ variant, imgWidth }: FacetProps) => {
       {facet && (
         <Tip
           component={
-            <FacetTooltip
-              img={icon}
-              facet={facet}
-              heroStats={heroData[nameParam]}
-            />
+            <FacetTooltip img={icon} facet={facet} heroStats={heroData[hero]} />
           }
         >
           <Box
             onClick={() =>
-              updateSearchResults(variant, "facet", "variant", facet.title_loc)
+              updateSearchResults(
+                variant,
+                "facet",
+                "variant",
+                facet.title_loc,
+                hero
+              )
             }
           >
             <img
