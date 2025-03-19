@@ -1,7 +1,8 @@
 import { usePageContext } from "../../stat_page/pageContext";
 import TalentTooltip from "../../tooltip/talentTooltip";
 import Tip from "../../tooltip/tooltip";
-import DotaMatch, { HeroAbility } from "../../types/matchData";
+import { HeroAbility } from "../../types/matchData";
+import { useTableContext } from "../tableContext";
 import TalentImg from "../talentImg";
 import { AbilityImg } from "./abilityImg";
 import { Facet } from "./facet";
@@ -10,19 +11,17 @@ type AbilitiesProps = {
   imageHost: string;
   width: string;
   visitedTalents: HeroAbility[][];
-  variant?: number;
-  row: DotaMatch;
 };
 
 export const Abilities = ({
-  row,
   imageHost,
   width,
   visitedTalents,
 }: AbilitiesProps) => {
+  const { heroData } = usePageContext();
+  const { row } = useTableContext();
   const len = row.abilities.length + 1;
   const imgWidth = Math.floor((+width - 50) / len);
-  const { heroData } = usePageContext();
   return (
     <div className="abilities" style={{ alignItems: "flex-end" }}>
       {!!Object.keys(heroData).length && (
