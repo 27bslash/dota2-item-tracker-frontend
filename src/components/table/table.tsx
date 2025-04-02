@@ -89,7 +89,7 @@ const CustomTable = (props: TableProps) => {
                             showStarter={props.showStarter}
                             type={props.type}
                         />
-                        <CustomTableBody data={sortTable()} heroData={props.heroData} type={props.type} page={page} nameParam={props.nameParam}
+                        <CustomTableBody data={filteredData} heroData={props.heroData} type={props.type} page={page} nameParam={props.nameParam}
                             totalMatchData={totalMatchData} heroList={props.heroList} playerList={props.playerList} itemData={props.itemData}
                             showStarter={props.showStarter} role={props.role} updateMatchData={props.updateMatchData}></CustomTableBody>
                         <TableFooter >

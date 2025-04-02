@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import { faCopy } from "@fortawesome/free-solid-svg-icons";
-import { TableBody, TableRow, TableCell } from "@mui/material";
+import { TableBody, TableRow, TableCell, Box, Typography } from "@mui/material";
 import TimeAgo from "javascript-time-ago";
 import TableItems from "./tableItems/tableItems";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -202,7 +202,25 @@ const CustomTableBody = (props: BodyProps) => {
               <TableCell sx={{ color: "white" }}>
                 {new Date(1000 * row.duration).toISOString().substring(11, 19)}
               </TableCell>
-              <TableCell sx={{ color: "white" }}>{row.mmr}</TableCell>
+              <TableCell sx={{ color: "white" }}>
+                {row.mmr !== 99999 ? (
+                  <Typography>{row.mmr}</Typography>
+                ) : (
+                  <Box
+                    color={"black"}
+                    sx={{
+                      color: "black",
+                      border: "solid black 2px",
+                      borderRadius: "20%",
+                      textAlign: "center",
+                      background:
+                        "linear-gradient(90deg, hsla(14, 90%, 73%, 1) 0%, hsla(331, 54%, 44%, 1) 100%)",
+                    }}
+                  >
+                    PRO
+                  </Box>
+                )}
+              </TableCell>
             </TableRow>
           </TableContextProvider>
         );
@@ -210,5 +228,9 @@ const CustomTableBody = (props: BodyProps) => {
     </TableBody>
   );
 };
-
+// background: radial-gradient(circle, hsla(33, 100%, 53%, 1) 0%, hsla(58, 100%, 68%, 1) 100%);
+// background: -webkit-linear-gradient(90deg, hsla(217, 100%, 50%, 1) 0%, hsla(186, 100%, 69%, 1) 100%);
+// background: -webkit-linear-gradient(0deg, hsla(152, 100%, 50%, 1) 0%, hsla(186, 100%, 69%, 1) 100%);
+// background: -webkit-linear-gradient(0deg, hsla(33, 100%, 53%, 1) 0%, hsla(58, 100%, 68%, 1) 100%);
+// background: -webkit-linear-gradient(0deg, hsla(14, 90%, 73%, 1) 0%, hsla(331, 54%, 44%, 1) 100%);
 export default CustomTableBody;

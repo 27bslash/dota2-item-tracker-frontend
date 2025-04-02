@@ -22,7 +22,6 @@ export const useHeroData = (
         //     `${baseApiUrl}files/hero-data/${nameParam}`
         // )
         if (hData) {
-          console.log(hData.heroData);
           setHeroData({ [nameParam]: hData.heroData });
         } else {
           getHeroData(nameParam);
@@ -35,7 +34,7 @@ export const useHeroData = (
       }
     };
     async_get();
-  }, [totalMatchData]);
+  }, [totalMatchData, nameParam]);
   async function getHeroData(hero: string) {
     const hData = await fetch(`${baseApiUrl}files/hero-data/${hero}`);
     const hJson = await hData.json();
