@@ -30,17 +30,19 @@ export interface BuildProps extends MatchDataAdj {
 }
 
 const Build = (props: BuildProps) => {
-  const [proData, setProData] = useState(false);
+  const [proFilter, setproFilter] = useState(false);
   const [open, setOpen] = useState(false);
   const [filterType, setFilterType] = useState<string | undefined>('consumables');
   const { itemData, heroData, nameParam, totalMatchData, searchRes } =
     usePageContext();
   const buildsData = useParseMatchData(
-    proData,
+    true,
     totalMatchData,
     nameParam,
     props,
-    searchRes
+    searchRes,
+    undefined,
+    proFilter
   );
   const heroBuilds = useHeroBuilds(
     buildsData!,
@@ -108,10 +110,10 @@ const Build = (props: BuildProps) => {
               <Button
                 variant="contained"
                 color="primary"
-                onClick={() => setProData((prevstate) => !prevstate)}
+                onClick={() => setproFilter((prevstate) => !prevstate)}
                 sx={baseButtonStyle}
               >
-                <Typography>{!proData ? " Pro data" : "non pro"}</Typography>
+                <Typography>{!proFilter ? " Pro data" : "non pro"}</Typography>
               </Button>
               <Button
                 variant="contained"

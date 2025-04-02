@@ -40,7 +40,7 @@ const humanToUnix = (time: string | number) => {
 export const countItems = (
     data: NonProDataType[],
     itemData: Items,
-    filterConsumables?: string
+    filter?: string
 ) => {
     const consumables: string[] = [
         'tango',
@@ -74,7 +74,7 @@ export const countItems = (
         for (const [i, item] of match['items'].entries()) {
             if (item['key'] == 'tpscroll') continue
             if (
-                filterConsumables === 'consumables' &&
+                filter === 'consumables' &&
                 consumables.includes(item['key'])
             )
                 continue
@@ -227,11 +227,11 @@ const filterItems = (
     roleKey: string,
     matchData?: NonProDataType[],
     shortBuild?: UnparsedBuilds,
-    filterConsumables?: string
+    filter?: string
 ) => {
     // const start = performance.now()
     let itemBuild = !shortBuild
-        ? countItems(matchData!, itemData, filterConsumables)
+        ? countItems(matchData!, itemData, filter)
         : (shortBuild['items'].map((x) => [
               x['key'],
               {

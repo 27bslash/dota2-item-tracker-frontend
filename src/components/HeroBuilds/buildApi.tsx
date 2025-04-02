@@ -23,7 +23,7 @@ const BuildDataJson = ({
     itemData: Items
 }) => {
     const filteredData = useParseMatchData(
-        false,
+        true,
         undefined,
         heroName,
         { picks: totalPicks },
