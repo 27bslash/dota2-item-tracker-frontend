@@ -1,3 +1,4 @@
+import { Box, Typography } from "@mui/material";
 import { damageType } from "./abilityAttributes";
 
 const TooltipAttributes = (props: any) => {
@@ -8,7 +9,7 @@ const TooltipAttributes = (props: any) => {
           (
             x: {
               key: string;
-              value: string | string[];
+              value: string;
               footer: string;
               header: string;
             },
@@ -19,15 +20,20 @@ const TooltipAttributes = (props: any) => {
               : x.header.replace(/[+-]/g, (m) => (m === "_" ? " " : ""));
             const headerSymbol = x.header.replace(/[^+-]/g, "").trim();
             const value =
-              typeof x.value === "string" ? x.value : x.value.join("/");
+              x.value.split(" ").join(" / ") +
+              (attribName.match("%") ? "%" : "");
             return (
-              <p key={i} className="attribute">
-                {headerSymbol}{" "}
-                <strong>
-                  <span className="tooltip-text-highlight">{value}</span>
-                </strong>{" "}
-                {attribName}
-              </p>
+              <Box display={"flex"} key={i}>
+                <Typography className="attribute">
+                  {headerSymbol}
+                  <strong>
+                    <span className="tooltip-text-highlight">{value}</span>
+                  </strong>
+                </Typography>
+                <Typography marginLeft={"4px"}>
+                  {attribName.replace("%", "")}
+                </Typography>
+              </Box>
             );
           }
         )}
@@ -98,7 +104,11 @@ export const AbilityAttribute = (props: {
       <strong>
         <span
           className="tooltip-text-highlight"
-          style={{ color: color, textTransform: "capitalize",marginLeft: '5px' }}
+          style={{
+            color: color,
+            textTransform: "capitalize",
+            marginLeft: "5px",
+          }}
         >
           {value}
         </span>

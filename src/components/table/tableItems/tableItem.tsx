@@ -20,6 +20,7 @@ type TItemProp = {
   updateMatchData?: MatchDataAdj["updateMatchData"];
   row?: DotaMatch;
   role?: RoleStrings;
+  enchant?: string;
 };
 const TableItem = (props: TItemProp) => {
   const image_host = "https://ailhumfakp.cloudimg.io/v7/";
@@ -66,6 +67,7 @@ const TableItem = (props: TItemProp) => {
           img={link}
           itemId={props.itemId}
           itemKey={props.itemKey}
+          enchant={props.enchant}
         />
       }
     >
@@ -105,7 +107,7 @@ const TableItem = (props: TItemProp) => {
 
       {props.type === "neutral" && (
         <div className="neutral-cell table-cell-outline" onClick={updateTable}>
-          <div className="circle">
+          <div className="circle" style={{ height: "55px", width: "55px" }}>
             <img
               id="neutral-item"
               className="item-img"

@@ -1,93 +1,138 @@
-import { Items } from '../../../types/Item'
-import { NonProDataType } from '../../types'
-export type NeutralItemsStats = {
-    [key: string]: {
-        key: string
-        count: number
-        tier: number
-        perc: number
-    }[]
-}
+import { Items } from "../../../types/Item";
+import { NonProDataType } from "../../types";
+
+export type NeutralItemCounts = {
+  key: string;
+  count: number;
+  tier: number;
+  totalGameOfTier?: number;
+  perc: number;
+  enchantment?: string;
+};
+
+export type NeutralItemsStats = Record<string, NeutralItemCounts>;
+
 export const mostUsedNeutrals = (
-    matchData: NonProDataType[],
-    itemData: Items,
+  matchData: NonProDataType[],
+  itemData: Items
 ) => {
-    const tierCountArr: Record<
-        string,
-        { count: number; tier: number; perc: number }
-    >[] = []
-    // iterate over all neutral item tiers
-    for (let i = 1; i < 6; i++) {
-        const count: Record<
-            string,
-            { count: number; tier: number; perc: number }
-        > = {}
-        const totalGameOfTier = matchData.filter(
-            (match: { item_neutral?: string }) => {
-                if (match['item_neutral']) {
-                    const neutralItemStats =
-                        itemData['items'][match['item_neutral']]
-                    const neutralTier = neutralItemStats
-                        ? neutralItemStats['tier']
-                        : -1
-                    return neutralTier === i
-                }
-            }
-        ).length
-        for (const match of matchData) {
-            if (match['item_neutral']) {
-                const neutralItemStats =
-                    itemData['items'][match['item_neutral']]
-                const neutralTier = neutralItemStats
-                    ? neutralItemStats['tier']
-                    : -1
-                if (neutralTier === i) {
-                    if (count[match['item_neutral']]) {
-                        const itemCount =
-                            count[match['item_neutral']]['count'] + 1
-                        count[match['item_neutral']] = {
-                            count: itemCount,
-                            tier: neutralTier,
-                            perc: (itemCount / totalGameOfTier) * 100,
-                        }
-                    } else {
-                        count[match['item_neutral']] = {
-                            count: 1,
-                            tier: neutralTier,
-                            perc: (1 / totalGameOfTier) * 100,
-                        }
-                    }
-                }
-                // if (count[match['item_neutral']]) {
-                //     count[match['item_neutral']] = { 'count': count[match['item_neutral']]['count'] + 1, 'tier': neutralTier }
-                // }
-            }
-        }
-        tierCountArr.push(count)
+  const tierCountArr: {
+    enchants: NeutralItemsStats;
+    neutral_items: NeutralItemsStats;
+  }[] = [];
+
+  for (let tier = 1; tier <= 5; tier++) {
+    const neutralItemCount: NeutralItemsStats = {};
+    const enchantmentCount: NeutralItemsStats = {};
+
+    const totalGameOfTier = matchData.reduce((count, match) => {
+      if (match.neutral_item_history) {
+        return (
+          count +
+          match.neutral_item_history.filter((item) => {
+            const neutralItem = itemData.items[item.item_neutral];
+            return neutralItem.tier === tier;
+          }).length
+        );
+      }
+
+      const neutralItem = itemData.items[match.item_neutral!];
+      return count + (neutralItem.tier === tier ? 1 : 0);
+    }, 0);
+
+    for (const match of matchData) {
+      if (match.neutral_item_history) {
+        match.neutral_item_history.forEach(
+          ({ item_neutral, item_neutral_enhancement }) => {
+            const neutralItem = itemData.items[item_neutral];
+            if (neutralItem?.tier !== tier) return;
+
+            const customKey = `${item_neutral}__${item_neutral_enhancement}`;
+            const itemCount = (neutralItemCount[customKey]?.count || 0) + 1;
+
+            neutralItemCount[customKey] = {
+              key: customKey,
+              count: itemCount,
+              tier,
+              totalGameOfTier,
+              perc: (itemCount / totalGameOfTier) * 100,
+            };
+          }
+        );
+      } else if (match.item_neutral) {
+        const neutralItem = itemData.items[match.item_neutral];
+        if (neutralItem.tier !== tier) continue;
+
+        const itemCount =
+          (neutralItemCount[match.item_neutral]?.count || 0) + 1;
+
+        neutralItemCount[match.item_neutral] = {
+          key: match.item_neutral,
+          count: itemCount,
+          tier,
+          totalGameOfTier,
+          perc: (itemCount / totalGameOfTier) * 100,
+        };
+      }
     }
-    console.log('all neutrals: ', tierCountArr)
-    const ret: NeutralItemsStats = {}
-    // const ret = []
-    for (const [i, tierArr] of tierCountArr.entries()) {
-        const sorted = Object.entries(tierArr)
-            .sort((a, b) => {
-                return b[1]['count'] - a[1]['count']
-            })
-            .slice(0, 4)
-            .map((x) => ({
-                key: x[0],
-                count: x[1]['count'],
-                perc: x[1]['perc'],
-                tier: x[1]['tier'],
-            }))
-        // console.log('sorted neutral items: ', sorted)
-        // ret.push({ [`tier_${i}`]: sorted})
-        ret[`tier_${i}`] = sorted
+
+    tierCountArr.push({
+      enchants: enchantmentCount,
+      neutral_items: neutralItemCount,
+    });
+  }
+
+  const sortNeutrals = (items: NeutralItemsStats) => {
+    const grouped = new Map<
+      string,
+      {
+        count: number;
+        topEnchant: string;
+        tier: number;
+        totalGameOfTier: number;
+      }
+    >();
+
+    for (const [key, item] of Object.entries(items)) {
+      const baseKey = key.split("__")[0];
+      const enchantment = key.split("__")[1];
+
+      if (!grouped.has(baseKey)) {
+        grouped.set(baseKey, {
+          count: 0,
+          topEnchant: enchantment,
+          tier: item.tier,
+          totalGameOfTier: item.totalGameOfTier!,
+        });
+      }
+
+      grouped.get(baseKey)!.count += item.count;
     }
-    return ret
-    // const countArr = Object.values(count)
-    // console.log(count)
-    // for (let neutralCount in count) {
-    //     console.log(neutralCount)
-    // }
-}
+
+    return Array.from(grouped.entries())
+      .map(([key, { count, topEnchant, tier, totalGameOfTier }]) => ({
+        key,
+        count,
+        perc: (count / totalGameOfTier) * 100,
+        tier,
+        enchantment: topEnchant,
+      }))
+      .sort((a, b) => b.count - a.count);
+  };
+
+  const result: Record<string, { neutral_items: NeutralItemCounts[] }> = {
+    tier_1: { neutral_items: [] },
+    tier_2: { neutral_items: [] },
+    tier_3: { neutral_items: [] },
+    tier_4: { neutral_items: [] },
+    tier_5: { neutral_items: [] },
+  };
+
+  for (let i = 0; i < tierCountArr.length; i++) {
+    result[`tier_${i + 1}`].neutral_items = sortNeutrals(
+      tierCountArr[i].neutral_items
+    ).slice(0, 4);
+  }
+
+  return result;
+};

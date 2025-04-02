@@ -4,23 +4,28 @@ import TooltipAttributes from "./tooltipAttributes";
 import TooltipDescription from "./tooltipDescription";
 import TooltipLore from "./tooltipLore";
 import { usePageContext } from "../stat_page/pageContext";
-import { Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import { Item } from "../types/Item";
 import { grey } from "@mui/material/colors";
 
 interface ItemTooltipProps {
   itemId?: number;
   itemKey: string;
-  type: string;
+  type: "item" | "neutral" | "shard" | "scepter";
   img: string;
   heroName?: string;
+  enchant?: string;
 }
 const ItemTooltip = (props: ItemTooltipProps) => {
   const [itemProperties, setItemProperties] = useState<Item>();
+  const [enchantProperties, setEnchantProperties] = useState<Item>();
   const { itemData } = usePageContext();
   useEffect(() => {
     if (itemData) {
       setItemProperties(itemData.items[props.itemKey]);
+      if (props.enchant) {
+        setEnchantProperties(itemData.items[props.enchant]);
+      }
     }
   }, []);
   const tierBackgroundColours = [
@@ -113,6 +118,63 @@ const ItemTooltip = (props: ItemTooltipProps) => {
                 ></TooltipDescription>
                 <TooltipLore itemProperties={itemProperties}></TooltipLore>
               </div>
+              {enchantProperties && (
+                <Box
+                  className="tooltip-content"
+                  marginBottom={"0px"}
+                  marginTop={-2}
+                >
+                  <Box display={"flex"} alignItems={"center"}>
+                    <Box
+                      className="neutral-enchantment-line"
+                      display={"flex"}
+                      height={"4px"}
+                      width={"70%"}
+                      alignItems={"center"}
+                      justifyContent={"center"}
+                      bgcolor={"#11171c"}
+                    ></Box>
+                    <Typography
+                      color={"grey"}
+                      variant="caption"
+                      fontSize={"11px"}
+                    >
+                      ENCHANTMENT
+                    </Typography>
+                  </Box>
+                  <Box className="enchant-img-wrapper flex">
+                    <Box className="neutral-cell table-cell-outline">
+                      <Box
+                        className="circle"
+                        height={"35px"}
+                        width={"35px"}
+                        marginLeft={-1}
+                      >
+                        <img
+                          id="neutral-item"
+                          className="tooltip-img"
+                          alt={props.img}
+                          src={`https://ailhumfakp.cloudimg.io/v7/https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/items/${props.enchant}.png`}
+                          width="35px"
+                        ></img>
+                      </Box>
+                    </Box>
+                    <Typography
+                      variant="h6"
+                      fontWeight={"bold"}
+                      marginLeft={-0.6}
+                    >
+                      {props.enchant?.replace("enhancement_", "").toUpperCase()}
+                    </Typography>
+                  </Box>
+                  <TooltipAttributes
+                    itemProperties={enchantProperties}
+                  ></TooltipAttributes>
+                  <TooltipDescription
+                    itemProperties={enchantProperties}
+                  ></TooltipDescription>
+                </Box>
+              )}
             </div>
           ) : (
             <AghanimTooltip
