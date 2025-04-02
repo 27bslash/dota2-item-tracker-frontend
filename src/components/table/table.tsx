@@ -63,18 +63,7 @@ const CustomTable = (props: TableProps) => {
         setSortDirection(ern);
         setOrderBy(property);
     };
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const sortTable = () => {
-        // console.log(filteredData)
-        const sortedData = filteredData.sort((a: any, b: any) => {
-            if (typeof a[orderBy] === "string" && orderBy !== 'mmr') {
-                return sortDirection === 'asc' ? a[orderBy].localeCompare(b[orderBy]) : b[orderBy].localeCompare(a[orderBy])
-            } else {
-                return sortDirection === 'asc' ? +a[orderBy] - +b[orderBy] : +b[orderBy] - +a[orderBy]
-            }
-        })
-        return sortedData
-    }
+
     return (
         <div className="item-table">
             {(!(filteredData.length)) &&
