@@ -63,6 +63,7 @@ const CustomTable = (props: TableProps) => {
         setSortDirection(ern);
         setOrderBy(property);
     };
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const sortTable = () => {
         // console.log(filteredData)
         const sortedData = filteredData.sort((a: any, b: any) => {
