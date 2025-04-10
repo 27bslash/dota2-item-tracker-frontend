@@ -1,24 +1,22 @@
 import { useEffect, useState } from "react";
-import { useFetchData } from "./fetchMatchDataHook";
 import PickStats from "../../types/pickStats";
 import { RoleStrings } from "../../home/home";
-import { NonProDataType } from "../types";
 import { TableSearchResults } from "../../table/table_search/types/tableSearchResult.types";
 import DotaMatch from "../../types/matchData";
 
 const calc_common_roles = (
-  props: any,
+  props: { picks: PickStats },
   pickData?: Record<string, { [key: string]: number }>,
   threshold?: number
 ) => {
-  const picks: PickStats = pickData || props.picks || props["picks"];
+  const picks = pickData || props.picks;
   threshold = threshold || 0.1;
   const combinedRoles = ["Support", "Roaming"];
   let totalPicks = 0;
   for (const o of Object.entries(picks)) {
     totalPicks += o[1]["picks"];
   }
-  totalPicks = totalPicks || props.picks.picks;
+
   const roles: string[] = [];
   const sorted = Object.entries(picks)
     .filter((x) => typeof x[1] === "object")
@@ -52,19 +50,26 @@ const calc_common_roles = (
   }
   return roles;
 };
-export const useParseMatchData = (
-  proData: boolean,
-  totalMatchData: any,
-  heroName: string,
-  props: any,
-  searchRes?: TableSearchResults,
-  threshold?: number,
-  proFilter?: boolean
-) => {
-  const nonProData = useFetchData(heroName);
-  const [data, setData] = useState<NonProDataType[]>();
+type UseParseMatchDataArgs = {
+  proData: boolean;
+  totalMatchData: DotaMatch[];
+  props: {picks: PickStats, role?: string};
+  searchRes?: TableSearchResults;
+  threshold?: number;
+  proFilter?: boolean;
+};
+
+export const useParseMatchData = ({
+  proData,
+  totalMatchData,
+  props,
+  searchRes,
+  threshold,
+  proFilter,
+}: UseParseMatchDataArgs) => {
+  const [data, setData] = useState<DotaMatch[]>();
   const [filteredData, setFilteredData] = useState<{
-    [k: string]: NonProDataType[];
+    [k: string]: DotaMatch[];
   }>();
   const [displayedRoles, setDisplayedRoles] = useState<string[]>([]);
   useEffect(() => {
@@ -95,17 +100,15 @@ export const useParseMatchData = (
         }
       }
       setDisplayedRoles(calc_common_roles(props, roleCount));
-    } else {
-      setData(nonProData);
     }
-  }, [proData, nonProData, totalMatchData, proFilter]);
+  }, [proData, totalMatchData, proFilter]);
   useEffect(() => {
     if (props.role && data) {
       const filtered = data.filter((match) => match.role === props.role);
       const o = { [props.role]: filtered };
       setFilteredData(o);
     } else if (data) {
-      const tempObject: { [role: string]: NonProDataType[] } = {};
+      const tempObject: { [role: string]: DotaMatch[] } = {};
       let searchResItemKeys: string[] = [];
       if (searchRes) {
         searchResItemKeys = Object.keys(searchRes)
@@ -124,7 +127,7 @@ export const useParseMatchData = (
             searchRes
               ? searchResItemKeys.some((k: string) => {
                   if (k.length > 1) {
-                    return objectContainsString(match, k);
+                    return objectContainsString<DotaMatch>(match, k);
                   } else {
                     return match["variant"] ? match["variant"] === +k : false;
                   }
@@ -138,7 +141,7 @@ export const useParseMatchData = (
   }, [props.role, data, searchRes]);
   return filteredData;
 };
-function objectContainsString(obj: any, searchString: string) {
+function objectContainsString<T>(obj: T, searchString: string) {
   for (const key in obj) {
     if (typeof obj[key] === "object") {
       // If the value is an object, recursively search within it

@@ -39,17 +39,25 @@ export const FacetBuild = ({ data }: FacetProps) => {
   }, [sortedData, facets]);
 
   const mergedData = useMemo(() => {
-    console.log(mappedData);
     return Object.values(
-      mappedData.reduce((acc: Record<string, any>, item) => {
-        if (!item.title) return acc;
-        if (!acc[item.title]) {
-          acc[item.title] = { ...item };
-        } else {
-          acc[item.title].count += item.count;
-        }
-        return acc;
-      }, {})
+      mappedData.reduce(
+        (
+          acc: Record<
+            string,
+            { key: number; count: number; perc: string; title: string }
+          >,
+          item
+        ) => {
+          if (!item.title) return acc;
+          if (!acc[item.title]) {
+            acc[item.title] = { ...item };
+          } else {
+            acc[item.title].count += item.count;
+          }
+          return acc;
+        },
+        {}
+      )
     );
   }, [mappedData]);
 

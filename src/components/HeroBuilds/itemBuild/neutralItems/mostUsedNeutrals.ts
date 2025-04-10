@@ -1,5 +1,5 @@
 import { Items } from "../../../types/Item";
-import { NonProDataType } from "../../types";
+import DotaMatch from "../../../types/matchData";
 
 export type NeutralItemCounts = {
   key: string;
@@ -12,10 +12,7 @@ export type NeutralItemCounts = {
 
 export type NeutralItemsStats = Record<string, NeutralItemCounts>;
 
-export const mostUsedNeutrals = (
-  matchData: NonProDataType[],
-  itemData: Items
-) => {
+export const mostUsedNeutrals = (matchData: DotaMatch[], itemData: Items) => {
   const tierCountArr: {
     enchants: NeutralItemsStats;
     neutral_items: NeutralItemsStats;

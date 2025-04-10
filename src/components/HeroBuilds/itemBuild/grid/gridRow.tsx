@@ -85,9 +85,7 @@ export const GridRow = ({ data, ObjectKey, dataLength }: GridRowProps) => {
         if (maxWidth > 6) maxWidth = 6;
         const widthPerc = (maxWidth / 12) * 100;
         const adjustedWidth = widthPerc - (widthPerc / 100) * 15;
-        // const l = buildObject[ObjectKey].map((x: any) => x).flat().length
-        // console.log(l)
-        // console.log(buildObject)
+
 
         return (
           <Grid

@@ -4,9 +4,6 @@ import { ItemBuildImage } from "./itemBuildImage";
 
 export const ItemBuildCell = (props: { itemkey: string; item: CoreItem; }) => {
     const { itemkey, item } = props
-    // itemkey.sort((a: any, b: any) => {
-    //     return item[b]['time'] - item[a]['time']
-    // })
     const perc = item['adjustedValue']
     const avgTime = (Math.floor(item['time'] / 60))
     const disassemble = item['disassemble']

@@ -1,6 +1,6 @@
+import { humanReadableTime } from "../../../utils/humanReadableTime";
 import DotaMatch from "../../types/matchData";
 import TableItem from "./tableItem";
-import { humanReadableTime } from "./tableItems";
 
 type TableStartingItemsProps = {
     consumables: string[],

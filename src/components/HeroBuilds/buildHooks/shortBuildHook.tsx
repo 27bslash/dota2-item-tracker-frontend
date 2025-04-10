@@ -4,9 +4,7 @@ import { useEffect, useState } from "react";
 import { usePageContext } from "../../stat_page/pageContext";
 import { Talent } from "../builds/buildCell";
 import { RawItemBuildValues } from "../itemBuild/itemFitltering/itemFiltering";
-import {
-  NeutralItemCounts,
-} from "../itemBuild/neutralItems/mostUsedNeutrals";
+import { NeutralItemCounts } from "../itemBuild/neutralItems/mostUsedNeutrals";
 
 export type UnparsedBuilds = {
   abilities: { a_count: { [key: string]: number } };

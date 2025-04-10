@@ -17,41 +17,41 @@ import { UnparsedBuilds } from "../buildHooks/shortBuildHook";
 import { theme } from "../../../main";
 
 export interface BuildProps extends MatchDataAdj {
-  data?: any;
   itemData?: Items;
   heroName: string;
   heroData: PageHeroData;
   role: string;
   searchRes?: TableSearchResults;
-  picks?: PickStats;
+  picks: PickStats;
   heroList: Hero[];
   totalMatchData?: DotaMatch[];
+  data?:DotaMatch[]
   shortBuilds: { [key: string]: UnparsedBuilds };
 }
 
 const Build = (props: BuildProps) => {
   const [proFilter, setproFilter] = useState(false);
   const [open, setOpen] = useState(false);
-  const [filterType, setFilterType] = useState<string | undefined>('consumables');
-  const { itemData, heroData, nameParam, totalMatchData, searchRes } =
-    usePageContext();
-  const buildsData = useParseMatchData(
-    true,
+  const [filterType, setFilterType] = useState<string | undefined>(
+    "consumables"
+  );
+  const { itemData, heroData, totalMatchData, searchRes } = usePageContext();
+
+  const buildsData = useParseMatchData({
+    proData: true,
     totalMatchData,
-    nameParam,
     props,
     searchRes,
-    undefined,
-    proFilter
-  );
-  const heroBuilds = useHeroBuilds(
-    buildsData!,
+    proFilter,
+  });
+  const heroBuilds = useHeroBuilds({
+    filteredData: buildsData!,
     heroData,
-    itemData!,
-    false,
-    props.shortBuilds,
-    filterType
-  );
+    itemData: itemData!,
+    api: false,
+    shortBuild: props.shortBuilds,
+    filter: filterType,
+  });
   const [guideGuide, setGuideGuide] = useState(false);
 
   const baseButtonStyle = {

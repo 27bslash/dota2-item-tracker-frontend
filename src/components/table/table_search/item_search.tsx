@@ -1,9 +1,10 @@
+import Items, { Item } from "../../types/Item";
 import DotaMatch from "../../types/matchData";
 
 const itemSearch = (
   item: string,
   data: DotaMatch[],
-  itemData: any,
+  itemData: Items,
   role = "",
   i = 0
 ) => {
@@ -15,6 +16,7 @@ const itemSearch = (
   const noSymbl = item.replace("-", "");
   const symbolMatch = item.match(/^-/);
   let symbol = "";
+  console.log(itemData);
   if (symbolMatch) symbol = "-";
   const searchRes = itemIdSearch(itemData, noSymbl);
   const dict: {
@@ -40,7 +42,7 @@ const itemSearch = (
         (searchRes["names"].has(item.key) ||
           searchRes["names"].has(`item_${item.key}`))
       ) {
-        const name = itemData[item.key] ? itemData[item.key] : item.key;
+        const name = itemData.items[item.key].dname ? itemData.items[item.key].dname : item.key;
         seenItems.add(item.key);
         if (dict[`${symbol}${name}`]) {
           dict[`${symbol}${name}`]["matches"].push(match);
@@ -80,7 +82,7 @@ const itemSearch = (
   return dict;
 };
 const itemIdSearch = (
-  itemsArr: { [x: string]: { [x: string]: any } },
+  itemsArr: Items ,
   search: string
 ) => {
   const names: Set<string> = new Set();
@@ -103,7 +105,7 @@ const itemIdSearch = (
   }
   return { names: names, displayNames: displayNames };
 };
-const acronym = (search: string, item: any) => {
+const acronym = (search: string, item: Item) => {
   const displayNameAcronym = item["dname"]
     .split(/\s|_|-/g)
     .map((char: string) => char[0])

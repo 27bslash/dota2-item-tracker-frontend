@@ -1,13 +1,14 @@
 import { Typography } from '@mui/material'
 import TableItem from '../../../table/tableItems/tableItem'
 import { HeroBuild } from '../../buildHooks/buildHook'
+import DotaMatch from '../../../types/matchData'
 type StartingItemsProps = {
     startingItemData: HeroBuild
-    data?: any
+    data?: DotaMatch[]
 }
 const StartingItems = (props: StartingItemsProps) => {
     const exp = (
-        props.data ? props.data!.length : props.startingItemData['length']!
+        props.data ? props.data.length : props.startingItemData['length']!
     ).toFixed(2)
 
     return (

@@ -6,7 +6,6 @@ import { usePickCounterContext } from './pickCounterContext';
 import { cleanDecimal } from '../../utils/cleanDecimal';
 
 const RoleCounter = () => {
-    // const roles = totalPicks.filter((x: any) => typeof (x) === 'object')
     const params = useParams()
     const { role, totalPicks, roleSearch, matchData } = usePickCounterContext()
     const keys = Object.keys(totalPicks)

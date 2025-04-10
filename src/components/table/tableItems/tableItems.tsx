@@ -8,25 +8,9 @@ import { Abilities } from "../tableAbilities/tableAbilities";
 import { PurchaseLog } from "./purchaseLog";
 import { TableStartingItems } from "./tableStartingItems";
 import { useTableContext } from "../tableContext";
+import { humanReadableTime } from "../../../utils/humanReadableTime";
 
-export const humanReadableTime = (time: number | string) => {
-  if (typeof time === "number" && time < 0) {
-    time = 0;
-  }
-  let minutes, secs;
-  if (typeof time === "string") {
-    const spit = time.split(":");
-    const hours = +spit[0].replace(/^0/, "");
-    minutes = +spit[1].replace(/^0/, "") + hours * 60;
-    secs = spit[2].replace(/^0/, "");
-    secs = +secs >= 10 ? secs : `0${secs}`;
-  } else {
-    minutes = Math.floor(time / 60);
-    secs = time % 60 >= 10 ? time % 60 : `0${time % 60}`;
-  }
-  const timeString = `${minutes}:${secs}`;
-  return minutes > 0 ? timeString : "0";
-};
+
 
 const TableItems = ({ heroName }: { heroName?: string }) => {
   const { row, role, showStarter, updateMatchData } = useTableContext();
@@ -132,14 +116,14 @@ const TableItems = ({ heroName }: { heroName?: string }) => {
         <div className="draft">
           <div className="radiant-draft">
             <Draft
-              heroName={heroName}
+              heroName={heroName!}
               updateMatchData={updateMatchData}
               draft={row.radiant_draft}
             ></Draft>
           </div>
           <div className="dire-draft">
             <Draft
-              heroName={heroName}
+              heroName={heroName!}
               updateMatchData={updateMatchData}
               draft={row.dire_draft}
             ></Draft>
@@ -149,13 +133,6 @@ const TableItems = ({ heroName }: { heroName?: string }) => {
     </TableCell>
   );
 };
-// const ConditionalLink = (props: { condition: any; to: string; children: any }) => {
-//     return (
-//         (condition && to)
-//             ? <a href={to} target='_blank' rel='noreferrer'>{children}</a>
-//             : <>{children}
-//             </>
-//     )
-// }
+
 
 export default TableItems;

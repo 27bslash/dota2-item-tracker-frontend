@@ -112,6 +112,7 @@ const ItemTooltip = (props: ItemTooltipProps) => {
               <div className="tooltip-content">
                 <TooltipAttributes
                   itemProperties={itemProperties}
+                  type={"item"}
                 ></TooltipAttributes>
                 <TooltipDescription
                   itemProperties={itemProperties}

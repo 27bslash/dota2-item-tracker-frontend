@@ -267,7 +267,7 @@ export const FacetTooltip = ({ img, facet, heroStats }: facetToolipProps) => {
             )}
             {facetAbilityObj && facetAbilityObj["ability"] && (
               <TooltipAttributes
-                itemProperties={facetAbilityObj["ability"]}
+                abilityProperties={facetAbilityObj["ability"]}
                 type={!facetAbilityObj["innateAbility"] ? "facet" : "ability"}
               ></TooltipAttributes>
             )}

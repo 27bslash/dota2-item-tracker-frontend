@@ -14,9 +14,9 @@ import {
   CoreItem,
   GroupedCoreItems,
 } from "../itemBuild/itemGroups/groupBytime";
-import { NonProDataType } from "../types";
 import { facetFilter } from "../abillityBuild/facetFiltering";
 import { UnparsedBuilds } from "./shortBuildHook";
+import DotaMatch from "../../types/matchData";
 export type HeroBuild = {
   item_builds: {
     [key: string]: CoreItem[];
@@ -39,14 +39,22 @@ export type HeroBuild = {
   }[];
   length?: number;
 };
-export const useHeroBuilds = (
-  filteredData: { [role: string]: NonProDataType[] },
-  heroData: PageHeroData,
-  itemData: Items,
-  api: boolean,
-  shortBuild?: { [key: string]: UnparsedBuilds },
-  filter?: string
-) => {
+type UseHeroBuildsArgs = {
+  filteredData: { [role: string]: DotaMatch[] };
+  heroData: PageHeroData;
+  itemData: Items;
+  api: boolean;
+  shortBuild?: { [key: string]: UnparsedBuilds };
+  filter?: string;
+};
+export const useHeroBuilds = ({
+  filteredData,
+  heroData,
+  itemData,
+  api,
+  shortBuild,
+  filter,
+}: UseHeroBuildsArgs) => {
   const [heroBuilds, setHeroBuilds] = useState<Record<string, HeroBuild>>();
   // const [filterComponents, setFilterComponents] = useState(false)
   // const [filterBoots, setFilterBoots] = useState(false)

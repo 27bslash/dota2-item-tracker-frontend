@@ -1,11 +1,18 @@
 import { Box, Typography } from "@mui/material";
 import { damageType } from "./abilityAttributes";
+import { Item } from "../types/Item";
+import { HeroAbilities } from "../types/heroData";
 
-const TooltipAttributes = (props: any) => {
+type TooltipAttributesProps = {
+  itemProperties?: Item;
+  type?: string;
+  abilityProperties?: HeroAbilities;
+};
+const TooltipAttributes = (props: TooltipAttributesProps) => {
   return (
     <div className="attributes">
-      {props.itemProperties.attrib &&
-        props.itemProperties.attrib.map(
+      {props.itemProperties &&
+        props.itemProperties.attrib!.map(
           (
             x: {
               key: string;
@@ -37,15 +44,15 @@ const TooltipAttributes = (props: any) => {
             );
           }
         )}
-      {props.itemProperties.special_values && (
+      {props.abilityProperties && props.abilityProperties.special_values && (
         <>
-          {props.itemProperties.special_values.map((x: any, i: number) => {
-            const ob = props.type === "facet" ? x["facet_bonus"] : x;
+          {props.abilityProperties.special_values.map((x, i: number) => {
+            const ob = props.type === "facet" ? x.facet_bonus : x;
             const heading = x.heading_loc;
             const percentage = x.is_percentage;
             const values = props.type === "facet" ? ob.values : ob.values_float;
             let value;
-            const zeroCheck = values.some((x: any) => x != 0);
+            const zeroCheck = values.some((x) => x != 0);
             if (percentage) {
               value = values.join("% / ") + "%";
             } else {
@@ -56,7 +63,7 @@ const TooltipAttributes = (props: any) => {
               heading.toLowerCase().includes("damage") &&
               zeroCheck
             ) {
-              const dmgtype = damageType(props.itemProperties.damage);
+              const dmgtype = damageType(props.abilityProperties!.damage);
               if (dmgtype) {
                 return (
                   <AbilityAttribute

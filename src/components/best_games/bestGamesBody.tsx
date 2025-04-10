@@ -5,9 +5,10 @@ import { cleanDecimal } from "../../utils/cleanDecimal";
 import { usePageContext } from "../stat_page/pageContext";
 import DotaMatch from "../types/matchData";
 import { BenchMarksKeys } from "./bestGames";
+import { RoleStrings } from "../home/home";
 
 const BestGamesTableBody = (props: {
-  updateRole: any;
+  updateRole: (role: RoleStrings) => void;
   updatePageNumber: (idx: number) => void;
   bestgames: DotaMatch[];
   benchmarkKeys: BenchMarksKeys[];

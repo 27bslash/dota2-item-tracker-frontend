@@ -9,7 +9,7 @@ function groupByItemChoices(res: GroupedCoreItems[]) {
     }
 }
 
-function processItemGroup(itemGroup: any, type: string, choiceSet: Set<string>) {
+function processItemGroup(itemGroup: GroupedCoreItems, type: string, choiceSet: Set<string>) {
     const otherType = type === 'core' ? 'situational' : 'core';
 
     for (let i = itemGroup[type].length - 1; i >= 0; i--) {
@@ -20,17 +20,17 @@ function processItemGroup(itemGroup: any, type: string, choiceSet: Set<string>) 
         const targetKey = itemObject['key'];
         const optionKey = itemObject['option']['choice'];
 
-        if (choiceSet.has(targetKey) || choiceSet.has(optionKey)) continue;
+        if (choiceSet.has(targetKey!) || choiceSet.has(optionKey)) continue;
 
         removeDuplicateItems(itemGroup, type,  optionKey, otherType);
 
-        choiceSet.add(targetKey);
+        choiceSet.add(targetKey!);
         choiceSet.add(optionKey);
     }
 }
 
-function removeDuplicateItems(itemGroup: any, type: string,  optionKey: string, otherType: string) {
-    const idx = itemGroup[type].findIndex((x: CoreItem) => x['key'] === optionKey);
+function removeDuplicateItems(itemGroup: GroupedCoreItems, type: string,  optionKey: string, otherType: string) {
+    const idx = itemGroup[type].findIndex((x) => x['key'] === optionKey);
     const situationalIdx = itemGroup[otherType].findIndex((x: CoreItem) => x['key'] === optionKey);
 
     if (idx !== -1) itemGroup[type].splice(idx, 1);

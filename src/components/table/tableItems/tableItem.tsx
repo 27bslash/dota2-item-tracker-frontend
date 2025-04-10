@@ -41,7 +41,7 @@ const TableItem = (props: TItemProp) => {
     }
   };
 
-  const handleClick = (event: any) => {
+  const handleClick = (event: React.MouseEvent) => {
     if (!event.ctrlKey && itemData) {
       updateTable();
     } else if (

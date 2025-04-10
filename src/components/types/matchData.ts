@@ -1,3 +1,4 @@
+import { RoleStrings } from "../home/home";
 import BenchmarksData from "./benchmarks";
 
 export type HeroAbility = {
@@ -53,7 +54,7 @@ type DotaMatch = {
   patch: string;
   radiant_draft: string[];
   replay_url: string;
-  role: string;
+  role: RoleStrings;
   starting_items: SimpleItems[];
   tower_damage: number;
   unix_time: number;

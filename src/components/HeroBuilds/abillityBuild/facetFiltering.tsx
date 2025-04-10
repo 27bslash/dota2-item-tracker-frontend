@@ -1,14 +1,11 @@
 import { PageHeroData } from "../../types/heroData";
-import { NonProDataType } from "../types";
+import DotaMatch from "../../types/matchData";
 
-export const facetFilter = (
-  buildData: NonProDataType[],
-  heroData: PageHeroData
-) => {
+export const facetFilter = (buildData: DotaMatch[], heroData: PageHeroData) => {
   const facetCount: { [key: string]: number } = {};
   let total = 0;
   const heroFacets = heroData[Object.keys(heroData)[0]]["facets"];
-  const findFacet = (match: NonProDataType) => {
+  const findFacet = (match: DotaMatch) => {
     if (match["variant"]) {
       if (!heroFacets[match["variant"] - 1]) return heroFacets.length;
       return match["variant"];

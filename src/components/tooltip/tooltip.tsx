@@ -1,12 +1,19 @@
-import { Tooltip } from '@mui/material'
+import { Tooltip } from "@mui/material";
+import { ReactNode } from "react";
 
-const Tip = (props: any) => {
-    return (
-        <Tooltip {...props} title={props.component}>
-            <div className="wrap" style={{ display: 'flex' }}>
-                {props.children}
-            </div>
-        </Tooltip>
-    )
-}
-export default Tip
+type TipProps = {
+  component: ReactNode;
+  children: ReactNode;
+};
+
+const Tip = ({ component, children, ...rest }: TipProps) => {
+  return (
+    <Tooltip {...rest} title={component}>
+      <div className="wrap" style={{ display: "flex" }}>
+        {children}
+      </div>
+    </Tooltip>
+  );
+};
+
+export default Tip;

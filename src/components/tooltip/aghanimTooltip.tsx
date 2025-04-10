@@ -6,14 +6,19 @@ import { usePageContext } from "../stat_page/pageContext";
 import { HeroAbilities } from "../types/heroData";
 import { extractHiddenValues } from "./abilityTooltip";
 
-const AghanimTooltip = (props: any) => {
+interface AghanimTooltipProps {
+  heroName?: string;
+  type: "shard" | "scepter";
+}
+
+const AghanimTooltip = (props: AghanimTooltipProps) => {
   let abilities: Record<string, HeroAbilities> = {};
   const { heroData, nameParam } = usePageContext();
   const heroName = props.heroName || nameParam;
   if (heroData[heroName]) {
     abilities = heroData[heroName]["abilities"];
   }
-  const aghanimAbility = extractAghanim(abilities, props.type);
+  const aghanimAbility = extractAghanim(abilities, props.type) as HeroAbilities;
   const aghText =
     aghanimAbility[`${props.type}_loc`] || aghanimAbility["desc_loc"];
   const aghanimDescription = extractHiddenValues(
@@ -81,9 +86,8 @@ const AghanimTooltip = (props: any) => {
               </div>
               <div className="tooltip-attributes">
                 <TooltipAttributes
-                  aghanimAbility={aghanimAbility}
                   type={props.type}
-                  itemProperties={aghanimAbility}
+                  abilityProperties={aghanimAbility}
                 ></TooltipAttributes>
               </div>
             </div>
@@ -102,39 +106,20 @@ const AghanimTooltip = (props: any) => {
 
 export default AghanimTooltip;
 
-// const highlightPattern = (text: string, pattern: RegExp) => {
-//     const splitText = text.split(pattern);
-
-//     if (splitText.length <= 1) {
-//         return [];
-//     }
-
-//     const matches = text.match(pattern) || [];
-
-//     return splitText.reduce((arr: any, element: string) => {
-//         if (!element) return arr;
-//         console.log(element, matches)
-//         if (matches.includes(element)) {
-//             return [...arr, <span className="tooltip-text-highlight">{element}</span>];
-//         }
-
-//         return [...arr, element];
-//     },
-//         []
-//     );
-// };
-
-const extractAghanim = (result: { [x: string]: any }, s: string) => {
-  for (const ability in result) {
-    if (result[ability][`ability_is_granted_by_${s}`]) {
-      result[ability]["newAbility"] = true;
-      return result[ability];
+export const extractAghanim = (
+  result: Record<string, HeroAbilities>,
+  s: "shard" | "scepter"
+) => {
+  for (const _id in result) {
+    if (result[_id][`ability_is_granted_by_${s}`]) {
+      result[_id]["newAbility"] = true;
+      return result[_id];
     } else if (
-      result[ability][`ability_has_${s}`] &&
-      result[ability][`${s}_loc`]
+      result[_id][`ability_has_${s}`] &&
+      result[_id][`${s}_loc`]
     ) {
-      result[ability]["modifier"] = true;
-      return result[ability];
+      result[_id]["modifier"] = true;
+      return result[_id];
     }
   }
 };

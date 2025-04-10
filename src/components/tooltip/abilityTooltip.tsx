@@ -9,10 +9,16 @@ import { highlight_numbers } from "./tooltipDescription";
 import AbilityAttributes from "./abilityAttributes";
 import { usePageContext } from "../stat_page/pageContext";
 import { HeroAbilities, SpecialValues } from "../types/heroData";
+import { HeroAbility } from "../types/matchData";
 
-const AbilityTooltip = (props: any) => {
+interface AbilityTooltipProps {
+  ability: HeroAbility;
+  img: string;
+}
+
+const AbilityTooltip = (props: AbilityTooltipProps) => {
   const id = props.ability.id;
-  const [ability, setAbility] = useState<any>();
+  const [ability, setAbility] = useState<HeroAbilities>();
   const { nameParam, heroData } = usePageContext();
   useEffect(() => {
     if (heroData && Object.keys(heroData).length) {
@@ -81,9 +87,7 @@ const AbilityTooltip = (props: any) => {
                 <div className="tooltip-content">
                   <AbilityAttributes ability={ability} />
                   <AbilityDescription ability={ability}></AbilityDescription>
-                  <TooltipAttributes
-                    itemProperties={ability}
-                  ></TooltipAttributes>
+                  <TooltipAttributes abilityProperties={ability} />
                   <TooltipLore itemProperties={ability}></TooltipLore>
                 </div>
                 <div className="tooltip-footer">

@@ -146,14 +146,5 @@ const TotalPickCounter = () => {
   );
 };
 
-// const ItemCounter = (props: any) => {
-//     const { items, handleClick } = props
-//     const keys = sortByMatches(items)
-//     return (
-//         <>
-//             <h4>Items: </h4>
-//             <SearchResultText data={items} handleClick={handleClick} filteredData={keys} type={'items'} />
-//         </>
-//     )
-// }
+
 export default PickCounter;

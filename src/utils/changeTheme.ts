@@ -1,6 +1,6 @@
 import { theme } from "../main";
 
-export const generateColorPalette = (sourceColor: string[], heroName?: string, options?: any) => {
+export const generateColorPalette = (sourceColor: string[], heroName?: string, options?: {[key:string]:number}) => {
     // Generate a Material-UI color palette based on the source color
     if (!options) {
         options = {}

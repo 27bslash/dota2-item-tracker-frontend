@@ -1,16 +1,26 @@
 import { usePageContext } from "../stat_page/pageContext";
+import DotaMatch from "../types/matchData";
 import DraftImage from "./draftImg";
 import DraftSearch from "./table_search/draft_search";
-
-const Draft = (props: any) => {
+import { TableSearchResult, TableSearchResults } from "./table_search/types/tableSearchResult.types";
+type DraftProps = {
+  draft: string[];
+  heroName: string;
+  updateMatchData: (
+    data: DotaMatch[],
+    searchValue?: TableSearchResults,
+    types?: string[]
+  ) => void;
+};
+const Draft = (props: DraftProps) => {
   const { totalMatchData, nameParam } = usePageContext();
   const dr = props.draft.includes(nameParam);
   const draftS = new DraftSearch();
 
   const updateData = (search: string, symbol: string) => {
-    const dict: any = {};
+    const dict: TableSearchResult = {};
     if (totalMatchData.length === 0) return;
-    const matches = new Set();
+    const matches = new Set<DotaMatch>();
     // const data = draftS.handleDraftSearch(totalMatchData, nameParamList, search, nameParam)
     for (const match of totalMatchData) {
       const draf = draftS.draftChecker(match, nameParam, search, symbol);
@@ -19,7 +29,7 @@ const Draft = (props: any) => {
         if (dict[key]) {
           dict[key]["matches"].push(match);
         } else {
-          dict[key] = { matches: [match] };
+          dict[key] = { matches: [match] ,index:0};
         }
         matches.add(match);
       }

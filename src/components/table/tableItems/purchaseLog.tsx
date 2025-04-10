@@ -1,10 +1,10 @@
 import { exists } from '../../../utils/exists'
+import { humanReadableTime } from '../../../utils/humanReadableTime'
 import { RoleStrings } from '../../home/home'
 import DotaMatch from '../../types/matchData'
 import { useTableContext } from '../tableContext'
 import { FinalItems } from './finalItems'
 import TableItem from './tableItem'
-import { humanReadableTime } from './tableItems'
 
 type PurchaseLogProps = {
     tableItemProps: {

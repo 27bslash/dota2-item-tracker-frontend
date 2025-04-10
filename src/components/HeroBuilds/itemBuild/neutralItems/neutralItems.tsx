@@ -6,7 +6,6 @@ export const NeutralItems = (props: {
   neutralItems: Record<string, { neutral_items: NeutralItemCounts[] }>;
 }) => {
   // const neutralItems = mostUsedNeutrals(props.data, props.itemData)
-  console.log(props.neutralItems);
   const neutralItems = Object.entries(props.neutralItems).map((itemArr) => {
     return itemArr[1]["neutral_items"].length < 3
       ? [itemArr[1]["neutral_items"]]
@@ -83,7 +82,6 @@ const NeutralItem = (props: { idx: number; tierArr: NeutralItemCounts[] }) => {
         {props.tierArr.map((neutralItem, i) => {
           const key: string = neutralItem["key"];
           const perc: number = neutralItem["perc"];
-          console.log(neutralItem)
           return (
             <div key={i} className="neutral-item">
               <ItemBuildImage

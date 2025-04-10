@@ -1,14 +1,15 @@
-import { HeroStats } from '../../types/heroData'
+import { HeroAbilities, HeroStats } from '../../types/heroData'
 import { extractHiddenValues } from '../abilityTooltip'
+import { extractAghanim } from '../aghanimTooltip'
 
 const HeroAghs = ({
     type,
     heroStats,
 }: {
     heroStats: HeroStats
-    type: string
+    type: "shard" | "scepter"
 }) => {
-    const agh = extractAghanim(heroStats['abilities'], type)
+    const agh = extractAghanim(heroStats['abilities'], type) as HeroAbilities
     if (agh) {
         const aghText = agh[`${type}_loc`] || agh['desc_loc']
         const aghanimDescription = extractHiddenValues(
@@ -60,18 +61,5 @@ const HeroAghs = ({
     }
 }
 
-const extractAghanim = (result: { [x: string]: any }, s: string) => {
-    for (const ability in result) {
-        if (result[ability][`ability_is_granted_by_${s}`]) {
-            result[ability]['newAbility'] = true
-            return result[ability]
-        } else if (
-            result[ability][`ability_has_${s}`] &&
-            result[ability][`${s}_loc`]
-        ) {
-            result[ability]['modifier'] = true
-            return result[ability]
-        }
-    }
-}
+
 export default HeroAghs

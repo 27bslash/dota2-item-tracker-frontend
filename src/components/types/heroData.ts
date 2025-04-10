@@ -71,9 +71,13 @@ export type HeroAbilities = {
   name: string;
   name_loc: string;
   notes_loc: string[];
+  slot?: number;
   scepter_loc: string;
   shard_loc: string;
   special_values: SpecialValues[];
+  img?: string;
+  newAbility?: boolean;
+  modifier?: boolean;
 };
 export type FacetObj = {
   ability: number;
@@ -105,6 +109,7 @@ export type SpecialValues = {
   heading_loc: string;
   is_percentage: boolean;
   name: string;
+  values: number[];
   values_float: number[];
   values_int: number[];
   values_scepter: number[];

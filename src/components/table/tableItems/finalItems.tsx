@@ -1,11 +1,9 @@
+import { humanReadableTime } from "../../../utils/humanReadableTime";
 import { SimpleItems } from "../../types/matchData";
 import { useTableContext } from "../tableContext";
 import TableItem from "./tableItem";
-import { humanReadableTime } from "./tableItems";
 
-// row: TitemProps['row'], bear?: boolean; role: string; heroName: string; itemList: DotaMatch['items'];
-// updateMatchData: ((data: DotaMatch[], searchResults?: any) => void);
-// filteredData: DotaMatch[]; totalMatchData: DotaMatch[]; items: any; heroData: PageHeroData
+
 export const FinalItems = ({ bear, itemList, heroName }: { bear?: boolean, itemList: SimpleItems[], heroName?: string }) => {
     const { role, updateMatchData, } = useTableContext()
     return (

@@ -1,4 +1,11 @@
-const TooltipLore = (props: any) => {
+type TooltipLoreProps = {
+  itemProperties: {
+    lore?: string;
+    lore_loc?: string;
+  };
+};
+
+const TooltipLore = (props: TooltipLoreProps) => {
   return (
     props.itemProperties.lore && (
       <div className="tooltip-lore">
