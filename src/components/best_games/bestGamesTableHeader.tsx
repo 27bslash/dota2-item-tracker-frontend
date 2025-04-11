@@ -65,10 +65,11 @@ const BestGamesTableHeader = (props: {
               border="none"
               align="center"
               color="white"
-              className="hover-text"
-              sort={benchmarkKey}
               onRequestSort={props.sortByKey}
               key={i}
+              sort={benchmarkKey}
+              orderBy={benchmarkKey}
+              sortDirection="asc"
             ></OrderableCell>
           );
         })}

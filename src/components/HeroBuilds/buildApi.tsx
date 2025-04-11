@@ -19,12 +19,12 @@ const BuildDataJson = ({
   patchObj,
 }: {
   heroName: string;
-  totalPicks: PickStats[];
+  totalPicks: PickStats;
   patchObj: { [x: string]: string };
   heroData: PageHeroData;
   itemData: Items;
 }) => {
-  const totalMatchData = useFetchData(heroName);
+  const totalMatchData = useFetchData(heroName)!;
   console.log("totalMatchData", totalMatchData);
 
   const filteredData = useParseMatchData({
@@ -55,7 +55,7 @@ const BuildDataJson = ({
 export const BuildApi = () => {
   const params = useParams();
   const heroName = params["hero"] ? heroSwitcher(params["hero"]) : "";
-  const [totalPicks, setTotalPicks] = useState<PickStats[]>();
+  const [totalPicks, setTotalPicks] = useState<PickStats>();
   const [itemData, setItemData] = useState<Items>();
   const [heroData, setHeroData] = useState<PageHeroData>();
   const [patch, setPatch] = useState<{ [key: string]: string }>();

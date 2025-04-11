@@ -2,7 +2,7 @@ import { TableCell, TableHead, TableRow, TableSortLabel } from "@mui/material";
 import { JSX, useEffect, useState } from "react";
 import DotaMatch from "../types/matchData";
 
-interface OrderableCellProps {
+interface OrderableCellProps<T> {
   align?: "inherit" | "left" | "center" | "right" | "justify";
   maxWidth?: string;
   maxHeight?: string;
@@ -11,13 +11,13 @@ interface OrderableCellProps {
   color?: string;
   orderBy: string;
   order?: "asc" | "desc";
-  sort: keyof DotaMatch;
+  sort: keyof T;
   sortDirection: "asc" | "desc";
   label: string;
-  onRequestSort: (property: keyof DotaMatch, sortDirection: string) => void;
+  onRequestSort: (property: keyof T, sortDirection: string) => void;
 }
 
-export const OrderableCell = (props: OrderableCellProps) => {
+export const OrderableCell = <T,>(props: OrderableCellProps<T>) => {
   const [sortDirection, setSortDirection] = useState(props.sortDirection);
   return (
     <TableCell
@@ -41,6 +41,7 @@ export const OrderableCell = (props: OrderableCellProps) => {
         direction={props.orderBy === props.sort ? props.order : "asc"}
         onClick={() => {
           props.onRequestSort(props.sort, sortDirection);
+
           return setSortDirection(sortDirection === "asc" ? "desc" : "asc");
         }}
         hideSortIcon

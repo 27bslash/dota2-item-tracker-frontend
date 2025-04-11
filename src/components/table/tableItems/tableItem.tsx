@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import ItemTooltip from "../../tooltip/itemTooltip";
 import React from "react";
 import Tip from "../../tooltip/tooltip";
@@ -71,16 +70,37 @@ const TableItem = (props: TItemProp) => {
         />
       }
     >
+      <ItemDisplay
+        {...props}
+        link={link}
+        handleClick={handleClick}
+        updateTable={updateTable}
+      />
+    </Tip>
+  );
+};
+const ItemDisplay = (
+  props: TItemProp & {
+    link: string;
+    handleClick: (event: React.MouseEvent) => void;
+    updateTable: () => void;
+  }
+) => {
+  return (
+    <>
       {(props.type === "item" ||
         props.type === "shard" ||
         props.type === "scepter") && (
-        <div className="item-cell table-cell-outline" onClick={handleClick}>
+        <div
+          className="item-cell table-cell-outline"
+          onClick={props.handleClick}
+        >
           <img
             className="item-img"
             height={props.height || "55px"}
             width={props.width || "100%"}
             alt={props.itemKey}
-            src={link}
+            src={props.link}
             loading="lazy"
           ></img>
           {props.type === "shard" && props.overlay && (
@@ -106,20 +126,23 @@ const TableItem = (props: TItemProp) => {
       )}
 
       {props.type === "neutral" && (
-        <div className="neutral-cell table-cell-outline" onClick={updateTable}>
+        <div
+          className="neutral-cell table-cell-outline"
+          onClick={props.updateTable}
+        >
           <div className="circle" style={{ height: "55px", width: "55px" }}>
             <img
               id="neutral-item"
               className="item-img"
               height="55px"
               alt={props.itemKey}
-              src={link}
+              src={props.link}
               loading="lazy"
             ></img>
           </div>
         </div>
       )}
-    </Tip>
+    </>
   );
 };
 export default TableItem;
