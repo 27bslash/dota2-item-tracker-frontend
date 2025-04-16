@@ -13,21 +13,19 @@ export const useFetchData = (heroName: string) => {
       const countDocsUrl = `${baseApiUrl}hero/${heroName}/count_docs?collection=heroes`;
       const docLength = await fetchData(countDocsUrl);
       let merged: DotaMatch[] = [];
-      let data = [];
+      let matchData = [];
       if (docLength > 50) {
-        data = await bulkRequest(
+        matchData = await bulkRequest(
           `${baseApiUrl}hero/${heroName}/react-test`,
           docLength,
           0
         );
-        merged = data
+        merged = matchData
           .map((matchArr: { data: DotaMatch[] }) => matchArr.data)
           .flat();
       } else {
-        data = await fetchData(`${baseApiUrl}hero/${heroName}/react-test`);
-        merged = data
-          .map((matchArr: { data: DotaMatch[] }) => matchArr.data)
-          .flat();
+        matchData = await fetchData(`${baseApiUrl}hero/${heroName}/react-test`);
+        merged = matchData.data.flat();
       }
       console.log("merged", merged);
       const filteredMerged = merged.filter((match) => {
