@@ -35,6 +35,7 @@
   --shadow: drop-shadow(black 1px 0 0px) drop-shadow(black -1px 0 0px)
     drop-shadow(black 0 1px 0px) drop-shadow(black 0 -1px 0px);
 }
+
 @font-face {
   font-family: "Trajan Bold";
   src: local("Trajan Bold"), url(./fonts/TrajanPro-Bold.otf) format("opentype");
@@ -94,6 +95,10 @@ body {
 h6 {
   filter: drop-shadow(black 1px 0 0px) drop-shadow(black -1px 0 0px)
     drop-shadow(black 0 1px 0px) drop-shadow(black 0 -1px 0px);
+}
+.shadow {
+    filter: drop-shadow(black 1px 0 0px) drop-shadow(black -1px 0 0px)
+        drop-shadow(black 0 1px 0px) drop-shadow(black 0 -1px 0px);
 }
 .hover-text:hover {
   opacity: 0.8;

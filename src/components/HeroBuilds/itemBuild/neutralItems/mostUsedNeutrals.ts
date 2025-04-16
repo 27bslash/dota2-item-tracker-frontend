@@ -17,7 +17,6 @@ export const mostUsedNeutrals = (matchData: DotaMatch[], itemData: Items) => {
     enchants: NeutralItemsStats;
     neutral_items: NeutralItemsStats;
   }[] = [];
-
   for (let tier = 1; tier <= 5; tier++) {
     const neutralItemCount: NeutralItemsStats = {};
     const enchantmentCount: NeutralItemsStats = {};
@@ -73,6 +72,28 @@ export const mostUsedNeutrals = (matchData: DotaMatch[], itemData: Items) => {
       }
     }
 
+    for (const match of matchData) {
+      if (match.neutral_item_history) {
+        match.neutral_item_history.forEach(
+          ({ item_neutral, item_neutral_enhancement }) => {
+            const neutralItem = itemData.items[item_neutral];
+            if (neutralItem?.tier !== tier) return;
+
+            const enchantCount =
+              (enchantmentCount[item_neutral_enhancement]?.count || 0) + 1;
+
+            enchantmentCount[item_neutral_enhancement] = {
+              key: item_neutral_enhancement,
+              count: enchantCount,
+              tier,
+              totalGameOfTier,
+              perc: (enchantCount / totalGameOfTier) * 100,
+            };
+          }
+        );
+      }
+    }
+
     tierCountArr.push({
       enchants: enchantmentCount,
       neutral_items: neutralItemCount,
@@ -117,17 +138,23 @@ export const mostUsedNeutrals = (matchData: DotaMatch[], itemData: Items) => {
       .sort((a, b) => b.count - a.count);
   };
 
-  const result: Record<string, { neutral_items: NeutralItemCounts[] }> = {
-    tier_1: { neutral_items: [] },
-    tier_2: { neutral_items: [] },
-    tier_3: { neutral_items: [] },
-    tier_4: { neutral_items: [] },
-    tier_5: { neutral_items: [] },
+  const result: Record<
+    string,
+    { neutral_items: NeutralItemCounts[]; enchants: NeutralItemCounts[] }
+  > = {
+    tier_1: { neutral_items: [], enchants: [] },
+    tier_2: { neutral_items: [], enchants: [] },
+    tier_3: { neutral_items: [], enchants: [] },
+    tier_4: { neutral_items: [], enchants: [] },
+    tier_5: { neutral_items: [], enchants: [] },
   };
 
   for (let i = 0; i < tierCountArr.length; i++) {
     result[`tier_${i + 1}`].neutral_items = sortNeutrals(
       tierCountArr[i].neutral_items
+    ).slice(0, 4);
+    result[`tier_${i + 1}`].enchants = sortNeutrals(
+      tierCountArr[i].enchants
     ).slice(0, 4);
   }
 

@@ -27,6 +27,7 @@ export type HeroBuild = {
     string,
     {
       neutral_items: NeutralItemCounts[];
+      enchants: NeutralItemCounts[];
     }
   >;
   talents: Talents;
@@ -92,18 +93,31 @@ export const useHeroBuilds = ({
             console.log(`removed role: ${role} count: ${count}`);
             continue;
           }
+
           const abilityBuilds = abilityFilter(undefined, buildData) || [[]];
           const startingItemBuilds = Object.entries(
             buildData["starting_items"]
           );
           const neutralItems = buildData["neutral_items"];
+          const d: {
+            [key: string]: {
+              neutral_items: NeutralItemCounts[];
+              enchants: NeutralItemCounts[];
+            };
+          } = {};
+          for (const key in neutralItems) {
+            d[key] = {
+              enchants: neutralItems[key],
+              neutral_items: neutralItems[key],
+            };
+          }
           const talents = Object.entries(buildData["talents"]);
           const res = {
             item_builds: itemBuild,
             facet_builds: buildData.facets,
             ability_builds: abilityBuilds[0],
             starting_items: startingItemBuilds,
-            neutral_items: neutralItems,
+            neutral_items: d,
             talents: talents,
             ultimate_ability: ultimateAbility,
             length: buildData["length"],

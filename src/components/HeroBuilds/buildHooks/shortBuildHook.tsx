@@ -11,12 +11,7 @@ export type UnparsedBuilds = {
   items: RawItemBuildValues[];
   talents: { [key: string]: Talent };
   starting_items: { [key: string]: number };
-  neutral_items: Record<
-    string,
-    {
-      neutral_items: NeutralItemCounts[];
-    }
-  >;
+  neutral_items: Record<string, NeutralItemCounts[]>;
   facets: {
     key: number;
     count: number;
