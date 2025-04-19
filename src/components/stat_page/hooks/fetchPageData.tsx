@@ -17,13 +17,7 @@ export const useFetchAllData = (type: string) => {
   const [shortBuilds, setShortBuilds] = useState<{
     [key: string]: UnparsedBuilds;
   }>();
-  const moveProGames = (matchArr: DotaMatch[]) => {
-    const proMatches = [...matchArr].filter((match) => match.pro);
-    for (const m of proMatches) {
-        matchArr.unshift(m);
-    }
-    return matchArr;
-  };
+
   const params = useParams();
   const [query] = useSearchParams();
   const role = query.get("role") || "";
@@ -65,7 +59,7 @@ export const useFetchAllData = (type: string) => {
       );
       merged = matches["data"].concat(allMatches["data"]);
     }
-    setTotalMatches(moveProGames(merged));
+    setTotalMatches(merged);
     const currentPatch = await fetchData(`${baseApiUrl}files/patch`);
     setPatch(currentPatch);
     localStorage.setItem("patch", currentPatch);

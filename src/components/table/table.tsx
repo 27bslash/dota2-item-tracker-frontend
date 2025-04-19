@@ -42,6 +42,8 @@ const CustomTable = (props: TableProps) => {
   const [orderBy, setOrderBy] = useState<keyof DotaMatch>("unix_time");
   const [sortDirection, setSortDirection] = useState<"desc" | "asc">("desc");
   const { filteredData, totalMatchData } = props;
+  const [firstLoad, setFirstLoad] = useState(true);
+
   useEffect(() => {
     setCount(props.count);
     if (page * 10 > props.count) {
@@ -71,18 +73,12 @@ const CustomTable = (props: TableProps) => {
     const ern = isAsc ? "desc" : "asc";
     setSortDirection(ern);
     setOrderBy(property);
+    setFirstLoad(false);
   };
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const sortTable = () => {
-    console.log(
-      "sort table",
-      filteredData.filter((match) => {
-        if (match.pro) {
-          return true;
-        }
-      })
-    );
-    return [...filteredData].sort((a, b) => {
+
+    const sortedData = [...filteredData].sort((a, b) => {
       const aValue = a[orderBy as keyof DotaMatch];
       const bValue = b[orderBy as keyof DotaMatch];
 
@@ -100,6 +96,27 @@ const CustomTable = (props: TableProps) => {
       const bNum = Number(bValue);
       return sortDirection === "asc" ? aNum - bNum : bNum - aNum;
     });
+    return firstLoad ? anomalyCheck(sortedData) : sortedData;
+  };
+  const anomalyCheck = (matches: DotaMatch[]) => {
+    const indexs: number[] = [];
+    const proMatches = [];
+    const nonProMatches = [...matches].filter((match, idx) => {
+      if (match.pro) {
+        indexs.push(idx);
+        return false;
+      }
+      return true;
+    });
+    for (const idx of indexs) {
+      const match = matches[idx];
+      proMatches.unshift(match);
+    }
+    return proMatches
+      .sort((a, b) => {
+        return b.unix_time - a.unix_time;
+      })
+      .concat(nonProMatches);
   };
   return (
     <div className="item-table">

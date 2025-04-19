@@ -85,7 +85,7 @@ const Page = ({ type, heroList, playerList }: pageProps) => {
       );
       setCount(totalMatches.length);
     }
-  }, [filteredMatchData, totalMatches]);
+  }, [filteredMatchData, totalMatches, params]);
 
   const scrollGameIntoView = (idx: number) => {
     let pageIdx = Math.ceil(idx / 10) - 1;
