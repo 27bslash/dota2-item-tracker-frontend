@@ -11,7 +11,6 @@ export const ItemBuildCell = (props: { itemkey: string; item: CoreItem; }) => {
     const orText = item['option'] || item['longOption'] ? 'or' : ''
     return (
         <div className="img-cell" >
-
             <div className='itembuild-img-cell flex' style={{ alignItems: 'center', justifyContent: 'end' }} >
                 {components &&
                     <ItemComponents components={components} />

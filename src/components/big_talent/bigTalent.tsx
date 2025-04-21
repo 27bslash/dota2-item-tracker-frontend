@@ -27,9 +27,10 @@ const BigTalent: FC<BigTalentProps> = (props) => {
     usePageContext();
   useEffect(() => {
     const heroTalentData = heroData[nameParam];
+    if (!heroTalentData) return;
     const sorted = countTalents(heroTalentData, filteredData);
     setTalents(sorted);
-  }, [filteredData, totalMatchData]);
+  }, [filteredData, totalMatchData, heroData, nameParam]);
 
   return (
     <div

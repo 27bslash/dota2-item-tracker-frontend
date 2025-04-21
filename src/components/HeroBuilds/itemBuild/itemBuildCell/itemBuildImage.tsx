@@ -8,6 +8,7 @@ type ItemBuildImageProps = {
   perc: string | number;
   orText?: string;
   enchant?: string;
+  type?: string;
 };
 export const ItemBuildImage = ({
   k,
@@ -17,6 +18,12 @@ export const ItemBuildImage = ({
   orText,
   enchant,
 }: ItemBuildImageProps) => {
+  let type: "item" | "shard" | "scepter" = "item";
+  if (k.includes("shard")) {
+    type = "shard";
+  } else if (k.includes("scepter")) {
+    type = "scepter";
+  }
   return (
     <div className="item-build-img">
       {avgTime && (
@@ -26,7 +33,7 @@ export const ItemBuildImage = ({
       )}
       <TableItem
         enchant={enchant}
-        type="item"
+        type={type}
         height="40px"
         width="55px"
         itemKey={k.replace(/__\d+/g, "")}

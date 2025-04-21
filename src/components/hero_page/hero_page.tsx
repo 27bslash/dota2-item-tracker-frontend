@@ -29,7 +29,7 @@ export const HeroPageTopSection = (props: {
     heroList,
   } = usePageContext();
   const { role, updateRole, updateMatchData, totalPicks, shortBuilds } = props;
-  console.log("short",shortBuilds)
+  console.log("short", shortBuilds);
   return (
     <>
       <div className="flex" style={{ minHeight: "87px" }}>
@@ -41,30 +41,31 @@ export const HeroPageTopSection = (props: {
           updatePageNumber={props.updatePageNumber}
           updateRole={updateRole}
         ></BestGames>
-        {!!Object.keys(heroData).length && !!filteredData.length && (
-          <BigTalent
-            width="100px"
-            margin="2% 0px 0px 230px"
-            updateMatchData={updateMatchData}
-          />
-        )}
+        <BigTalent
+          width="100px"
+          margin="2% 0px 0px 230px"
+          updateMatchData={updateMatchData}
+        />
       </div>
       <div style={{ minHeight: "45px", marginTop: "20px" }}>
-        {itemData && shortBuilds && totalPicks && (
-          <Build
-            shortBuilds={shortBuilds}
-            heroList={heroList}
-            role={role}
-            picks={totalPicks}
-            searchRes={searchRes}
-            data={filteredData}
-            heroData={heroData}
-            heroName={nameParam}
-            itemData={itemData}
-            totalMatchData={totalMatchData}
-            updateMatchData={updateMatchData}
-          />
-        )}
+        {itemData &&
+          !!Object.keys(itemData).length &&
+          shortBuilds &&
+          totalPicks && (
+            <Build
+              shortBuilds={shortBuilds}
+              heroList={heroList}
+              role={role}
+              picks={totalPicks}
+              searchRes={searchRes}
+              data={filteredData}
+              heroData={heroData}
+              heroName={nameParam}
+              itemData={itemData}
+              totalMatchData={totalMatchData}
+              updateMatchData={updateMatchData}
+            />
+          )}
       </div>
     </>
   );
