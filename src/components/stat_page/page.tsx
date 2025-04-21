@@ -99,7 +99,9 @@ const Page = ({ type, heroList, playerList }: pageProps) => {
   useEffect(() => {
     if (Role) {
       const data = totalMatchData.filter(
-        (match: { role: string }) => match.role === Role
+        (match, index) =>
+          match.role === Role &&
+          totalMatchData.findIndex((m) => m.id === match.id) === index
       );
       setFilteredData(data);
       setCount(data.length);
