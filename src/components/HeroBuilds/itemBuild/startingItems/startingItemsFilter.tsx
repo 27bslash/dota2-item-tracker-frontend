@@ -3,6 +3,7 @@ import DotaMatch from "../../../types/matchData";
 const countStartingItems = (data: DotaMatch[]) => {
   const comboCount: { [key: string]: number } = {};
   for (const match of data) {
+    if (!match.starting_items.length) continue;
     const key = match["starting_items"]
       // .filter((x: { key: string }) => {
       //     if (!wards.includes(x['key'])) return x['key']
