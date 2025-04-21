@@ -19,9 +19,9 @@ export const ItemBuildImage = ({
   enchant,
 }: ItemBuildImageProps) => {
   let type: "item" | "shard" | "scepter" = "item";
-  if (k.includes("shard")) {
+  if (k === "aghanims_shard") {
     type = "shard";
-  } else if (k.includes("scepter")) {
+  } else if (k === "ultimate_scepter") {
     type = "scepter";
   }
   return (
