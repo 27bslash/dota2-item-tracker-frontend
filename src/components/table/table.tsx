@@ -118,6 +118,13 @@ const CustomTable = (props: TableProps) => {
       })
       .concat(nonProMatches);
   };
+  const removeDuplicates = (arr: DotaMatch[]) => {
+    const data = arr.filter(
+      (match, index) =>
+        arr.findIndex((m) => m.id === match.id) === index
+    );
+    return data;
+  };
   return (
     <div className="item-table">
       {!filteredData.length && (
@@ -134,7 +141,7 @@ const CustomTable = (props: TableProps) => {
               type={props.type}
             />
             <CustomTableBody
-              data={sortTable()}
+              data={removeDuplicates(sortTable())}
               heroData={props.heroData}
               type={props.type}
               page={page}

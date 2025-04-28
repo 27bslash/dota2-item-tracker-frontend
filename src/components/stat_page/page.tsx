@@ -2,7 +2,7 @@
 import Nav from "../nav/nav";
 import CustomTable from "../table/table";
 import { useEffect, useState } from "react";
-import { Typography } from "@mui/material";
+import { Button, Typography } from "@mui/material";
 import TableSearch, {
   combineMatches,
 } from "../table/table_search/table_search";
@@ -21,6 +21,7 @@ import Hero from "../types/heroList";
 import { TableSearchResults } from "../table/table_search/types/tableSearchResult.types";
 import { RoleStrings } from "../home/home";
 import PageContextProvider from "./pageContext";
+import { theme } from "../../main";
 
 //  TODO
 //  lazyload images
@@ -54,6 +55,7 @@ const Page = ({ type, heroList, playerList }: pageProps) => {
   const [pageNumber, setPageNumber] = useState(0);
   const [count, setCount] = useState(0);
   const [filteringByPatch, setFilteringByPatch] = useState(false);
+  const [proFilter, setProFilter] = useState(false);
   const nameParam = params["name"] ? heroSwitcher(params["name"]) : "";
   const heroColor = useHeroColor(type, nameParam);
   const updateStarter = () => {
@@ -201,10 +203,18 @@ const Page = ({ type, heroList, playerList }: pageProps) => {
         combineMatches(searchObj).flat().includes(x.id)
       );
       obj = searchObj;
+      setSearchResults(obj);
+      setFilteredData(newFilteredData);
+      setCount(newFilteredData.length);
+      return;
     }
+    const filtered = newFilteredData.filter((match) =>
+      proFilter ? match.pro : true
+    );
+    obj[searchResKey!][searchObj as number | string].matches = filtered;
     setSearchResults(obj);
-    setFilteredData(newFilteredData);
-    setCount(newFilteredData.length);
+    setFilteredData(filtered);
+    setCount(filtered.length);
   };
   // useEffect(() => {
   //     if (searchRes) updateSearchResults(searchRes)
@@ -300,18 +310,31 @@ const Page = ({ type, heroList, playerList }: pageProps) => {
       )
     );
   };
+
+  useEffect(() => {
+    if (proFilter) {
+      const proFilteredData = filteredData.filter((match) => match.pro);
+      setFilteredData(proFilteredData);
+      setCount(proFilteredData.length);
+    } else {
+      setFilteredData(totalMatchData);
+      setCount(totalMatchData.length);
+    }
+  }, [proFilter]);
   const renderPageContent = () => {
     if (!exists(heroColor)) return null;
     const contextValues = {
-      filteredData: filteredData,
-      totalMatchData: totalMatchData,
+      filteredData,
+      totalMatchData,
       searchRes: searchResults,
       updateSearchResults,
-      nameParam: nameParam,
-      itemData: itemData,
-      heroData: heroData,
-      heroList: heroList,
-      playerList: playerList,
+      nameParam,
+      itemData,
+      heroData,
+      heroList,
+      playerList,
+      proFilter,
+      setProFilter,
     };
     return (
       <PageContextProvider value={contextValues}>
@@ -334,12 +357,30 @@ const Page = ({ type, heroList, playerList }: pageProps) => {
           <div className="flex">
             <StarterToggle updateStarter={updateStarter} />
             {filteredData && (
-              <TableSearch
-                {...commonProps}
-                disabled={filteredData.length === 0 || !itemData || !heroList}
-                heroName={nameParam}
-                itemData={itemData}
-              />
+              <>
+                <Button
+                  variant="contained"
+                  onClick={() => setProFilter((prev) => !prev)}
+                  sx={{
+                    padding: "4px 8px 4px 8px",
+                    backgroundColor: theme.palette.primary.main,
+                    borderRadius: "5px",
+                    border: " solid 2px black",
+                    margin: "0",
+                    marginRight: "auto",
+                  }}
+                >
+                  <Typography>
+                    {!proFilter ? "pro games" : "all games"}
+                  </Typography>
+                </Button>
+                <TableSearch
+                  {...commonProps}
+                  disabled={filteredData.length === 0 || !itemData || !heroList}
+                  heroName={nameParam}
+                  itemData={itemData}
+                />
+              </>
             )}
           </div>
           <CustomTable
