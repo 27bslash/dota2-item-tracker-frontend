@@ -26,8 +26,14 @@ import { theme } from "../../main";
 //  TODO
 //  lazyload images
 //  fix role url not being able to be changed when clicking pick counter options
+//  add pro games picks to totalPicks
+//  try get player names from steam api
+//  add facets to hero toolip and page
+//  ward map app thing
+//  farming pattern map
+//  creative builds that are high winrate played by spammers
 interface pageProps {
-  type: string;
+  type: "player" | "hero";
   heroList: Hero[];
   playerList: string[];
   palette?: string;
@@ -358,22 +364,27 @@ const Page = ({ type, heroList, playerList }: pageProps) => {
             <StarterToggle updateStarter={updateStarter} />
             {filteredData && (
               <>
-                <Button
-                  variant="contained"
-                  onClick={() => setProFilter((prev) => !prev)}
-                  sx={{
-                    padding: "4px 8px 4px 8px",
-                    backgroundColor: theme.palette.primary.main,
-                    borderRadius: "5px",
-                    border: " solid 2px black",
-                    margin: "0",
-                    marginRight: "auto",
-                  }}
-                >
-                  <Typography>
-                    {!proFilter ? "pro games" : "all games"}
-                  </Typography>
-                </Button>
+                {type === "hero" && (
+                  <Button
+                    variant="contained"
+                    onClick={() => setProFilter((prev) => !prev)}
+                    sx={{
+                      padding: "4px 8px 4px 8px",
+                      backgroundColor: theme.palette.primary.main,
+                      borderRadius: "5px",
+                      border: " solid 2px black",
+                      marginRight: "auto",
+                      marginLeft: "10px",
+                      "&:hover": {
+                        backgroundColor: theme.palette.secondary.main,
+                      },
+                    }}
+                  >
+                    <Typography>
+                      {!proFilter ? "pro games" : "all games"}
+                    </Typography>
+                  </Button>
+                )}
                 <TableSearch
                   {...commonProps}
                   disabled={filteredData.length === 0 || !itemData || !heroList}
