@@ -62,7 +62,7 @@ const Draft = (props: DraftProps) => {
       {props.team && (
         <img
           style={{
-            marginLeft: props.team.name !== "Team Liquid" ? "0px" : "10px",
+            marginLeft: props.team.name !== "Team Liquid" ? "2px" : "12px",
             marginBottom: "3px",
           }}
           height="28px"
