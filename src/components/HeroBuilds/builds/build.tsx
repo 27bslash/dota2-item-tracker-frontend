@@ -25,17 +25,23 @@ export interface BuildProps extends MatchDataAdj {
   picks: PickStats;
   heroList: Hero[];
   totalMatchData?: DotaMatch[];
-  data?:DotaMatch[]
+  data?: DotaMatch[];
   shortBuilds: { [key: string]: UnparsedBuilds };
 }
 
 const Build = (props: BuildProps) => {
-  const [proFilter, setproFilter] = useState(false);
   const [open, setOpen] = useState(false);
   const [filterType, setFilterType] = useState<string | undefined>(
     "consumables"
   );
-  const { itemData, heroData, totalMatchData, searchRes } = usePageContext();
+  const {
+    itemData,
+    heroData,
+    totalMatchData,
+    searchRes,
+    proFilter,
+    setProFilter,
+  } = usePageContext();
 
   const buildsData = useParseMatchData({
     proData: true,
@@ -110,7 +116,7 @@ const Build = (props: BuildProps) => {
               <Button
                 variant="contained"
                 color="primary"
-                onClick={() => setproFilter((prevstate) => !prevstate)}
+                onClick={() => setProFilter((prevstate) => !prevstate)}
                 sx={baseButtonStyle}
               >
                 <Typography>{!proFilter ? " Pro data" : "non pro"}</Typography>
