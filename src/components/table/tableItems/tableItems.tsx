@@ -119,6 +119,7 @@ const TableItems = ({ heroName }: { heroName?: string }) => {
               heroName={heroName!}
               updateMatchData={updateMatchData}
               draft={row.radiant_draft}
+              team={row.radiant_team}
             ></Draft>
           </div>
           <div className="dire-draft">
@@ -126,6 +127,7 @@ const TableItems = ({ heroName }: { heroName?: string }) => {
               heroName={heroName!}
               updateMatchData={updateMatchData}
               draft={row.dire_draft}
+              team={row.dire_team}
             ></Draft>
           </div>
         </div>
@@ -133,6 +135,5 @@ const TableItems = ({ heroName }: { heroName?: string }) => {
     </TableCell>
   );
 };
-
 
 export default TableItems;

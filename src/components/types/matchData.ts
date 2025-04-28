@@ -9,15 +9,20 @@ export type HeroAbility = {
   type: string;
   slot?: number;
 };
-
+type ProTeam = {
+    tag? : string;
+    name: string;
+    logo_url: string;
+    team_id?: number;
+}
 type DotaMatch = {
   abilities: HeroAbility[];
   accountId: null | number;
   aghanims_shard: null | SimpleItems[];
   additional_units?: SimpleItems[];
   pro?: boolean;
-  radiant_team?: string;
-  dire_team?: string;
+  radiant_team?: ProTeam;
+  dire_team?: ProTeam;
   assists: number;
   backpack: SimpleItems[];
   bans: string[];
