@@ -12,7 +12,8 @@ const TooltipAttributes = (props: TooltipAttributesProps) => {
   return (
     <div className="attributes">
       {props.itemProperties &&
-        props.itemProperties.attrib!.map(
+        props.itemProperties.attrib &&
+        props.itemProperties.attrib.map(
           (
             x: {
               key: string;

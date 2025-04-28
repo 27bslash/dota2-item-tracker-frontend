@@ -107,7 +107,7 @@ const ItemDisplay = (
             <div
               className="overlay"
               style={{
-                bottom: "10px",
+                bottom: props.type !== "shard" ? "10px" : "0px",
               }}
             >
               {props.time || 0}
