@@ -82,7 +82,7 @@ const PickCounter = (props: pickProps) => {
                   <TotalPickCounter />
                   <RoleCounter />
                 </div>
-                <PlayerPicks matchKey="name" />
+                <PlayerPicks matchKey="account_id" />
               </>
             )
           )}
@@ -137,7 +137,7 @@ const TotalPickCounter = () => {
             <>
               <Typography className="bold-name" onClick={() => reset()}>
                 {nameParam} has played {matchData.length} times. He mostly
-                plays:{" "}
+                plays:
               </Typography>
               <PlayerPicks matchKey="hero" />
             </>

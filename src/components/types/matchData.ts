@@ -10,14 +10,14 @@ export type HeroAbility = {
   slot?: number;
 };
 type ProTeam = {
-    tag? : string;
-    name: string;
-    logo_url: string;
-    team_id?: number;
-}
+  tag?: string;
+  name: string;
+  logo_url: string;
+  team_id?: number;
+};
 type DotaMatch = {
   abilities: HeroAbility[];
-  accountId: null | number;
+  account_id: number;
   aghanims_shard: null | SimpleItems[];
   additional_units?: SimpleItems[];
   pro?: boolean;
