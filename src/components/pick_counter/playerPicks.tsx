@@ -90,8 +90,8 @@ export const PlayerPicks = ({ matchKey }: PlayerPickProps) => {
   return (
     <Box className="flex boxContainer" sx={{ marginLeft: "-8px" }}>
       {sortedData.map((x, i) => {
-        console.log(x);
         const roleKey = Object.keys(x[1])[0];
+        if (!x[1][roleKey].key) return null;
         const cleanName = x[1][roleKey].key.replace(/\(smurf.*/, "");
         return (
           <Box
