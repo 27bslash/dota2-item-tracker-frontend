@@ -27,6 +27,9 @@ export const mostUsedNeutrals = (matchData: DotaMatch[], itemData: Items) => {
           count +
           match.neutral_item_history.filter((item) => {
             const neutralItem = itemData.items[item.item_neutral];
+            if (!neutralItem) {
+              return false;
+            }
             return neutralItem.tier === tier;
           }).length
         );
@@ -41,6 +44,9 @@ export const mostUsedNeutrals = (matchData: DotaMatch[], itemData: Items) => {
         match.neutral_item_history.forEach(
           ({ item_neutral, item_neutral_enhancement }) => {
             const neutralItem = itemData.items[item_neutral];
+            if (!neutralItem) {
+              return;
+            }
             if (neutralItem.tier !== tier) return;
 
             const customKey = `${item_neutral}__${item_neutral_enhancement}`;
