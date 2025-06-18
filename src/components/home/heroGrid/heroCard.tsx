@@ -71,9 +71,6 @@ function HeroCard({
                             </span>
                         )}
                     </Typography>
-                    <Typography variant="body2" fontSize={14} className="wins">
-                        {stats.wins}
-                    </Typography>
                     <Typography
                         variant="body2"
                         fontSize={14}
