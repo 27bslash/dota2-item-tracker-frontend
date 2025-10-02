@@ -33,13 +33,13 @@ export const NeutralTooltipPalette = () => {
       tier: 2,
     };
     const img =
-      "https://ailhumfakp.cloudimg.io/v7/https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/items/pogo_stick.png";
+      "https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/items/pogo_stick.png";
     return (
       <>
         {[1, 2, 3, 4, 5].map((tier) => {
           console.log(tier);
           return (
-            <div className="tooltip" style={{left: `${tier *300}px`}}>
+            <div className="tooltip" style={{ left: `${tier * 300}px` }}>
               <div
                 className="tooltip-line-one item-tooltip-line-one"
                 style={{

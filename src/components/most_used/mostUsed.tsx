@@ -37,7 +37,7 @@ const MostUsed = ({ role }: MostUsedProps) => {
         <div className="most-used-container">
           <div className="most-used">
             {mostUsed.map((x, i) => {
-              const img = `https://ailhumfakp.cloudimg.io/v7/https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/items/${x[0]}.png`;
+              const img = `https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/items/${x[0]}.png`;
               const value = x[1];
               const perc = (value / max) * 100;
               // console.log(x[0], perc)

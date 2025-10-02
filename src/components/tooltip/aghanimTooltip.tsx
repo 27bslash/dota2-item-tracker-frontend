@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import TooltipAttributes from "./tooltipAttributes";
 import CdMc from "./cdmc";
 import Color from "color-thief-react";
@@ -25,7 +24,7 @@ const AghanimTooltip = (props: AghanimTooltipProps) => {
     aghText,
     aghanimAbility["special_values"]
   );
-  const img = `https://ailhumfakp.cloudimg.io/v7/https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react//abilities/${aghanimAbility.name}.png`;
+  const img = `https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react//abilities/${aghanimAbility.name}.png`;
   return (
     <Color src={img} crossOrigin="anonymous" format="hex">
       {({ data }) => {
@@ -114,10 +113,7 @@ export const extractAghanim = (
     if (result[_id][`ability_is_granted_by_${s}`]) {
       result[_id]["newAbility"] = true;
       return result[_id];
-    } else if (
-      result[_id][`ability_has_${s}`] &&
-      result[_id][`${s}_loc`]
-    ) {
+    } else if (result[_id][`ability_has_${s}`] && result[_id][`${s}_loc`]) {
       result[_id]["modifier"] = true;
       return result[_id];
     }

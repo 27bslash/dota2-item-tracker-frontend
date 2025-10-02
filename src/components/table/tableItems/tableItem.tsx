@@ -22,7 +22,7 @@ type TItemProp = {
   enchant?: string;
 };
 const TableItem = (props: TItemProp) => {
-  const image_host = "https://ailhumfakp.cloudimg.io/v7/";
+  const image_host = "";
 
   const link = `${image_host}https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/items/${props.itemKey}.png`;
   // console.log(props.item)

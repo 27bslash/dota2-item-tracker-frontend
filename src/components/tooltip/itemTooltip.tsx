@@ -155,7 +155,7 @@ const ItemTooltip = (props: ItemTooltipProps) => {
                           id="neutral-item"
                           className="tooltip-img"
                           alt={props.img}
-                          src={`https://ailhumfakp.cloudimg.io/v7/https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/items/${props.enchant}.png`}
+                          src={`https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/items/${props.enchant}.png`}
                           width="35px"
                         ></img>
                       </Box>

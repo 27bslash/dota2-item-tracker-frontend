@@ -59,7 +59,7 @@ type facetAbilityObj = {
 };
 export const FacetTooltip = ({ img, facet, heroStats }: facetToolipProps) => {
   const [facetAbilityObj, setFacetAbilityObj] = useState<facetAbilityObj>();
-
+//   console.log(img, facet);
   useEffect(() => {
     // clean facets
     let abilitySet = false;
@@ -251,6 +251,17 @@ export const FacetTooltip = ({ img, facet, heroStats }: facetToolipProps) => {
                 }}
                 dangerouslySetInnerHTML={{
                   __html: highlight_numbers(facet["ability_loc"]),
+                }}
+              ></div>
+            )}
+            {facetAbilityObj && !facetAbilityObj?.ability && (
+              <div
+                style={{
+                  letterSpacing: "1px",
+                  marginBottom: "15px",
+                }}
+                dangerouslySetInnerHTML={{
+                  __html: highlight_numbers(facet["description_loc"]),
                 }}
               ></div>
             )}

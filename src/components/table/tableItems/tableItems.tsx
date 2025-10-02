@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import { TableCell } from "@mui/material";
 import TableItem from "./tableItem";
 import ArrowButton from "../../ui_elements/arrowButton";
@@ -10,11 +9,9 @@ import { TableStartingItems } from "./tableStartingItems";
 import { useTableContext } from "../tableContext";
 import { humanReadableTime } from "../../../utils/humanReadableTime";
 
-
-
 const TableItems = ({ heroName }: { heroName?: string }) => {
   const { row, role, showStarter, updateMatchData } = useTableContext();
-  const image_host = "https://ailhumfakp.cloudimg.io/v7/";
+  const image_host = "";
   const consumables = [
     "tango",
     "flask",

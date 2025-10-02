@@ -6,7 +6,7 @@ import { AbilityImg } from "../../table/tableAbilities/abilityImg";
 import { AbilityBuildEntry, Talent } from "../builds/buildCell";
 import { usePageContext } from "../../stat_page/pageContext";
 import DotaMatch from "../../types/matchData";
-import {  PageHeroData } from "../../types/heroData";
+import { PageHeroData } from "../../types/heroData";
 
 interface AbilityBuildProps extends MatchDataAdj {
   abilityBuilds: {
@@ -17,7 +17,7 @@ interface AbilityBuildProps extends MatchDataAdj {
   data?: DotaMatch[];
 }
 const AbilityBuilds = ({ abilityBuilds, data }: AbilityBuildProps) => {
-  const imageHost = "https://ailhumfakp.cloudimg.io/v7/";
+  const imageHost = "";
   // const secAbilities = abilityFilter(data, fistAB)
   // console.log(abilities)
   const [debug, setShowDebug] = useState(false);
@@ -145,7 +145,7 @@ type AbilitBuildProps = {
   i: number;
 };
 const AbilityBuild = ({ abilityArr, imageHost, i }: AbilitBuildProps) => {
-    const { heroData, nameParam } = usePageContext();
+  const { heroData, nameParam } = usePageContext();
   return (
     <>
       {abilityArr.split("__").map((ability: string, idx: number) => {
@@ -170,7 +170,12 @@ const AbilityBuild = ({ abilityArr, imageHost, i }: AbilitBuildProps) => {
                 {idx + 1}
               </Typography>
             )}
-            <AbilityImg link={link} imgWidth={55} ability={simpleAbility!} key={idx} />
+            <AbilityImg
+              link={link}
+              imgWidth={55}
+              ability={simpleAbility!}
+              key={idx}
+            />
           </div>
         );
       })}
