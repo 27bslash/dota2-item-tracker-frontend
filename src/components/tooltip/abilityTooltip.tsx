@@ -133,7 +133,6 @@ export const extractHiddenValues = (
   facet?: boolean
 ) => {
   const sp = text.replace("bonus_", "").split("%");
-  console.log(sp);
   specialValues.forEach((x) => {
     x["name"] = x["name"].replace("bonus_", "");
     if (sp.includes(x["name"])) {

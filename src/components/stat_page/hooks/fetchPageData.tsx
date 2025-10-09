@@ -40,6 +40,14 @@ export const useFetchAllData = (type: string) => {
       `${baseApiUrl}hero/${nameParam}/item_build?short=True`
     );
     setShortBuilds(shortBuild[0]);
+    const itemdd = await fetchItems("files/items");
+    if (itemdd) {
+      setItemData(itemdd);
+    } else {
+      const notModified = await fetch(`${baseApiUrl}files/items`);
+      const notModifiedJson = await notModified.json();
+      setItemData(notModifiedJson);
+    }
     if (docLength > 35 && type === "hero") {
       // const worker = new Worker('./fetchData.ts')
       allMatches = await bulkRequest(
@@ -59,10 +67,10 @@ export const useFetchAllData = (type: string) => {
       );
       merged = matches["data"].concat(allMatches["data"]);
     }
-    setTotalMatches(merged);
     const currentPatch = await fetchData(`${baseApiUrl}files/patch`);
     setPatch(currentPatch);
     localStorage.setItem("patch", currentPatch);
+    setTotalMatches(merged);
 
     // const itemDataVersion = localStorage.getItem("item_list_version");
 
@@ -73,14 +81,6 @@ export const useFetchAllData = (type: string) => {
     // }
     // const itemDataJson = await fetchData(itemUrl);
     // localStorage.setItem("item_list_version", String(itemDataJson["version"]));
-    const itemdd = await fetchItems("files/items");
-    if (itemdd) {
-      setItemData(itemdd);
-    } else {
-      const notModified = await fetch(`${baseApiUrl}files/items`);
-      const notModifiedJson = await notModified.json();
-      setItemData(notModifiedJson);
-    }
   };
   useEffect(() => {
     getData();
