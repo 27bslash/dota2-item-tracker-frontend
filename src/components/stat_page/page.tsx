@@ -24,6 +24,7 @@ import PageContextProvider from "./pageContext";
 import { theme } from "../../main";
 
 //  TODO
+//  fix facet searching very inconsistent
 //  lazyload images
 //  fix role url not being able to be changed when clicking pick counter options
 //  add pro games picks to totalPicks
@@ -328,7 +329,6 @@ const Page = ({ type, heroList, playerList }: pageProps) => {
     }
   }, [proFilter]);
   const renderPageContent = () => {
-    if (!exists(heroColor)) return null;
     const contextValues = {
       filteredData,
       totalMatchData,
