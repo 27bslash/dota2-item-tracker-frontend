@@ -14,7 +14,6 @@ interface HeroTooltipProps {
 const HeroTooltip = ({ children, img }: HeroTooltipProps) => {
   const [open, setOpen] = useState(false);
 
-  // todo move this to main page
   const handleChange = (b: boolean) => {
     setOpen(b);
   };
@@ -100,9 +99,14 @@ const Bar = ({ stat, heroData }: { stat: string; heroData: HeroStats }) => {
   const maxStat = `max_${stat}` as keyof MaxStats;
   const regenStat = `${stat}_regen` as keyof RegenStats;
   return (
-    <div className="stat-bar" id={stat + "-bar"}>
+    <div className="stat-bar" id={stat + "-bar"} style={{ fontWeight: "bold" }}>
       <p className="max-stat">{heroData[maxStat]}</p>
-      <p className="stat-regen">+{heroData[regenStat].toFixed(2)}</p>
+      <p
+        style={{ filter: "none", justifyContent: "center" }}
+        className="stat-regen"
+      >
+        +{heroData[regenStat].toFixed(2)}
+      </p>
     </div>
   );
 };
