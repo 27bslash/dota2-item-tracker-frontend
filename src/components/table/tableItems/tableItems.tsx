@@ -115,6 +115,7 @@ const TableItems = ({ heroName }: { heroName?: string }) => {
             <Draft
               heroName={heroName!}
               updateMatchData={updateMatchData}
+              type="radiant"
               draft={row.radiant_draft}
               team={row.radiant_team}
             ></Draft>
@@ -123,6 +124,7 @@ const TableItems = ({ heroName }: { heroName?: string }) => {
             <Draft
               heroName={heroName!}
               updateMatchData={updateMatchData}
+              type="dire"
               draft={row.dire_draft}
               team={row.dire_team}
             ></Draft>

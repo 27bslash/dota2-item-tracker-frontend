@@ -6,6 +6,7 @@ import {
   TableSearchResult,
   TableSearchResults,
 } from "./table_search/types/tableSearchResult.types";
+import { red, green } from "@mui/material/colors";
 type DraftProps = {
   draft: string[];
   heroName: string;
@@ -14,6 +15,7 @@ type DraftProps = {
     searchValue?: TableSearchResults,
     types?: string[]
   ) => void;
+  type: "radiant" | "dire";
   team?: DotaMatch["radiant_team"];
 };
 const Draft = (props: DraftProps) => {
@@ -64,6 +66,7 @@ const Draft = (props: DraftProps) => {
           style={{
             marginLeft: props.team.name !== "Team Liquid" ? "2px" : "12px",
             marginBottom: "3px",
+            color: props.type === "radiant" ? green["400"] : red["400"],
           }}
           height="28px"
           src={props.team.logo_url}
