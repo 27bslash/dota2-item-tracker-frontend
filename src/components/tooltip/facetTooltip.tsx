@@ -59,7 +59,6 @@ type facetAbilityObj = {
 };
 export const FacetTooltip = ({ img, facet, heroStats }: facetToolipProps) => {
   const [facetAbilityObj, setFacetAbilityObj] = useState<facetAbilityObj>();
-//   console.log(img, facet);
   useEffect(() => {
     // clean facets
     let abilitySet = false;
@@ -94,11 +93,14 @@ export const FacetTooltip = ({ img, facet, heroStats }: facetToolipProps) => {
         (x) => x.title_loc === facet.title_loc
       );
       //   heroStats.facet_abilities[idx].abilities[0]
-      const innatefacetAbility = heroStats.facet_abilities[idx].abilities[0];
-      setFacetAbilityObj({
-        innateAbility: true,
-        ability: innatefacetAbility,
-      });
+      const facetAb = heroStats.facet_abilities[idx];
+      if (facetAb) {
+        const innatefacetAbility = facetAb.abilities[0];
+        setFacetAbilityObj({
+          innateAbility: true,
+          ability: innatefacetAbility,
+        });
+      }
     }
   }, [facet, heroStats]);
   if (!facet || facet.Deprecated) return null;
@@ -179,7 +181,7 @@ export const FacetTooltip = ({ img, facet, heroStats }: facetToolipProps) => {
             {!facetAbilityObj &&
               facet["description_loc"] &&
               facet.ability_loc != facet["description_loc"] &&
-              facet["description_loc"].length && (
+              !!facet["description_loc"].length && (
                 <div className="tooltip-description">
                   <p
                     dangerouslySetInnerHTML={{
@@ -207,9 +209,9 @@ export const FacetTooltip = ({ img, facet, heroStats }: facetToolipProps) => {
                   <img
                     height="30px"
                     src={
-                      !facetAbilityObj["innateAbility"]
-                        ? `https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/abilities/${facetAbilityObj.ability.name}.png`
-                        : `https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/icons/facets/${facet.icon}.png`
+                      facetAbilityObj["innateAbility"]
+                        ? `https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/icons/facets/${facet.icon}.png`
+                        : `https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/abilities/${facetAbilityObj.ability.name}.png`
                     }
                     onError={(e) => {
                       const target = e.target as HTMLImageElement;
@@ -227,9 +229,9 @@ export const FacetTooltip = ({ img, facet, heroStats }: facetToolipProps) => {
                       fontFamily: "reaver, serif",
                     }}
                   >
-                    {!facetAbilityObj["innateAbility"]
-                      ? facetAbilityObj["ability"]["name_loc"]
-                      : "Passive effect"}
+                    {facetAbilityObj["innateAbility"]
+                      ? "Passive effect"
+                      : facetAbilityObj["ability"]["name_loc"]}
                   </Typography>
                 </Box>
                 <div
@@ -279,7 +281,7 @@ export const FacetTooltip = ({ img, facet, heroStats }: facetToolipProps) => {
             {facetAbilityObj && facetAbilityObj["ability"] && (
               <TooltipAttributes
                 abilityProperties={facetAbilityObj["ability"]}
-                type={!facetAbilityObj["innateAbility"] ? "facet" : "ability"}
+                type={facetAbilityObj["innateAbility"] ? "ability" : "facet"}
               ></TooltipAttributes>
             )}
           </div>
