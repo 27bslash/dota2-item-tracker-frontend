@@ -12,7 +12,6 @@ import { Link, useSearchParams } from "react-router-dom";
 import PickCounter from "../pick_counter/pickCounter";
 import DotaMatch from "../types/matchData";
 import { HeroPageTopSection } from "../hero_page/hero_page";
-import { exists } from "../../utils/exists";
 import { useHeroColor } from "./hooks/heroColorHook";
 import { useHeroData } from "./hooks/heroDataHook";
 import { useFetchAllData } from "./hooks/fetchPageData";
