@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useParams } from "react-router";
 import { useSearchParams } from "react-router-dom";
 import { baseApiUrl } from "../../../App";
-import { fetchData, bulkRequest, fetchItems } from "../../../utils/fetchData";
+import { bulkRequestStaged, fetchData, fetchItems } from "../../../utils/fetchData";
 import heroSwitcher from "../../../utils/heroSwitcher";
 import DotaMatch from "../../types/matchData";
 import PickStats from "../../types/pickStats";
@@ -24,7 +24,7 @@ export const useFetchAllData = (type: string) => {
   const nameParam = params["name"] ? heroSwitcher(params["name"]) : "";
   const [patch, setPatch] = useState({ patch: "", patch_timestamp: 0 });
   const getData = async () => {
-    let merged;
+    let merged: DotaMatch[] = [];
     let url = `${baseApiUrl}${type}/${nameParam}/react-test?skip=0&length=10`;
     if (role)
       url = `${baseApiUrl}${type}/${nameParam}/react-test?skip=0&length=10&role=${role}`;
@@ -33,9 +33,8 @@ export const useFetchAllData = (type: string) => {
       url
     );
     setfilteredMatchData(matches["data"]);
-    const docLength = await fetchData(countDocsUrl);
+    const docLength = Number(await fetchData(countDocsUrl));
     setTotalPicks(matches["picks"]);
-    let allMatches;
     const shortBuild = await fetchData(
       `${baseApiUrl}hero/${nameParam}/item_build?short=True`
     );
@@ -48,39 +47,35 @@ export const useFetchAllData = (type: string) => {
       const notModifiedJson = await notModified.json();
       setItemData(notModifiedJson);
     }
+    const initialMatches = matches["data"];
+    setTotalMatches(initialMatches);
     if (docLength > 35 && type === "hero") {
-      // const worker = new Worker('./fetchData.ts')
-      allMatches = await bulkRequest(
-        `${baseApiUrl}${type}/${nameParam}/react-test`,
+      const stagedBaseUrl = role
+        ? `${baseApiUrl}${type}/${nameParam}/react-test?role=${role}`
+        : `${baseApiUrl}${type}/${nameParam}/react-test`;
+      const stagedMatches = await bulkRequestStaged<DotaMatch>(
+        stagedBaseUrl,
         docLength,
-        10
+        10,
+        {
+          seedData: initialMatches,
+          onStage: setTotalMatches,
+        },
       );
-      merged = allMatches
-        .map((x: { [x: string]: DotaMatch[] }) => x["data"])
-        .flat();
-      merged = matches["data"].concat(merged);
+      merged = stagedMatches;
     } else if (docLength <= 10 && type === "hero") {
-      merged = matches["data"];
+      merged = initialMatches;
     } else {
-      allMatches = await fetchData(
+      const allMatches = await fetchData(
         `${baseApiUrl}${type}/${nameParam}/react-test?skip=10&length=${docLength}`
       );
-      merged = matches["data"].concat(allMatches["data"]);
+      merged = initialMatches.concat(allMatches["data"]);
     }
     const currentPatch = await fetchData(`${baseApiUrl}files/patch`);
     setPatch(currentPatch);
     localStorage.setItem("patch", currentPatch);
     setTotalMatches(merged);
 
-    // const itemDataVersion = localStorage.getItem("item_list_version");
-
-    // let itemUrl = `${baseApiUrl}files/items?version=${itemDataVersion}&time=${Date.now()}`;
-    // const jsdon = await fetchData(url);
-    // if (itemDataVersion! === jsdon["version"]) {
-    //   itemUrl = `${baseApiUrl}files/items?version=${itemDataVersion}`;
-    // }
-    // const itemDataJson = await fetchData(itemUrl);
-    // localStorage.setItem("item_list_version", String(itemDataJson["version"]));
   };
   useEffect(() => {
     getData();

@@ -21,7 +21,7 @@ export const fetchData = async (url: string, retries = 2, delay = 1000) => {
           ? parseInt(retryAfter, 10) * 1000
           : delay * attempt;
         console.log(
-          `Rate limited. ${url} Retrying in ${waitTime / 1000} seconds...`
+          `Rate limited. ${url} Retrying in ${waitTime / 1000} seconds...`,
         );
         await wait(waitTime);
         continue;
@@ -44,7 +44,7 @@ export async function fetchItems(url: string) {
 
   const findEtag = (url: string) =>
     cachedEtagData.find(
-      (entry: { [key: string]: string }) => entry.url === url
+      (entry: { [key: string]: string }) => entry.url === url,
     );
   const storedETag = findEtag(url);
 
@@ -69,7 +69,7 @@ export async function fetchItems(url: string) {
         updateEtag(
           url,
           response.headers.get("ETag")!,
-          response.headers.get("Last-Modified")!
+          response.headers.get("Last-Modified")!,
         );
       }
       return data;
@@ -84,7 +84,7 @@ export async function fetchItems(url: string) {
 export const updateEtag = (
   url: string,
   newEtag: string,
-  newLastModified: string
+  newLastModified: string,
 ) => {
   const etagCache = JSON.parse(localStorage.getItem("etagCache") || "[]");
   if (!newEtag || !newLastModified) {
@@ -92,7 +92,7 @@ export const updateEtag = (
     return;
   }
   const index = etagCache.findIndex(
-    (entry: { url: string }) => entry.url === url
+    (entry: { url: string }) => entry.url === url,
   );
   if (index !== -1) {
     etagCache[index].etag = newEtag;
@@ -106,11 +106,12 @@ export const updateEtag = (
 export const bulkRequest = async (
   baseUrl: string,
   docLength: number,
-  start: number
+  start: number,
 ) => {
   const urlList = [];
-  let chunk = Math.ceil((docLength - start) / 6);
-  if (chunk < 10) chunk = Math.ceil((docLength - start) / 3);
+  const remaining = docLength - start;
+  let chunk = Math.ceil(remaining / 6);
+  if (chunk < 10) chunk = Math.ceil(remaining / 3);
   let skip = start;
   for (let i = 0; i < +docLength - start; i += chunk) {
     const url = `${baseUrl}?skip=${skip}&length=${chunk}`;
@@ -120,7 +121,50 @@ export const bulkRequest = async (
   const data = await Promise.all(
     urlList.map((innerPromiseArray) => {
       return fetchData(innerPromiseArray);
-    })
+    }),
   );
   return data;
+};
+
+export const bulkRequestStaged = async <T>(
+  baseUrl: string,
+  docLength: number,
+  start: number,
+  options: {
+    seedData: T[];
+    onStage: (accumulated: T[], chunk: T[]) => void;
+  },
+) => {
+  const merged: T[] = [...options.seedData];
+  const total = Math.max(docLength, 0);
+  const remaining = Math.max(total - start, 0);
+  let generatedChunk = Math.ceil(remaining / 6);
+  if (generatedChunk < 10) generatedChunk = Math.ceil(remaining / 3);
+  const safeStageSize = Math.max(1, generatedChunk);
+  for (let skip = start; skip < total; skip += safeStageSize) {
+    const length = Math.min(safeStageSize, total - skip);
+    const url = `${baseUrl}?skip=${skip}&length=${length}`;
+    const response = await fetchData(url);
+    let chunk: T[];
+    if (Array.isArray(response)) {
+      chunk = response;
+    } else if (
+      response &&
+      typeof response === "object" &&
+      Array.isArray(response.data)
+    ) {
+      chunk = response.data;
+    } else {
+      chunk = [];
+    }
+    if (!chunk.length) {
+      continue;
+    }
+    merged.push(...chunk);
+    if (options.onStage) {
+      options.onStage([...merged], chunk);
+    }
+  }
+
+  return merged;
 };
