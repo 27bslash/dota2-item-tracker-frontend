@@ -2,7 +2,11 @@ import { useState, useEffect } from "react";
 import { useParams } from "react-router";
 import { useSearchParams } from "react-router-dom";
 import { baseApiUrl } from "../../../App";
-import { bulkRequestStaged, fetchData, fetchItems } from "../../../utils/fetchData";
+import {
+  bulkRequestStaged,
+  fetchData,
+  fetchItems,
+} from "../../../utils/fetchData";
 import heroSwitcher from "../../../utils/heroSwitcher";
 import DotaMatch from "../../types/matchData";
 import PickStats from "../../types/pickStats";
@@ -22,21 +26,19 @@ export const useFetchAllData = (type: string) => {
   const [query] = useSearchParams();
   const role = query.get("role") || "";
   const nameParam = params["name"] ? heroSwitcher(params["name"]) : "";
-  const [patch, setPatch] = useState({ patch: "", patch_timestamp: 0 });
   const getData = async () => {
     let merged: DotaMatch[] = [];
     let url = `${baseApiUrl}${type}/${nameParam}/react-test?skip=0&length=10`;
     if (role)
       url = `${baseApiUrl}${type}/${nameParam}/react-test?skip=0&length=10&role=${role}`;
     const countDocsUrl = `${baseApiUrl}hero/${nameParam}/count_docs?collection=heroes`;
-    const matches: { data: DotaMatch[]; picks: PickStats } = await fetchData(
-      url
-    );
+    const matches: { data: DotaMatch[]; picks: PickStats } =
+      await fetchData(url);
     setfilteredMatchData(matches["data"]);
     const docLength = Number(await fetchData(countDocsUrl));
     setTotalPicks(matches["picks"]);
     const shortBuild = await fetchData(
-      `${baseApiUrl}hero/${nameParam}/item_build?short=True`
+      `${baseApiUrl}hero/${nameParam}/item_build?short=True`,
     );
     setShortBuilds(shortBuild[0]);
     const itemdd = await fetchItems("files/items");
@@ -67,15 +69,12 @@ export const useFetchAllData = (type: string) => {
       merged = initialMatches;
     } else {
       const allMatches = await fetchData(
-        `${baseApiUrl}${type}/${nameParam}/react-test?skip=10&length=${docLength}`
+        `${baseApiUrl}${type}/${nameParam}/react-test?skip=10&length=${docLength}`,
       );
       merged = initialMatches.concat(allMatches["data"]);
     }
-    const currentPatch = await fetchData(`${baseApiUrl}files/patch`);
-    setPatch(currentPatch);
-    localStorage.setItem("patch", currentPatch);
-    setTotalMatches(merged);
 
+    setTotalMatches(merged);
   };
   useEffect(() => {
     getData();
@@ -83,7 +82,6 @@ export const useFetchAllData = (type: string) => {
   return {
     filteredMatchData,
     totalMatches,
-    patch,
     itemData,
     totalPicks,
     shortBuilds,

@@ -30,7 +30,7 @@ function HeroCard({
   const heroHighlight = idx === highlight && searching ? "hero-highlight" : "";
   const width = heroHighlight ? "148" : "145";
   // const width = heroHighlight ? '113' : '110'
-  const img = `https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/heroes/${imgName}.png?v=5926546`;
+  const img = `https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/heroes/${imgName}.png`;
   const heroname = heroName.replace(/\s/g, "_");
   let link = `${patchString}/hero/${heroname}`;
   if (role && stats["picks"] > 0) {

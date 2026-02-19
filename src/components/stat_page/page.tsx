@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import Nav from "../nav/nav";
 import CustomTable from "../table/table";
 import { useEffect, useState } from "react";
@@ -37,19 +36,20 @@ interface pageProps {
   heroList: Hero[];
   playerList: string[];
   palette?: string;
+  patch: { patch: string; patch_timestamp: number };
 }
 export interface MatchDataAdj {
   updateMatchData: (
     data: DotaMatch[],
     searchValue?: TableSearchResults,
-    types?: string[]
+    types?: string[],
   ) => void;
   matchData?: DotaMatch[];
   totalMatchData?: DotaMatch[];
   filteredData?: DotaMatch[];
 }
 
-const Page = ({ type, heroList, playerList }: pageProps) => {
+const Page = ({ type, heroList, playerList, patch }: pageProps) => {
   const [filteredData, setFilteredData] = useState<DotaMatch[]>([]);
   const [totalMatchData, setTotalMatchData] = useState<DotaMatch[]>([]);
   const [showStarter, setShowStarter] = useState(false);
@@ -69,27 +69,21 @@ const Page = ({ type, heroList, playerList }: pageProps) => {
   };
 
   document.title = heroSwitcher(nameParam);
-  const {
-    filteredMatchData,
-    totalMatches,
-    patch: patch_obj,
-    itemData,
-    totalPicks,
-    shortBuilds,
-  } = useFetchAllData(type);
+  const { filteredMatchData, totalMatches, itemData, totalPicks, shortBuilds } =
+    useFetchAllData(type);
   useEffect(() => {
     if (filteredMatchData) {
       setFilteredData(
         params["patch"]
           ? filteredMatchData.filter((match) => match.patch === params["patch"])
-          : filteredMatchData
+          : filteredMatchData,
       );
     }
     if (totalMatches) {
       setTotalMatchData(
         params["patch"]
           ? totalMatches.filter((match) => match.patch === params["patch"])
-          : totalMatches
+          : totalMatches,
       );
       setCount(totalMatches.length);
     }
@@ -97,7 +91,7 @@ const Page = ({ type, heroList, playerList }: pageProps) => {
 
   const scrollGameIntoView = (idx: number) => {
     let pageIdx = Math.ceil(idx / 10) - 1;
-    pageIdx = pageIdx >= 0 ? pageIdx : 0;
+    pageIdx = Math.max(pageIdx, 0);
     setPageNumber(pageIdx);
     const elPageIdx = idx - 10 * pageIdx;
     const tbodys = document.querySelectorAll("tbody");
@@ -109,7 +103,7 @@ const Page = ({ type, heroList, playerList }: pageProps) => {
       const data = totalMatchData.filter(
         (match, index) =>
           match.role === Role &&
-          totalMatchData.findIndex((m) => m.id === match.id) === index
+          totalMatchData.findIndex((m) => m.id === match.id) === index,
       );
       setFilteredData(data);
       setCount(data.length);
@@ -135,7 +129,7 @@ const Page = ({ type, heroList, playerList }: pageProps) => {
     searchResKey?: string,
     matchKey?: SearchResultKeyType,
     resultKey?: string,
-    hero?: string
+    hero?: string,
   ) => {
     let obj: TableSearchResults = {};
     if (!searchObj && !searchResKey) {
@@ -171,7 +165,7 @@ const Page = ({ type, heroList, playerList }: pageProps) => {
     if (typeof searchObj === "string" && matchKey && searchResKey) {
       if (["name", "role", "hero", "item_neutral"].includes(matchKey)) {
         newFilteredData = totalMatchData.filter(
-          (x) => x[matchKey] === searchObj
+          (x) => x[matchKey] === searchObj,
         );
         console.log(searchObj, newFilteredData, {
           [matchKey]: {
@@ -190,10 +184,8 @@ const Page = ({ type, heroList, playerList }: pageProps) => {
           },
         };
       } else if (matchKey === "items" || matchKey === "abilities") {
-        newFilteredData = totalMatchData.filter(
-          (x) =>
-            x[matchKey] &&
-            x[matchKey].map((item) => item["key"]).includes(searchObj)
+        newFilteredData = totalMatchData.filter((x) =>
+          x[matchKey]?.map((item) => item["key"]).includes(searchObj),
         );
         obj = {
           [searchResKey]: {
@@ -206,7 +198,7 @@ const Page = ({ type, heroList, playerList }: pageProps) => {
       }
     } else if (typeof searchObj === "object" && !matchKey) {
       newFilteredData = totalMatchData.filter((x) =>
-        combineMatches(searchObj).flat().includes(x.id)
+        combineMatches(searchObj).flat().includes(x.id),
       );
       obj = searchObj;
       setSearchResults(obj);
@@ -215,19 +207,17 @@ const Page = ({ type, heroList, playerList }: pageProps) => {
       return;
     }
     const filtered = newFilteredData.filter((match) =>
-      proFilter ? match.pro : true
+      proFilter ? match.pro : true,
     );
     obj[searchResKey!][searchObj as number | string].matches = filtered;
     setSearchResults(obj);
     setFilteredData(filtered);
     setCount(filtered.length);
   };
-  // useEffect(() => {
-  //     if (searchRes) updateSearchResults(searchRes)
-  // }, [searchRes]);
+
   const updateMatchData = (
     data: DotaMatch[],
-    searchValue?: TableSearchResults
+    searchValue?: TableSearchResults,
   ) => {
     // setMatchData(data)
     if (!data.length) return;
@@ -250,7 +240,7 @@ const Page = ({ type, heroList, playerList }: pageProps) => {
     if (!totalMatches) return;
     if (filteringByPatch) {
       const patchFilteredData = filteredData.filter((match) => {
-        return match["patch"] === patch_obj["patch"];
+        return match["patch"] === patch["patch"];
       });
       setTotalMatchData(patchFilteredData);
       setFilteredData(patchFilteredData);
@@ -290,26 +280,25 @@ const Page = ({ type, heroList, playerList }: pageProps) => {
   const renderFilterByPatch = () => {
     if (!totalMatches) return null;
     const oldPatchGameList = totalMatches.filter(
-      (match) =>
-        patch_obj["patch_timestamp"] > 0 && match.patch !== patch_obj["patch"]
+      (match) => patch["patch_timestamp"] > 0 && match.patch !== patch["patch"],
     );
     return (
       !!oldPatchGameList.length &&
       oldPatchGameList.length !== totalMatchData.length && (
         <Typography variant="h5" color="white" align="center">
-          {!params["patch"] ? (
-            <Link
-              onClick={() => setFilteringByPatch(true)}
-              to={`/${patch_obj["patch"]}/hero/${heroSwitcher(nameParam)}`}
-            >
-              Filter Matches By {patch_obj["patch"]}
-            </Link>
-          ) : (
+          {params["patch"] ? (
             <Link
               onClick={() => setFilteringByPatch(false)}
               to={`/hero/${heroSwitcher(nameParam)}`}
             >
               Show All Games
+            </Link>
+          ) : (
+            <Link
+              onClick={() => setFilteringByPatch(true)}
+              to={`/${patch["patch"]}/hero/${heroSwitcher(nameParam)}`}
+            >
+              Filter Matches By {patch["patch"]}
             </Link>
           )}
         </Typography>
