@@ -17,6 +17,13 @@ import {
 import { facetFilter } from "../abillityBuild/facetFiltering";
 import { UnparsedBuilds } from "./shortBuildHook";
 import DotaMatch from "../../types/matchData";
+
+const ENABLE_BUILD_PROFILING = process.env.NODE_ENV !== "production";
+const nowMs = () =>
+  typeof performance !== "undefined" && typeof performance.now === "function"
+    ? performance.now()
+    : Date.now();
+const roundMs = (value: number) => Math.round(value * 100) / 100;
 export type HeroBuild = {
   item_builds: {
     [key: string]: CoreItem[];
@@ -41,7 +48,7 @@ export type HeroBuild = {
   length?: number;
 };
 type UseHeroBuildsArgs = {
-  filteredData: { [role: string]: DotaMatch[] };
+  filteredData?: { [role: string]: DotaMatch[] };
   heroData: PageHeroData;
   itemData: Items;
   api: boolean;
@@ -74,30 +81,49 @@ export const useHeroBuilds = ({
   };
   useEffect(() => {
     const updateHeroBuilds = () => {
+      const totalStart = nowMs();
+      const stepTimings: Record<string, number> = {};
+      const trackStep = (step: string, startTime: number) => {
+        if (!ENABLE_BUILD_PROFILING) return;
+        stepTimings[step] = (stepTimings[step] || 0) + (nowMs() - startTime);
+      };
       const updatedBuilds: Record<string, HeroBuild> = {};
+      const hasFullFilteredData =
+        !!filteredData &&
+        Object.values(filteredData).some((matches) => matches.length > 0);
+      let stepStart = nowMs();
       const ultimateAbility = getUltimateAbility();
-      if (shortBuild && !filteredData) {
+      trackStep("getUltimateAbility", stepStart);
+      if (shortBuild && !hasFullFilteredData) {
+        console.log("loading short build", shortBuild);
         const srted = Object.entries(shortBuild).sort(
-          (a, b) => b[1]["length"] - a[1]["length"]
+          (a, b) => b[1]["length"] - a[1]["length"],
         );
         for (const role of srted) {
+          const roleStart = nowMs();
           const buildData = shortBuild[role[0]];
+          stepStart = nowMs();
           const itemBuild = filterItems(
             itemData,
             role[0],
             undefined,
-            buildData
+            buildData,
           );
+          trackStep("filterItems", stepStart);
           const count = itemBuildLengthChecker(itemBuild);
           if (count < 2) {
-            console.log(`removed role: ${role} count: ${count}`);
+            console.log(`removed role: ${Object.keys(role)} count: ${count}`);
             continue;
           }
-
+          stepStart = nowMs();
           const abilityBuilds = abilityFilter(undefined, buildData) || [[]];
+          trackStep("abilityFilter", stepStart);
+          stepStart = nowMs();
           const startingItemBuilds = Object.entries(
-            buildData["starting_items"]
+            buildData["starting_items"],
           );
+          trackStep("startingItems", stepStart);
+          stepStart = nowMs();
           const neutralItems = buildData["neutral_items"];
           const d: {
             [key: string]: {
@@ -111,7 +137,10 @@ export const useHeroBuilds = ({
               neutral_items: neutralItems[key],
             };
           }
+          trackStep("neutralItems", stepStart);
+          stepStart = nowMs();
           const talents = Object.entries(buildData["talents"]);
+          trackStep("talents", stepStart);
           const res = {
             item_builds: itemBuild,
             facet_builds: buildData.facets,
@@ -122,38 +151,56 @@ export const useHeroBuilds = ({
             ultimate_ability: ultimateAbility,
             length: buildData["length"],
           };
-          console.log(res);
+          console.log("shortbuild", res);
           updatedBuilds[role[0]] = res;
+          if (ENABLE_BUILD_PROFILING) {
+            console.log(
+              `[useHeroBuilds] role=${role[0]} mode=short elapsed=${roundMs(nowMs() - roleStart)}ms`,
+            );
+          }
         }
-      } else {
+      } else if (filteredData) {
         for (const key in filteredData) {
+          const roleStart = nowMs();
           let buildData = filteredData[key];
+          stepStart = nowMs();
           const facetBuilds = facetFilter(buildData, heroData);
+          trackStep("facetFilter", stepStart);
           if (api) {
             const facetSort = facetBuilds.sort(
-              (a, b) => +b["perc"] - +a["perc"]
+              (a, b) => +b["perc"] - +a["perc"],
             );
             buildData = buildData.filter(
-              (match) => match.variant === facetSort[0]["key"]
+              (match) => match.variant === facetSort[0]["key"],
             );
             filter = "consumables";
           }
+          stepStart = nowMs();
           const itemBuild = filterItems(
             itemData,
             key,
             buildData,
             undefined,
-            filter
+            filter,
           );
+          trackStep("filterItems", stepStart);
           const count = itemBuildLengthChecker(itemBuild);
           if (count < 2) {
             console.log(`removed key: ${key} count: ${count}`);
             continue;
           }
+          stepStart = nowMs();
           const abilityBuilds = abilityFilter(buildData) || [[]];
+          trackStep("abilityFilter", stepStart);
+          stepStart = nowMs();
           const startingItemBuilds = countStartingItems(buildData);
+          trackStep("startingItems", stepStart);
+          stepStart = nowMs();
           const neutralItems = mostUsedNeutrals(buildData, itemData);
+          trackStep("neutralItems", stepStart);
+          stepStart = nowMs();
           const talentBuild = mostUsedTalents(buildData);
+          trackStep("talents", stepStart);
           const res = {
             item_builds: itemBuild,
             facet_builds: facetBuilds,
@@ -165,7 +212,23 @@ export const useHeroBuilds = ({
           };
           console.log(res);
           updatedBuilds[key] = res;
+          if (ENABLE_BUILD_PROFILING) {
+            console.log(
+              `[useHeroBuilds] role=${key} matches=${buildData.length} mode=full elapsed=${roundMs(nowMs() - roleStart)}ms`,
+            );
+          }
         }
+      }
+      if (ENABLE_BUILD_PROFILING) {
+        const totalElapsed = roundMs(nowMs() - totalStart);
+        const breakdown = Object.entries(stepTimings)
+          .sort((a, b) => b[1] - a[1])
+          .map(([step, ms]) => `${step}=${roundMs(ms)}ms`)
+          .join(" | ");
+        console.log(
+          `[useHeroBuilds] total=${totalElapsed}ms roles=${Object.keys(updatedBuilds).length}`,
+        );
+        console.log(`[useHeroBuilds] breakdown ${breakdown}`);
       }
       setHeroBuilds(updatedBuilds);
     };

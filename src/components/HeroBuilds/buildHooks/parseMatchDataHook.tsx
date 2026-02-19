@@ -7,10 +7,9 @@ import DotaMatch from "../../types/matchData";
 const calc_common_roles = (
   props: { picks: PickStats },
   pickData?: Record<string, { [key: string]: number }>,
-  threshold?: number
+  threshold: number = 0.1,
 ) => {
   const picks = pickData || props.picks;
-  threshold = threshold || 0.1;
   const combinedRoles = ["Support", "Roaming"];
   let totalPicks = 0;
   for (const o of Object.entries(picks)) {
@@ -28,7 +27,7 @@ const calc_common_roles = (
       let totalRolePicks = picks[role].picks;
       if (!combinedRole && combinedRoles.includes(role)) {
         const otherRole = combinedRoles.find(
-          (pos) => pos !== role && pos in picks
+          (pos) => pos !== role && pos in picks,
         );
         if (otherRole) {
           const otherRolePicks = otherRole
@@ -53,7 +52,7 @@ const calc_common_roles = (
 type UseParseMatchDataArgs = {
   proData: boolean;
   totalMatchData: DotaMatch[];
-  props: {picks: PickStats, role?: string};
+  props: { picks: PickStats; role?: string };
   searchRes?: TableSearchResults;
   threshold?: number;
   proFilter?: boolean;
@@ -121,7 +120,7 @@ export const useParseMatchData = ({
             (match) =>
               match.role === role ||
               (combinedRoles.includes(role) &&
-                combinedRoles.includes(match.role))
+                combinedRoles.includes(match.role)),
           )
           .filter((match) =>
             searchRes
@@ -132,13 +131,13 @@ export const useParseMatchData = ({
                     return match["variant"] ? match["variant"] === +k : false;
                   }
                 })
-              : true
+              : true,
           );
         tempObject[role] = roleFiltered;
       }
       setFilteredData(tempObject);
     }
-  }, [props.role, data, searchRes]);
+  }, [props.role, data, searchRes, displayedRoles]);
   return filteredData;
 };
 function objectContainsString<T>(obj: T, searchString: string) {

@@ -82,7 +82,6 @@ const groupByTime = (data: RawItemBuild[], roleKey: string) => {
   if (lateSituational.length) res[2]["situational"] = lateSituational;
   groupDisassembledComponents(filteredData);
   groupByItemChoices(res);
-  console.log("item build: ", data, res);
   return res;
 };
 export default groupByTime;
