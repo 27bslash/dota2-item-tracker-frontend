@@ -64,16 +64,23 @@ export const useHeroBuilds = ({
   filter,
 }: UseHeroBuildsArgs) => {
   const [heroBuilds, setHeroBuilds] = useState<Record<string, HeroBuild>>();
+  const hasItemData =
+    !!itemData &&
+    !!itemData["items"] &&
+    Object.keys(itemData["items"]).length > 0;
+  const hasHeroData = !!heroData && Object.keys(heroData).length > 0;
   // const [filterComponents, setFilterComponents] = useState(false)
   // const [filterBoots, setFilterBoots] = useState(false)
   // const [filterPerc, setFilterPerc] = useState(1)
 
   const getUltimateAbility = () => {
     for (const k in heroData) {
-      const abilities = heroData[k]["abilities"];
+      const hero = heroData?.[k];
+      if (!hero || !hero["abilities"]) continue;
+      const abilities = hero["abilities"];
       for (const abilityKey in abilities) {
         const ability = abilities[abilityKey];
-        if (ability["max_level"] === 3) {
+        if (ability && ability["max_level"] === 3) {
           return ability["name"];
         }
       }
@@ -164,9 +171,9 @@ export const useHeroBuilds = ({
           const roleStart = nowMs();
           let buildData = filteredData[key];
           stepStart = nowMs();
-          const facetBuilds = facetFilter(buildData, heroData);
+          const facetBuilds = facetFilter(buildData, heroData) || [];
           trackStep("facetFilter", stepStart);
-          if (api) {
+          if (api && facetBuilds.length) {
             const facetSort = facetBuilds.sort(
               (a, b) => +b["perc"] - +a["perc"],
             );
@@ -233,12 +240,21 @@ export const useHeroBuilds = ({
       setHeroBuilds(updatedBuilds);
     };
     // Call the function to update hero builds
-    if (filteredData || shortBuild) {
+    const canRunShort = !!shortBuild && hasItemData;
+    const canRunFull = !!filteredData && hasItemData && hasHeroData;
+    if (canRunShort || canRunFull) {
       updateHeroBuilds();
+    } else {
+      setHeroBuilds(undefined);
     }
   }, [
     filteredData,
     shortBuild,
+    heroData,
+    itemData,
+    hasHeroData,
+    hasItemData,
+    api,
     // filterBoots,
     // filterComponents,
     filter,

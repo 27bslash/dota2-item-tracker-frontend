@@ -4,12 +4,12 @@ import DotaMatch from "../../types/matchData";
 export const facetFilter = (buildData: DotaMatch[], heroData: PageHeroData) => {
   const facetCount: { [key: string]: number } = {};
   let total = 0;
-  if (!heroData) {
-    console.log("no datra");
-    return;
+  if (!heroData || !Object.keys(heroData).length) {
+    return [];
   }
   const k = Object.keys(heroData);
-  const heroFacets = heroData[k[0]]["facets"];
+  const hero = heroData[k[0]];
+  const heroFacets = hero?.["facets"] || [];
   const findFacet = (match: DotaMatch) => {
     if (match["variant"]) {
       if (!heroFacets[match["variant"] - 1]) return heroFacets.length;
