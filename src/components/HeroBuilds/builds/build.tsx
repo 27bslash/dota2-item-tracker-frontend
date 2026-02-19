@@ -51,7 +51,7 @@ const Build = (props: BuildProps) => {
     proFilter,
   });
   const heroBuilds = useHeroBuilds({
-    filteredData: buildsData!,
+    filteredData: buildsData,
     heroData,
     itemData: itemData!,
     api: false,
@@ -95,7 +95,9 @@ const Build = (props: BuildProps) => {
             }}
             onClick={() => setOpen((prevstate) => !prevstate)}
           >
-            <Typography>builds</Typography>
+            <Typography>
+              builds
+            </Typography>
           </Button>
         )}
         {open && heroBuilds && (
@@ -154,7 +156,7 @@ const Build = (props: BuildProps) => {
               return (
                 <BuildCell
                   key={index}
-                  data={buildsData ? buildsData![role] : undefined}
+                  data={buildsData?.[role]}
                   updateMatchData={props.updateMatchData}
                   buildData={buildData}
                   role={role}

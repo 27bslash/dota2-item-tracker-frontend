@@ -26,6 +26,27 @@ export type RawItemBuildValues = {
 };
 export type RawItemBuild = [string, RawItemBuildValues];
 
+const CONSUMABLE_ITEMS = new Set([
+  "tango",
+  "flask",
+  "branches",
+  "blood_grenade",
+  "ward_observer",
+  "ward_sentry",
+  "smoke_of_deceit",
+  "enchanted_mango",
+  "clarity",
+  "tpscroll",
+  "dust",
+  "tome_of_knowledge",
+  "faerie_fire",
+  "great_famango",
+  "famango",
+  "dagon_2",
+  "dagon_3",
+  "dagon_4",
+]);
+
 const humanToUnix = (time: string | number) => {
   if (typeof time === "number") {
     return 0;
@@ -33,147 +54,109 @@ const humanToUnix = (time: string | number) => {
   const split = time.split(":");
   const hours = +split[0] * 3600;
   const mins = +split[1] * 60;
-  const secs = +split[1];
+  const secs = +split[2];
   return hours + mins + secs;
 };
 
 export const countItems = (
   data: DotaMatch[],
   itemData: Items,
-  filter?: string
+  filter?: string,
 ) => {
-  const consumables: string[] = [
-    "tango",
-    "flask",
-    "branches",
-    "blood_grenade",
-    "ward_observer",
-    "ward_sentry",
-    "smoke_of_deceit",
-    "enchanted_mango",
-    "clarity",
-    "tpscroll",
-    "dust",
-    "tome_of_knowledge",
-    "faerie_fire",
-    "great_famango",
-    "famango",
-    "dagon_2",
-    "dagon_3",
-    "dagon_4",
-  ];
-
-  const items: Record<string, number>[] = [];
-  const seenItems = new Set<string>();
+  const itemTimesByKey = new Map<string, number[]>();
   for (const match of data) {
-    const dupeCounter: string[] = [];
-    for (const [i, item] of match["items"].entries()) {
-      if (item["key"] == "tpscroll") continue;
-      if (filter === "consumables" && consumables.includes(item["key"]))
-        continue;
-      if (!itemData["items"][item["key"]]) continue;
-      let key;
+    const duplicateCountByKey = new Map<string, number>();
+    for (const item of match["items"]) {
+      const itemKey = item["key"];
+      if (itemKey === "tpscroll") continue;
+      if (filter === "consumables" && CONSUMABLE_ITEMS.has(itemKey)) continue;
+      if (!itemData["items"][itemKey]) continue;
+
+      const seenCount = duplicateCountByKey.get(itemKey) || 0;
+      let key = itemKey;
       if (
-        dupeCounter.includes(item["key"]) &&
-        item["key"] !== "aghanims_shard" &&
-        item["key"] !== "ultimate_scepter"
+        seenCount > 0 &&
+        itemKey !== "aghanims_shard" &&
+        itemKey !== "ultimate_scepter"
       ) {
-        const itemCount = match["items"]
-          .slice(0, i)
-          .filter((x) => x["key"] === item["key"]).length;
-        key = `${item["key"]}__${itemCount}`;
-        dupeCounter.push(`${item["key"]}_${itemCount}`);
-      } else {
-        dupeCounter.push(item["key"]);
-        key = item["key"];
+        key = `${itemKey}__${seenCount}`;
       }
+      duplicateCountByKey.set(itemKey, seenCount + 1);
+
       const time =
         typeof item["time"] === "string"
           ? humanToUnix(item["time"])
           : item["time"];
       if (time <= 0) continue;
-      // const idx = seenItems.filter((x) => x === key).length + 1
-      // key = idx > 1 ? `${key}__${idx}` : key
-      // key = key
-      // const oKey = itemCount[item['key']]
-      // console.log(key)
-      items.push({ [key]: time });
-      // itemCount[key] ? itemCount[key] = ({ value: oKey['value'] + 1, time: oKey['time'] + time })
-      //     : itemCount[key] = { value: 1, time: time }
 
-      seenItems.add(key);
-    }
-    // console.log(dupeCounter)
-  }
-  const itemValues: { [key: string]: { value: number; time: number } } = {};
-  // console.log(seenItems)
-  seenItems.forEach((x) => {
-    const key = x;
-    const filteredItemTimes = items
-      .filter((item) => Object.keys(item)[0] === key)
-      .map((item) => Object.values(item)[0]);
-    if (filteredItemTimes) {
-      const medianTime = medianValue(filteredItemTimes);
-      const avgTime =
-        filteredItemTimes.reduce((a, b) => a + b) / filteredItemTimes.length;
-      const time = Math.min(medianTime, avgTime);
-      if (!key.match(/__\d+/g) || (key.match(/__\d+/g) && avgTime <= 800)) {
-        itemValues[key] = {
-          value: filteredItemTimes.length,
-          time: time,
-        };
+      const times = itemTimesByKey.get(key);
+      if (times) {
+        times.push(time);
+      } else {
+        itemTimesByKey.set(key, [time]);
       }
     }
+  }
 
-    // itemValues[key] ? itemValues[key] = ({ value: oKey['value'] + 1, time: oKey['time'] + time })
-    //     : itemValues[key] = { value: 1, time: time }
+  const itemValues: { [key: string]: { value: number; time: number } } = {};
+  for (const [key, filteredItemTimes] of itemTimesByKey.entries()) {
+    const medianTime = medianValue(filteredItemTimes);
+    const avgTime =
+      filteredItemTimes.reduce((a, b) => a + b, 0) / filteredItemTimes.length;
+    const time = Math.min(medianTime, avgTime);
+    if (!key.match(/__\d+/g) || avgTime <= 800) {
+      itemValues[key] = {
+        value: filteredItemTimes.length,
+        time: time,
+      };
+    }
+  }
+
+  const matchMeta = data.map((match) => {
+    const counts = new Map<string, number>();
+    for (const item of match["items"]) {
+      const itemKey = item["key"];
+      counts.set(itemKey, (counts.get(itemKey) || 0) + 1);
+    }
+    const lastTime = Number(
+      match["items"][match["items"].length - 1]?.["time"],
+    );
+    return { counts, lastTime };
   });
+
   const map = Object.entries(itemValues)
     .filter((item) => (item[1]["value"] / data.length) * 100 > 1)
-    .map((item) => {
-      let count = 0;
-      const filteredData = data.filter((match) => {
-        const lastTime = match["items"][match["items"].length - 1]["time"];
-        // console.log(match['items'], lastTime)
-        const cleanedKey = item[0].replace(/__\d+/g, "");
-        let dupeCount = 0;
-        const itemNum: string[] | null = item[0].match(/\d+/g);
-        const inItems = match.items.some((itemObj) => {
-          if (
-            itemNum &&
-            dupeCount !== +itemNum[0] + 1 &&
-            itemObj.key === cleanedKey
-          ) {
-            dupeCount++;
-          }
-          if ((itemNum && dupeCount === +itemNum[0] + 1) || !itemNum) {
-            return itemObj.key === cleanedKey;
-          }
-        });
-        if (!inItems && +lastTime - 300 > item[1]["time"]) {
-          // only count items where they're brought atleast 5 mins before game ending
-          count++;
-        } else if (inItems) {
-          return true;
-        }
-      });
+    .map((item): RawItemBuild => {
+      let missingBeforeEndCount = 0;
+      let includedMatchCount = 0;
+      const cleanedKey = item[0].replace(/__\d+/g, "");
+      const itemNum: string[] | null = item[0].match(/\d+/g);
+      const requiredItemCount = itemNum ? +itemNum[0] + 1 : 1;
 
-      // console.log(item[0], item[1], avgTime, filteredData, count)
-      // return [item[0], { value: (item[1]['value'] / data.length) * 100, 'time': avgTime }]
+      for (const match of matchMeta) {
+        const inItems =
+          (match.counts.get(cleanedKey) || 0) >= requiredItemCount;
+        if (inItems) {
+          includedMatchCount++;
+        } else if (match.lastTime - 300 > item[1]["time"]) {
+          // only count items where they're bought at least 5 mins before game ending
+          missingBeforeEndCount++;
+        }
+      }
       const o: RawItemBuild = [
         item[0],
         {
           value: (item[1]["value"] / data.length) * 100,
           adjustedValue:
-            (filteredData.length / (filteredData.length + count)) * 100,
+            (includedMatchCount /
+              (includedMatchCount + missingBeforeEndCount)) *
+            100,
           time: item[1]["time"],
         },
       ];
       return o;
-      // if (filteredData > 0)
-      // return [item[0], { value: (item[1]['value'] / data.length) * 100, adjustedValue: `${filteredData} / `, 'time': avgTime }]
     })
-    .filter((x) => x);
+    .filter(Boolean);
   return map.sort((a, b) => a[1]["time"] - b[1]["time"]);
 };
 
@@ -211,7 +194,7 @@ const filterItems = (
   roleKey: string,
   matchData?: DotaMatch[],
   shortBuild?: UnparsedBuilds,
-  filter?: string
+  filter?: string,
 ) => {
   // const start = performance.now()
   let itemBuild = !shortBuild
