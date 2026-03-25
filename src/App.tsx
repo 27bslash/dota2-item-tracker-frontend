@@ -73,7 +73,6 @@ function App() {
           }
         ></Route>
         <Route path="/api/:hero/build" element={<BuildApi />}></Route>
-        <Route path="/debug/facetpalette" element={<FacetPalete />}></Route>
       </Routes>
     </Box>
   );
