@@ -33,44 +33,45 @@ export const GridRow = ({ data, ObjectKey, dataLength }: GridRowProps) => {
     return updatedBuildObject;
   });
   const totalLen = dataLength.reduce((a: number, b: number) => a + b);
+  const findBadIndexes = (itemSet: CoreItem[]) => {
+    const badIdxs: number[] = [];
+    for (const [i, item] of itemSet.entries()) {
+      if (item["option"]) {
+        badIdxs.push(i);
+      }
+    }
+    return badIdxs;
+  };
+
+  const calculateLeftOffset = (itemSet: CoreItem[]) => {
+    for (const item of itemSet) {
+      if (item["disassembledComponents"]) {
+        return 55 * item["disassembledComponents"].length || 0;
+      }
+    }
+    return 0;
+  };
+
+  const applyOffsets = (itemsets: CoreItem[], badIdxs: number[]) => {
+    let i = 0;
+    for (const itemset of itemsets) {
+      let moveCount = 0;
+      while (badIdxs.includes(i)) {
+        i += 1;
+        moveCount += 1;
+      }
+      badIdxs.push(i + moveCount);
+      itemset["offset"] = { left: moveCount * 55, top: -82 };
+      i += 1;
+    }
+  };
+
   const calcOffset = () => {
     newData.forEach((buildObject) => {
-      let leftOffset = 0;
-      const badIdxs = [];
       if (buildObject[ObjectKey].length > 1) {
-        for (const itemSet of buildObject[ObjectKey]) {
-          for (const [i, item] of itemSet.entries()) {
-            if (item["disassembledComponents"]) {
-              if (leftOffset === 0) {
-                leftOffset = 55 * item["disassembledComponents"].length || 0;
-                // buildObject[ObjectKey][1].push({ 'offset': leftOffset })
-                // console.log(item)
-              }
-            }
-            if (item["option"]) {
-              // console.log(buildObject[ObjectKey][0], i, itemSet)
-              badIdxs.push(i);
-            }
-          }
-          // console.log('left', leftOffset)
-        }
+        const badIdxs = buildObject[ObjectKey].flatMap(findBadIndexes);
         if (badIdxs.length) {
-          let i = 0;
-          for (const itemset of buildObject[ObjectKey][1]) {
-            // i = leftOffset
-            let moveCount = 0;
-            // const keys = Object.keys(itemset)
-            while (badIdxs.includes(i)) {
-              i += 1;
-              moveCount += 1;
-            }
-            badIdxs.push(i + moveCount);
-            // if (looped) moveCount = 0
-            // console.log(itemset, itemset[keys[0]]['offset'], badIdxs, i, leftOffset)
-            itemset["offset"] = { left: moveCount * 55, top: -82 };
-            i += 1;
-            // console.log(itemset)
-          }
+          applyOffsets(buildObject[ObjectKey][1], badIdxs);
         }
       }
     });
@@ -85,7 +86,6 @@ export const GridRow = ({ data, ObjectKey, dataLength }: GridRowProps) => {
         if (maxWidth > 6) maxWidth = 6;
         const widthPerc = (maxWidth / 12) * 100;
         const adjustedWidth = widthPerc - (widthPerc / 100) * 15;
-
 
         return (
           <Grid

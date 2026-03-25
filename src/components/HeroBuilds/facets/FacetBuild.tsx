@@ -28,12 +28,15 @@ export const FacetBuild = ({ data }: FacetProps) => {
 
   const mappedData = useMemo(() => {
     return sortedData.map((x) => {
-      if (!facets) return x;
+      if (!facets?.length) return x;
       if (!facets[x["key"] - 1]["Deprecated"]) {
         x.title = facets[x["key"] - 1].title_loc.toLowerCase();
         return x;
       }
-      x.title = facets[facets?.length - 1].title_loc.toLowerCase();
+      const fallbackFacet = facets.at(-1);
+      if (fallbackFacet && !("Deprecated" in fallbackFacet)) {
+        x.title = fallbackFacet.title_loc.toLowerCase();
+      }
       return x;
     });
   }, [sortedData, facets]);
@@ -46,18 +49,18 @@ export const FacetBuild = ({ data }: FacetProps) => {
             string,
             { key: number; count: number; perc: string; title: string }
           >,
-          item
+          item,
         ) => {
           if (!item.title) return acc;
-          if (!acc[item.title]) {
-            acc[item.title] = { ...item };
-          } else {
+          if (acc[item.title]) {
             acc[item.title].count += item.count;
+          } else {
+            acc[item.title] = { ...item };
           }
           return acc;
         },
-        {}
-      )
+        {},
+      ),
     );
   }, [mappedData]);
 
@@ -76,7 +79,9 @@ export const FacetBuild = ({ data }: FacetProps) => {
         maps.map((arr, i) => (
           <div className="facets-group" style={{ display: "flex" }} key={i}>
             {arr.map((x, j) =>
-              x ? <FacetContent key={j} facetStats={x} facets={facets} /> : null
+              x ? (
+                <FacetContent key={j} facetStats={x} facets={facets} />
+              ) : null,
             )}
           </div>
         ))}

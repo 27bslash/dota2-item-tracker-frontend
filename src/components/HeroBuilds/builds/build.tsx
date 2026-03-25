@@ -32,7 +32,7 @@ export interface BuildProps extends MatchDataAdj {
 const Build = (props: BuildProps) => {
   const [open, setOpen] = useState(false);
   const [filterType, setFilterType] = useState<string | undefined>(
-    "consumables"
+    "consumables",
   );
   const {
     itemData,
@@ -72,7 +72,7 @@ const Build = (props: BuildProps) => {
       color: "white",
     },
   };
-  const disabledOpacity = !heroBuilds ? 0.3 : 1;
+  const disabledOpacity = heroBuilds ? 1 : 0.3;
   return (
     <Box color={"white"} className="build-wrapper">
       <Box
@@ -95,9 +95,7 @@ const Build = (props: BuildProps) => {
             }}
             onClick={() => setOpen((prevstate) => !prevstate)}
           >
-            <Typography>
-              builds
-            </Typography>
+            <Typography>builds</Typography>
           </Button>
         )}
         {open && heroBuilds && (

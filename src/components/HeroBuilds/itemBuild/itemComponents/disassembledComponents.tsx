@@ -6,7 +6,6 @@ export const disassembledComponents = (components: string[], data: RawItemBuild[
     // check for future items that are missing the component
     // then add the disassembled components to data[1]
     for (const component of components) {
-        // console.log(itemKey, component, components);
         const slicedData = [...data].slice(i + 1)
         const itemUses = slicedData.filter((x, i) => {
             const parentComponents = allComponents(x[0].replace(/__\d+/g, ''), itemdata)
@@ -16,9 +15,10 @@ export const disassembledComponents = (components: string[], data: RawItemBuild[
             if (!core && !situtational) {
                 return false
             }
-            if (parentComponents && parentComponents.includes(component)) {
+            if (parentComponents?.includes(component)) {
                 const componentInParent = slicedData.filter((item, idx) => {
-                    if (!('components' in itemdata['items'][item[0].replace(/__\d+/g, '')])) {
+                    const itemEntry = itemdata['items'][item[0].replace(/__\d+/g, '')]
+                    if (!itemEntry || !('components' in itemEntry)) {
                         return false
                     }
                     const componentC = allComponents(item[0].replace(/__\d+/g, ''), itemdata)
@@ -41,8 +41,8 @@ export const disassembledComponents = (components: string[], data: RawItemBuild[
             }
             if (disassembledComponents.length > 1) {
                 if (data[idx][1]['disassembledComponents']) {
-                    const itemIdx = data[idx][1]['disassembledComponents']!.findIndex((x) => disassembledComponents.includes(x[0]))
-                    if (itemIdx === -1) data[idx][1]['disassembledComponents']!.push(disassembledComponents)
+                    const itemIdx = data[idx][1]['disassembledComponents'].findIndex((x) => disassembledComponents.includes(x[0]))
+                    if (itemIdx === -1) data[idx][1]['disassembledComponents'].push(disassembledComponents)
                 } else {
                     data[idx][1]['disassembledComponents'] = [disassembledComponents]
                 }

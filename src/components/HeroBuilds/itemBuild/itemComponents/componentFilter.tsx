@@ -1,6 +1,137 @@
-import { Items } from "../../../types/Item";
+import { Item, Items } from "../../../types/Item";
 import { RawItemBuild } from "../itemFitltering/itemFiltering";
 import { disassembledComponents } from "./disassembledComponents";
+
+const shouldSkipComponent = (component: string): boolean => {
+  return (
+    component === "blink" ||
+    component === "boots" ||
+    component === "travel_boots" ||
+    component === "ultimate_scepter"
+  );
+};
+
+const checkBadQualNoComponents = (
+  component: string,
+  componentStats: Item,
+  dataComponent: RawItemBuild,
+  item: RawItemBuild,
+): boolean => {
+  if (
+    (!componentStats["hint"] || !componentStats["attrib"]!.length) &&
+    dataComponent[1]["time"] > 600
+  ) {
+    return true;
+  }
+  if (
+    !component.includes("boots") &&
+    component !== "ring_of_health" &&
+    component !== "cornucopia" &&
+    component !== "helm_of_iron_will" &&
+    Math.abs(dataComponent[1]["time"] - item[1]["time"]) < 300 &&
+    item[1]["value"] > 3
+  ) {
+    return true;
+  }
+  return false;
+};
+
+const checkCostRemoval = (
+  componentStats: Item,
+  dataComponent: RawItemBuild,
+  item: RawItemBuild,
+): boolean => {
+  return (
+    componentStats["cost"]! < 1500 &&
+    dataComponent[1]["time"] > 700 &&
+    item[1]["value"] * 2 > dataComponent[1]["value"]
+  );
+};
+
+const checkFinalRemoval = (
+  item: RawItemBuild,
+  componentStats: Item,
+  dataComponent: RawItemBuild,
+): boolean => {
+  return (
+    item[1]["value"] > 3 &&
+    item[1]["value"] * 2 > dataComponent[1]["value"] &&
+    Math.abs(item[1]["time"] - dataComponent[1]["time"]) < 400 &&
+    dataComponent[1]["time"] > 400 &&
+    componentStats["cost"]! < 2000
+  );
+};
+
+const checkSubRemoval = (
+  componentStats: Item,
+  item: RawItemBuild,
+  dataComponent: RawItemBuild,
+) => {
+  return (
+    componentStats["components"] &&
+    componentStats["cost"]! < 900 &&
+    Math.abs(item[1]["time"] - dataComponent[1]["time"]) < 300
+  );
+};
+
+const checkSpecialComponents = (component: string): boolean => {
+  return component === "sange" || component === "soul_booster";
+};
+
+const checkNoHintLate = (
+  componentStats: Item,
+  dataComponent: RawItemBuild,
+): boolean => {
+  return !componentStats["hint"] && dataComponent[1]["time"] > 1200;
+};
+
+const checkTimeLate = (dataComponent: RawItemBuild): boolean => {
+  return dataComponent[1]["time"] > 1800;
+};
+
+const shouldRemoveComponentBadQual = (
+  component: string,
+  componentStats: Item,
+  dataComponent: RawItemBuild,
+  item: RawItemBuild,
+): boolean => {
+  if (!componentStats["components"]) {
+    return checkBadQualNoComponents(
+      component,
+      componentStats,
+      dataComponent,
+      item,
+    );
+  }
+  return !componentStats["hint"] && dataComponent[1]["time"] > 1500;
+};
+
+const shouldRemoveComponentForAnyReason = (
+  component: string,
+  componentStats: Item,
+  dataComponent: RawItemBuild,
+  item: RawItemBuild,
+): boolean => {
+  if (checkCostRemoval(componentStats, dataComponent, item)) return true;
+  if (checkFinalRemoval(item, componentStats, dataComponent)) return true;
+  if (checkSubRemoval(componentStats, item, dataComponent)) return true;
+  if (checkSpecialComponents(component)) return true;
+  if (checkNoHintLate(componentStats, dataComponent)) return true;
+  if (checkTimeLate(dataComponent)) return true;
+  return false;
+};
+
+const getComponentKey = (
+  component: string,
+  itemDupeNum: RegExpMatchArray | null,
+  keys: string[],
+): { idx: number; key: string } => {
+  if (itemDupeNum) {
+    const key = `${component}_${itemDupeNum}`;
+    return { idx: keys.findIndex((pot) => pot === key), key };
+  }
+  return { idx: keys.indexOf(component), key: component };
+};
 
 export const recursive_remove = (
   item: RawItemBuild,
@@ -8,110 +139,49 @@ export const recursive_remove = (
   components: string[],
   data: RawItemBuild[],
   keys: string[],
-  removedComponents: string[]
+  removedComponents: string[],
 ) => {
   const badQuals = ["component", "common", "consumable", "secret_shop"];
   for (const component of components) {
-    const itemDupeNum = item[0].match(/\d+/g);
-    const componentStats = itemdata["items"][component];
-    let idx;
-    let componentKey;
-    if (itemDupeNum) {
-      idx = keys.findIndex((pot) => pot === `${component}_${itemDupeNum}`);
-      componentKey = `${component}_${itemDupeNum}`;
-    } else {
-      idx = keys.indexOf(component);
-      componentKey = component;
+    if (shouldSkipComponent(component)) {
+      continue;
     }
 
+    const itemDupeNum = item[0].match(/\d+/g);
+    const { idx, key: componentKey } = getComponentKey(
+      component,
+      itemDupeNum,
+      keys,
+    );
+    const componentStats = itemdata["items"][component];
     const dataComponent = data[idx];
-    if (
-      !dataComponent ||
-      component === "blink" ||
-      component === "boots" ||
-      component === "travel_boots" ||
-      component === "ultimate_scepter"
-    ) {
+
+    if (!dataComponent) {
       continue;
     }
-    if (
-      badQuals.includes(componentStats["qual"]!) &&
-      !componentStats["components"]
-    ) {
-      // console.log(component, dataComponent[1]['time'] / componentStats['cost']! * 300)
+
+    if (badQuals.includes(componentStats["qual"]!)) {
       if (
-        (!componentStats["hint"] || !componentStats["attrib"]!.length) &&
-        dataComponent[1]["time"] > 600
+        shouldRemoveComponentBadQual(
+          component,
+          componentStats,
+          dataComponent,
+          item,
+        )
       ) {
-        // console.log('qual remove: ', component, componentStats, data[idx])
-        removedComponents.push(componentKey);
-        continue;
-      } else if (
-        !component.includes("boots") &&
-        component !== "ring_of_health" &&
-        component !== "cornucopia" &&
-        component !== "helm_of_iron_will" &&
-        Math.abs(dataComponent[1]["time"] - item[1]["time"]) < 300 &&
-        item[1]["value"] > 3
-      ) {
-        // console.log('lace', component, dataComponent, Math.abs(dataComponent[1]['time'] - item[1]['time']), item)
-        removedComponents.push(componentKey);
-        continue;
-      }
-      if (componentStats["components"]) {
-        // return recursive_remove(itemdata, componentStats['components'], data, keys, removedComponents)
-      }
-    } else if (
-      badQuals.includes(componentStats["qual"]!) &&
-      componentStats["components"]
-    ) {
-      if (!componentStats["hint"] && dataComponent[1]["time"] > 1500) {
         removedComponents.push(componentKey);
         continue;
       }
     }
+
     if (
-      dataComponent &&
-      componentStats["cost"]! < 1500 &&
-      dataComponent[1]["time"] > 700 &&
-      item[1]["value"] * 2 > dataComponent[1]["value"]
+      shouldRemoveComponentForAnyReason(
+        component,
+        componentStats,
+        dataComponent,
+        item,
+      )
     ) {
-      // console.log('cost remove: ', component, componentStats['components'], componentStats)
-      removedComponents.push(componentKey);
-      if (componentStats["components"]) {
-        // return recursive_remove(itemdata, componentStats['components'], data, keys, removedComponents)
-      }
-      continue;
-    }
-    if (
-      dataComponent &&
-      item[1]["value"] > 3 &&
-      item[1]["value"] * 2 > dataComponent[1]["value"] &&
-      Math.abs(item[1]["time"] - dataComponent[1]["time"]) < 400 &&
-      dataComponent[1]["time"] > 400 &&
-      componentStats["cost"]! < 2000
-    ) {
-      // console.log('final remove: ', item, components, component, dataComponent)
-      removedComponents.push(componentKey);
-      continue;
-    }
-    if (
-      componentStats["components"] &&
-      componentStats["cost"]! < 900 &&
-      Math.abs(item[1]["time"] - dataComponent[1]["time"]) < 300
-    ) {
-      // console.log(component, componentStats)
-      removedComponents.push(componentKey);
-      continue;
-    }
-    if (component === "sange" || component === "soul_booster") {
-      removedComponents.push(componentKey);
-    }
-    if (!componentStats["hint"] && dataComponent[1]["time"] > 1200) {
-      removedComponents.push(componentKey);
-    }
-    if (dataComponent[1]["time"] > 1800) {
-      // console.log('time removal', component)
       removedComponents.push(componentKey);
     }
   }
@@ -119,15 +189,17 @@ export const recursive_remove = (
 };
 export const allComponents = (itemKey: string, itemdata: Items): string[] => {
   const res: string[] = [];
-  const components =
-    "components" in itemdata["items"][itemKey]
-      ? itemdata["items"][itemKey]["components"]
-      : undefined;
+  const itemstats = itemdata["items"][itemKey];
+  if (!itemstats) {
+    console.log("no components for ", itemKey);
+    return res;
+  }
+  const components = itemdata.items[itemKey]?.components;
   if (!components) return res;
   for (const component of components) {
     res.push(component);
     const componentStats = itemdata["items"][component];
-    if (componentStats && componentStats["components"]) {
+    if (componentStats?.components) {
       for (const subComponent of componentStats["components"]) {
         res.push(subComponent);
       }
@@ -135,92 +207,62 @@ export const allComponents = (itemKey: string, itemdata: Items): string[] => {
   }
   return res;
 };
-export const filterComponents = (data: RawItemBuild[], itemData: Items) => {
-  // data is in the form of [string, {value ,time}]
-  const toRemove = new Set<string>();
-  // for (let k in itemData['items']) {
-  //     if (!itemData['items'][k]['hint'] && itemData['items'][k]['cost'] && itemData['items'][k]['cost'] > 1000 && !k.includes('recipe')) {
-  //         console.log(k, itemData['items'][k]['qual'])
-  //         noHint.push(k)
-  //     }
-  // }
-  // console.log(noHint)
-  const keys = data.map((x) => x[0]);
-  // console.log([...keys])
-  const removedComponents: string[] = [];
-  const disassembleable = ["echo_sabre", "mask_of_madness"];
-  // console.log(data)
-  for (let i = 0; i < data.length; i++) {
-    const item = data[i];
-    const itemKey: string = item[0];
-    // console.log(itemKey, keys)
-    const itemTime: number = item[1]["time"];
-    const itemStats = itemData["items"][itemKey.replace(/__\d+/g, "")];
-    if (!itemStats) {
-      continue;
-    } else if (itemTime > 1000 && itemStats["cost"]! < 500) {
-      toRemove.add(data[i][0]);
-      continue;
-    } else if (
-      !itemStats["hint"] &&
-      itemTime > 1000 &&
-      ["common", "component", "secret_shop"].includes(itemStats["qual"]!)
-    ) {
-      // console.log(itemKey)
-      toRemove.add(data[i][0]);
-      continue;
-    } else if (
-      !itemStats["hint"] &&
-      ["component", "secret_shop"].includes(itemStats["qual"]!)
-    ) {
-      toRemove.add(data[i][0]);
-      continue;
-    } else if (
-      itemTime > 1800 &&
-      itemStats["cost"]! < 2000 &&
-      itemKey !== "aghanims_shard"
-    ) {
-      toRemove.add(data[i][0]);
-      console.log("remove low cost item after 30 mins: ", data[i]);
-      continue;
-    }
-    if (toRemove.has(itemKey)) continue;
-    if (itemStats && itemStats["components"]) {
-      const components: string[] = itemStats["components"];
-      const removedComps = recursive_remove(
-        item,
-        itemData,
-        components,
-        data,
-        keys,
-        removedComponents
-      );
-      removedComps.forEach((c) => toRemove.add(c));
-      // disassemble components section
-      if (
-        components &&
-        item[1]["value"] > 10 &&
-        (disassembleable.includes(itemKey.replace(/__\d+/g, "")) ||
-          components.includes("kaya") ||
-          components.includes("sange"))
-      ) {
-        disassembledComponents(
-          components,
-          data,
-          i,
-          itemData,
-          item,
-          itemKey,
-          keys
-        );
-      }
-    }
+const shouldRemoveItem = (
+  itemStats: Item,
+  itemTime: number,
+  itemKey: string,
+): boolean => {
+  if (itemTime > 1000 && itemStats["cost"]! < 500) {
+    return true;
   }
+  if (
+    !itemStats["hint"] &&
+    itemTime > 1000 &&
+    ["common", "component", "secret_shop"].includes(itemStats["qual"]!)
+  ) {
+    return true;
+  }
+  if (
+    !itemStats["hint"] &&
+    ["component", "secret_shop"].includes(itemStats["qual"]!)
+  ) {
+    return true;
+  }
+  if (
+    itemTime > 1800 &&
+    itemStats["cost"]! < 2000 &&
+    itemKey !== "aghanims_shard" &&
+    itemKey !== "gem"
+  ) {
+    console.log("remove low cost item after 30 mins: ");
+    return true;
+  }
+  return false;
+};
+
+const shouldDisassemble = (
+  itemKey: string,
+  components: string[],
+  itemValue: number,
+  disassembleable: string[],
+): boolean => {
+  return (
+    components &&
+    itemValue > 10 &&
+    (disassembleable.includes(itemKey.replace(/__\d+/g, "")) ||
+      components.includes("kaya") ||
+      components.includes("sange"))
+  );
+};
+
+const removeFilteredItems = (
+  toRemove: Set<string>,
+  keys: string[],
+  data: RawItemBuild[],
+): void => {
   const seenItems: string[] = [];
-  console.log("remove", toRemove);
   for (const item of toRemove) {
     if (seenItems.includes(item)) {
-      // console.log(item)
       continue;
     }
     const filteredKeys = keys.filter((x) => {
@@ -235,6 +277,66 @@ export const filterComponents = (data: RawItemBuild[], itemData: Items) => {
       }
     }
   }
+};
+
+export const filterComponents = (data: RawItemBuild[], itemData: Items) => {
+  const toRemove = new Set<string>();
+  const keys = data.map((x) => x[0]);
+  const removedComponents: string[] = [];
+  const disassembleable = ["echo_sabre", "mask_of_madness"];
+
+  for (let i = 0; i < data.length; i++) {
+    const item = data[i];
+    const itemKey: string = item[0];
+    const itemTime: number = item[1]["time"];
+    const itemStats = itemData["items"][itemKey.replace(/__\d+/g, "")];
+
+    if (!itemStats) {
+      continue;
+    }
+
+    if (shouldRemoveItem(itemStats, itemTime, itemKey)) {
+      toRemove.add(data[i][0]);
+      continue;
+    }
+
+    if (toRemove.has(itemKey)) continue;
+
+    if (itemStats.components) {
+      const components: string[] = itemStats.components;
+      const removedComps = recursive_remove(
+        item,
+        itemData,
+        components,
+        data,
+        keys,
+        removedComponents,
+      );
+      removedComps.forEach((c) => toRemove.add(c));
+
+      if (
+        shouldDisassemble(
+          itemKey,
+          components,
+          item[1]["value"],
+          disassembleable,
+        )
+      ) {
+        disassembledComponents(
+          components,
+          data,
+          i,
+          itemData,
+          item,
+          itemKey,
+          keys,
+        );
+      }
+    }
+  }
+
+  console.log("remove", toRemove);
+  removeFilteredItems(toRemove, keys, data);
   return data;
 };
 

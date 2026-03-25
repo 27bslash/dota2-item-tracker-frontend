@@ -22,7 +22,7 @@ export const useUpdateSearchResults = (searchObj?: TableSearchResults | string, 
             setSearchResults({ [searchResKey]: { [searchObj]: { 'index': 0, 'matches': newFilteredData } } })
 
         } else if ((matchKey === 'items' || matchKey === 'abilities')) {
-            newFilteredData = totalMatchData.filter((x) => x[matchKey] && x[matchKey].map((item) => item['key']).includes(searchObj))
+            newFilteredData = totalMatchData.filter((x) => x[matchKey]?.map((item) => item['key']).includes(searchObj))
             setSearchResults({ [searchResKey]: { [searchObj]: { 'index': 0, 'matches': newFilteredData } } })
         }
     }
