@@ -115,7 +115,7 @@ function Home({ heroList, playerList, patch }: HomeProps) {
     if (!winStats) return;
 
     const heroPickData = winStats.filter(
-      (x) => x.hero === heroName.replaceAll(/\s/g, "_"),
+      (x) => x.hero === heroName.replace(/\s/g, "_"),
     );
     const currentTrend = heroPickData[0]["trends"][0];
     let viableTrends = heroPickData[0]["trends"];
@@ -254,7 +254,7 @@ function Home({ heroList, playerList, patch }: HomeProps) {
         {filteredHeroes?.map((heroName: string) => {
           const displayName = heroName === "anti_mage" ? "anti-mage" : heroName;
           const stats = winStats?.find(
-            (x) => x.hero === displayName.replaceAll(/\s/g, "_"),
+            (x) => x.hero === displayName.replace(/\s/g, "_"),
           );
           let picks = 0,
             wins = 0,

@@ -43,15 +43,6 @@ export const GridRow = ({ data, ObjectKey, dataLength }: GridRowProps) => {
     return badIdxs;
   };
 
-  const calculateLeftOffset = (itemSet: CoreItem[]) => {
-    for (const item of itemSet) {
-      if (item["disassembledComponents"]) {
-        return 55 * item["disassembledComponents"].length || 0;
-      }
-    }
-    return 0;
-  };
-
   const applyOffsets = (itemsets: CoreItem[], badIdxs: number[]) => {
     let i = 0;
     for (const itemset of itemsets) {

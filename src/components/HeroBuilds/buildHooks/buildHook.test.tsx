@@ -46,7 +46,7 @@ const baseHeroData = {
       },
     },
   },
-} as PageHeroData;
+} as unknown as PageHeroData;
 
 const baseItemData = {
   items: {
@@ -55,7 +55,7 @@ const baseItemData = {
       dname: "Blink Dagger",
     },
   },
-} as Items;
+} as unknown as Items;
 
 const groupedItemsResult = [
   { core: [{ key: "blink" }, { key: "bkb" }], situational: [] },
