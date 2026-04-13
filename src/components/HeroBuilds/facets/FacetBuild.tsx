@@ -29,7 +29,7 @@ export const FacetBuild = ({ data }: FacetProps) => {
   const mappedData = useMemo(() => {
     return sortedData.map((x) => {
       if (!facets?.length) return x;
-      if (!facets[x["key"] - 1]["Deprecated"]) {
+      if (facets[x["key"] - 1] && !facets[x.key - 1]["Deprecated"]) {
         x.title = facets[x["key"] - 1].title_loc.toLowerCase();
         return x;
       }

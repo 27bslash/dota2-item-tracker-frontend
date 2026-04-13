@@ -146,6 +146,7 @@ type AbilitBuildProps = {
 };
 const AbilityBuild = ({ abilityArr, imageHost, i }: AbilitBuildProps) => {
   const { heroData, nameParam } = usePageContext();
+  if (!heroData[nameParam]) return null;
   return (
     <>
       {abilityArr.split("__").map((ability: string, idx: number) => {

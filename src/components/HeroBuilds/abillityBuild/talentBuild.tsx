@@ -13,6 +13,7 @@ export const TalentBuild = (props: {
   numbered?: boolean;
 }) => {
   const { heroData, nameParam } = usePageContext();
+  if (!heroData || !heroData[nameParam]) return null;
   const heroTalents = heroData[nameParam]["talents"];
   const visitedTalents: HeroAbility[][] = [];
   const s = new Set<string>();
