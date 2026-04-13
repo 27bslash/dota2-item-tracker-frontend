@@ -211,6 +211,13 @@ thead .stats:hover {
     drop-shadow(white 0 1px 0px) drop-shadow(white 0 -1px 0px);
   z-index: 99;
 }
+.table-role-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 30px;
+  min-height: 30px;
+}
 #Midlane {
   background: url(./images/role_icons/Midlane.png);
   background-size: cover;
