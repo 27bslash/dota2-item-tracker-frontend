@@ -16,6 +16,7 @@ import { TableSearchResults } from "./table_search/types/tableSearchResult.types
 import { MouseEvent } from "react";
 import DraftImage from "./draftImg";
 import { usePageContext } from "../stat_page/pageContext";
+import { RoleIcon } from "../HeroBuilds/builds/roleIcons";
 interface BodyProps {
   nameParam: string;
   type: string;
@@ -25,7 +26,7 @@ interface BodyProps {
   updateMatchData: (
     data: DotaMatch[],
     searchValue?: TableSearchResults,
-    types?: string[]
+    types?: string[],
   ) => void;
   heroList: Hero[];
   playerList: string[];
@@ -42,7 +43,7 @@ const CustomTableBody = (props: BodyProps) => {
     event: MouseEvent,
     type: string,
     key: keyof DotaMatch,
-    value: string
+    value: string,
   ) => {
     if (!event.ctrlKey) {
       props.updateMatchData(stringSearch(props.data, key, value));
@@ -133,36 +134,71 @@ const CustomTableBody = (props: BodyProps) => {
                 )}
               </TableCell>
               <TableCell>
-                <FontAwesomeIcon
-                  className="copy-match-id"
-                  icon={faCopy}
-                  color="white"
-                  onClick={() => navigator.clipboard.writeText(String(row.id))}
-                />
-                <a
-                  href={`https://www.opendota.com/matches/${row.id}`}
-                  target="_blank"
-                  rel="noreferrer"
+                <Box
+                  sx={{
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: "10px",
+                    marginTop: "4px",
+                  }}
                 >
-                  <img
-                    style={{ marginLeft: "10px" }}
-                    src="https://www.opendota.com/assets/images/icons/icon-72x72.png"
-                    height="14px"
-                    alt="opendota link"
+                  <FontAwesomeIcon
+                    className="copy-match-id"
+                    icon={faCopy}
+                    color="white"
+                    onClick={() => navigator.clipboard.writeText(String(row.id))}
                   />
-                </a>
+                  <a
+                    href={`https://www.opendota.com/matches/${row.id}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    style={{ display: "inline-flex", alignItems: "center" }}
+                  >
+                    <img
+                      src="https://www.opendota.com/assets/images/icons/icon-72x72.png"
+                      height="14px"
+                      alt="opendota link"
+                    />
+                  </a>
+                  <Box
+                    sx={{
+                      px: "6px",
+                      py: "1px",
+                      borderRadius: "4px",
+                      display: "inline-flex",
+                      alignItems: "center",
+                      background:
+                        row.parsed === "opendota"
+                          ? "linear-gradient(90deg, #4fc3f7, #0288d1)"
+                          : "linear-gradient(90deg, #f48fb1, #8e24aa)",
+                    }}
+                  >
+                    <Typography
+                      variant="body2"
+                      sx={{
+                        color: "white",
+                        fontSize: "0.7rem",
+                        fontWeight: 700,
+                        lineHeight: 1.2,
+                        letterSpacing: "0.04em",
+                      }}
+                    >
+                      {row.parsed === "opendota" ? "OD" : "STZ"}
+                    </Typography>
+                  </Box>
+                </Box>
               </TableCell>
               <TableCell sx={{ color: "white" }}>
-                {/* {row.role} */}
-                <div
-                  className="svg-icon  table-cell-outline"
-                  id={row.role ? row.role.replace(" ", "-") : "None"}
+                <Box
+                  className="table-role-icon table-cell-outline"
                   onClick={() =>
                     props.updateMatchData(
-                      stringSearch(props.data, "role", row.role)
+                      stringSearch(props.data, "role", row.role),
                     )
                   }
-                ></div>
+                >
+                  {row.role ? <RoleIcon role={row.role as RoleStrings} /> : null}
+                </Box>
               </TableCell>
               {!props.showStarter ? (
                 <>

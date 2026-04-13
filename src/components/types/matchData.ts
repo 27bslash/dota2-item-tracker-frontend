@@ -55,7 +55,7 @@ type DotaMatch = {
   lvl_at_ten: number;
   mmr: number;
   name: string;
-  parsed: boolean;
+  parsed: "opendota" | "stratz";
   patch: string;
   radiant_draft: string[];
   replay_url: string;
