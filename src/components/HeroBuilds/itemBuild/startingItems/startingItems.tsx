@@ -1,7 +1,7 @@
 import { Typography } from "@mui/material";
 import TableItem from "../../../table/tableItems/tableItem";
-import { HeroBuild } from "../../buildHooks/buildHook";
 import DotaMatch from "../../../types/matchData";
+import { HeroBuild } from "../../buildHooks/buildTypes";
 type StartingItemsProps = {
   startingItemData: HeroBuild;
   data?: DotaMatch[];

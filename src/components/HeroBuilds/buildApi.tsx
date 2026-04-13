@@ -1,6 +1,5 @@
 import { useParams } from "react-router";
 import heroSwitcher from "../../utils/heroSwitcher";
-import { useHeroBuilds } from "./buildHooks/buildHook";
 import { useParseMatchData } from "./buildHooks/parseMatchDataHook";
 import { fetchData } from "../../utils/fetchData";
 import { useEffect, useState } from "react";
@@ -10,6 +9,7 @@ import { Items } from "../types/Item";
 import { PageHeroData } from "../types/heroData";
 import { useFetchData } from "./buildHooks/fetchMatchDataHook";
 import PickStats from "../types/pickStats";
+import useHeroBuilds from "./buildHooks/buildHook";
 
 const BuildDataJson = ({
   heroName,

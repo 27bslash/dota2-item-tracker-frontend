@@ -2,15 +2,20 @@ import { CoreItem, GroupedCoreItems } from "./groupBytime";
 
 function groupByItemChoices(res: GroupedCoreItems[]) {
     const choiceSet = new Set<string>();
-
+    console.log('before', res)
     for (const itemGroup of res) {
-        processItemGroup(itemGroup, 'core', choiceSet);
-        processItemGroup(itemGroup, 'situational', choiceSet);
+        processItemGroup(res, itemGroup, 'core', choiceSet);
+        processItemGroup(res, itemGroup, 'situational', choiceSet);
     }
 }
 
-function processItemGroup(itemGroup: GroupedCoreItems, type: string, choiceSet: Set<string>) {
-    const otherType = type === 'core' ? 'situational' : 'core';
+function processItemGroup(
+  allGroups: GroupedCoreItems[],
+  itemGroup: GroupedCoreItems,
+  type: "core" | "situational",
+  choiceSet: Set<string>,
+) {
+  const otherType = type === 'core' ? 'situational' : 'core';
 
     for (let i = itemGroup[type].length - 1; i >= 0; i--) {
         const itemObject = itemGroup[type][i];
@@ -22,19 +27,32 @@ function processItemGroup(itemGroup: GroupedCoreItems, type: string, choiceSet: 
 
         if (choiceSet.has(targetKey!) || choiceSet.has(optionKey)) continue;
 
-        removeDuplicateItems(itemGroup, type,  optionKey, otherType);
+        markDuplicateItemsRemoved(allGroups, type, optionKey, otherType);
 
         choiceSet.add(targetKey!);
         choiceSet.add(optionKey);
     }
 }
 
-function removeDuplicateItems(itemGroup: GroupedCoreItems, type: string,  optionKey: string, otherType: string) {
-    const idx = itemGroup[type].findIndex((x) => x['key'] === optionKey);
-    const situationalIdx = itemGroup[otherType].findIndex((x: CoreItem) => x['key'] === optionKey);
+function markDuplicateItemsRemoved(
+  allGroups: GroupedCoreItems[],
+  type: "core" | "situational",
+  optionKey: string,
+  otherType: "core" | "situational",
+) {
+  for (const group of allGroups) {
+        const item = group[type].find((x) => x['key'] === optionKey);
+        const otherItem = group[otherType].find((x: CoreItem) => x['key'] === optionKey);
 
-    if (idx !== -1) itemGroup[type].splice(idx, 1);
-    if (situationalIdx !== -1) itemGroup[otherType].splice(situationalIdx, 1);
+        if (item) {
+            item.removed = true;
+            item.removedReason = 'choice_duplicate';
+        }
+        if (otherItem) {
+            otherItem.removed = true;
+            otherItem.removedReason = 'choice_duplicate';
+        }
+  }
 }
 
 export default groupByItemChoices

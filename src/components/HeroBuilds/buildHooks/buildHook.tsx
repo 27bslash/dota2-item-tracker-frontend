@@ -9,14 +9,11 @@ import {
 import { mostUsedTalents } from "../abillityBuild/talentLevels";
 import { Items } from "../../types/Item";
 import { PageHeroData } from "../../types/heroData";
-import { AbilityBuildEntry, Talents } from "../builds/buildCell";
-import {
-  CoreItem,
-  GroupedCoreItems,
-} from "../itemBuild/itemGroups/groupBytime";
+import { GroupedCoreItems } from "../itemBuild/itemGroups/groupBytime";
 import { facetFilter } from "../abillityBuild/facetFiltering";
 import { UnparsedBuilds } from "./shortBuildHook";
 import DotaMatch from "../../types/matchData";
+import { HeroBuild } from "./buildTypes";
 
 const ENABLE_BUILD_PROFILING = process.env.NODE_ENV !== "production";
 const nowMs = () =>
@@ -24,29 +21,8 @@ const nowMs = () =>
     ? performance.now()
     : Date.now();
 const roundMs = (value: number) => Math.round(value * 100) / 100;
-export type HeroBuild = {
-  item_builds: {
-    [key: string]: CoreItem[];
-  }[];
-  ability_builds: AbilityBuildEntry[] | never[];
-  starting_items: [string, number][];
-  neutral_items: Record<
-    string,
-    {
-      neutral_items: NeutralItemCounts[];
-      enchants: NeutralItemCounts[];
-    }
-  >;
-  talents: Talents;
-  ultimate_ability: string | undefined;
-  facet_builds: {
-    key: number;
-    count: number;
-    perc: string;
-    title: string;
-  }[];
-  length?: number;
-};
+const normalizeItemKey = (itemKey: string) => itemKey.replace(/__\d+/g, "");
+
 type UseHeroBuildsArgs = {
   filteredData?: { [role: string]: DotaMatch[] };
   heroData: PageHeroData;
@@ -55,7 +31,7 @@ type UseHeroBuildsArgs = {
   shortBuild?: { [key: string]: UnparsedBuilds };
   filter?: string;
 };
-export const useHeroBuilds = ({
+const useHeroBuilds = ({
   filteredData,
   heroData,
   itemData,
@@ -76,11 +52,11 @@ export const useHeroBuilds = ({
   const getUltimateAbility = () => {
     for (const k in heroData) {
       const hero = heroData?.[k];
-      if (!hero || !hero["abilities"]) continue;
+      if (!hero?.["abilities"]) continue;
       const abilities = hero["abilities"];
       for (const abilityKey in abilities) {
         const ability = abilities[abilityKey];
-        if (ability && ability["max_level"] === 3) {
+        if (ability?.["max_level"] === 3) {
           return ability["name"];
         }
       }
@@ -191,6 +167,64 @@ export const useHeroBuilds = ({
             filter,
           );
           trackStep("filterItems", stepStart);
+          const proMatches = buildData.filter((m) => m.pro);
+          //   console.log(
+          //     `[proRatio] role=${key} proMatches=${proMatches.length} total=${buildData.length}`,
+          //   );
+          if (proMatches.length >= 5) {
+            const proItemBuild = filterItems(
+              itemData,
+              key,
+              proMatches,
+              undefined,
+              filter,
+            );
+            const proMap = new Map<string, number>();
+            for (const slot of proItemBuild) {
+              for (const items of Object.values(slot)) {
+                for (const item of items) {
+                  if (!item.key) continue;
+
+                  const exactKey = item.key;
+                  const normalizedKey = normalizeItemKey(item.key);
+                  const existingExact = proMap.get(exactKey) ?? 0;
+                  const existingNormalized = proMap.get(normalizedKey) ?? 0;
+
+                  proMap.set(
+                    exactKey,
+                    Math.max(existingExact, item.adjustedValue),
+                  );
+                  proMap.set(
+                    normalizedKey,
+                    Math.max(existingNormalized, item.adjustedValue),
+                  );
+                }
+              }
+            }
+            // console.log(`[proRatio] proMap keys:`, [...proMap.keys()]);
+            for (const slot of itemBuild) {
+              for (const items of Object.values(slot)) {
+                for (const item of items) {
+                  if (item.key) {
+                    const proVal =
+                      proMap.get(item.key) ??
+                      proMap.get(normalizeItemKey(item.key)) ??
+                      0;
+                    item.proRatio =
+                      proVal > 0 ? proVal / (item.adjustedValue || 1) : 0;
+                    if (item.proRatio < 1) {
+                      item.proRatio = 1 + (1 - item.proRatio);
+                    }
+                    item.proAdjustedValue = proVal;
+                    // if (item.proRatio > 0)
+                    //   console.log(
+                    //     `[proRatio] ${item.key}: proVal=${proVal.toFixed(1)} overall=${item.adjustedValue.toFixed(1)} ratio=${item.proRatio.toFixed(2)}`,
+                    //   );
+                  }
+                }
+              }
+            }
+          }
           const count = itemBuildLengthChecker(itemBuild);
           if (count < 2) {
             console.log(`removed key: ${key} count: ${count}`);
@@ -272,3 +306,4 @@ const itemBuildLengthChecker = (itemBuild: GroupedCoreItems[]) => {
   }
   return count;
 };
+export default useHeroBuilds;

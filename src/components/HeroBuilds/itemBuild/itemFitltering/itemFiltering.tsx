@@ -13,6 +13,8 @@ type ItemBuildOption = {
   time: number;
 };
 export type RawItemBuildValues = {
+  itemCount: number;
+  totalMatches: number;
   value: number;
   adjustedValue: number;
   time: number;
@@ -23,6 +25,10 @@ export type RawItemBuildValues = {
   currMax?: number;
   offset?: { [key: string]: number };
   key?: string;
+  proRatio: number;
+  proAdjustedValue: number | undefined;
+  removed?: boolean;
+  removedReason?: "component_filter" | "choice_duplicate";
 };
 export type RawItemBuild = [string, RawItemBuildValues];
 
@@ -63,6 +69,20 @@ export const countItems = (
   itemData: Items,
   filter?: string,
 ) => {
+  const multipleItemList = new Set<string>([
+    "bracer",
+    "wraith_band",
+    "null_talisman",
+    "branch",
+    "faerie_fire",
+    "tango",
+    "enchanted_mango",
+    "clarity",
+    "ward_observer",
+    "ward_sentry",
+    "dragon_lance",
+    "skadi",
+  ]);
   const itemTimesByKey = new Map<string, number[]>();
   for (const match of data) {
     const duplicateCountByKey = new Map<string, number>();
@@ -74,12 +94,11 @@ export const countItems = (
 
       const seenCount = duplicateCountByKey.get(itemKey) || 0;
       let key = itemKey;
-      if (
-        seenCount > 0 &&
-        itemKey !== "aghanims_shard" &&
-        itemKey !== "ultimate_scepter"
-      ) {
-        key = `${itemKey}__${seenCount}`;
+      if (multipleItemList.has(itemKey)) {
+        key = seenCount > 0 ? `${itemKey}__${seenCount}` : itemKey;
+      } else if (seenCount > 0) {
+        duplicateCountByKey.set(itemKey, seenCount + 1);
+        continue; // skip subsequent purchases of non-stackable items
       }
       duplicateCountByKey.set(itemKey, seenCount + 1);
 
@@ -125,7 +144,7 @@ export const countItems = (
   });
 
   const map = Object.entries(itemValues)
-    .filter((item) => (item[1]["value"] / data.length) * 100 > 1)
+    // .filter((item) => (item[1]["value"] / data.length) * 100 > 1)
     .map((item): RawItemBuild => {
       let missingBeforeEndCount = 0;
       let includedMatchCount = 0;
@@ -138,25 +157,30 @@ export const countItems = (
           (match.counts.get(cleanedKey) || 0) >= requiredItemCount;
         if (inItems) {
           includedMatchCount++;
-        } else if (match.lastTime - 300 > item[1]["time"]) {
-          // only count items where they're bought at least 5 mins before game ending
+        } else if (match.lastTime - 60 > item[1]["time"]) {
+          // only count items where they're bought at least 1 min before game ending
           missingBeforeEndCount++;
         }
       }
       const o: RawItemBuild = [
         item[0],
         {
+          totalMatches: data.length,
+          itemCount: item[1]["value"],
           value: (item[1]["value"] / data.length) * 100,
           adjustedValue:
             (includedMatchCount /
               (includedMatchCount + missingBeforeEndCount)) *
             100,
           time: item[1]["time"],
+          proAdjustedValue: 0,
+          proRatio: 0,
         },
       ];
+
       return o;
     })
-    .filter(Boolean);
+    .filter((item) => item[1]["value"] >= 3);
   return map.sort((a, b) => a[1]["time"] - b[1]["time"]);
 };
 
@@ -197,20 +221,21 @@ const filterItems = (
   filter?: string,
 ) => {
   // const start = performance.now()
-  let itemBuild = !shortBuild
-    ? countItems(matchData!, itemData, filter)
-    : (shortBuild["items"].map((x) => [
+  let itemBuild = shortBuild
+    ? (shortBuild["items"].map((x) => [
         x["key"],
         {
           value: x["value"],
           time: x["time"],
           adjustedValue: x["adjustedValue"],
         },
-      ]) as RawItemBuild[]);
+      ]) as RawItemBuild[])
+    : countItems(matchData!, itemData, filter);
   // const end = performance.now()
   // console.log(itemBuild)
   itemBuild = filterComponents(itemBuild, itemData);
   // itemBuild = bootsFilter(itemBuild)
+  console.log("after filter components", itemBuild);
   if (!shortBuild) itemBuild = addItemChoices(itemBuild, matchData!, itemData);
   const groupedItems = groupByTime(itemBuild, roleKey);
   // console.log('filterCompoentns:', performance.now() - start, 'ms')

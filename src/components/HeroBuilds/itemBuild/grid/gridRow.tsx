@@ -14,10 +14,10 @@ const chunkArray = (array: CoreItem[], size: number) => {
 type GridRowProps = {
   data: ItemBuildProps["data"];
   ObjectKey: "core" | "situational";
-  dataLength: number[];
+  timingOverride?: "Early" | "Mid" | "Late";
 };
 
-export const GridRow = ({ data, ObjectKey, dataLength }: GridRowProps) => {
+export const GridRow = ({ data, ObjectKey, timingOverride }: GridRowProps) => {
   // console.log(data)
   // 18 6
   // 18
@@ -32,7 +32,6 @@ export const GridRow = ({ data, ObjectKey, dataLength }: GridRowProps) => {
     }
     return updatedBuildObject;
   });
-  const totalLen = dataLength.reduce((a: number, b: number) => a + b);
   const findBadIndexes = (itemSet: CoreItem[]) => {
     const badIdxs: number[] = [];
     for (const [i, item] of itemSet.entries()) {
@@ -72,19 +71,17 @@ export const GridRow = ({ data, ObjectKey, dataLength }: GridRowProps) => {
     <>
       {newData.map((buildObject, i: number) => {
         const timing =
-          i === 1 || i === 4 ? "Mid" : i === 2 || i === 5 ? "Late" : "Early";
-        let maxWidth = 12 / (totalLen / dataLength[i]);
-        if (maxWidth > 6) maxWidth = 6;
-        const widthPerc = (maxWidth / 12) * 100;
-        const adjustedWidth = widthPerc - (widthPerc / 100) * 15;
+          timingOverride ||
+          (i === 1 || i === 4 ? "Mid" : i === 2 || i === 5 ? "Late" : "Early");
 
         return (
           <Grid
             key={i}
             item
-            md={4}
-            sm={maxWidth}
-            sx={{ textAlign: "center", maxWidth: adjustedWidth }}
+            xs={12}
+            sm={12}
+            md={12}
+            // sx={{ textAlign: "center" }}
           >
             <ItemGroups
               buildObject={buildObject}

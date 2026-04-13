@@ -1,6 +1,6 @@
 import { renderHook, waitFor } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { useHeroBuilds } from "./buildHook";
+import useHeroBuilds from "./buildHook";
 import type { PageHeroData } from "../../types/heroData";
 import type { Items } from "../../types/Item";
 import type DotaMatch from "../../types/matchData";
@@ -75,10 +75,14 @@ const shortBuildFixture: { [key: string]: UnparsedBuilds } = {
     abilities: { a_count: { skill_order: 10 } },
     items: [
       {
-        key: "blink",
-        value: 70,
-        adjustedValue: 65,
-        time: 1200,
+          key: "blink",
+          value: 70,
+          adjustedValue: 65,
+          time: 1200,
+          proRatio: 0,
+          proAdjustedValue: 0,
+          itemCount: 0,
+          totalMatches: 0
       },
     ],
     talents: {},

@@ -1,7 +1,7 @@
 import { Box, Button, Tooltip, Typography } from "@mui/material";
 import GuideGuide from "../guideDownload";
 import { MatchDataAdj } from "../../stat_page/page";
-import { useHeroBuilds } from "../buildHooks/buildHook";
+import useHeroBuilds from "..//buildHooks/buildHook";
 import { useParseMatchData } from "../buildHooks/parseMatchDataHook";
 import Hero from "../../types/heroList";
 import DotaMatch from "../../types/matchData";
@@ -159,6 +159,8 @@ const Build = (props: BuildProps) => {
                   buildData={buildData}
                   role={role}
                   dataLength={Object.entries(heroBuilds).length}
+                  totalGames={totalMatchData.filter((m) => m).length}
+                  totalProGames={totalMatchData.filter((m) => m.pro).length}
                   setFilterType={setFilterType}
                 />
               );

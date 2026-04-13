@@ -11,6 +11,33 @@ const shouldSkipComponent = (component: string): boolean => {
   );
 };
 
+const SAME_TIME_CLASS_VALUE_GAP = 12;
+
+const getTimeClass = (time: number) => {
+  if (time < 300) return "lane";
+  if (time < 600) return "early";
+  if (time < 1200) return "early mid";
+  if (time < 1800) return "mid";
+  if (time < 2500) return "late";
+  return "ultra late";
+};
+
+const shouldRemoveSameTimeClassComponent = (
+  item: RawItemBuild,
+  dataComponent: RawItemBuild,
+) => {
+  const itemTimeClass = getTimeClass(item[1]["time"]);
+  const componentTimeClass = getTimeClass(dataComponent[1]["time"]);
+  const adjustedValueGap = Math.abs(
+    item[1]["adjustedValue"] - dataComponent[1]["adjustedValue"],
+  );
+
+  return (
+    itemTimeClass === componentTimeClass &&
+    adjustedValueGap <= SAME_TIME_CLASS_VALUE_GAP
+  );
+};
+
 const checkBadQualNoComponents = (
   component: string,
   componentStats: Item,
@@ -95,6 +122,9 @@ const shouldRemoveComponentBadQual = (
   dataComponent: RawItemBuild,
   item: RawItemBuild,
 ): boolean => {
+  const badQuals = ["component", "common", "consumable", "secret_shop"];
+  if (!badQuals.includes(componentStats["qual"]!)) return false;
+
   if (!componentStats["components"]) {
     return checkBadQualNoComponents(
       component,
@@ -128,12 +158,12 @@ const getComponentKey = (
 ): { idx: number; key: string } => {
   if (itemDupeNum) {
     const key = `${component}_${itemDupeNum}`;
-    return { idx: keys.findIndex((pot) => pot === key), key };
+    return { idx: keys.indexOf(key), key };
   }
   return { idx: keys.indexOf(component), key: component };
 };
 
-export const recursive_remove = (
+export const recursiveRemove = (
   item: RawItemBuild,
   itemdata: Items,
   components: string[],
@@ -141,8 +171,10 @@ export const recursive_remove = (
   keys: string[],
   removedComponents: string[],
 ) => {
-  const badQuals = ["component", "common", "consumable", "secret_shop"];
   for (const component of components) {
+    if (component === "kaya") {
+      console.log("kaya");
+    }
     if (shouldSkipComponent(component)) {
       continue;
     }
@@ -160,18 +192,21 @@ export const recursive_remove = (
       continue;
     }
 
-    if (badQuals.includes(componentStats["qual"]!)) {
-      if (
-        shouldRemoveComponentBadQual(
-          component,
-          componentStats,
-          dataComponent,
-          item,
-        )
-      ) {
-        removedComponents.push(componentKey);
-        continue;
-      }
+    if (
+      shouldRemoveComponentBadQual(
+        component,
+        componentStats,
+        dataComponent,
+        item,
+      )
+    ) {
+      removedComponents.push(componentKey);
+      continue;
+    }
+
+    if (shouldRemoveSameTimeClassComponent(item, dataComponent)) {
+      removedComponents.push(componentKey);
+      continue;
     }
 
     if (
@@ -255,25 +290,18 @@ const shouldDisassemble = (
   );
 };
 
-const removeFilteredItems = (
+const normalizeItemKey = (itemKey: string) => itemKey.replace(/__\d+/g, "");
+
+const markFilteredItems = (
   toRemove: Set<string>,
-  keys: string[],
   data: RawItemBuild[],
 ): void => {
-  const seenItems: string[] = [];
   for (const item of toRemove) {
-    if (seenItems.includes(item)) {
-      continue;
-    }
-    const filteredKeys = keys.filter((x) => {
-      return x.replace(/__\d+/g, "") === item;
-    });
-    for (const k of filteredKeys) {
-      const idx = keys.indexOf(k);
-      if (idx !== -1) {
-        data.splice(idx, 1);
-        keys.splice(idx, 1);
-        seenItems.push(item);
+    const normalizedTarget = normalizeItemKey(item);
+    for (const entry of data) {
+      if (normalizeItemKey(entry[0]) === normalizedTarget) {
+        entry[1].removed = true;
+        entry[1].removedReason = "component_filter";
       }
     }
   }
@@ -304,7 +332,7 @@ export const filterComponents = (data: RawItemBuild[], itemData: Items) => {
 
     if (itemStats.components) {
       const components: string[] = itemStats.components;
-      const removedComps = recursive_remove(
+      const removedComps = recursiveRemove(
         item,
         itemData,
         components,
@@ -336,7 +364,7 @@ export const filterComponents = (data: RawItemBuild[], itemData: Items) => {
   }
 
   console.log("remove", toRemove);
-  removeFilteredItems(toRemove, keys, data);
+  markFilteredItems(toRemove, data);
   return data;
 };
 
