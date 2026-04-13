@@ -1,3 +1,4 @@
+import { Tooltip } from "@mui/material";
 import { usePageContext } from "../stat_page/pageContext";
 import DotaMatch from "../types/matchData";
 import DraftImage from "./draftImg";
@@ -6,14 +7,14 @@ import {
   TableSearchResult,
   TableSearchResults,
 } from "./table_search/types/tableSearchResult.types";
-import { red, green } from "@mui/material/colors";
+import { green, red } from "@mui/material/colors";
 type DraftProps = {
   draft: string[];
   heroName: string;
   updateMatchData: (
     data: DotaMatch[],
     searchValue?: TableSearchResults,
-    types?: string[]
+    types?: string[],
   ) => void;
   type: "radiant" | "dire";
   team?: DotaMatch["radiant_team"];
@@ -43,38 +44,40 @@ const Draft = (props: DraftProps) => {
     props.updateMatchData(Array.from(matches), { draft: dict });
   };
   return (
-    <>
-      {props.draft.map((x: string, i: number) => {
-        // src\assets\images
-        let searchPrefix: "+" | "-" = "-";
-        if (dr) {
-          searchPrefix = "+";
-        }
-        return x === nameParam || x === props.heroName ? (
-          <DraftImage key={i} highlight={true} heroName={x}></DraftImage>
-        ) : (
-          <DraftImage
-            key={i}
-            heroName={x}
-            highlight={false}
-            onClick={() => updateData(x, searchPrefix)}
-          ></DraftImage>
-        );
-      })}
-      {props.team && (
-        <img
-          style={{
-            marginLeft: props.team.name !== "Team Liquid" ? "2px" : "12px",
-            marginBottom: "3px",
-            color: props.type === "radiant" ? green["400"] : red["400"],
-          }}
-          height="28px"
-          src={props.team.logo_url}
-          alt={props.team.name}
-          className="team-logo"
-        ></img>
-      )}
-    </>
+    <div className={`table-draft-row table-draft-row-${props.type}`}>
+      <div className="table-inline-group table-draft-icons">
+        {props.draft.map((x: string, i: number) => {
+          let searchPrefix: "+" | "-" = "-";
+          if (dr) {
+            searchPrefix = "+";
+          }
+          return x === nameParam || x === props.heroName ? (
+            <DraftImage key={i} highlight={true} heroName={x}></DraftImage>
+          ) : (
+            <DraftImage
+              key={i}
+              heroName={x}
+              highlight={false}
+              onClick={() => updateData(x, searchPrefix)}
+            ></DraftImage>
+          );
+        })}
+        {props.team && (
+          <Tooltip title={props.team.name}>
+            <img
+              height="28px"
+              src={props.team.logo_url}
+              alt={props.team.name}
+              className="team-logo"
+              style={{
+                marginLeft: props.team.name !== "Team Liquid" ? "2px" : "12px",
+                color: props.type === "radiant" ? green["400"] : red["400"],
+              }}
+            />
+          </Tooltip>
+        )}
+      </div>
+    </div>
   );
 };
 export default Draft;

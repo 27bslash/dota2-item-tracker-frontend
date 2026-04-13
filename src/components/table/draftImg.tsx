@@ -21,6 +21,7 @@ const DraftImage = ({
                 }
             }}
             alt={heroName}
+            title={heroName}
             src={`/images/minimap_icons/${heroName}.jpg`}
             className={cls}
             onClick={onClick}

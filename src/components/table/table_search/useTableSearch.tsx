@@ -11,7 +11,7 @@ export const useTableSearch = (
   playerList: string[] | undefined,
   items: Items,
   role: string | undefined,
-  heroName: string
+  heroName: string,
 ) => {
   const data = role
     ? totalMatchData.filter((match) => match.role === role)
@@ -26,7 +26,7 @@ export const useTableSearch = (
     items!,
     heroList,
     playerList,
-    heroName
+    heroName,
   );
   const combinedMatches = combineMatches(searchResults);
   const matchIds: number[] = [];
@@ -46,10 +46,10 @@ export const useTableSearch = (
       matchIds.push(tempArr[0]);
     }
   }
-  const matches = [...totalMatchData].filter(
-    (x) =>
-      (matchIds.includes(x.id) && x.role === role) ||
-      (matchIds.includes(x.id) && !role)
+  const matches = totalMatchData.filter(
+    (match) =>
+      (matchIds.includes(match.id) && match.role === role) ||
+      (matchIds.includes(match.id) && !role),
   );
   return { matches, searchResults };
 };
