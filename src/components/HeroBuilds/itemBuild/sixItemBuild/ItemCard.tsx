@@ -55,7 +55,7 @@ const ItemCard = ({
           {Math.floor(item.time / 60)}m
         </Typography>
         <Typography variant="caption" color="white" style={{ lineHeight: 1 }}>
-          `${item.adjustedValue.toFixed(1)}%`
+          {`${item.adjustedValue.toFixed(1)}%`}
         </Typography>
         <Typography
           variant="caption"
