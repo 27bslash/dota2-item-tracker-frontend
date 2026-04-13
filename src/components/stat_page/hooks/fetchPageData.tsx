@@ -5,7 +5,7 @@ import { baseApiUrl } from "../../../App";
 import {
   bulkRequestStaged,
   fetchData,
-  fetchItems,
+  fetchDotaDataBlob,
 } from "../../../utils/fetchData";
 import heroSwitcher from "../../../utils/heroSwitcher";
 import DotaMatch from "../../types/matchData";
@@ -28,27 +28,31 @@ export const useFetchAllData = (type: string) => {
   const nameParam = params["name"] ? heroSwitcher(params["name"]) : "";
   const getData = async () => {
     let merged: DotaMatch[] = [];
-    let url = `${baseApiUrl}${type}/${nameParam}/react-test?skip=0&length=10`;
+    let EarlyDataSliceUrl = `${baseApiUrl}${type}/${nameParam}/react-test?skip=0&length=10`;
     if (role)
-      url = `${baseApiUrl}${type}/${nameParam}/react-test?skip=0&length=10&role=${role}`;
+      EarlyDataSliceUrl = `${baseApiUrl}${type}/${nameParam}/react-test?skip=0&length=10&role=${role}`;
     const countDocsUrl = `${baseApiUrl}hero/${nameParam}/count_docs?collection=heroes`;
-    const matches: { data: DotaMatch[]; picks: PickStats } =
-      await fetchData(url);
-    setfilteredMatchData(matches["data"]);
-    const docLength = Number(await fetchData(countDocsUrl));
-    setTotalPicks(matches["picks"]);
-    const shortBuild = await fetchData(
-      `${baseApiUrl}hero/${nameParam}/item_build?short=True`,
+    const [matches, docLength, shortBuild, newItemJsonData] = await Promise.all(
+      [
+        fetchData(EarlyDataSliceUrl) as Promise<{
+          data: DotaMatch[];
+          picks: PickStats;
+        }>,
+        fetchData(countDocsUrl).then(Number),
+        fetchData(`${baseApiUrl}hero/${nameParam}/item_build?short=True`),
+        fetchDotaDataBlob("files/items"),
+      ],
     );
-    setShortBuilds(shortBuild[0]);
-    const itemdd = await fetchItems("files/items");
-    if (itemdd) {
-      setItemData(itemdd);
+    if (newItemJsonData) {
+      setItemData(newItemJsonData);
     } else {
-      const notModified = await fetch(`${baseApiUrl}files/items`);
-      const notModifiedJson = await notModified.json();
-      setItemData(notModifiedJson);
+      const data = await fetchData(`${baseApiUrl}files/items`);
+      if (data) setItemData(data);
     }
+    setfilteredMatchData(matches["data"]);
+    setTotalPicks(matches["picks"]);
+    setShortBuilds(shortBuild[0]);
+
     const initialMatches = matches["data"];
     setTotalMatches(initialMatches);
     if (docLength > 35 && type === "hero") {

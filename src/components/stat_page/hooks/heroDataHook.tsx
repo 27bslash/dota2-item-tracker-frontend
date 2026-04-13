@@ -2,24 +2,21 @@ import { useEffect, useState } from "react";
 import { baseApiUrl } from "../../../App";
 import DotaMatch from "../../types/matchData";
 import { PageHeroData } from "../../types/heroData";
-import { fetchItems, updateEtag } from "../../../utils/fetchData";
+const HERO_DATA_CACHE_PREFIX = "hero_data_cache_";
 
 async function getHeroData(hero: string) {
-  const cachedHeroData = await fetchItems(`files/hero-data/${hero}`);
-  if (cachedHeroData?.heroData) {
-    return cachedHeroData.heroData;
-  }
-  const hData = await fetch(`${baseApiUrl}files/hero-data/${hero}`);
-  const hJson = await hData.json();
+  const cacheKey = `${HERO_DATA_CACHE_PREFIX}${hero}`;
+  const cached = localStorage.getItem(cacheKey);
+  if (cached) return JSON.parse(cached);
 
-  if (hData.headers.get("ETag") && hData.headers.get("ETag") !== null) {
-    updateEtag(
-      `files/hero-data/${hero}`,
-      hData.headers.get("ETag") as string,
-      hData.headers.get("Last-Modified") as string,
-    );
+  const response = await fetch(`${baseApiUrl}files/hero-data/${hero}`);
+  const json = await response.json();
+  try {
+    localStorage.setItem(cacheKey, JSON.stringify(json.heroData));
+  } catch {
+    // quota exceeded — skip cache
   }
-  return hJson["heroData"];
+  return json.heroData;
 }
 export const useHeroData = (
   type: string,

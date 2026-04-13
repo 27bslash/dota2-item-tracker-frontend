@@ -38,7 +38,7 @@ export const fetchData = async (url: string, retries = 2, delay = 1000) => {
     }
   }
 };
-export async function fetchItems(url: string) {
+export async function fetchDotaDataBlob(url: string) {
   // Retrieve stored ETag (if any) from localStorage
   const cachedEtagData = JSON.parse(localStorage.getItem("etagCache") || "[]");
 
@@ -53,14 +53,15 @@ export async function fetchItems(url: string) {
     "If-Modified-Since": "",
   };
   if (storedETag) {
-    headers["If-None-Match"] = storedETag.etag; // Ask server if there's a newer version
+    headers["If-None-Match"] = storedETag.etag;
     headers["If-Modified-Since"] = storedETag.lastModified;
   }
   try {
     const response = await fetch(`${baseApiUrl}${url}`, { headers });
     if (response.status === 304) {
-      console.log(`No update needed, for ${url} using cached data`);
-      return null;
+      const cached = localStorage.getItem(`blob_cache_${url}`);
+      if (cached) return JSON.parse(cached);
+      return null; // no local copy, caller falls back
     }
 
     if (response.ok) {
@@ -71,6 +72,13 @@ export async function fetchItems(url: string) {
           response.headers.get("ETag")!,
           response.headers.get("Last-Modified")!,
         );
+        try {
+          localStorage.setItem(`blob_cache_${url}`, JSON.stringify(data));
+        } catch (e) {
+          console.log(`Failed to cache blob data for ${url}:`, e);
+          if (!(e instanceof DOMException && e.name === "QuotaExceededError"))
+            throw e;
+        }
       }
       return data;
     } else {

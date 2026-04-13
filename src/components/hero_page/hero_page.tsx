@@ -29,7 +29,6 @@ export const HeroPageTopSection = (props: {
     heroList,
   } = usePageContext();
   const { role, updateRole, updateMatchData, totalPicks, shortBuilds } = props;
-  console.log("short", shortBuilds);
   return (
     <>
       <div className="flex" style={{ minHeight: "87px" }}>
