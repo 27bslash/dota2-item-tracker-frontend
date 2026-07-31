@@ -3,26 +3,13 @@ type DraftImageProps = {
     highlight: boolean
     onClick?: (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void
 }
-const DraftImage = ({
-    heroName,
-    highlight,
-    onClick,
-}: DraftImageProps) => {
+const DraftImage = ({ heroName, highlight, onClick }: DraftImageProps) => {
     const cls = highlight ? 'draft-icon icon-highlight' : 'draft-icon'
     return (
         <img
-            onError={(e) => {
-                try {
-                    const target = e.target as HTMLImageElement
-                    target.onerror = null
-                    target.src = '/images/minimap_icons/error.jpg'
-                } catch (error) {
-                    console.error('Image loading error:', error)
-                }
-            }}
             alt={heroName}
             title={heroName}
-            src={`/images/minimap_icons/${heroName}.jpg`}
+            src={`https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/heroes/icons/${heroName}.png`}
             className={cls}
             onClick={onClick}
         ></img>
